@@ -1,0 +1,57 @@
+/* pages/manage/manage.wxss */
+
+page {
+  width: 100%;
+  height: 100%;
+}
+
+.container {
+  width: 100%;
+  height: 100%; 
+  padding: 0;
+}
+
+.nav {
+  height: 74rpx;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  line-height: 70rpx;
+  font-size: 32rpx;
+  white-space: nowrap;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99;
+}
+
+.nav-item {
+  width: 25%;
+  display: inline-block;
+  text-align: center;
+  background-color: #ffffff;
+}
+
+.tab {
+  display: inline-block;
+  line-height: 70rpx;
+  box-sizing: border-box;
+}
+
+.tab.active {
+  color: #fd5d2d;
+  border-bottom: solid 4rpx #fd5d2d;
+}
+
+.tab-box {
+  padding-top: 70rpx;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+/* .tab-content {
+   overflow-y: scroll; 
+} */
+.contentBox{
+  padding-top: 70rpx;
+}

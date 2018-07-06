@@ -1,0 +1,19 @@
+<!--pages/store/headline/headline.wxml-->
+<view class='container headline'> 
+  <view wx:for="{{list}}" wx:key="index" class='list'>
+    <view class='contentBox'>
+      <image src='{{item.url}}'></image>
+      <view class='text'>
+        <text class='title'>{{item.title}}</text>
+        <text class='content'>{{item.text}}</text>
+      </view>
+    </view>
+    <view class='infoBox'>
+      <text>{{item.userName}}</text>
+      <view>
+        <text>{{item.readNum}}</text>浏览
+        <text>{{item.replyNum}}</text>回复
+      </view>
+    </view>
+  </view>
+</view>

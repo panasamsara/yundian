@@ -1,0 +1,77 @@
+.color333{
+  color: #333;
+}
+.color999{
+  color: #999;
+}
+.font28{
+  font-size: 28rpx;
+}
+.font30{
+  font-size: 30rpx;
+}
+.font32{
+  font-size: 32rpx;
+}
+.discountDetail{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #f17168;
+}
+.list{
+  height: 630rpx;
+  width: 710rpx;
+  background: #fff;
+  margin: 0 20rpx;
+  border-radius: 10rpx;
+  margin-top: 90rpx;
+  overflow: hidden;
+}
+.list .shopIcon{
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  position: absolute;
+  left: 325rpx;
+  top: 31rpx;
+}
+.list .shopname{
+  margin-top: 100rpx !important;
+}
+.list .con{
+  overflow: hidden;
+  height: 314rpx;
+}
+.list .con>view{
+  margin-top: 20rpx;
+  text-align: center;
+}
+.list .info{
+  padding: 40rpx;
+  border-top: 2rpx dashed #ddd;
+  color: #666;
+  font-size: 28rpx;
+}
+.list .info view{
+  text-align: left;
+  margin-bottom: 10rpx;
+}
+.cicrl{
+  width: 30rpx;
+  height: 30rpx;
+  background: #f17168;
+  position: absolute;
+  border-radius: 50%;
+ 
+}
+.cicleLeft{
+  left:6rpx;
+  top:386rpx; 
+}
+.cicleRight{
+  right: 6rpx;
+  top:386rpx; 
+}

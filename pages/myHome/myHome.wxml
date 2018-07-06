@@ -1,0 +1,52 @@
+<view>
+  <view class="header">
+    <view class="headerToP">
+      <image class="bgimg" src='images/myhome.png'></image>
+      <view class='top'>
+        <image class="" src="images/head.png"></image>
+        <text>爱丽丝</text>
+      </view>
+    </view>
+  </view>
+  <!--线上订单  -->
+  <view class="order">
+     <view class="onlineOrder">
+      <view class="title">
+        <text class="left">线上订单</text>
+        <image class="right" src="images/right_icon.png"></image>
+      </view>
+      <view class="orderList">
+         <navigator url="/pages/myHome/order/order" hover-class="none" class="navigator"> 
+          <view>
+            <image src="images/daifukuan.png"></image>
+            <text>待付款</text>
+          </view>
+          <view>
+            <image src="images/daifahuo.png"></image>
+            <text>待发货</text>
+          </view>
+          <view>
+            <image src="images/daishouhuo.png"></image>
+            <text>待收货</text>
+          </view>
+          <view>
+            <image src="images/daipingjia.png"></image>
+            <text>待评价</text>
+          </view>
+          <view>
+            <image src="images/shouhou.png"></image>
+            <text>售后</text>
+          </view>
+        </navigator>
+      </view>
+      <view class="shoporder borderTop">
+        <block wx:for="{{items}}" wx:key="{{item.id}}">
+          <view data-path="{{ item.path }}" data-index="{{ index }}" bindtap="navigateTo">
+            <image src="{{item.icon}}"></image>
+            <text>{{item.text}}</text>
+          </view>
+        </block>
+      </view>
+    </view> 
+  </view>
+</view>

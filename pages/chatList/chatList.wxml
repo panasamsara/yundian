@@ -1,0 +1,28 @@
+<!--pages/chatList/chatList.wxml-->
+<view class='chat-list'>
+  <view class='list'>
+    <view class='photo'>
+      <image src='../index/img/logo.png'></image>
+    </view>
+    <view class='info'>
+      <view class='user-name'>222</view>
+      <view class='detail'>333</view>
+    </view>
+    <view class='date'>
+      <view>2018-05-22</view>
+    </view>
+  </view>
+</view>
+
+<view class='chat-list'>
+  <view class='list'>
+    <view class='photo'>
+      <image src='../index/img/logo.png'></image>
+    </view>
+    <view class='info'>
+      <view class='user-name'>222</view>
+      <view class='detail'>333</view>
+    </view>
+    <view class='date'></view>
+  </view>
+</view>

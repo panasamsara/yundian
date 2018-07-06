@@ -1,0 +1,172 @@
+/* pages/myHome/myQuestion/questionDetail/questionDetail.wxss */
+.left{
+  float: left;
+}
+.right{
+  float: right;
+}
+.overHidden{
+  overflow: hidden;
+}
+.mr15{
+  margin-right: 15rpx;
+}
+.font24{
+  font-size: 24rpx;
+}
+.font28{
+  font-size: 28rpx;
+}
+.font34{
+  font-size: 34rpx;
+}
+.priceColor{
+  color: #ff0036;
+}
+.color999{
+  color: #999;
+}
+.addessNull image{
+    width: 340rpx;
+    height: 310rpx;
+    display: block;
+    margin: 300rpx auto 50rpx;
+}
+.addessNull{
+  text-align: center;
+  font-size: 28rpx;
+  color: #999;
+}
+.content .list{
+  font-size: 28rpx;
+  color: #333;
+  padding: 0 30rpx;
+  margin-top: 70rpx;
+  border-bottom: 1rpx solid #eee;
+}
+.content .list:first-child{
+  margin-top: 0;
+}
+.shopList{
+  margin-top: 30rpx;
+}
+.orderInfo{
+  padding: 30rpx 0;
+  overflow: hidden;
+
+}
+.orderInfo>.left image{
+  width: 150rpx;
+  height: 150rpx;
+  border-radius: 10rpx;
+}
+.orderInfo>.con{
+  width: 370rpx;
+  margin-left: 10rpx;
+}
+.orderInfo>.con text{
+  height: 75rpx;
+  display: block;
+}
+.conTitle{
+  font-size: 32rpx;
+  color: #333;
+}
+.orderInfo>.right .size{
+  color: #999;
+}
+.question{
+  margin-top: 60rpx;
+  width: 120rpx;
+}
+.question .imageQ{
+  margin: auto;
+  display: block;
+}
+.imageQ{
+  width: 36rpx;
+  height: 37rpx;
+}
+.question>text{
+  width: 120rpx;
+  display: block;
+}
+.question view{
+  color: #999;
+  font-size: 28rpx;
+  margin-top: 5rpx;
+}
+.questionList{
+  margin:20rpx;
+  border: 1rpx solid #eee;
+  border-radius: 5rpx;
+  overflow: hidden;
+}
+.questionList .left{
+  padding: 0 14rpx 0 20rpx;
+}
+.questionList>view{
+  border-bottom: 1rpx solid #eee;
+  overflow: hidden;
+  padding-top: 36rpx;
+}
+.questionList>view:last-child{
+  border-bottom: none;
+}
+.conLeft{
+  width: 630rpx;
+}
+.timer{
+  color: #666;
+  font-size: 28rpx;
+  padding: 20rpx 0;
+}
+.touxiang .left image{
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+}
+.touxiang .conLeft{
+  width: 590rpx;
+}
+.touxiang .conLeft .timer,.touxiang .conTitle{
+  padding: 0;
+}
+.collect{
+  margin: 34rpx 0 24rpx;
+}
+.collect image{
+  width: 26rpx !important;
+  height: 24rpx !important;
+  margin-top: 8rpx;
+}
+.collect text{
+  color: #999;
+}
+.touxiang .conLeft .overHidden{
+  height: 80rpx;
+  line-height: 80rpx;
+}
+.send{
+  position: fixed;
+  bottom: 0;
+  height: 100rpx;
+  left: 30rpx;
+  right: 30rpx;
+  background: #fff;
+}
+.send input{
+  border: 1rpx solid #eee;
+  border-radius: 10rpx;
+  color:#333;
+  font-size: 28rpx;
+  width: 500rpx;
+  padding: 20rpx;
+}
+.send button[size=mini]{
+ border-radius: 50rpx;
+ width: 130rpx;
+ height: 68rpx;
+ border: 1rpx solid #ddd;
+ margin-top: 10rpx;
+}

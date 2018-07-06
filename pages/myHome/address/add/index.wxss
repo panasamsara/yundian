@@ -1,0 +1,41 @@
+/* pages/myhome/address/add/index.wxss */
+.left{
+  float: left;
+}
+.right{
+  float: right;
+}
+.add{
+  padding: 0 30rpx;
+}
+.border0{
+  border:none !important;
+}
+.add>view{
+  padding: 40rpx 0;
+  border-top: 1px solid #eee;
+  overflow: hidden;
+}
+.add text{
+  font-size: 32rpx;
+  color: #666;
+}
+.add input,.radio{
+  font-size: 30rpx;
+  color: #333;
+}
+button[type=warn]{
+  background: #ff4330;
+  font-size: 30rpx;
+}
+.colorRed{
+  color:#fc4428 !important;
+}
+text.left{
+  width: 100px;
+  color: #333;
+}
+.picker-rigion{
+  font-size: 32rpx;
+  color: #333;
+}

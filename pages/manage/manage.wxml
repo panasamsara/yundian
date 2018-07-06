@@ -1,0 +1,48 @@
+<!--pages/manage/manage.wxml-->
+<view class="container">
+  <!-- tab导航栏 -->
+  <!-- scroll-left属性可以控制滚动条位置 -->
+  <!-- scroll-with-animation滚动添加动画过渡 -->
+  <scroll-view scroll-x="true" class="nav" scroll-left="{{navScrollLeft}}" scroll-with-animation="{{true}}">
+      <block wx:for="{{navData}}" wx:for-index="idx" wx:for-item="navItem" wx:key="{{item.id}}">
+          <view class='nav-item'>
+              <view class="tab {{currentTab == idx ?'active':''}}"  data-current="{{idx}}" bindtap="switchNav" id='{{navItem.id}}'>{{navItem.text}}</view>
+          </view>
+      </block>        
+  </scroll-view>
+  <!-- 页面内容 -->
+  <view class='contentBox'>
+    <dynamic-view id='dynamic' wx:if="{{show=='dynamic'}}"></dynamic-view>
+    <headline-view id='headline' wx:if="{{show=='headline'}}"></headline-view>
+    <player-view id='player' wx:if="{{show=='player'}}"></player-view>
+    <fans-view id='fans' wx:if="{{show=='fans'}}"></fans-view>
+    <view wx:if="{{show=='account'}}">待开发</view>
+  </view>
+  <!-- <swiper class="tab-box" current="{{currentTab}}" duration="300" bindchange="switchTab">        
+    <swiper-item class="tab-content">
+      <view class='box'>
+        <dynamic-view id='dynamic'></dynamic-view>
+      </view>
+    </swiper-item>
+    <swiper-item class="tab-content">
+      <view class='box'>
+        <headline-view id='headline'></headline-view>
+      </view>
+    </swiper-item>
+    <swiper-item class="tab-content">
+      <view class='box'>
+        <player-view id='player'></player-view>
+      </view>
+    </swiper-item>
+    <swiper-item class="tab-content">
+      <view class='box'>
+        <fans-view id='fans'></fans-view>
+      </view>
+    </swiper-item>
+    <swiper-item class="tab-content">
+      <view class='box'>
+        待开发
+        </view>
+    </swiper-item>
+  </swiper>  -->
+</view>

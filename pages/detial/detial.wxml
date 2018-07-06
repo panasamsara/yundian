@@ -1,0 +1,22 @@
+<view class='btn-area clearfix'>
+  <navigator url='../index/index' hover-class='active'>综合</navigator>
+  <navigator url='../logs/logs' hover-class='active'>销量</navigator>
+  <navigator hover-class='active'>新品</navigator>
+  <navigator hover-class='active'>价格</navigator>
+</view>
+<view class='main clearfix'>
+  <view class='main-top'>
+    <image src='images/3.gif' class='top-img'></image>
+    <text class='tips'>{{tips}}</text>
+  </view> 
+  <view class='item' wx:for="{{arry}}" wx:key='key'>
+    <view class='item-img'>
+      <image src='{{item.url}}'></image>
+      <text class='item-text'>{{item.text}}</text>
+      <view class='item-bot clearfix'>
+        <span class='price'>{{item.price}}</span>
+        <span class='acount'>{{item.acount}}购买</span>
+      </view>
+    </view>
+  </view>
+</view>

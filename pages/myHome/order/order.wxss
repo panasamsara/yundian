@@ -1,0 +1,357 @@
+/* pages/myhome/order/order.wxss */
+
+page,.content{
+    height: 100%;
+    font-family: PingFang-SC-Regular;
+    background: #f8f8f8;
+    font-size: 28rpx;
+}
+.tab-h{
+  width: 100%;
+  height: 100rpx;
+  box-sizing: border-box;
+  overflow: hidden;
+  line-height: 100rpx;
+  background: #fff;
+  font-size: 32rpx;
+  color:#333;
+  white-space: nowrap;
+  position: fixed;
+  top:0;
+  left: 0;
+  z-index: 55;
+  display: flex;
+  border-top:1px solid #dfdfdf;
+  border-bottom: 1px solid #dfdfdf;
+}
+.tab-content{
+  margin-top:100rpx;
+}
+.tab-h .tab-item{
+  width: 20%;
+  float: left;
+  text-align: center;
+}
+.tab-item.active span{
+  padding: 0 0 4rpx 0; 
+  border-bottom:2px solid #fb452c;
+  color:#fb452c;
+  font-family: PingFang-SC-Medium;
+}
+.detail{
+  width: 100%;
+  box-sizing: border-box; 
+  align-items: center;
+  border-bottom: 1px solid #F2F2F2;
+  background: #fff;
+  margin:0 0 40rpx;
+}
+.detail .goods{
+  margin-top:10rpx;
+}
+.detail .goods:first-child{
+  margin-top:0;
+}
+.detail-list{
+  padding-bottom: 100rpx;
+}
+.content .detail .detail-top{
+  color:#323232;
+  font-size:30rpx;
+  height:90rpx;
+  line-height: 90rpx;
+  width:100%;
+  overflow:hidden;
+  position: relative;
+}
+.detail-top .detail-tit{
+  padding:0 85rpx;
+}
+.detail-top text:last-child{
+  float: right;
+  margin-right: 40rpx;
+  color:#fb452c;
+}
+.detail-top image{
+  width: 34rpx;
+  height: 35rpx;
+  position: absolute;
+  top:29rpx;
+  left: 40rpx;
+}
+.goods{
+  overflow:hidden;
+  background: #f8f8f8;
+}
+.goods .good-content{
+  display: flex;
+}
+.goods .good-left{
+  flex: 0.5;
+  vertical-align:middle;
+}
+.goods .item-select{
+  width: 40rpx;
+  height: 40rpx;
+  float: left;
+  position: absolute;
+  top:50%;
+  margin-top:-20rpx;
+  left:31rpx;
+}
+.goods .good-img{
+  display:inline-block;
+  width:180rpx;
+  height:180rpx;
+  border-radius:5px;
+  margin:20rpx 30rpx;
+}
+.goods .right-info{
+  flex:1;
+  font-size: 30rpx;
+  margin-right: 30rpx;
+}
+.right-info text:first-child{
+  display: block;
+  margin: 30rpx 30rpx 30rpx 0;
+}
+.right-info text:nth-child(2){
+  background: #f3f3f3;
+  color:#989898;
+  padding:5rpx 10rpx;
+  margin-bottom:30rpx;
+}
+.right-info .detail-down{
+  margin-top:30rpx;
+  height:auto;
+  overflow:hidden;
+}
+.right-info .detail-down text:first-child{
+  display:inline-block;
+  margin:0;
+  font-size: 24rpx;
+  color:#fb452c;
+}
+.right-info .detail-down text:nth-child(2){
+  color:#fb452c;
+  background: none;
+  font-size: 34rpx;
+}
+.right-info .detail-down text:last-child{
+  float: right;
+  background: none;
+  font-size: 34rpx;
+}
+.account-box{
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  font-size: 30rpx;
+  border-top:1px solid #e5e5e5;
+  background: #fff;
+  z-index:33;
+}
+.account-box .all{
+  padding: 10rpx 40rpx;
+  display: inline-block;
+  height: 70rpx;
+  line-height:70rpx;
+}
+.account-box .sum-info{
+  float: right;
+  padding: 10rpx 40rpx;
+}
+.account-box .sum-info .sum-box{
+  height: 70rpx;
+  line-height:70rpx;
+  float:left;
+  margin-right: 15px;
+}
+.account-box .sum-info .sum-box,.sum-box .sum-price{
+  display: inline-block;
+}
+.sum-box .sum-price{
+  color:#f57a92;
+}
+.account-btn{
+  display: inline-block;
+  width: 154rpx;
+  height: 70rpx;
+  border-radius: 20px;
+  line-height: 70rpx;
+  padding: 0;
+  font-size: 30rpx;
+  color:#fff !important;
+  background: -webkit-linear-gradient(left,  #fd712c , #fa492c); /* Safari 5.1 - 6.0 */
+  background: -o-linear-gradient(right,  #fd712c , #fa492c); /* Opera 11.1 - 12.0 */
+  background: -moz-linear-gradient(right,  #fd712c , #fa492c); /* Firefox 3.6 - 15 */
+  background: linear-gradient(to right,#fd712c , #fa492c); 
+}
+.detail-title{
+  display: inline-block;
+  height: 48rpx;
+  overflow: hidden;
+  position: relative;
+  line-height:48rpx;
+}
+.detail-title image{
+  width: 40rpx;
+  height: 40rpx;
+  position: absolute;
+  top:50%;
+  margin-top:-20rpx;
+}
+.detail-title text{
+  margin-left: 60rpx;
+}
+.all{
+  position: relative;
+}
+.all .item-select{
+  width: 40rpx;
+  height: 40rpx;
+  position: absolute;
+  margin-top:-20rpx;
+  top:50%;
+}
+.all text{
+  margin-left: 50rpx;
+}
+.delete-box{
+  background-color: #e64340;
+  color: #ffffff;
+  float: right;
+  height: 100%;
+  width: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.stepper{
+  display: inline-block;
+  text-align: center;
+  border:1rpx solid #ccc;
+  border-radius:5px;
+  margin:15rpx auto 0;
+}
+.stepper .minus{
+  float: left;
+  padding: 0 20rpx;
+  color: #969696 !important;
+}
+.stepper input{
+  width: 100rpx;
+  float: left;
+  text-align: center;
+  border-right: 1rpx solid #ccc;
+  border-left: 1rpx solid #ccc;
+}
+.stepper .add{
+  padding: 0 20rpx;
+  vertical-align: middle;
+}
+.top-control{
+  position: fixed;
+  width: 100%;
+  padding:10rpx 0;
+  top:0;
+  background: #fff;
+  z-index: 33;
+  text-align: right;
+  border: 1rpx solid #e5e5e5;
+  border-left: none;
+  border-right: none;
+  box-shadow:1px 1px 10px #ccc;
+}
+.top-control button{
+  display:inline-block;
+  width:154rpx;
+  height:70rpx;
+  border-radius:20px;
+  line-height:70rpx;
+  padding:0;
+  font-size:30rpx;
+  color:#f9422b;
+  border:1rpx solid #f9422b;
+  background: #fff;
+  margin-right: 30rpx;
+}
+.del{
+  display: inline-block;
+  float: right;
+}
+.del .del-icon{
+  width:40rpx;
+  height:40rpx;
+  margin-top:19rpx;
+}
+.scoll-h{
+  height: 100%;
+}
+.list-total{
+  width: 100%;
+  height: 70rpx;
+  text-align: center;
+  vertical-align: middle;
+  font-family: PingFang-SC-Medium;
+  border-bottom: 1px solid #e5e5e5;
+  line-height:70rpx;
+}
+.list-total .total-num,.list-total .total-price{
+  display: inline-block;
+  font-size: 30rpx;
+  color:#333;
+}
+.list-total .total-num{
+  margin-right: 20rpx;
+}
+.list-total .total-price span:first-child{
+  color:#fb452c;
+}
+.ctronl-btn{
+  width: 100%;
+  height: 100rpx;
+  text-align: right;
+  vertical-align: middle;
+}
+.ctronl-btn button{
+  width: 180rpx;
+  height: 70rpx;
+  font-size: 28rpx;
+  float: right;
+  margin:15rpx 30rpx;
+}
+.ctronl-btn .reimburse-btn,.ctronl-btn .cancel-btn,.ctronl-btn .return-btn,.ctronl-btn .delete-btn,.ctronl-btn .audit-btn{
+  background: #fff;
+  color:#333;
+  border:1px solid #333;
+}
+.ctronl-btn .shipments-btn,.ctronl-btn .pay-btn,.ctronl-btn .take-btn,.ctronl-btn .appraise-btn{
+  background: #fb452c;
+  color:#fff;
+  border:1px solid #fb452c;
+}
+.empty{
+  width: 640rpx;
+  height: 480rpx;
+  position: absolute;
+  left: 50%;
+  top:50%;
+  margin-top:-320rpx;
+  margin-left: -300rpx;
+}
+.appraise-btn{
+  width:100rpx;
+  font-size:23rpx;
+  color:#fb452c !important;
+  border:1px solid #fb452c;
+  float:right;
+  height:50rpx;
+  line-height:50rpx;
+  margin-top:15rpx;
+}
+.back{
+  width: 24rpx;
+  height: 30rpx;
+  margin-left: 200rpx;
+}

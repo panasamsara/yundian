@@ -1,0 +1,33 @@
+<!--pages/myhome/address/add/index.wxml-->
+<form bindsubmit="formSubmit" bindreset="formReset">
+  <view class="add">
+    <view>
+      <text class="left">收货人：</text>
+      <input class="weui-input" placeholder="请填写收货人" name="username"/>
+    </view>
+    <view>
+      <text class="left">手机号码：</text>
+      <input class="weui-input" type="number" maxlength="11" placeholder="请填写手机号码" name="tel"/>
+    </view>
+    <view>
+      <text class="left">所在地区：</text>
+      <input class="weui-input" type="number" name="city" value="{{region[0]}}{{region[1]}}{{region[2]}}" style="display:none;"/>
+      <picker class="picker-rigion" mode="region" bindchange="bindRegionChange" value="{{region}}" >
+        <view class="picker">
+          <block wx:if="{{region.length > 0}}">{{region[0]}} - {{region[1]}} - {{region[2]}}</block>
+          <block wx:else>请选择地区</block>
+        </view>
+      </picker> 
+    </view>
+    <view>
+      <text class="left">详细地址：</text>
+      <input class="weui-input" placeholder="请填写详细地址" name="address"/>
+    </view>
+    <view>
+      <text class="{{redClick==0?'colorRed':''}}" bindtap="addressTap">设置默认地址</text>
+    </view>
+    <view class="border0">
+      <button type="warn" form-type="submit">确 定</button>
+    </view>
+  </view>
+</form>

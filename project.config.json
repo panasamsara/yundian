@@ -1,0 +1,171 @@
+{
+	"description": "项目配置文件。",
+	"packOptions": {
+		"ignore": []
+	},
+	"setting": {
+		"urlCheck": false,
+		"es6": true,
+		"postcss": true,
+		"minified": true,
+		"newFeature": true
+	},
+	"compileType": "miniprogram",
+	"libVersion": "2.1.1",
+	"appid": "wxdd29a42e8274d46e",
+	"projectname": "zshop_pro",
+	"svr": "",
+	"client": "",
+	"qcloudRoot": "",
+	"miniprogramRoot": "",
+	"pluginRoot": "",
+	"scripts": {},
+	"condition": {
+		"search": {
+			"current": -1,
+			"list": []
+		},
+		"conversation": {
+			"current": -1,
+			"list": []
+		},
+		"plugin": {
+			"current": -1,
+			"list": []
+		},
+		"game": {
+			"list": []
+		},
+		"miniprogram": {
+			"current": -1,
+			"list": [
+				{
+					"id": -1,
+					"name": "云店动态",
+					"pathName": "pages/dynamic/dynamic",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "云店",
+					"pathName": "pages/store/store",
+					"query": ""
+				},
+				{
+					"id": 3,
+					"name": "detail",
+					"pathName": "pages/goodsDetial/goodsDetial",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "list",
+					"pathName": "pages/goodsList/goodsList",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "预约",
+					"pathName": "pages/appointment/appointment",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "预约成功",
+					"pathName": "pages/appointment/success",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "店铺位置",
+					"pathName": "pages/store/location/location",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "店铺二维码",
+					"pathName": "pages/store/code/code",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "活动列表",
+					"pathName": "pages/store/activity/activity",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "活动详情",
+					"pathName": "pages/store/activityInfo/activityInfo",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "设施设备modal",
+					"pathName": "pages/appointment/modal/device-modal",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "服务人员modal",
+					"pathName": "pages/appointment/modal/service-modal",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "服务项目modal",
+					"pathName": "pages/appointment/modal/serviceName-modal",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "聊天列表",
+					"pathName": "pages/chatList/chatList",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "智经营",
+					"pathName": "pages/manage/manage",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "云店动态组件",
+					"pathName": "pages/store/dynamic/dynamic",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "720",
+					"pathName": "pages/720/720",
+					"query": ""
+				},
+				{
+					"id": 17,
+					"name": "云店头条",
+					"pathName": "pages/store/headline/headline",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "云店玩家圈",
+					"pathName": "pages/store/player/player",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "云店粉团队",
+					"pathName": "pages/store/fans/fans",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "proList",
+					"pathName": "pages/proList/proList",
+					"query": ""
+				}
+			]
+		}
+	}
+}

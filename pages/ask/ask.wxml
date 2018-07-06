@@ -1,0 +1,34 @@
+<!--pages/ask/ask.wxml-->
+<view class='top clearfix'>
+  <image src='../../images/pic_03.gif'></image>
+  <view class='text'>
+    <text class='text-top'>CHANEL限量彩妆套装</text>
+    <text class='text-bot'>2017年全新礼盒每人限购一套春季新品限量</text>
+  </view>
+  <view class='text-right'>
+    <text class='right-text'>{{askAcount}}个问题</text>
+    <span>问</span>
+  </view>  
+</view>
+<!-- 主体部分 -->
+<view class='main'>
+  <view class='item' wx:for="{{askData}}" wx:key="key">
+    <view class='ask'>
+      <view class='ask-icon'>问</view>
+      <text>{{item.content}}</text>
+    </view> 
+    <view class='answer'>
+      <view class='answer-icon'>答</view>
+      <text>{{item.answerCount}}</text>
+    </view>  
+    <view class='check clearfix'>
+      <span>查看全部{{item.answers}}个回答</span>
+      <span>{{item.time}}</span>
+    </view>
+  </view>     
+</view>
+<view class='bottom'>
+  <input type='text' placeholder='向买过的人提问'></input>
+  <button type='submt'>提问</button>
+</view>
+

@@ -1,0 +1,15 @@
+<!--pages/appointment/modal/serviceName.wxml-->
+<view class='serviceNameModal modal'>
+  <view>
+    <view class='close' bindtap='close'>
+      <image src='../images/yundian_yyxx_guanbi.png'></image>
+    </view>
+    <text class='title'>选择服务项目</text>
+    <view class='choseBox'>
+      <view wx:for="{{list}}" wx:key="index" class='chose {{item.class}}' bindtap='chose' id='{{index}}'>{{item.name}}</view>
+    </view>
+    <button type='primary' class="submit {{active==true?'active':'normal'}}" bindtap='submit'>确认</button>
+  </view>
+  <slot></slot>
+</view>
+

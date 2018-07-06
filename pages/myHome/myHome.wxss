@@ -1,0 +1,117 @@
+.left{
+  float: left;
+}
+.right{
+  float: right;
+}
+.header{
+  height: 330rpx;
+  width: 100%;
+}
+.headerToP .bgimg{
+  width: 100%;
+  height: 330rpx;
+  display: block;
+}
+.headerToP .top{
+  position: absolute;
+  top: 0;
+  left: 325rpx;
+}
+.headerToP .top image{
+  border-radius: 50%;
+  display: block;
+  width: 130rpx;
+  height: 130rpx;
+  margin: 40rpx auto 0;
+}
+.headerToP text{
+  text-align: center;
+  font-size: 32rpx;
+  margin-top: 20rpx;
+  display: block;
+  color: #fff;
+}
+
+.order{
+  height: 500rpx;
+  width: 100%;
+  position:relative;
+  top:-20px;
+}
+.onlineOrder{
+  position: absolute;
+  top: -30rpx;
+  background: #fff;
+  width: 690rpx;
+  border-radius: 20rpx 20rpx 0 0;
+  margin-left: 30rpx;
+}
+
+.onlineOrder .title image{
+  width: 16rpx;
+  height: 24rpx;
+  vertical-align: middle;
+  margin-top:20rpx;
+}
+.onlineOrder .title{
+  line-height: 60rpx;
+  overflow:hidden;
+  font-size: 30rpx;
+  padding: 10rpx 30rpx 30rpx 30rpx;
+}
+.orderList{
+  display: flex;
+  border-top: 1px solid #ddd;
+  padding-top: 40rpx;
+}
+.orderList view{
+  flex: 5;
+}
+.orderList view image{
+  width: 48rpx;
+  height: 40rpx;
+  display: block;
+  margin: auto;
+}
+.orderList view text{
+  font-size: 28rpx;
+  text-align: center;
+  display: block;
+  width: 100%;
+  color: #333;
+  margin-top: 20rpx;
+  margin-bottom: 30rpx;
+}
+.shoporder view{
+  width: 230rpx;
+  float: left;
+  padding-top: 80rpx;
+}
+.shoporder view image{
+  width: 50rpx;
+  height: 50rpx;
+  display: block;
+  margin: auto;
+}
+.shoporder view text{
+  text-align: center;
+  color: #666;
+  font-size: 28rpx;
+  width: 100%;
+  display: block;
+  margin-top: 20rpx;
+}
+.borderTop{
+  border-top: 1px solid #ddd;
+}
+.borderBottom{
+  border-bottom: 1px solid #ddd;
+}
+.paddingBottom{
+  padding-bottom: 50rpx;
+}
+.navigator{
+  display: flex;
+  width: 100%;
+}

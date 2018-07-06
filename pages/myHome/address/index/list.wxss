@@ -1,0 +1,95 @@
+/* pages/myhome/address/index/list.wxss */
+.left{
+  float: left
+}
+.right{
+  float: right;
+}
+.ml{
+  margin-right: 30rpx;
+}
+.ml10{
+  margin-right: 10rpx;
+}
+.list{
+  padding: 40rpx 30rpx 50rpx;
+}
+.userInfo{
+ margin-bottom: 30rpx;
+}
+.userInfo text{
+ font-size: 32rpx;
+ color: #333;
+}
+.addInfo{
+  font-size: 28rpx;
+  color: #666;
+}
+
+/* 未选中的 背景样式 */
+radio .wx-radio-input{
+   border-radius: 50%;/* 圆角 */
+   width: 30rpx;
+   height: 30rpx;
+}
+/* 选中后的 背景样式 （红色背景 无边框 可根据UI需求自己修改） */
+radio .wx-radio-input.wx-radio-input-checked{
+   border: none;
+   background: red;
+}
+/* 选中后的 对勾样式 （白色对勾 可根据UI需求自己修改） */
+radio .wx-radio-input.wx-radio-input-checked::before{
+  background: #f74830;
+  border-radius: 50%;/* 圆角 */
+  width: 40rpx; /* 选中后对勾大小，不要超过背景的尺寸 */
+  height: 40rpx; /* 选中后对勾大小，不要超过背景的尺寸 */
+  line-height: 40rpx;
+  text-align: center;
+  font-size:30rpx; /* 对勾大小 30rpx */
+  color:#fff; /* 对勾颜色 白色 */
+  transform:translate(-50%, -50%) scale(1);
+  -webkit-transform:translate(-50%, -50%) scale(1);
+}
+.addInfo{
+  border-bottom: 1rpx solid #ddd;
+  padding-bottom: 40rpx;
+}
+.edit image{
+  width: 36rpx;
+  height: 36rpx;
+  display: inline-block;
+  vertical-align: top;
+}
+.setDefault{
+  margin-top: 30rpx;
+  font-size: 28rpx;
+  color: #666;
+}
+.btn-plus{
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 80rpx;
+  border-top: 1rpx solid #ddd;
+  background: #fff;
+}
+.btn-plus text{
+  text-align: center;
+  color: #fd4529;
+  width: 100%;
+  display: block;
+  height: 100%;
+  line-height: 80rpx;
+  font-size: 30rpx;
+}
+.addessNull image{
+    width: 340rpx;
+    height: 310rpx;
+    display: block;
+    margin: 190rpx auto 50rpx;
+}
+.addessNull{
+  text-align: center;
+  font-size: 28rpx;
+  color: #999;
+}

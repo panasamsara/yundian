@@ -1,0 +1,17 @@
+<!--pages/store/fans/fans.wxml-->
+<view class='container fans'>
+  <view wx:for="{{list}}" wx:key="index" class='list'>
+    <view class='banner'>
+      <image src="{{item.url}}"></image>
+    </view>
+    <scroll-view class="teamBox" scroll-x="true">
+      <view class='team' wx:for="{{item.teamList}}" wx:key="index" wx:for-item="items">
+        <image src='{{items.url}}'></image>
+        <view class='infoBox'>
+          <text class='teamName'>{{items.name}}</text>
+          <text class='total'>{{items.total}}人</text>
+        </view> 
+      </view>
+    </scroll-view>
+  </view>
+</view>

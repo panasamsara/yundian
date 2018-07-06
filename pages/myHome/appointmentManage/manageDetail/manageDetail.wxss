@@ -1,0 +1,171 @@
+/* pages/myHome/appointmentManage/manageDetail/manageDetail.wxss */
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+.mr15 {
+  margin-right: 15rpx;
+}
+
+.header {
+  width: 100%;
+  height: 256rpx;
+}
+
+.header image {
+  height: 100%;
+  width: 100%;
+}
+
+.type {
+  position: absolute;
+  top: 58rpx;
+  left: 30rpx;
+  font-size: 34rpx;
+  color: #fff;
+}
+
+.info {
+  position: absolute;
+  top: 138rpx;
+  background: #fff;
+  border-radius: 10rpx 10rpx 0 0;
+  margin: 0 30rpx;
+  box-sizing: border-box;
+  width: 690rpx;
+  font-size: 32rpx;
+  color: #333;
+}
+
+.person {
+  margin-top: 40rpx;
+  padding: 0 30rpx;
+  box-shadow: 0px 4px 7px 0px rgba(0, 0, 0, 0.06);
+}
+
+.person>view:last-child {
+  padding: 20rpx 0 40rpx;
+  background-color: #fff;
+}
+
+.content .list {
+  font-size: 28rpx;
+  color: #333;
+  padding: 0 30rpx;
+  margin-top: 20rpx;
+}
+
+.content .list:first-child {
+  margin-top: 0;
+}
+
+.content .shop {
+  overflow: hidden;
+  padding: 30rpx 0;
+}
+
+.content .shop .shopImg {
+  width: 32rpx;
+  height: 28rpx;
+  vertical-align: middle;
+}
+
+.content .shop .rightIcon {
+  width: 16rpx;
+  height: 26rpx;
+  vertical-align: middle;
+}
+
+.rightType {
+  color: #fb452c;
+}
+
+.shopList {
+  margin-top: 30rpx;
+}
+
+.des {
+  font-size: 32rpx;
+  text-align: center;
+  margin-top: 100rpx;
+}
+
+.offOrder {
+  position: fixed;
+  bottom: 0;
+  text-align: center;
+  font-size: 34rpx;
+  width: 100%;
+  height: 100rpx;
+  line-height: 100rpx;
+}
+
+.mask {
+  position: fixed;
+  z-index: 9000;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(114, 114, 114, 0.5);
+}
+radio-group label{
+  display: block;
+  text-align: left;
+  border-bottom: 2rpx solid #eee;
+}
+radio-group view{
+  display: inline-block;
+  font-size: 28rpx;
+  color: #333;
+
+    padding: 20rpx;
+}
+.con {
+  width: 80%;
+  display: inline-block;
+  background: #fff;
+  position: absolute;
+  top: 50%;
+  left: 5%;
+  transform: translate(0, -50%);
+  border-radius: 10rpx;
+  padding: 5%;
+}
+.title{
+  font-size: 30rpx;
+  text-align: center;
+  padding: 20rpx;
+  background: #eee;
+}
+/* 未选中的 背景样式 */
+radio .wx-radio-input{
+   border-radius: 50%;/* 圆角 */
+   width: 40rpx;
+   height: 40rpx;
+}
+/* 选中后的 背景样式 （红色背景 无边框 可根据UI需求自己修改） */
+radio .wx-radio-input.wx-radio-input-checked{
+   border: none;
+   background: red;
+}
+button{
+  width: 200rpx;
+  height: 70rpx;
+  display: inline-block;
+  font-size:28rpx;
+  padding: 0;
+  line-height: 70rpx;
+  border: 2rpx solid #eee;
+  margin-left: 50rpx;
+  margin-top: 30rpx;
+}
+.red{
+  background: #fb452c;
+  color: #fff;
+}

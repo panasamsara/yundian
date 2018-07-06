@@ -1,0 +1,57 @@
+<view class='content'>
+  <scroll-view class='detail-list' scroll-y='true' >
+    <view class='detail' wx:for='{{goodlist}}' wx:for-index="inx" wx:key="id" data-index="{{inx}}">
+        <view class='detail-top'>
+          <view class='detail-title'>
+           <image class="item-select" bindtap="shopSelect"  data-is="{{item.checked}}" data-index="{{inx}}" data-shopId="{{item.shopId}}" src="{{item.checked?'img/comment_select.png':'img/comment_normal.png'}}" />
+          <text>{{item.shopName}}</text>
+          </view>
+          <view class='back' bindtap="back">
+            <image src='../../../images/yundian_spxq_gengduo.png'></image>
+          </view>
+        </view>
+        <view class='goods' wx:for='{{item.goodsList}}' wx:for-item='items' wx:key="goods">
+          <view class='good-content inner txt' bindtouchstart="touchS" bindtouchmove="touchM" bindtouchend="touchE" data-pindex="{{inx}}" data-index="{{index}}" data-goodsId="{{items.goodsId}}" data-id="{{items.id}}" data-shopId="{{item.shopId}}" data-stockId="{{items.stockId}}"  style="{{items.txtStyle}}" >
+            <view class='good-left' data-pindex="{{inx}}" data-index="{{index}}" data-id="{{items.id}}">
+              <image class="item-select" bindtap="switchSelect" data-pindex="{{inx}}" data-index="{{index}}" data-id="{{items.id}}" src="{{items.checked?'img/comment_select.png':'img/comment_normal.png'}}" />
+                <image class='good-img' src='{{items.goodsImageUrl}}'></image>
+            </view>
+            <view class='right-info'>
+              <text>{{items.goodsName}}</text>
+              <text wx:if="{{items.stockName!=''}}">{{items.stockName}}</text>
+              <view class='detail-down'>
+                <text>￥{{items.goodsPrice}}</text>
+                <view class="stepper">
+                <!-- 减号 -->
+                  <text class="minus"  data-pindex="{{inx}}" data-index="{{index}}" bindtap="bindMinus">-</text>
+                <!-- 数值 -->
+                  <input type="number" bindchange="bindManual" value="{{items.number}}" />
+                <!-- 加号 -->
+                  <text class="add normal" data-index="{{index}}" data-pindex="{{inx}}" bindtap="bindPlus">+</text>
+                </view>
+              </view>
+            </view>
+          </view>
+          <view bindtap='remove' class="inner delete" data-index="{{index}}" data-id="{{items.id}}" data-pindex="{{inx}}" data-goodsId="{{items.goodsId}}" data-shopId="{{item.shopId}}" data-stockId="{{items.stockId}}" data-customerId="{{items.customerId}}">
+            <view>删除</view>
+          </view>
+        </view>  
+    </view>
+  </scroll-view>
+  <view class='account-box'>
+    <view class='all'>
+     <image class="item-select" data-is='{{isAllSelect}}' bindtap="allSelect" src="{{isAllSelect?'img/comment_select.png':'img/comment_normal.png'}}" />
+      <text>全选</text>
+    </view>
+    <view class="all-del" bindtap="allDel" >
+      <image src="../../../images/delete.png"></image>
+    </view>
+    <view class='sum-info'>
+      <view class='sum-box'>
+        合计：<view class='sum-price'>￥{{totalMoney}}</view>
+      </view>
+      <button class='account-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}"
+         bindtap="default" hover-class="other-button-hover"> 结算 </button>
+    </view>
+  </view>
+</view>

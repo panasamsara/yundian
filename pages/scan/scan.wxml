@@ -1,0 +1,3 @@
+<!--pages/scan/scan.wxml-->
+<text>扫码页面，店铺历史纪录页面</text>
+<view class='scanBlock' bindtap='scanCode'>点击扫码</view>

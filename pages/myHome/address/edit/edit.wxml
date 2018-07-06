@@ -1,0 +1,32 @@
+
+<view class="edit">
+  <form bindsubmit="formSubmit" bindreset="formReset">
+    <view>
+      <text>收货人:</text>
+      <input class="weui-input" placeholder="" value="{{person}}" name="username" />
+    </view>
+    <view>
+      <text>手机号码:</text>
+      <input class="weui-input" type="number" placeholder="" value="{{tel}}" maxlength="11" name="tel"/>
+    </view>
+    <view>
+      <text>所在地区:</text>
+      <input class="weui-input" placeholder="" value="{{region}}" name="city" style="display:none;"/>
+      <picker class="left" mode="region" bindchange="bindRegionChange" value="{{region}}">
+        <view class="picker">
+          {{region[0]}}，{{region[1]}}，{{region[2]}}
+        </view>
+      </picker> 
+    </view>
+    <view>
+      <text>详细地址:</text>
+      <input class="weui-input" placeholder="" value="{{address}}" name="address"/>
+    </view>
+    <view>
+      <text class="{{redClick==0?'colorRed':''}}" bindtap="addressTap">设置默认地址</text>
+    </view>
+    <view>
+      <button type="warn" form-type="submit">确   定</button>
+    </view>
+  </form>
+</view>

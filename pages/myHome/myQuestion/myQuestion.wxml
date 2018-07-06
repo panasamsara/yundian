@@ -1,0 +1,41 @@
+<!--pages/myhome/myQuestion/myQuestion.wxml-->
+<view>
+  <view class="header">
+    <view class="manageTitle">
+      <text bindtap='typeTop' data-index="1"><text class="{{activeIndex==1?'active':''}}">我的提问</text></text>
+      <text bindtap='typeTop' data-index="2"><text class="{{activeIndex==2?'active':''}}" >我的回答</text></text> 
+      <text bindtap='typeTop' data-index="3"><text class="{{activeIndex==3?'active':''}}" >邀请我的</text></text> 
+    </view>
+  </view>
+  <view class="wrap" >
+    <!-- 没有可使用的预约默认图 -->
+    <block wx:if="{{orderList.length==0}}">
+      <view class="addessNull">
+        <image src="../images/adderss.png"></image>
+        <view wx:if="{{activeIndex==1}}">还没有提问,快去提问吧~</view>
+        <view wx:if="{{activeIndex==2}}">还没有回答,快去回答吧~</view>
+        <view wx:if="{{activeIndex==3}}">还没有邀请你的回答哦~</view>
+      </view>
+    </block> 
+    <view class='content' wx:for="{{orderList}}" wx:key="index" >
+      <view class="list" bindtap='skip' data-id="{{item.id}}">
+        <view class="listTitle" wx:if="{{activeIndex==2||activeIndex==3}}">李****有问题像你求助哦</view>
+        <view class="orderInfo">
+          <view class='left'>
+            <image src='../images/1.gif'></image>
+          </view>
+          <view class='question left'>
+            <image wx:if="{{activeIndex==1||activeIndex==3}}" class="imageQ" src='../images/question.png'></image>
+            <image wx:if="{{activeIndex==2}}" class="imageQ" src='../images/answer.png'></image>
+          </view>
+          <view class='right'>
+            <text>{{item.content}}</text>
+            <text>
+              <text class='right color999 font28'>{{item.createTime}}</text>
+            </text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

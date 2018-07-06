@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "智经营",
+  "usingComponents": {
+    "dynamic-view": "../store/dynamic/dynamic",
+    "headline-view": "../store/headline/headline",
+    "player-view" : "../store/player/player",
+    "fans-view" : "../store/fans/fans"
+  }
+}

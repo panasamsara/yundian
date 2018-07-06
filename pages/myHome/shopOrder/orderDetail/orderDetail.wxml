@@ -1,0 +1,57 @@
+<view class="manageDetail">
+  <view class='header'>
+    <image src="../../images/bgmall.png"></image>
+    <view class='type'>订单已提交</view>
+  </view>
+  <view class='content' wx:for="{{orderList}}" wx:key="index">
+    <view class="info">
+    <view class='person'>
+      <view>
+        <text>房间：</text>
+        <text>3号房</text>
+      </view>
+      <view>
+        <text>商家店名：</text>
+        <text>{{item.shopName}}</text>
+      </view>
+      <view>
+        <text>订单编号：</text>
+        <text>26559595</text>
+      </view>
+    </view>
+  </view>
+    <view class="list" bindtap='skip' data-id="{{item.id}}" data-index="{{index}}">
+      <view class='shop'>
+        <view class='left'>
+          <image class="shopImg mr15" src="../../images/shopDefault.png"></image>
+          <text class="mr15">{{item.shopName}}</text>
+          <image class="rightIcon" src="../../images/right.png"></image>
+        </view>
+        <view wx-if="{{activeIndex==0}}" class='right rightType'>订单已提交</view>
+        <view wx-if="{{activeIndex==1}}" class='right rightType'>订单已完成</view>
+      </view>
+      <view wx:for="{{item.shopOrderInfo}}" wx:key="index">
+        <view class="orderInfo">
+          <view class='left'>
+            <image src='{{item.goodsPic}}'></image>
+          </view>
+          <view class='right'>
+            <text>{{item.goodsName}}</text>
+            <text class="size">{{item.remake}}</text>
+            <text>
+              <text class='left font34 priceColor'><text class='font24'>￥</text>{{item.goodsPrice}}</text>
+            <text class='right color999 font28'>X{{item.goodsNum}}</text>
+            </text>
+          </view>
+        </view>
+      </view>
+      <view>
+        <view class='right'>
+          <text>共{{item.goodsNum}}件商品</text>
+          <text>合计：</text>
+          <text class='font34 priceColor'><text class='font24'>￥</text>{{item.shouldPay}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,330 @@
+/**index.wxss**/
+
+page, .main{
+    height: 100%;
+}
+
+.categroy{
+    width: 750rpx;
+    height: 100%;
+    overflow: hidden;
+}
+.cate-box{
+    height: 100%;
+    box-sizing: border-box;
+}
+.top-bg{
+  width: 100%;
+  height: 450rpx;
+  position: absolute;
+  top: 240rpx;
+  z-index: -1;
+}
+.btn-list{
+  width: 80rpx;
+  height: 600rpx;
+  position: absolute;
+  right: 30rpx;
+  bottom: 130rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 99999;
+}
+.btn-img{
+  width:78rpx; 
+  height: 78rpx;
+  opacity: 0.6;
+}
+.btn-img-active{
+  width:78rpx; 
+  height: 78rpx;
+  opacity: 1;
+}
+.text-below{
+  font-size: 28rpx;
+  line-height: 28rpx;
+  display: inline-block;
+  width: 80rpx;
+  text-align: center;
+  position: relative;
+  top: -10rpx;
+  color: #b6b6b6;
+}
+
+.bottom-box{
+  width: 100%;
+  height: 100rpx;
+  position: absolute;
+  bottom: 30rpx;
+}
+.logo{
+  width: 88rpx;
+  height: 88rpx;
+  border: 5rpx solid #b6b6b6;
+  border-radius: 88rpx;
+  position: relative;
+  left: 40rpx;
+  display: inline-block;
+}
+.desc-box{
+  display: inline-block;
+  position: relative;
+  left: 60rpx;
+  top: -20rpx;
+  color: #b6b6b6;
+  padding-right: 10rpx;
+  border-right: dashed 2rpx #b6b6b6;
+}
+.desc-name{
+  font-size: 28rpx;
+}
+.fans-num{
+  font-size: 24rpx;
+}
+.qrcode{
+  display: inline-block;
+  width: 50rpx;
+  height: 50rpx;
+  position: relative;
+  left:70rpx;
+  top:-30rpx;
+}
+#detail{
+  background-color: #f8f8f8;
+  /* height:auto;
+  overflow-y:auto; */
+}
+.coupon{
+  background-color: #fff;
+  width: 690rpx;
+  height: 100rpx; 
+  border-radius: 10rpx;
+  box-shadow: #f3f3f3 0px 0px 10rpx; 
+  position: relative;
+  top: 30rpx;
+  left: 30rpx;
+  margin-bottom: 30rpx;
+}
+.coupon-img{
+  width: 160rpx;
+  height: 28rpx;
+  display: inline-block;
+  position: relative;
+  top: 20rpx;
+  left: 40rpx;
+}
+.coupon-txt{
+  position:relative;
+  left:60rpx;
+  top:18rpx;
+  font-size:28rpx;
+  color:#838383;
+
+}
+.tuijian{
+  padding:0 30rpx;
+  background-color:#f8f8f8;
+}
+.main-top{
+  position:relative;
+}
+.main-top .top-img{
+  position: absolute;
+  width:22rpx;
+  height:30rpx;
+  left:2rpx;
+  top:48rpx;
+}
+.tips{
+  display: block;
+  font-size: 30rpx;
+  line-height: 39rpx;
+  text-align: center;
+}
+.tips::before{
+  content: "";
+  height: 2px;
+  width: 100rpx;
+  display: block;
+  background: #fe5c45;
+  position: relative;
+  left: 170rpx;
+  top: 20rpx;
+}
+.tips::after{
+  content: "";
+  height: 2px;
+  width: 100rpx;
+  display: block;
+  background: #fe5c45;
+  position: absolute;
+  left: 420rpx;
+  top: 20rpx;
+}
+.item{
+  width:335rpx;
+  float:left;
+  margin-top:24rpx; 
+}
+.item:nth-child(odd){
+  margin-left:20rpx;
+}
+.item-img{
+  width:100%;
+  height:335rpx;
+}
+.item-img image{
+  width:100%;
+  height:100%;
+}
+.item-text{
+  height: 24rpx;
+  font-size: 30rpx;
+  display: block;
+  padding:16rpx 12rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box; /** 将对象作为伸缩盒子模型 **/
+  -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
+  -webkit-line-clamp: 1; /** 显示的行数 **/
+}
+.item-bot{
+  height:55rpx;
+  line-height: 55rpx;
+  padding:0 12rpx 22rpx;
+}
+.price{
+  font-size: 44rpx;
+  color:#ff0130;
+  float:left;
+}
+.acount{
+  color:#949494;
+  font-size: 24rpx;
+  float:right;
+}
+.putInCart{
+  width: 42rpx;
+  height: 42rpx;
+  display: inline-block;
+  margin-top: 5rpx;
+  float: right;
+}
+putInCart-img{
+  width: 100%;
+  height: 100%;
+}
+.activity-swiper{
+  display: block;
+  height: 320rpx;
+  padding: 30rpx;
+  overflow: hidden;
+  border-radius: 5rpx;
+  margin-bottom:30rpx;
+}
+.swiper-item{
+  display: block;
+  height: 300rpx;
+}
+.page-section-title{
+  margin-top: 60rpx;
+  position: relative;
+}
+.activity-img{
+  width: 100%;
+  height: 227rpx;
+  overflow: hidden;
+}
+.activity-img image{
+  width: 100%;
+}
+.activity-desc-box{
+  width: 100%;
+  height: 70rpx;
+  display: flex;
+  justify-content: space-between;
+}
+.activity-name{
+  color: orange;
+}
+.text-align-right{
+  text-align: right;
+}
+.font-size-24{
+  font-size: 24rpx;
+}
+.activity-detail{
+  width: 400rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box; /** 将对象作为伸缩盒子模型 **/
+  -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
+  -webkit-line-clamp: 1; /** 显示的行数 **/
+}
+.video-bg{
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+}
+.video-ctx{
+  width: 100%;
+  margin-top: 240rpx;
+}
+.m-b-20{
+  margin-bottom: 20rpx;
+}
+.yuyue{
+  width: 690rpx;
+  height: 148rpx;
+  margin: 0 auto;
+  padding-top:15px;
+  border-radius: 5rpx;
+  overflow: hidden;
+}
+.yuyue image{
+  width: 100%;
+  height: 100%;
+}
+
+.mask{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #000;
+    z-index: 9000;
+    opacity: 0.7;
+}
+.modalDlg{
+    width: 480rpx;
+    height: 640rpx;
+    position: fixed;
+    top: 50%;
+    left: 20rpx;
+    z-index: 9999;
+    margin: -370rpx 85rpx;
+    border-radius: 16rpx;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.new-coupon-img{
+  width: 100%;
+  height: 100%;
+}
+.lingqu-btn{
+  width: 345rpx;
+  height: 105rpx;
+  position: absolute;
+  top: 480rpx;
+  left: 110rpx;
+}
+.close-btn{
+  width: 50rpx;
+  height: 50rpx;
+  position: relative;
+  top: 50rpx; 
+  left: 30rpx;
+}

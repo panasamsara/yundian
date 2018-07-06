@@ -1,0 +1,24 @@
+<!--pages/store/code/code.wxml-->
+<view class='container code'>
+  <view class='storeInfo'>
+    <view>
+      <image src='../images/touxiang.png'></image>
+    </view>
+    <text id='storeName'>乐町官方旗舰店</text>
+    <text id='fans'>粉丝<text id='fansNum'>1234</text></text>
+  </view>
+  <view class='storeCode'>
+    <view>
+      <image src='../images/yundain_dpewm.png' id='codeBox'>
+        <view class="img-box">
+          <image bindtap="previewImg" mode="scaleToFill" src="{{imagePath}}">
+          </image>
+        </view>
+      </image>
+    </view>
+    <text id='scan'>扫一扫二维码图案,进入店铺</text>
+  </view>
+  <view class="canvas-box">
+    <canvas  hidden="{{canvasHidden}}" style="width: 686rpx;height: 686rpx;background:#f1f1f1;" canvas-id="mycanvas"/>
+  </view>
+</view>

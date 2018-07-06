@@ -1,0 +1,7 @@
+<!--pages/test/test.wxml-->
+<text>pages/test/test.wxml</text>
+<button bindtap='doLogin'>登陆(静默)</button>
+<button open-type="getUserInfo" bindgetuserinfo='bindGetUserInfo'>获取用户信息</button> 
+<button open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber"> 一键绑定手机号 </button>
+<open-data type="userAvatarUrl"></open-data>
+<open-data type="userNickName"></open-data>

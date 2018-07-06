@@ -1,0 +1,89 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/appraise/appraise",
+    "pages/goodsList/goodsList",
+    "pages/store/store",
+    "pages/shoppingCart/shoppingCart",
+    "pages/proList/proList",
+    "pages/car/car",
+    "pages/dynamic/dynamic",
+    "pages/myHome/myHome",
+    "pages/myHome/order/order",
+    "pages/myHome/orderDetail/orderDetail",
+    "pages/myHome/shopOrder/shopOrder",
+    "pages/myHome/shopOrder/orderDetail/orderDetail",
+    "pages/myHome/appointmentManage/appointmentManage",
+    "pages/myHome/appointmentManage/manageDetail/manageDetail",
+    "pages/myHome/myAccount/myAccount",
+    "pages/myHome/discounts/discounts",
+    "pages/myHome/discounts/discountDetail/discountDetail",
+    "pages/myHome/address/index/list",
+    "pages/myHome/myQuestion/myQuestion",
+    "pages/myHome/myQuestion/questionDetail/questionDetail",
+    "pages/myHome/address/add/index",
+    "pages/myHome/address/edit/edit",
+    "pages/goodsDetial/goodsDetial",
+    "pages/ask/ask",
+    "pages/search/search",
+    "pages/appointment/appointment",
+    "pages/appointment/success",
+    "pages/appointment/modal/device-modal",
+    "pages/appointment/modal/service-modal",
+    "pages/appointment/modal/serviceName-modal",
+    "pages/store/location/location",
+    "pages/store/code/code",
+    "pages/store/activity/activity",
+    "pages/store/activityInfo/activityInfo",
+    "pages/chat/chat",
+    "pages/chatList/chatList",
+    "pages/manage/manage",
+    "pages/orderBuy/orderBuy",
+    "pages/store/dynamic/dynamic",
+    "pages/720/720",
+    "pages/store/headline/headline",
+    "pages/store/player/player",
+    "pages/store/fans/fans",
+    "pages/test/test",
+    "pages/scan/scan"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "WeChat",
+    "navigationBarTextStyle": "black",
+    "enablePullDownRefresh": true
+  },
+  "tabBar": {
+    "color": "#7A7E83",
+    "selectedColor": "#fb412a",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "iconPath": "images/shouye_hui.png",
+        "selectedIconPath": "images/shouye_ju.png",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/proList/proList",
+        "iconPath": "images/fenlei_hui.png",
+        "selectedIconPath": "images/fenlei_ju.png",
+        "text": "分类"
+      },
+      {
+        "pagePath": "pages/shoppingCart/shoppingCart",
+        "iconPath": "images/gouwuche_hui.png",
+        "selectedIconPath": "images/gouwuche_ju.png",
+        "text": "购物车"
+      },
+      {
+        "pagePath": "pages/myHome/myHome",
+        "iconPath": "images/wode_hui.png",
+        "selectedIconPath": "images/wode_ju.png",
+        "text": "我的"
+      }
+    ]
+  }
+}

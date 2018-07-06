@@ -1,0 +1,144 @@
+<!--pages/store/store.wxml-->
+<view class='container store'>
+  <view class='storeInfo'>
+    <image src='images/test.jpg' id='back'></image>
+    <view class='headBox'>
+      <view class='headPic'>
+        <image src="{{data.shopInfo.logoUrl}}"></image>
+      </view>
+      <view class='infoBox'>
+        <text class='storeName'>{{data.shopInfo.shopName}}</text>
+        <view class='fans'>粉丝数:
+          <text class='fansNum'>{{data.fansCounter}}</text>
+        </view>
+      </view>
+      <!-- <view class='build'>
+        <image src="{{data.isMyConcern==true?'images/yundain_dpzy_yizhucehng.png':'images/yundain_dpzy_zhucehng.png'}}"></image>
+      </view> -->
+    </view>
+    <view class='products'>
+      <view class='productsNum'>
+        <text class='num'>{{data.goodsNum}}</text>
+        <view>全部商品</view>
+      </view>
+      <image src='images/whiteline.png'></image>
+      <view class='updateNum'>
+        <text class='num'>{{data.UpNewNum}}</text>
+        <view>上新</view>
+      </view>
+      <image src='images/whiteline.png'></image>
+      <navigator class='activityNum' url='activity/activity' hover-class='none'>
+        <text class='num'>{{data.activityNum}}</text>
+        <view>活动</view>
+      </navigator>
+    </view>
+  </view>
+  <view class='tabBox'>
+    <view class="manage {{active == 'manage'?'active':'normal'}}" bindtap='tabChange' data-on="storeManage" id='manage'>智经营</view>
+    <image src='images/greyline.png'></image>
+    <view class="brief {{active == 'brief'?'active':'normal'}}" bindtap='tabChange' data-on="storeBrief" id='brief'>云店简介</view>
+  </view>
+  <!-- 智经营 -->
+  <view class="storeBody {{active == 'manage'?'show':'hidden'}}" id='storeManage'>
+    <view class='dynamic'>
+      <view class='title'>
+        <image src='images/yundain_dpzy_yddt.png' class='titleName'></image>
+        <navigator url='../dynamic/dynamic' hover-class='none'>
+           <image src='images/yundian_gengduohui.png' class='enter'></image>
+        </navigator>
+      </view>
+      <view class='body'>
+        <view>
+          <dynamic-view id='dynamic'></dynamic-view>
+        </view>
+        <view class="blank {{dynamicList==''||dynamicList==undefined?'show':'hidden'}}">
+          <image src='images/yundian_zjy_yddt.png'></image>
+          <navigator url="" hover-class='none'>
+            <button type="default" plain="true" class='publish' hover-class='none'>发布云店动态</button>
+          </navigator>
+        </view>
+      </view>
+    </view>
+    <view class='headline'>
+      <view class='title'>
+        <image src='images/yundain_dpzy_tdtt.png' class='titleName'></image>
+        <navigator url='' hover-class='none' open-type="">
+           <image src='images/yundian_gengduohui.png' class='enter'></image>
+        </navigator>
+      </view>
+      <view class='body'>
+        <view class='blank'>
+          <image src='images/yundian_zjy_ydtt.png'></image>
+          <navigator url="" hover-class="none">
+            <button type="default" plain="true" class='publish' hover-class='none'>发布云店头条</button>
+          </navigator>
+        </view>
+      </view>
+    </view>
+    <view class='player'>
+      <view class='title'>
+        <image src='images/yundain_dpzy_wdwjq.png' class='titleName'></image>
+        <navigator url='' hover-class='none' open-type="switchTab">
+           <image src='images/yundian_gengduohui.png' class='enter'></image>
+        </navigator>
+      </view>
+      <view class='body'>
+        <view class='blank'>
+          <image src='images/yundian_zjy_ydwjq.png'></image>
+          <navigator url="" hover-class='none'>
+            <button type="default" plain="true" class='publish' hover-class='none'>发布云店玩家圈</button>
+          </navigator>
+        </view>
+      </view>
+    </view>
+    <view class='team'>
+      <view class='title'>
+        <image src='images/yundain_dpzy_ydftd.png' class='titleName'></image>
+        <navigator url='' hover-class='none' open-type="switchTab">
+           <image src='images/yundian_gengduohui.png' class='enter'></image>
+        </navigator>
+      </view>
+      <view class='body'>
+        <view class='blank'>
+          <image src='images/yundian_zjy_ydftd.png'></image>
+          <navigator url="" hover-class='none'>
+            <button type="default" plain="true" class='publish' hover-class='none'>发布云店粉团队</button>
+          </navigator>
+        </view>
+      </view>
+    </view>
+  </view>
+  <!-- 云店简介 -->
+  <view class="storeBody {{active == 'brief'?'show':'hidden'}}" id='storeBrief'>
+    <view class='list'>
+      <text>联系卖家</text>
+      <image src='images/yundian_kefu.png' class='enter'></image>
+    </view>
+    <view class='list'>
+      <text>店铺二维码</text>
+      <navigator url='code/code'>
+        <image src='images/yundian_erweima.png' class='enter' bindtap='code'></image>
+      </navigator>
+    </view>
+    <view class='list phone'>
+      <text>联系电话</text>
+      <text class='phoneNum'>{{data.shopInfo.phone!=null?data.shopInfo.phone:''}}</text>
+    </view>
+    <view class='list'>
+      <text>店铺简介</text>
+    </view>
+    <view class="list desc" wx:if="{{data.shopInfo.shopDesc!=null}}" bindtap='inputChange'>
+      <text>{{data.shopInfo.shopDesc}}</text>
+    </view>
+    <view class="list" wx:else>
+        <input class="weui-input" maxlength="22" placeholder="有你想要的一切(最多22字)" bindblur='briefChange' value='{{text}}' focus="{{focus}}"/>
+    </view>
+    <view class='list'>
+      <text>店铺地址</text>
+    </view>
+    <view class='list address'>
+      <text>{{data.shopInfo.address}}</text>
+      <image src='images/yundian_dpzy_ditudaohang.png' class='enter'></image>
+    </view>   
+  </view>
+</view>

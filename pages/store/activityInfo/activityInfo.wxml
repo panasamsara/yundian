@@ -1,0 +1,13 @@
+<!--pages/store/activityInfo/activityInfo.wxml-->
+<view class='container activityInfo'>
+  <view class='head'>
+    <text>新品促销,全场九折,卫衣买二送一</text>
+    <view>
+      <text class='time'>活动时间</text>
+      <text class='time'>{{data.startTime}}-{{data.endTime}}</text>
+    </view>
+  </view>
+  <view class='banner'>
+    <image src='images/bj.png'></image>
+  </view>
+</view>

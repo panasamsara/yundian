@@ -1,0 +1,36 @@
+.edit{
+  color: #666;
+}
+.edit text{
+  font-size: 32rpx;
+  float: left;
+  margin-right: 20rpx;
+}
+
+.edit view{
+  padding: 40rpx 30rpx 40rpx;
+  overflow: hidden;
+}
+.edit input{
+  color: #333;
+  float: left;
+  font-size: 30rpx;
+  width: 500rpx;
+}
+.bindaddress{
+  width: 500rpx;
+  color: #333;
+  font-size: 30rpx;
+}
+button[type=warn] {
+  height: 80rpx;
+  line-height: 80rpx;
+  background: #fc4428;
+}
+.colorRed{
+  color:#fc4428;
+}
+.picker{
+  padding: 0 !important;
+  font-size: 30rpx;
+}

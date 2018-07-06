@@ -1,0 +1,28 @@
+<!--pages/appointment/success.wxml-->
+<view class='container success'> 
+  <view class='status'>
+    <image src='images/yundian_dpzy_yytj.png'></image>
+    <text id='tip1'>商家正在处理您的订单</text>
+    <text id='tip2'>预计2~10分钟内，会将处理的结果推送给您</text>
+  </view>
+  <!-- <view class='list' wx:for="{{list}}" wx:key="index">
+    <text>{{item.infoLabel}}</text>
+    <text>{{item.info}}</text>
+  </view> -->
+  <view class='list storeName'>
+    <text>乐町官方旗舰店</text>
+  </view>
+  <view class='list info'>
+    <text>06月28日11：00</text>
+    <text>1人|单人房</text>
+  </view>
+  <view class='list service'>
+    <text>补水套餐</text>
+    <text>服务人员:王月月</text>
+  </view>
+  <view class='list client'>
+    <text>叶知秋</text>
+    <text>12345678910</text>
+  </view>
+  <button type='primary' id='submit'>确认</button>
+</view>

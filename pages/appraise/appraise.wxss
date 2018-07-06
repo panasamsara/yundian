@@ -1,0 +1,169 @@
+/* pages/appraise/appraise.wxss */
+.clearfix::after{
+  content: '.';
+  display: block;
+  height:0;
+  font-size: 0;
+  clear:both;
+}
+.btn-area{
+  position: fixed;
+  top:0;
+  left: 0;
+  width:100%;
+  padding:25rpx 0 23rpx 0;
+  border-top:1px solid #e5e5e5;
+  box-shadow:0px 5px 5px #ececec ;
+}
+.btn-area view {
+  float:left;
+  width:20%;
+  height:64rpx;
+  text-align: center;
+  font-size:26rpx;
+  line-height: 32rpx;
+  
+}
+.active{
+  color: #ff4430;
+}
+.noactive{
+  color:#000;
+}
+.zw-pic image{
+  position: absolute;
+  top:0;
+  right:0;
+  bottom: 0;
+  left:0;
+  margin: auto;
+}
+.hide{
+  display: none;
+}
+.show{
+  display: block;
+}
+.btn-area view span{
+  display:block;
+  line-height: 32rpx;
+}
+.user{
+  margin:0 30rpx;
+  padding-top:130rpx;
+  border-bottom: 1rpx solid #e5e5e5;
+}
+.user:last-child{
+  margin-bottom:50rpx;
+  border-bottom: none;
+}
+.user .user-top{
+  height:115rpx;
+  line-height: 115rpx;
+  font-size: 30rpx;
+}
+.user-top image{
+  width:60rpx;
+  height:60rpx;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+.user-top>span{
+  font-size: 30rpx; 
+  vertical-align: middle;
+  margin-left: 20rpx; 
+}
+.user-top .right{
+  display: inline-block;
+  vertical-align: top;
+  float:right;
+}
+.right .star{
+  float:left;
+}
+.right .star image{
+  width:30rpx;
+  height: 30rpx;
+}
+.text-remark{
+  display: block;
+  font-size: 25rpx;
+  line-height: 45rpx;
+}
+.user-pic{
+  padding-top:10rpx;
+}
+.user-pic image{
+  width:216rpx;
+  height: 216rpx;
+  border-radius:10rpx;
+  float:left;
+  margin: 0 20rpx 20rpx 0;
+}
+.user-pic image:nth-child(3n){
+  margin:0;
+}
+.user-info{
+  height: 83rpx;
+  line-height: 83rpx;
+}
+.user-info>span{
+  font-size: 24rpx;
+  color:#999999;
+}
+.user-info>span:first-child{
+  float: left;
+}
+.user-info>span:last-child{
+  float:right;
+}
+/* 底部悬浮栏 */
+.detail-nav{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  float:left;
+  background-color:#fff;
+  position: fixed;
+  z-index: 1;
+  right:0;
+  bottom:0;
+  width:100%;
+  height:100rpx;
+}
+.tabBar{
+  width:40%;
+  height:100%;
+}
+.tabBar navigator{
+  width:50%;
+  height:100%;
+  float:left;
+  font-size: 24rpx;
+  text-align: center;
+  color:#565656;
+}
+navigator image{
+  padding-top:10rpx;
+  width:50rpx;
+  height:45rpx;
+
+}
+button{
+  color:#fff;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size:30rpx;
+  border-radius: 0;
+  height:100%;
+  line-height: 100rpx;
+  width:30%;
+  outline: none;
+}
+.add{
+  background-color: #ffc770;
+}
+.buy{
+  background-color:#ff894c;
+}

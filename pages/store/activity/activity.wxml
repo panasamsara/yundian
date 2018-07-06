@@ -1,0 +1,14 @@
+<!--pages/store/activity/activity.wxml-->
+<view class='container activity'>
+  <view wx:for="{{list}}" class='list'>
+    <image src='{{item.url}}'></image>
+    <view class='act'>
+      <text id='title'>{{item.title}}</text>
+      <text>活动时间</text>
+    </view>
+    <view class='actInfo'>
+      <text id='activity'>{{item.activity}}</text>
+      <text id='time'>{{item.time}}</text>
+    </view>
+  </view>
+</view>

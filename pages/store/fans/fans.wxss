@@ -1,0 +1,48 @@
+/* pages/store/fans/fans.wxss */
+.container{
+  padding: 30rpx;
+}
+
+.fans .list{
+  margin-bottom: 40rpx;
+}
+
+.fans .banner image{
+  width: 100%;
+  height: 400rpx;
+}
+
+.fans .teamBox{
+  /* height: 300rpx; */
+  white-space: nowrap;
+}
+
+.fans .team{
+  display: inline-block;
+  width: 204rpx;
+  margin: 20rpx 20rpx 0 0;
+}
+
+.fans .team:last-of-type{
+  margin-right: 0;
+}
+
+.fans .team image{
+  width: 100%;
+  height: 201rpx;
+}
+
+.fans .infoBox{
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  line-height: 40rpx;
+}
+
+.fans .teamName{
+  font-size: 24rpx;
+}
+
+.fans .total{
+  font-size: 20rpx;
+}

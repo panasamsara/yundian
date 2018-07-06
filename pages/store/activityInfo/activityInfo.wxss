@@ -1,0 +1,24 @@
+/* pages/store/activityInfo/activityInfo.wxss */
+.container{
+  padding: 30rpx 0;
+  letter-spacing: 1rpx;
+}
+
+.activityInfo .head{
+  padding: 0 35rpx;
+  margin-bottom: 20rpx;
+  color: #333333;
+}
+
+.activityInfo .head text{
+  line-height: 80rpx;
+}
+
+.activityInfo .time{
+  font-size: 30rpx;
+}
+
+.activityInfo .banner image{
+  width: 100%;
+  height: 750rpx;
+}

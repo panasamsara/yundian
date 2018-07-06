@@ -1,0 +1,124 @@
+<!--立即购买/下单-->
+<view class="content">
+  <!--购买方式-->
+  <view class="buy-type">
+    <view class="section__title">购买方式</view>
+    <picker bindchange="bindPickerChange" data-val="{{array}}" value="{{array}}" range="{{array}}">
+    <view class="picker">
+      <text class="send-select">{{array[index]}}</text>
+      <image src="../../../images/yundian_spxq_gengduo.png"></image>
+    </view>
+  </picker>
+  </view>
+  <!--地址-->
+  <view class="address-box" wx:if="{{isSend==0}}">
+    <view wx:if="{{userInfo.recvAddress.address!=''}}">
+      <view class="user-info">
+        收货人：{{userInfo.recvAddress.name}}
+        <text>{{userInfo.recvAddress.phone}}</text>
+      </view>
+      <view class="address">
+        <image src="img/address-gray.png"></image>
+        {{userInfo.recvAddress.address}}
+      </view>
+    </view>
+    <view wx:if="{{userInfo.recvAddress.address==''}}">
+      <navigator url="../myHome/address/index/list" hover-class="navigator-hover">请添加收货地址</navigator>
+    </view>
+    <navigator url="../myHome/address/index/list" hover-class="navigator-hover"><image class="right-icon" src="../../../images/yundian_spxq_gengduo.png"></image></navigator>
+  </view>
+  <!--房间-->
+  <view class="room" wx:if="{{isSend==1}}">
+    <text>房间</text>
+    <text wx:if="{{roomInx=='-1'}}" bindtap="show">请选择房间</text>
+    <text wx:if="{{roomInx!='-1'}}" bindtap="show">{{roomVal}}</text>
+  </view>
+  <!--商品-->
+  <view class="detail">
+    <view class='detail-top'>
+      <image class="shop-icon" src="../../../images/1_05.gif"></image>
+      <text class='detail-tit'>{{shopName}}</text>
+    </view>
+    <view class="total-num">
+      共{{total}}件商品
+    </view>
+    <view class="goods-list">
+      <view class='goods' wx:for='{{goods}}' wx:for-item='items' wx:key="goods">
+        <view class='good-content inner txt' data-goodsType="{{items.goodsType}}" data-index="{{index}}" data-goodsId="{{items.goodsId}}" >
+          <view class='good-left' data-pindex="{{inx}}" data-index="{{index}}">
+              <image class='good-img' src='{{items.goodsImageUrl}}'></image>
+          </view>
+          <view class='right-info'>
+            <text>{{items.goodsName}}</text>
+            <text wx:if="{{items.stockName!=''}}">{{items.stockName}}</text>
+            <view class='detail-down'>
+              <text>￥{{items.goodsPrice}}</text>
+              <view class="stepper">
+              <!-- 减号 -->
+                <text class="minus" data-index="{{index}}" bindtap="bindMinus">-</text>
+              <!-- 数值 -->
+                <input type="number" bindchange="bindManual" value="{{items.number}}" />
+              <!-- 加号 -->
+                <text class="add normal" data-index="{{index}}" bindtap="bindPlus">+</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>  
+    </view>
+    <!--选择快递时才有店铺优惠he配送费-->
+    <view class="discount-box">
+      <view class="shop-discount" wx:if="{{isSend==0}}">
+        <text>店铺优惠</text>
+        <view class="discount-room">
+          <text></text>
+          <image src="../../../images/yundian_spxq_gengduo.png"></image>
+        </view>
+      </view>
+      <view class="send-price" wx:if="{{isSend==0 && isService==0}}">
+        <text>配送费</text><text>￥0.00</text>
+      </view>
+      <view class="price">
+        <text>商品总额</text><text>￥{{totalMoney}}</text>
+      </view>
+    </view>
+  </view>
+  <!--合计-->
+  <view class="ctronl-btn">
+    <view class="sun-price">
+      合计：<text>￥{{totalMoney}}</text>
+    </view>
+    <button class='account-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}"
+         bindtap="default" hover-class="other-button-hover"> 确认下单</button>
+  </view>
+</view>
+<!--房间弹出窗-->
+<view class="modal-box" hidden="{{flag}}">
+  <view class="modal-body">
+    <image src="img/close.png" bindtap="hide"></image>
+    <view class="modal-title">选择房间</view>
+    <view class="modal-content">
+      <view wx:if="{{roomInx==inx}}" class="room-list acv" wx:for="{{room}}" wx:for-item='rooms' wx:key="room" wx:for-index="inx" bindtap="selectRoom" data-index="{{inx}}" data-val="{{rooms.title}}">
+        {{rooms.title}}
+      </view>
+      <view wx:if="{{roomInx!=inx}}" class="room-list" wx:for="{{room}}" wx:for-item='rooms' wx:key="room" wx:for-index="inx" bindtap="selectRoom" data-index="{{inx}}" data-val="{{rooms.title}}">
+        {{rooms.title}}
+      </view>
+    </view>
+  </view>
+  </view>
+
+  <!--下单成功-->
+  <view class="modal-box order-tip" hidden="{{flagOrder}}" >
+  <view class="modal-body">
+    <image class="order-success" src="img/success.png"></image>
+    <view class="modal-content">
+      <text>下单成功!</text>
+      <text>选择继续购物或查看此订单</text>
+    </view>
+    <view class="modal-btn">
+      <text class="knowBtn" bindtap="goShop">继续购物</text>
+      <text class="knowBtn" bindtap="look">查看订单</text>
+    </view>
+  </view>
+  </view>

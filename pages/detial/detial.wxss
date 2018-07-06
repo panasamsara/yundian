@@ -1,0 +1,75 @@
+.clearfix::after{
+  content: '.';
+  display: block;
+  height:0;
+  font-size: 0;
+  clear:both;
+}
+navigator {
+  float:left;
+  width:25%;
+  height: 100rpx;
+  text-align: center;
+  font-size:32rpx;
+  line-height: 100rpx;
+  border-top:1px solid #e5e5e5;
+}
+.active{
+  color: #ff4430;
+}
+.main{
+  padding:0 30rpx;
+  background-color:#f8f8f8;
+}
+.main-top{
+  position:relative;
+}
+.main-top .top-img{
+  position: absolute;
+  width:22rpx;
+  height:30rpx;
+  left:2rpx;
+  top:48rpx;
+}
+.tips{
+  display: block;
+  font-size: 30rpx;
+  line-height: 39rpx;
+  padding:28rpx 0 0 35rpx; 
+}
+.item{
+  width:335rpx;
+  float:left;
+  margin-top:24rpx; 
+}
+.item:nth-child(odd){
+  margin-left:20rpx;
+}
+.item-img{
+  width:100%;
+  height:335rpx;
+}
+image{
+  width:100%;
+  height:100%;
+}
+.item-text{
+  font-size: 30rpx;
+  display: block;
+  padding:16rpx 12rpx;
+}
+.item-bot{
+  height:55rpx;
+  line-height: 55rpx;
+  padding:0 12rpx 22rpx;
+}
+.price{
+  font-size: 44rpx;
+  color:#ff0130;
+  float:left;
+}
+.acount{
+  color:#949494;
+  font-size: 24rpx;
+  float:right;
+}

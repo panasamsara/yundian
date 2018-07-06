@@ -1,0 +1,50 @@
+/* pages/store/headline/headline.wxss */
+.container{
+  padding: 30rpx;
+  letter-spacing: 1rpx;
+}
+
+.headline .list{
+  margin-bottom: 40rpx;
+}
+
+.headline .contentBox{
+  display: flex;
+  flex-direction: row;
+}
+
+.headline .contentBox image{
+  width: 220rpx;
+  height: 270rpx;
+}
+
+.headline .contentBox .text{
+  display: flex;
+  flex-direction: column;
+  width: 470rpx;
+  height: 270rpx;
+}
+
+.headline .contentBox .title{
+  height: 100rpx;
+  line-height: 45rpx;
+  font-size: 34rpx;
+  color: #333333;
+  margin: 10rpx 0 10rpx 25rpx;
+}
+
+.headline .contentBox .content{
+  height: 160rpx;
+  font-size: 28rpx;
+  color: #666666;
+  margin-left: 25rpx;
+  letter-spacing: 2rpx;
+}
+
+.headline .infoBox{
+  display: flex;
+  justify-content: space-between;
+  line-height: 65rpx;
+  font-size: 24rpx;
+  color: #999999;
+}

@@ -1,0 +1,7 @@
+/* pages/scan/scan.wxss */
+.scanBlock{
+  padding: 10rpx;
+  background: lightblue;
+  color: #fff;
+  text-align: center;
+}

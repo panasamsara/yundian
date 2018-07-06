@@ -1,0 +1,18 @@
+<!--pages/chat/chat.wxml-->
+<view class='chat-bg'>
+  <view class='chat-box'>
+    <view class='photo'></view>
+    <view class='chat-detail'>
+      <view class='user-name'>王月月</view>
+      <view class='chat-content'>dfgh4554dfghdfghdfg</view>
+    </view>
+  </view>
+
+   <view class='chat-box'>
+    <view class='photo'></view>
+    <view class='chat-detail'>
+      <view class='user-name'>王月月</view>
+      <view class='chat-content'>dfgh4554dfghdfghdfg</view>
+    </view>
+  </view> 
+</view>

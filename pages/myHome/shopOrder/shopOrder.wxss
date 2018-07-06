@@ -1,0 +1,117 @@
+.left{
+  float: left;
+}
+.right{
+  float: right;
+}
+.mr15{
+  margin-right: 15rpx;
+}
+.font24{
+  font-size: 24rpx;
+}
+.font28{
+  font-size: 28rpx;
+}
+.font34{
+  font-size: 34rpx;
+}
+.priceColor{
+  color: #ff0036;
+}
+.color999{
+  color: #999;
+}
+.header{
+  position: fixed;
+  top: 0;
+  background: #fff;
+  width: 100%;
+  border-top:1px solid #e0e0e0; 
+  border-bottom:1px solid #e0e0e0; 
+}
+.manageTitle{
+  font-size: 32rpx;
+  color: #333;
+  display: flex;
+}
+.manageTitle>text{
+  flex: 2;
+  text-align: center;
+  height: 100rpx;
+  line-height: 100rpx;
+  cursor: pointer;
+}
+.manageTitle text.active{
+  border-bottom: 2rpx solid #fb452c;
+  color: #fb452c;
+  padding:15rpx 0;
+}
+.wrap{
+ padding-top:100rpx;
+}
+.addessNull image{
+    width: 340rpx;
+    height: 310rpx;
+    display: block;
+    margin: 300rpx auto 50rpx;
+}
+.addessNull{
+  text-align: center;
+  font-size: 28rpx;
+  color: #999;
+}
+.content .list{
+  font-size: 28rpx;
+  color: #333;
+  padding: 0 30rpx;
+  margin-top: 70rpx;
+}
+.list>view{
+  overflow: hidden;
+}
+.content .list:first-child{
+  margin-top: 0;
+}
+.content .shop{
+  overflow: hidden;
+  padding: 30rpx 0;
+}
+.content .shop .shopImg{
+  width: 32rpx;
+  height: 28rpx;
+  vertical-align: middle;
+}
+.content .shop .rightIcon{
+  width: 16rpx;
+  height: 26rpx;
+  vertical-align: middle;
+}
+.rightType{
+  color: #fb452c;
+}
+.shopList{
+  margin-top: 30rpx;
+}
+.orderInfo{
+  padding: 30rpx 0;
+  overflow: hidden;
+}
+.orderInfo>.left image{
+  width: 180rpx;
+  height: 180rpx;
+  border-radius: 10rpx;
+}
+.orderInfo>.right{
+  width: 480rpx;
+}
+.orderInfo>.right>text{
+  display: block;
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 30rpx;
+}
+.orderInfo>.right .size{
+  color: #999;
+  
+}

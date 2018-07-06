@@ -1,0 +1,108 @@
+<view>
+  <view class="wrap" >
+    <!-- 没有可使用的预约默认图 -->
+    <block>
+      <view class="addessNull" style='display:none;'>
+        <image src="../images/adderss.png"></image>
+        <view>暂时没有订单哦~</view>
+      </view>
+    </block> 
+    <view class='content'>
+      <view class="list" bindtap='skip'>
+        <view class="orderInfo">
+          <view class='left'>
+            <image src='../../images/1.gif'></image>
+          </view>
+          <view class='left con'>
+            <text class='conTitle'>chanel彩妆套装</text>
+            <view class='color999 font28'>新款夏季连衣裙荷叶袖收腰ins热门款</view>
+          </view>
+           <view class='question right'>
+            <!-- <text>
+              <text class='questionText'>问</text>
+            </text> -->
+            <view><image class="imageQ" src='../../images/question.png'></image></view>
+            <view>
+              15个问题
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="questionList">
+        <view>
+         <view class='left'><image class="imageQ" src='../../images/question.png'></image></view>
+          <view class='right conLeft'>
+            <view class='conTitle'>这一套划算吗？的hi五虎将丢维护费对我凤凰这一套划算吗？的hi五虎将丢维护费对我凤凰 </view>
+            <view class='timer'>2018-08-55</view>
+          </view>
+        </view>
+        <view class='touxiang'>
+          <view class='left'>
+            <image src='../../images/1.gif'></image>
+          </view>
+          <view class='right conLeft'>
+            <view class='overHidden'>
+              <text class='conTitle left'>张****</text>
+              <text class='timer right'>2015-06-23</text>
+             </view>
+            <view class='timer'>
+              颜色还挺多的，个人感觉这个比较划算
+            </view>
+            <view class='right timer collect'>
+              <text class='right mr15'>举报</text>
+              <text class='right mr15'>2</text>
+              <image class='right mr15' src='../../images/collect.png'></image>
+            </view>
+          </view>
+        </view>
+        <view class='touxiang'>
+          <view class='left'>
+            <image src='../../images/1.gif'></image>
+          </view>
+          <view class='right conLeft'>
+            <view class='overHidden'>
+              <text class='conTitle left'>张****</text>
+              <text class='timer right'>2015-06-23</text>
+             </view>
+            <view class='timer'>
+              颜色还挺多的，个人感觉这个比较划算
+              颜色还挺多的，个人感觉这个比较划算
+              颜色还挺多的，个人感觉这个比较划算
+            </view>
+            <view class='right timer collect'>
+              <text class='right mr15'>举报</text>
+              <text class='right mr15'>2</text>
+              <image class='right mr15' src='../../images/collect.png'></image>
+            </view>
+          </view>
+        </view>
+        <view class='touxiang'>
+          <view class='left'>
+            <image src='../../images/1.gif'></image>
+          </view>
+          <view class='right conLeft'>
+            <view class='overHidden'>
+              <text class='conTitle left'>张****</text>
+              <text class='timer right'>2015-06-23</text>
+             </view>
+            <view class='timer'>
+              颜色还挺多的，个人感觉这个比较划算
+              颜色还挺多的，个人感觉这个比较划算
+              颜色还挺多的，个人感觉这个比较划算
+            </view>
+            <view class='right timer collect'>
+              <text class='right mr15'>举报</text>
+              <text class='right mr15'>2</text>
+              <image class='right mr15' src='../../images/collect.png'></image>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class='send'>
+    <input class="weui-input left" auto-focus placeholder="只有买过的人才能回答"/>
+    <button class="mini-btn right" type="default" size="mini">按钮</button>
+  </view>
+</view>
+

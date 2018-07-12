@@ -9,11 +9,11 @@
       <image src='images/yundian_yyxx_gengduo.png' class='choose' bindtap='end'></image>
     </view>
     <picker-view  value="{{multiIndex}}" bindchange="bindChange" indicator-style="height: 45px!important;" wx:if="{{picker}}">
-      <view class='close' bindtap='close'>确定</view>
-      <picker-view-column class="date" style="width:250rpx;">
-        <view wx:for="{{multiArray[0]}}" style='line-height:45px;background-color:#eeeeee;color:#fd7975' wx:key="index">{{item}}</view>
+      <view class='close' bindtap='close'><image src='images/yundian_yuyue_xuanshijian_guanbi.png'></image></view>
+      <picker-view-column class="date" style="background-color:#eeeeee;">
+        <view wx:for="{{multiArray[0]}}" style='line-height:45px;color:#fd7975' wx:key="index">{{item}}</view>
       </picker-view-column>
-      <picker-view-column class="time" style="width:500rpx!important;">
+      <picker-view-column class="time">
         <view wx:for="{{multiArray[1]}}" style='line-height:45px;text-indent:40rpx;' wx:key="index">{{item}}</view>
       </picker-view-column>
     </picker-view>

@@ -2,6 +2,7 @@
 
 page, .main{
     height: 100%;
+    background-color: #f8f8f8;
 }
 
 .categroy{
@@ -99,7 +100,7 @@ page, .main{
   width: 690rpx;
   height: 100rpx; 
   border-radius: 10rpx;
-  box-shadow: #f3f3f3 0px 0px 10rpx; 
+  box-shadow: 0rpx 0rpx 20rpx 8rpx #e2e2e2;
   position: relative;
   top: 30rpx;
   left: 30rpx;
@@ -165,6 +166,7 @@ page, .main{
   width:335rpx;
   float:left;
   margin-top:24rpx; 
+  background-color: #fff;
 }
 .item:nth-child(odd){
   margin-left:20rpx;
@@ -216,11 +218,12 @@ putInCart-img{
 }
 .activity-swiper{
   display: block;
-  height: 320rpx;
-  padding: 30rpx;
+  height: 360rpx;
+  margin: 30rpx;
   overflow: hidden;
   border-radius: 5rpx;
   margin-bottom:30rpx;
+  box-shadow : 0rpx 0rpx 20rpx 8rpx #e2e2e2;
 }
 .swiper-item{
   display: block;
@@ -243,9 +246,10 @@ putInCart-img{
   display: flex;
   justify-content: space-between;
   flex: 1;
-  width: 100%;
+  width: 670rpx;
   height: 70rpx;
-  padding-left: 10rpx;
+  padding:0 10rpx;
+
 }
 .activity-name{
   color: orange;
@@ -328,4 +332,112 @@ putInCart-img{
   position: relative;
   top: 50rpx; 
   left: 30rpx;
+}
+.sec-kill-box{
+  margin: 30rpx;
+  background-color: #fff;
+  width: 690rpx;
+  height: 320rpx;
+  box-shadow:0rpx 0rpx 20rpx 8rpx #e2e2e2;
+}
+.sec-kill-top{
+  position: relative;
+  width: 100%;
+  height: 80rpx;
+  line-height: 80rpx;
+  color: #999;
+  border-bottom: 1rpx solid #eee;
+}
+.sec-kill-title-img{
+  display: inline-block;
+  width: 129rpx;
+  height: 31rpx;
+}
+.sec-kill-title-img image{
+  width: 100%;
+  height: 100%;
+  padding-left: 30rpx;
+}
+.group-buy-title-img{
+  display: inline-block;
+  width: 101rpx;
+  height: 31rpx;
+}
+.group-buy-title-img image{
+  width: 100%;
+  height: 100%;
+  padding-left: 30rpx;
+}
+.more-icon{
+  display: inline-block;
+  width: 26rpx;
+  height: 24rpx;
+}
+.sec-kill-more{
+  position: absolute;
+  right: 20rpx;
+  display: inline-block;
+}
+.sec-kill-content-box{
+  position: relative;
+  width: 690rpx;
+  height: 240rpx;
+}
+.sec-kill-content{
+  display: inline-block;
+  position: relative;
+  width:300rpx;
+  padding-left:40rpx;
+  height:200rpx;
+  padding-top:35rpx;
+
+}
+.sec-kill-img{
+  display: inline-block;
+  position: relative;
+  width: 160rpx;
+  height: 160rpx;
+}
+.sec-kill-detail{
+  display: inline-block;
+  position:absolute;
+  top: 40rpx;
+  left: 200rpx;
+  height: 160rpx;
+  width: 140rpx;
+}
+.now-price{
+  color: #ff0036;
+  font-size: 24rpx;
+  padding-left: 20rpx;
+}
+.now-price-num{
+  font-size: 30rpx;
+}
+.old-price{
+  font-size: 24rpx;
+  text-decoration: line-through;
+  font-style: italic;
+  padding-left: 30rpx;
+  color: #999
+}
+.end-word{
+  font-size: 26rpx;
+  color: #777;
+  padding-left: 20rpx;
+  padding-top: 20rpx;
+}
+.end-time{
+  font-size: 20rpx;
+  padding-left: 20rpx;
+}
+.pingdan{
+  font-size: 24rpx;
+  color: #777;
+  padding-left: 20rpx;
+  padding-top: 20rpx;
+}
+.ping-group{
+  font-size: 24rpx;
+  padding-left: 20rpx;
 }

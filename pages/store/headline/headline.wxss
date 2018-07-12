@@ -34,7 +34,7 @@
 }
 
 .headline .contentBox .content{
-  height: 160rpx;
+  max-height: 160rpx;
   font-size: 28rpx;
   color: #666666;
   margin-left: 25rpx;

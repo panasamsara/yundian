@@ -23,10 +23,17 @@ Page({
     };
     // 店铺信息/云店简介
     app.util.reqAsync('shop/getShopAbstractInfo', data).then((res) => {
+      console.log(wx.getStorageSync('scSysUser').id, wx.getStorageSync('shop').id)
       if(res.data.data.resMap){
-        var map = res.data.data.resMap;
-        map.videoAlbumTime = app.util.formatStoreDate(map.videoAlbumTime);
-        map.mylength = map.urls.length;
+        var map = res.data.data.resMap,
+            articleContent=res.data.data.newCmsArticle[0]
+        if(map){
+          map.videoAlbumTime = app.util.formatStoreDate(map.videoAlbumTime);
+          map.mylength = map.urls.length;
+        }
+        if(articleContent){
+          articleContent.articleContent = articleContent.articleContent.replace(/<(style|script|iframe)[^>]*?>[\s\S]+?<\/\1\s*>/gi, '').replace(/<[^>]+?>/g, '').replace(/\s+/g, ' ').replace(/ /g, ' ').replace(/>/g, ' ').substring(0, 52) + '...';
+        }
       }
       this.setData({
         data: res.data.data

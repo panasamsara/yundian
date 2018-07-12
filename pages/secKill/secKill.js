@@ -1,66 +1,109 @@
 // pages/secKill/secKill.js
+const app=getApp();
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    list:[
-      {
-        url:'https://developers.weixin.qq.com/miniprogram/dev/image/cat/0.jpg?t=201879',
-        title:'新款夏季连衣裙荷叶袖收腰ins热门款ins热门款',
-        newPrice:'300',
-        oldPrice:'380',
-        endTime:''
-      },
-      {
-        url: 'https://developers.weixin.qq.com/miniprogram/dev/image/cat/0.jpg?t=201879',
-        title: '新款夏季连衣裙荷叶袖收腰ins热门款ins热门款',
-        newPrice: '300',
-        oldPrice: '380',
-        endTime: ''
-      },
-      {
-        url: 'https://developers.weixin.qq.com/miniprogram/dev/image/cat/0.jpg?t=201879',
-        title: '新款夏季连衣裙荷叶袖收腰ins热门款ins热门款',
-        newPrice: '300',
-        oldPrice: '380',
-        endTime: ''
-      },
-      {
-        url: 'https://developers.weixin.qq.com/miniprogram/dev/image/cat/0.jpg?t=201879',
-        title: '新款夏季连衣裙荷叶袖收腰ins热门款ins热门款',
-        newPrice: '300',
-        oldPrice: '380',
-        endTime: ''
-      },
-      {
-        url: 'https://developers.weixin.qq.com/miniprogram/dev/image/cat/0.jpg?t=201879',
-        title: '新款夏季连衣裙荷叶袖收腰ins热门款ins热门款',
-        newPrice: '300',
-        oldPrice: '380',
-        endTime: ''
-      }
-    ]
+    list:[],
+    h:'0',
+    m:'0',
+    s:'0'
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-  
+    let data={
+      pageNo: 1,
+      pageSize: 10,
+      shopId: 288,
+      status: 1,    
+    };
+    this.setData({
+      datas:data
+    });
+    this.getData(data);
+    let _this=this
+    setInterval(function(){_this.count()},1000)
   },
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-  
+    
   },
-
   /**
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-  
+    let totalPage = Math.ceil(this.data.total / 10);
+    wx.showLoading({
+      title: '加载中',
+    })
+    this.data.datas.pageNo += 1;
+    if (this.data.datas.pageNo > totalPage) {
+      wx.showToast({
+        title: '已经到底了',
+        icon: 'none'
+      })
+      return
+    }
+    let data = this.data.datas;
+    this.getData(data);
+  },
+  getData:function(data){
+    let oldData = this.data.list
+    app.util.reqAsync('shopSecondskilActivity/selectPageList', data).then((res) => {
+      if (res.data.data) {
+        let list=res.data.data.list,
+            newData = oldData.concat(list);
+        for(let i=0;i<list.length;i++){
+          list[i].activityStartTime = Date.parse(list[i].activityStartTime);
+          list[i].activityEndTime = Date.parse(list[i].activityEndTime);
+          list[i].count = list[i].activityEndTime - list[i].activityStartTime;
+        }
+        this.setData({
+          list: newData,
+          total: res.data.data.total
+        })
+      }
+    }).catch((err) => {
+      console.log(err)
+    })
+  },
+  count:function(){
+    for(let i=0;i<this.data.list.length;i++){
+      let leftTime=this.data.list[i].count;
+          leftTime-=1000;
+      if(leftTime==0){
+        return
+      }
+      let h = Math.floor(leftTime / 1000 / 60 / 60 / 24),
+          m = Math.floor(leftTime / 1000 / 60 % 60),
+          s = Math.floor(leftTime / 1000 % 60),
+          count = "list[" + i + "].count",
+          hCount = "list[" + i + "].h",
+          mCount = "list[" + i + "].m",
+          sCount = "list[" + i + "].s";
+      if(h<10){
+        h="0"+h;
+      }
+      if (m < 10) {
+        m = "0" + m;
+      }
+      if (s < 10) {
+        s = "0" + s;
+      }
+      this.setData({
+        [count]:leftTime,
+        [hCount]:h,
+        [mCount]:m,
+        [sCount]:s
+      })
+    }
   }
 })

@@ -109,3 +109,8 @@ picker-view .close{
   z-index: 9999;
   color: #1aad19;
 }
+
+picker-view .close image{
+  width: 30rpx;
+  height: 30rpx;
+}

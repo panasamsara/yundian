@@ -1,20 +1,20 @@
 <!--pages/groupBuy/groupBuy.wxml-->
 <view class='container groupBuy'>
   <view wx:for="{{list}}" wx:key="index" class='list'>
-    <image src='{{item.url}}' class='pic'></image>
+    <image src='{{item.pictureUrl}}' class='pic'></image>
     <view class='info'>
-      <text class='title'>{{item.title}}</text>
+      <text class='title'>{{item.itemTitle}}</text>
       <view class='infoBox'>
         <view class='price'>
           <view class='priceBox'>
-            <text class='newPrice'>￥{{item.newPrice}}</text>
-            <view class='group'>{{item.groupNum}}人团</view>
+            <text class='newPrice'>￥{{item.discountPrice}}</text>
+            <view class='group'>{{item.population}}人团</view>
           </view>
-          <text class='oldPrice'>原价格{{item.oldPrice}}</text>
+          <text class='oldPrice'>原价格￥{{item.originalPrice}}</text>
         </view>
         <view class='buyBox'>
           <view class='buy'>
-            <navigator>去拼团</navigator>
+            <navigator url='../goodsDetial/goodsDetial?shopId={{item.shopId}}&goodsId={{item.itemId}}'>去拼团</navigator>
           </view>
         </view>
       </view>

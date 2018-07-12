@@ -20,10 +20,6 @@ Page({
       {
         text: '云店粉团队',
         id: 'fans'
-      },
-      {
-        text: '云店账户',
-        id: 'account'
       }
     ],
     currentTab: 0

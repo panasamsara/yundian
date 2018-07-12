@@ -49,6 +49,9 @@ Page({
   },
   start:function(){
     this.change('start');
+    this.setData({
+      endTime:'结束时间'
+    })
   },
   end:function(){
     if(this.data.startTime=='开始时间'){
@@ -103,6 +106,18 @@ Page({
     this.selectComponent('#' + e.currentTarget.id +'-modal').onLoad();
   },
   close:function(){
+    let startTime=this.data.startTime,
+        date=startTime.split(' ')[0],
+        time=startTime.split(' ')[1],
+        nowDate=new Date(),
+        chose = nowDate.getFullYear() + '/' + date.split('月')[0] + '/' + date.split('月')[1].split('日')[0] + ' ' + time
+    if(Date.parse(chose)-Date.parse(new Date())<=0){
+      wx.showToast({
+        title: '开始时间不能小于或等于当前时间',
+        icon:'none'
+      })
+      return
+    }
     this.setData({
       picker:false,
       showModal:false
@@ -173,14 +188,14 @@ Page({
       if (endTime[0] - startTime[0] == 0){
         if(endTime[1]-startTime[1]<=0){
           wx.showToast({
-            title: '结束时间必须比开始时间晚',
+            title: '结束时间不能小于开始时间',
             icon: 'none'
           })
           return
         }
       }else if(endTime[0] - startTime[0]<0){
         wx.showToast({
-          title: '结束时间必须比开始时间晚',
+          title: '结束时间不能小于开始时间',
           icon:'none'
         })
         return

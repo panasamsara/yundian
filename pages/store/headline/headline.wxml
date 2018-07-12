@@ -1,14 +1,14 @@
 <!--pages/store/headline/headline.wxml-->
 <view class='container headline' wx:if="{{list.length!=0}}"> 
   <view wx:for="{{list}}" wx:key="index" class='list'>
-    <view class='contentBox' wx:if="{{item.typeCode=='1001'}}">
+    <view class='contentBox'>
       <image src='{{item.scCmsResourcesList[0].resourcesUrl}}'></image>
       <view class='text'>
         <text class='titles'>{{item.articleTitle}}</text>
         <text class='content'>{{item.articleContent?item.articleContent:''}}</text>
       </view>
     </view>
-    <view class='contentBox' wx:if="{{item.typeCode=='1002'}}">
+    <!-- <view class='contentBox' wx:if="{{item.typeCode=='1002'}}">
       <image src='{{item.scCmsResourcesList[0].resourcesUrl}}'></image>
       <view class='text'>
         <text class='titles'>{{item.articleTitle}}</text>
@@ -21,7 +21,7 @@
         <text class='titles'>{{item.articleTitle}}</text>
         <text class='content'>{{item.scCmsResourcesList[0].resourcesRemarks?item.scCmsResourcesList[0].resourcesRemarks:''}}</text>
       </view>
-    </view>
+    </view> -->
     <view class='infoBox'>
       <text>{{item.scSysUser.username}}</text>
       <view>

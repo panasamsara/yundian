@@ -30,7 +30,6 @@ Component({
         shopId: wx.getStorageSync('shop').id,
         sPagerows: 10
       };
-      console.log(wx.getStorageSync('shop').id,wx.getStorageSync('scSysUser').id)
       this.setData({
         datas:data
       });

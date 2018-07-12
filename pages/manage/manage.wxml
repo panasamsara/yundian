@@ -16,7 +16,6 @@
     <headline-view id='headline' wx:if="{{show=='headline'}}"></headline-view>
     <player-view id='player' wx:if="{{show=='player'}}"></player-view>
     <fans-view id='fans' wx:if="{{show=='fans'}}"></fans-view>
-    <view wx:if="{{show=='account'}}">待开发</view>
   </view>
   <!-- <swiper class="tab-box" current="{{currentTab}}" duration="300" bindchange="switchTab">        
     <swiper-item class="tab-content">

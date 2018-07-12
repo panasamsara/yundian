@@ -135,6 +135,16 @@ Page({
        url: '../video/video',
      })
    },
+   goSecKill: function(){
+     wx.navigateTo({
+       url: '../secKill/secKill',
+     })
+   },
+   goGroupBuy: function(){
+     wx.navigateTo({
+       url: '../groupBuy/groupBuy',
+     })
+   },
    //模态框
    submit: function () {
      this.setData({

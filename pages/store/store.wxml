@@ -121,20 +121,6 @@
                 <text class='content'>{{data.newCmsArticle[0].articleContent?data.newCmsArticle[0].articleContent:''}}</text>
               </view>
             </view>
-            <view class='contentBox' wx:if="{{data.newCmsArticle[0].typeCode=='1002'}}">
-              <image src='{{data.newCmsArticle[0].scCmsResourcesList[0].resourcesUrl}}'></image>
-              <view class='text'>
-                <text class='titles'>{{data.newCmsArticle[0].articleTitle}}</text>
-                <text class='content'>{{data.newCmsArticle[0].scCmsResourcesList[0].resourcesRemarks?data.newCmsArticle[0].scCmsResourcesList[0].resourcesRemarks:''}}</text>
-              </view>
-            </view>
-            <view class='contentBox' wx:if="{{data.newCmsArticle[0].typeCode=='1003'}}">
-              <image src='{{data.newCmsArticle[0].scCmsResourcesList[0].videoCoverUrl}}'></image>
-              <view class='text'>
-                <text class='titles'>{{data.newCmsArticle[0].articleTitle}}</text>
-                <text class='content'>{{data.newCmsArticle[0].scCmsResourcesList[0].resourcesRemarks?data.newCmsArticle[0].scCmsResourcesList[0].resourcesRemarks:''}}</text>
-              </view>
-            </view>
             <view class='infoBox'>
               <text>{{data.newCmsArticle[0].scSysUser.username}}</text>
               <view>

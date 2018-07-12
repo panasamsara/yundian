@@ -60,7 +60,7 @@
         <text class='tips'>店铺活动</text>
       </view>
       <swiper indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
-        <block wx:for="{{shopInformation.goodsInfos}}" wx:key="*this">
+        <block wx:for="{{shopInformation.goodsInfos}}" wx:key="index">
           <swiper-item>
             <view class="swiper-item">
               <view class='activity-img'>
@@ -83,6 +83,69 @@
       </swiper>
     </view>
 
+    <view class='sec-kill-box'>
+      <view class='sec-kill-top'>
+        <view class='sec-kill-title-img'>
+          <image src='../../images/yundian_zhixiangmiaosha@2x.png'></image>
+        </view>
+        <view class='sec-kill-more' bindtap='goSecKill'>
+          更多 <image class='more-icon' src='../../images/yundian_gengduohui@2x.png'></image>
+        </view>
+      </view>
+      <view class='sec-kill-content-box'>
+        <view class='sec-kill-content'>
+          <image class='sec-kill-img' src='{{hotCommoditiesList[0].goodsLogo}}'></image>
+          <view class='sec-kill-detail'>
+            <view class='now-price'>￥<text class='now-price-num'>300</text> </view>
+            <view class='old-price'>￥300</view>
+            <view class='end-word'>距结束</view>
+            <view class='end-time'>12：23：56</view>
+          </view>
+        </view>
+
+        <view class='sec-kill-content'>
+          <image class='sec-kill-img' src='{{hotCommoditiesList[0].goodsLogo}}'></image>
+          <view class='sec-kill-detail'>
+            <view class='now-price'>￥<text class='now-price-num'>300</text> </view>
+            <view class='old-price'>￥300</view>
+            <view class='end-word'>距结束</view>
+            <view class='end-time'>12：23：56</view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class='sec-kill-box'>
+      <view class='sec-kill-top'>
+        <view class='group-buy-title-img'>
+          <image src='../../images/yundian_qupintuan@2x.png'></image>
+        </view>
+        <view class='sec-kill-more' bindtap='goGroupBuy'>
+          更多 <image class='more-icon' src='../../images/yundian_gengduohui@2x.png'></image>
+        </view>
+      </view>
+      <view class='sec-kill-content-box'>
+        <view class='sec-kill-content'>
+          <image class='sec-kill-img' src='{{hotCommoditiesList[0].goodsLogo}}'></image>
+          <view class='sec-kill-detail'>
+            <view class='now-price'>￥<text class='now-price-num'>300</text> </view>
+            <view class='old-price'>￥300</view>
+            <view class='pingdan'>已拼<text>220</text>单</view>
+            <view class='ping-group'><text class='ping-group-num'>2</text>人团</view>
+          </view>
+        </view>
+
+        <view class='sec-kill-content'>
+          <image class='sec-kill-img' src='{{hotCommoditiesList[0].goodsLogo}}'></image>
+          <view class='sec-kill-detail'>
+            <view class='now-price'>￥<text class='now-price-num'>300</text> </view>
+            <view class='old-price'>￥300</view>
+            <view class='pingdan'>已拼<text>220</text>单</view>
+            <view class='ping-group'><text class='ping-group-num'>2</text>人团</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
     <view class='tuijian' wx:if="{{hotCommoditiesList.length}}">
       <view class='main-top'>
         <!-- <image src='images/3.gif' class='top-img'></image> -->
@@ -95,7 +158,7 @@
           <view class='item-bot'>
             <span class='price'>￥{{item.price}}</span>
             <view class='putInCart'>
-              <image class='putInCart-img' src='../../images/yundian_dpzy_gouwuchec@2x.png'></image>
+              <!-- <image class='putInCart-img' src='../../images/yundian_dpzy_gouwuchec@2x.png'></image> -->
             </view>
           </view>
         </view>

@@ -40,12 +40,6 @@
 			"current": -1,
 			"list": [
 				{
-					"id": 0,
-					"name": "云店动态",
-					"pathName": "pages/proList/proList",
-					"query": ""
-				},
-				{
 					"id": -1,
 					"name": "云店",
 					"pathName": "pages/store/store",
@@ -130,8 +124,8 @@
 					"query": ""
 				},
 				{
-					"id": -1,
-					"name": "云店动态组件",
+					"id": 14,
+					"name": "云店动态",
 					"pathName": "pages/store/dynamic/dynamic",
 					"query": ""
 				},
@@ -202,9 +196,15 @@
 					"query": ""
 				},
 				{
-					"id": -1,
-					"name": "secKill",
+					"id": 26,
+					"name": "智享秒杀",
 					"pathName": "pages/secKill/secKill",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "趣拼团",
+					"pathName": "pages/groupBuy/groupBuy",
 					"query": ""
 				}
 			]

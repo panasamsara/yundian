@@ -23,12 +23,14 @@
         <block wx:if="{{length>0}}" wx:for='{{goodlist}}' wx:for-index="inx"  wx:key="*this" wx:for-item='item'>
           <view class='detail' data-index="{{inx}}">
             <view class='detail-top'>
-              <image src='../images/shopDefault.png'></image>
-              <text class='detail-tit'>{{item.shopName}}</text>  
-              <image class="back" bindtap="shopSkip" src='../../../images/yundian_spxq_gengduo.png'></image>
+              <view class="shop-info" bindtap="shopSkip" data-shopid="{{item.bussinessId}}">
+                <image src='../images/shopDefault.png'></image>
+                <text class='detail-tit'>{{item.shopName}}</text>  
+                <image class="back" src='../../../images/yundian_spxq_gengduo.png'></image>
+              </view>
               <text >{{item.orderStatusStr}}</text>
             </view>
-            <view class='goods' wx:for='{{item.orderItemList}}' wx:for-item='items' wx:key="goods">
+            <view class='goods' wx:for='{{item.orderItemList}}' wx:for-item='items' wx:key="goods" bindtap="orderSkip" data-no="{{item.orderNo}}">
               <view class='good-content' data-pindex="{{inx}}" data-index="{{index}}" data-id="{{items.id}}" >
                 <view class='good-left' data-pindex="{{inx}}" data-index="{{index}}" data-id="{{items.id}}">
                   <image class='good-img' src='{{items.pictureUrl}}'></image>

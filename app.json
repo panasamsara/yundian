@@ -1,15 +1,16 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/scan/scan",
     "pages/appraise/appraise",
     "pages/goodsList/goodsList",
     "pages/store/store",
     "pages/shoppingCart/shoppingCart",
     "pages/proList/proList",
     "pages/car/car",
-    "pages/dynamic/dynamic",
     "pages/myHome/myHome",
     "pages/myHome/order/order",
+    "pages/myHome/order/applyRefund/applyRefund",
     "pages/myHome/orderDetail/orderDetail",
     "pages/myHome/shopOrder/shopOrder",
     "pages/myHome/shopOrder/orderDetail/orderDetail",
@@ -28,9 +29,9 @@
     "pages/search/search",
     "pages/appointment/appointment",
     "pages/appointment/success",
-    "pages/appointment/modal/device-modal",
-    "pages/appointment/modal/service-modal",
-    "pages/appointment/modal/serviceName-modal",
+    "pages/appointment/modal/device-modal/device-modal",
+    "pages/appointment/modal/service-modal/service-modal",
+    "pages/appointment/modal/serviceName-modal/serviceName-modal",
     "pages/store/location/location",
     "pages/store/code/code",
     "pages/store/activity/activity",
@@ -44,15 +45,20 @@
     "pages/store/headline/headline",
     "pages/store/player/player",
     "pages/store/fans/fans",
+    "pages/askDetail/askDetail",
     "pages/test/test",
-    "pages/scan/scan"
+    "pages/reg/reg",
+    "pages/photos/photos",
+    "pages/videoLists/videoLists",
+    "pages/video/video",
+    "pages/secKill/secKill",
+    "pages/groupBuy/groupBuy"
   ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "WeChat",
-    "navigationBarTextStyle": "black",
-    "enablePullDownRefresh": true
+    "navigationBarTextStyle": "black"
   },
   "tabBar": {
     "color": "#7A7E83",

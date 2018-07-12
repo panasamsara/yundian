@@ -9,7 +9,7 @@ Page({
         console.log('session_key 未过期，并且在本生命周期一直有效');
         if (wx.getStorageSync('loginToken') && wx.getStorageSync('loginToken')){
           //发起网络请求 注册
-          util.reqAsync('/wx/user/phone', {
+          util.reqAsync('/payBoot/wx/miniapp/phone', {
             'loginToken': wx.getStorageSync('loginToken'),
             'encryptedData': e.detail.encryptedData,
             'iv': e.detail.iv
@@ -55,13 +55,13 @@ Page({
     wx.login({
       success: function (res) {
         //console.log(res);
-        var cmd = '/wx/user/login';
+        var cmd = 'payBoot/wx/miniapp/login';   
         var data = {
           code:res.code
         };
         if (res.code) {
           //发起网络请求 登录
-          util.reqAsync('/wx/user/login', {
+          util.reqAsync(cmd, {
             code: res.code
           }).then((res) => {
             if(res.data.code == 1){
@@ -71,7 +71,7 @@ Page({
                 icon: 'none'
               })
               wx.setStorageSync('loginToken', res.data.data.loginToken);
-              wx.setStorageSync('isReg', res.data.data.isReg);
+              wx.setStorageSync('scSysUser', res.data.data.scSysUser);
             } else {
               console.log('登录失败')
             }
@@ -92,6 +92,52 @@ Page({
     });
 
   },
+  bindTestCreateOrder:function(){
+    var data = {
+      requestBody:{
+        body: '测试支付功能',
+        //out_trade_no:'1',
+        total_fee: 1,
+        notify_url: 'https://wxapp.izxcs.com/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult', 
+        spbill_create_ip: '127.0.0.1',   
+        trade_type: 'JSAPI',
+        openid: wx.getStorageSync('scSysUser').wxOpenId
+      }
+    };
+    //发起网络请求 微信统一下单   
+    util.reqAsync('payBoot/wx/pay/unifiedOrder', data).then((res) => {
+      trade_type:
+      console.log(res.data.data);
+
+      //发起支付
+      var wxResult = res.data.data.wxResult;
+      var paySign = res.data.data.paySign;
+      var timeStamp = res.data.data.timeStamp;
+
+      wx.requestPayment({
+        'timeStamp': timeStamp,
+        'nonceStr': wxResult.nonceStr,
+        'package': 'prepay_id=' + wxResult.prepayId,
+        'signType': 'MD5',
+        'paySign': paySign,
+        'success': function (res) { },
+        'fail': function (res) {
+          console.log(res);
+         },
+        'complete': function (res) {
+          console.log(res);
+        }
+      })
+
+    }).catch((err) => {
+      wx.showToast({
+        title: '失败……',
+        icon: 'none'
+      })
+    });
+  },
+
+
   /**
    * 页面的初始数据
    */

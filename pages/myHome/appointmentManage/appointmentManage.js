@@ -1,22 +1,23 @@
 var app=getApp();
+var userId = wx.getStorageSync('scSysUser').id;
 Page({
   data: {
     activeIndex: "0",
     orderList:[],
     listData:{
       pagination: { rows: 3, page: 1 },
-      customerId: 1870,
+      customerId: userId,
       bespokeStatus: 0
     },
     total:""
   },
   onLoad: function (options) {
-    wx.showLoading({
-      title: '加载中',
-    })
     this.getList();
   },
   getList:function(){
+    wx.showLoading({
+      title: '加载中',
+    })
     app.util.reqAsync('shop/getMyBespoke',this.data.listData).then((res) => {
       var orderListOld = this.data.orderList;
       var data = res.data.data;
@@ -57,7 +58,6 @@ Page({
     wx.navigateTo({ url:"./manageDetail/manageDetail?id="+id})
   },
   onPullDownRefresh: function () {
-    console.log(this.data.orderList.length);
     //票判断不为0,点击tab为空的时候不可以下拉;
     if (this.data.orderList.length != 0){
       wx.showLoading({

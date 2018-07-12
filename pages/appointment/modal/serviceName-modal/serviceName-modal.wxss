@@ -1,0 +1,15 @@
+/* pages/appointment/modal/serviceName.wxss */
+@import "../device-modal/device-modal.wxss";
+
+.modal{
+  top: 50rpx;
+}
+
+.serviceNameModal .chose{
+  width: 100%;
+  margin-right: 0;
+}
+
+.serviceNameModal scroll-view{
+  height: 620rpx;
+}

@@ -1,6 +1,6 @@
 <!--pages/ask/ask.wxml-->
 <view class='top clearfix'>
-  <image src='../../images/pic_03.gif'></image>
+  <image src='{{picImg}}'></image>
   <view class='text'>
     <text class='text-top'>CHANEL限量彩妆套装</text>
     <text class='text-bot'>2017年全新礼盒每人限购一套春季新品限量</text>
@@ -17,18 +17,19 @@
       <view class='ask-icon'>问</view>
       <text>{{item.content}}</text>
     </view> 
-    <view class='answer'>
+    <view class='answer {{isShow1?"show":"hide"}}'>
       <view class='answer-icon'>答</view>
       <text>{{item.answerCount}}</text>
     </view>  
-    <view class='check clearfix'>
+    <view class='check clearfix {{isShow2?"show":"hide"}}' bindtap='tosakDetail' data-questionId='{{item.id}}'>
       <span>查看全部{{item.answers}}个回答</span>
       <span>{{item.time}}</span>
     </view>
   </view>     
 </view>
+<view class='temp'></view>
 <view class='bottom'>
-  <input type='text' placeholder='向买过的人提问'></input>
-  <button type='submt'>提问</button>
+  <input type='text' placeholder='{{placeholder}}' bindinput='inputvalue' value='{{myValue}}'></input>
+  <button type='submt' bindtap='myAsk'>提问</button>
 </view>
 

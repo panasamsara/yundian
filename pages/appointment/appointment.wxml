@@ -2,29 +2,27 @@
 <view class='container appointment'>
    <view class="list" id='date'>
     <view class="listLabel">时间</view>
-    <picker mode="multiSelector" value="{{dateTime}}" bindchange="changeDateTime" bindcolumnchange="changeDateTimeColumn" range="{{dateTimeArray}}">
-      <view class='picker'>
-        <view class="detail">
-          {{time}} 至 {{appointTime}}
-        </view>
-        <image src='images/yundian_yyxx_gengduo.png' class='choose'></image>
+    <view class='picker'>
+      <view class='detail'>
+        <text id='startTime' bindtap='start'>{{startTime}}</text> 至 <text id='endTime' bindtap='end'>{{endTime}}</text>
       </view>
-    </picker>
+      <image src='images/yundian_yyxx_gengduo.png' class='choose' bindtap='end'></image>
+    </view>
+    <picker-view  value="{{multiIndex}}" bindchange="bindChange" indicator-style="height: 45px!important;" wx:if="{{picker}}">
+      <view class='close' bindtap='close'>确定</view>
+      <picker-view-column class="date" style="width:250rpx;">
+        <view wx:for="{{multiArray[0]}}" style='line-height:45px;background-color:#eeeeee;color:#fd7975' wx:key="index">{{item}}</view>
+      </picker-view-column>
+      <picker-view-column class="time" style="width:500rpx!important;">
+        <view wx:for="{{multiArray[1]}}" style='line-height:45px;text-indent:40rpx;' wx:key="index">{{item}}</view>
+      </picker-view-column>
+    </picker-view>
   </view> 
-  <!-- <view wx:for="{{list}}" wx:key="index" class='list'>
-    <text class='listLabel'>{{item.name}}</text>
-    <picker bindchange="bindPickerChange"  range='{{item.array}}' id='{{item.flag}}' data-index="{{index}}">
-      <view class="detail">
-       {{item.text}}
-      </view>
-      <image src='images/yundian_yyxx_gengduo.png' class='choose'></image>
-    </picker>
-  </view> -->
   <view class='list'>
     <text class='listLabel'>人数</text>
-    <picker bindchange="bindPickerChange"  range='{{num.numArray}}' id='num'>
+    <picker bindchange="bindPickerChange"  range='{{numArray}}' id='num'>
       <view class='picker'>
-        <view class="detail">{{num.text}}</view>
+        <view class="detail">{{numText}}</view>
         <image src='images/yundian_yyxx_gengduo.png' class='choose'></image>
       </view>
     </picker>
@@ -32,25 +30,25 @@
   <view class='list'>
     <text class='listLabel'>设备/设施</text>
     <view id='device' bindtap='showModal' class='picker'>
-      <view class="detail">{{device.text}}</view>
+      <view class="detail">{{deviceText}}</view>
       <image src='images/yundian_yyxx_gengduo.png' class='choose'></image>
     </view>
   </view>
   <view class='list'>
     <text class='listLabel'>服务人员</text>
     <view id='service' bindtap='showModal' class='picker'>
-      <view class="detail">{{service.text}}</view>
+      <view class="detail">{{serviceText}}</view>
       <image src='images/yundian_yyxx_gengduo.png' class='choose'></image>
     </view>
   </view>
   <view class='list'>
     <text class='listLabel'>服务项目</text>
     <view id='serviceName' bindtap='showModal' class='picker'>
-      <view class="detail">{{serviceName.text}}</view>
+      <view class="detail">{{serviceNameText}}</view>
       <image src='images/yundian_yyxx_gengduo.png' class='choose'></image>
     </view>
   </view>
-  <view class='list'>
+  <view class='list name'>
     <text class='listLabel'>姓名</text>
     <view class='info'>乐小丽</view>
   </view>
@@ -58,20 +56,18 @@
     <text class='listLabel'>电话</text>
     <view class='info'>12345678910</view>
   </view>
-  <view class='list'>
+  <view class='list remark'>
     <text class='listLabel'>备注</text>
     <view class='info'>
-      <input class="weui-input" placeholder="如有特殊要求可在此填写"/>
+      <input class="weui-input" placeholder="如有特殊要求可在此填写" bindblur='summary'/>
     </view>
   </view>
-  <view class='appoint'>
-    <navigator url='success' hover-class='none'>
+  <view class='appoint' bindtap='submit'>
       <text id='appoint'>立即预约</text>
-    </navigator>
   </view>
-  <view class='mask' wx:if="{{showModal}}">
-    <device-modal wx:if="{{device.modal}}" bind:close="closeModal"></device-modal>
-    <service-modal wx:if="{{service.modal}}" bind:close="closeModal"></service-modal>
-    <serviceName-modal wx:if="{{serviceName.modal}}" bind:close="closeModal"></serviceName-modal>
+  <view class='mask' wx:if="{{showModal}}" catchtouchmove="preventTouchMove">
+    <device-modal wx:if="{{modal=='device-modal'}}" bind:close="closeModal" facilityList="{{data.facilityTypes[0].facilityList}}" id="device-modal"></device-modal>
+    <service-modal wx:if="{{modal=='service-modal'}}" bind:close="closeModal" waiterList="{{data.waiterList}}" id="service-modal"></service-modal>
+    <serviceName-modal wx:if="{{modal=='serviceName-modal'}}" bind:close="closeModal" serviceList="{{data.serviceList}}" id="serviceName-modal"></serviceName-modal>
   </view>
 </view>

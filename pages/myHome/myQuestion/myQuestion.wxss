@@ -5,6 +5,9 @@
 .right{
   float: right;
 }
+.mr10{
+   margin-right: 10rpx;
+}
 .mr15{
   margin-right: 15rpx;
 }
@@ -22,6 +25,9 @@
 }
 .color999{
   color: #999;
+}
+.padding0{
+  padding: 0 !important; 
 }
 .header{
   position: fixed;
@@ -99,22 +105,37 @@
 }
 .question text,.answer text{
   display: block;
-  color: #fff;
   padding: 5rpx;
   margin-left: 10rpx;
-}
-.question text{
-  background: #7ee1c4;
-}
-.answer text{
-  background: #fd7332;
 }
 .listTitle{
   color: #333;
   font-size: 30rpx;
+  margin-top:20rpx;
 }
 .imageQ{
   width: 36rpx !important;
   height: 37rpx !important;
   margin-left: 10rpx;
+}
+.width510{
+  width: 510rpx;
+  position: relative;
+  height: 188rpx; 
+  overflow: hidden; 
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical; 
+}
+.width510>view{
+  width: 100%;
+}
+.creatTime{
+  position: absolute;
+  bottom: -6rpx;
+  width: 100%;
+}
+.creatTime text{
+  width: 100%;
+  text-align: right;
 }

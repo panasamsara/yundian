@@ -1,0 +1,2 @@
+/* pages/appointment/modal/service-modal.wxss */
+@import "../device-modal/device-modal.wxss"

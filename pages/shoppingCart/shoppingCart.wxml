@@ -1,20 +1,20 @@
 <view class='content'>
   <scroll-view class='detail-list' scroll-y='true' >
     <view class='detail' wx:for='{{goodlist}}' wx:for-index="inx" wx:key="id" data-index="{{inx}}">
-        <view class='detail-top'>
+        <view class='detail-top' >
           <view class='detail-title'>
            <image class="item-select" bindtap="shopSelect"  data-is="{{item.checked}}" data-index="{{inx}}" data-shopId="{{item.shopId}}" src="{{item.checked?'img/comment_select.png':'img/comment_normal.png'}}" />
           <text>{{item.shopName}}</text>
           </view>
-          <view class='back' bindtap="back">
+          <view class='back' bindtap="shopSkip" data-shopid="{{item.shopId}}">
             <image src='../../../images/yundian_spxq_gengduo.png'></image>
           </view>
         </view>
         <view class='goods' wx:for='{{item.goodsList}}' wx:for-item='items' wx:key="goods">
-          <view class='good-content inner txt' bindtouchstart="touchS" bindtouchmove="touchM" bindtouchend="touchE" data-pindex="{{inx}}" data-index="{{index}}" data-goodsId="{{items.goodsId}}" data-id="{{items.id}}" data-shopId="{{item.shopId}}" data-stockId="{{items.stockId}}"  style="{{items.txtStyle}}" >
+          <view class='good-content inner txt' bindtouchstart="touchS" bindtouchmove="touchM" bindtouchend="touchE" data-pindex="{{inx}}" data-index="{{index}}" data-goodsId="{{items.goodsId}}" data-id="{{items.id}}" data-shopId="{{item.shopId}}" data-stockId="{{items.stockId}}"  style="{{items.txtStyle}}">
             <view class='good-left' data-pindex="{{inx}}" data-index="{{index}}" data-id="{{items.id}}">
               <image class="item-select" bindtap="switchSelect" data-pindex="{{inx}}" data-index="{{index}}" data-id="{{items.id}}" src="{{items.checked?'img/comment_select.png':'img/comment_normal.png'}}" />
-                <image class='good-img' src='{{items.goodsImageUrl}}'></image>
+                <image data-goodsId="{{items.goodsId}}" data-shopid="{{item.shopId}}" bindtap="goodsSkip" class='good-img' src='{{items.goodsImageUrl}}'></image>
             </view>
             <view class='right-info'>
               <text>{{items.goodsName}}</text>
@@ -44,7 +44,7 @@
       <text>全选</text>
     </view>
     <view class="all-del" bindtap="allDel" >
-      <image src="../../../images/delete.png"></image>
+      <image src="img/delete.png"></image>
     </view>
     <view class='sum-info'>
       <view class='sum-box'>

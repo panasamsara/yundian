@@ -1,13 +1,17 @@
 <!--pages/store/player/player.wxml-->
-<view class='container player'> 
-  <view wx:for="{{list}}" wx:key="index" class='list'>
-    <image src='{{item.url}}' class='banner'></image>
-    <view class='title'>
-      <text>{{item.title}}</text>
+<view class='container player' wx:if="{{list.length!=0}}"> 
+  <view wx:for="{{list}}" wx:key="index" class='playerList'>
+    <image src='{{item.logo}}' class='banner'></image>
+    <view class='playerTitle'>
+      <text>{{item.name}}</text>
       <image src='../images/yundian_spxq_xuanzhong.png' class='titleBorder'></image>
     </view>
     <view class='text'>
-      <text>{{item.text}}</text>
+      <text>{{item.title}}</text>
     </view>
   </view>
 </view>
+<view class="blank" wx:else>
+  <image src='../images/yundian_zjy_ydwjq.png'></image>
+  <text>暂无玩家圈</text>
+</view> 

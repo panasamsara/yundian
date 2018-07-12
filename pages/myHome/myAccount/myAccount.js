@@ -1,66 +1,89 @@
-// pages/myhome/myAccount/myAccount.js
+var app = getApp();
+var shop = wx.getStorageSync('shop');
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-  
+    arrayName: [],
+    arrayId: [],
+    fansAccount:[],
+    memsYuanAccount:[],
+    accountList:[],
+    index:""
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad: function (options) {
-  
+  onLoad: function(options) {
+    // 获取缓存的shopOId和shopName存入数组
+    this.getShop();
+    this.getCard(shop.id);
   },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-  
+  bindPickerChange: function(e) {
+    // console.log('picker发送选择改变，携带值为', e.detail.value)
+    console.log(this.data.index);
+    this.setData({
+      index: e.detail.value
+    });
+    var shopIdActive = this.data.arrayId[this.data.index];
+    this.getCard(shopIdActive);
   },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-  
+  getCard: function(shopIdActive) {
+    //获取店铺id
+    wx.showLoading({
+      title: '加载中',
+    })
+    var newdata=[];
+    app.util.reqAsync('member/getMemberCard', {
+      "memberId": shopIdActive
+    }).then((res) => {
+      this.setData({
+        accountList: []
+      })
+      if(res.data.data){
+        //截取粉账户的时间
+        res.data.data.fans.periodTime = res.data.data.fans.periodTime.substring(0, 10);
+        res.data.data.fans.balance = app.util.formatMoney(res.data.data.fans.balance, 2); 
+        res.data.data.fans.finance = app.util.formatMoney(res.data.data.fans.finance, 2); 
+        console.log();
+        newdata.push(res.data.data);
+        this.setData({
+          accountList: newdata
+        })
+      }else{
+      }
+      wx.hideLoading();
+    }).catch((err) => {
+      wx.hideLoading()
+      wx.showToast({
+        title: '失败……',
+        icon: 'none'
+      })
+    })
   },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-  
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-  
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-  
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-  
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-  
+  getShop: function() {
+    //获取店铺名称
+    wx.showLoading({
+      title: '加载中',
+    })
+    var shopName = [];
+    var shopId = [];
+    app.util.reqAsync('member/getShopInfosByUserId', {
+      "userId": "573"
+    }).then((res) => {
+      res.data.data.forEach(function(item, index) {
+        shopName.push(item.shopName);
+        shopId.push(item.memberId);
+      })
+      //将缓存存入选择店铺的数组中
+      shopName.unshift(shop.shopName);
+      shopId.unshift(shop.id);
+      this.setData({
+        arrayName: shopName,
+        arrayId: shopId
+      });
+      wx.hideLoading()
+    }).catch((err) => {
+      wx.hideLoading()
+      wx.showToast({
+        title: '失败……',
+        icon: 'none'
+      })
+    })
   }
 })

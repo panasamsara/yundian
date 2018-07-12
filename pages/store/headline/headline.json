@@ -1,4 +1,6 @@
 {
+  "navigationBarTitleText": "云店头条",
   "component": true,
-  "usingComponents": {}
+  "usingComponents": {},
+  "enablePullDownRefresh": true
 }

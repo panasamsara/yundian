@@ -1,3 +1,11 @@
 <!--pages/scan/scan.wxml-->
-<text>扫码页面，店铺历史纪录页面</text>
+<view class='container'>
+  <view wx:if="{{histories && histories.length > 0}}">历史记录列表</view>
+  <block wx:for="{{histories}}" wx:key="{{index}}">
+    <view class="" bindtap='toShop' data-index='{{index}}'>
+      <image src="{{item.bgImage}}"></image>
+      <view>{{item.shopName}}</view>
+    </view>
+  </block>
 <view class='scanBlock' bindtap='scanCode'>点击扫码</view>
+</view>

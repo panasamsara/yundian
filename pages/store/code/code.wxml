@@ -2,10 +2,10 @@
 <view class='container code'>
   <view class='storeInfo'>
     <view>
-      <image src='../images/touxiang.png'></image>
+      <image src='{{url}}'></image>
     </view>
-    <text id='storeName'>乐町官方旗舰店</text>
-    <text id='fans'>粉丝<text id='fansNum'>1234</text></text>
+    <text id='storeName'>{{shopName}}</text>
+    <text id='fans'>粉丝<text id='fansNum'>{{fans}}</text></text>
   </view>
   <view class='storeCode'>
     <view>

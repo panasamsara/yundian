@@ -1,19 +1,37 @@
 <!--pages/store/headline/headline.wxml-->
-<view class='container headline'> 
+<view class='container headline' wx:if="{{list.length!=0}}"> 
   <view wx:for="{{list}}" wx:key="index" class='list'>
-    <view class='contentBox'>
-      <image src='{{item.url}}'></image>
+    <view class='contentBox' wx:if="{{item.typeCode=='1001'}}">
+      <image src='{{item.scCmsResourcesList[0].resourcesUrl}}'></image>
       <view class='text'>
-        <text class='title'>{{item.title}}</text>
-        <text class='content'>{{item.text}}</text>
+        <text class='titles'>{{item.articleTitle}}</text>
+        <text class='content'>{{item.articleContent?item.articleContent:''}}</text>
+      </view>
+    </view>
+    <view class='contentBox' wx:if="{{item.typeCode=='1002'}}">
+      <image src='{{item.scCmsResourcesList[0].resourcesUrl}}'></image>
+      <view class='text'>
+        <text class='titles'>{{item.articleTitle}}</text>
+        <text class='content'>{{item.scCmsResourcesList[0].resourcesRemarks?item.scCmsResourcesList[0].resourcesRemarks:''}}</text>
+      </view>
+    </view>
+    <view class='contentBox' wx:if="{{item.typeCode=='1003'}}">
+      <image src='{{item.scCmsResourcesList[0].resourcesUrl}}'></image>
+      <view class='text'>
+        <text class='titles'>{{item.articleTitle}}</text>
+        <text class='content'>{{item.scCmsResourcesList[0].resourcesRemarks?item.scCmsResourcesList[0].resourcesRemarks:''}}</text>
       </view>
     </view>
     <view class='infoBox'>
-      <text>{{item.userName}}</text>
+      <text>{{item.scSysUser.username}}</text>
       <view>
-        <text>{{item.readNum}}</text>浏览
-        <text>{{item.replyNum}}</text>回复
+        <text>{{item.visitorNum?item.visitorNum:0}}</text>浏览
+        <text>{{item.answerNumber}}</text>回复
       </view>
     </view>
   </view>
+</view>
+<view class="blank" wx:else>
+  <image src='../images/yundian_zjy_ydtt.png'></image>
+  <text>暂时没有资讯哦</text>
 </view>

@@ -6,7 +6,7 @@ Page({
   },
   onLoad: function (options) {
     var arr=[];
-    arr.push(JSON.parse( options.arr));
+    arr.push(JSON.parse(options.arr));
     this.setData({ orderList: arr})
     console.log(options.activeIndex)
   }

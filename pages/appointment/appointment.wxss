@@ -19,7 +19,11 @@ page{
   align-items: center;
   height: 120rpx;
   font-size: 32rpx;
-  border-top: solid 1px #e5e5e5;
+  border-top: solid 1rpx #e5e5e5;
+}
+
+.appointment .name,.appointment .remark{
+  border: none;
 }
 
 .appointment .listLabel{
@@ -38,6 +42,10 @@ page{
   width: 510rpx;
   color: #636363;
   font-size: 30rpx;
+}
+
+.appointment .info input{
+  text-overflow: ellipsis;
 }
 
 .appointment .detail{
@@ -78,4 +86,26 @@ page{
   width: 100%;
   height: 100%;
   background-color: rgba(114,114,114,0.5); 
+}
+
+picker-view{
+  width: 100%;
+  height: 480rpx; 
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 9999;
+  background-color: #ffffff;
+}
+
+picker-view .date{
+  text-align: center;
+}
+
+picker-view .close{
+  position: absolute;
+  top: 30rpx;
+  right: 30rpx;
+  z-index: 9999;
+  color: #1aad19;
 }

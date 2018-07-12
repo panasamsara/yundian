@@ -1,4 +1,4 @@
-<!--pages/myhome/myQuestion/myQuestion.wxml-->
+pages/myhome/myQuestion/myQuestion.wxml
 <view>
   <view class="header">
     <view class="manageTitle">
@@ -17,25 +17,47 @@
         <view wx:if="{{activeIndex==3}}">还没有邀请你的回答哦~</view>
       </view>
     </block> 
-    <view class='content' wx:for="{{orderList}}" wx:key="index" >
-      <view class="list" bindtap='skip' data-id="{{item.id}}">
-        <view class="listTitle" wx:if="{{activeIndex==2||activeIndex==3}}">李****有问题像你求助哦</view>
-        <view class="orderInfo">
-          <view class='left'>
-            <image src='../images/1.gif'></image>
-          </view>
-          <view class='question left'>
-            <image wx:if="{{activeIndex==1||activeIndex==3}}" class="imageQ" src='../images/question.png'></image>
-            <image wx:if="{{activeIndex==2}}" class="imageQ" src='../images/answer.png'></image>
-          </view>
-          <view class='right'>
-            <text>{{item.content}}</text>
-            <text>
-              <text class='right color999 font28'>{{item.createTime}}</text>
-            </text>
+    <block wx:if="{{activeIndex==1 || activeIndex==3}}">
+      <view class='content' wx:for="{{orderList}}" wx:key="index" >
+        <view class="list" bindtap='skip' data-id="{{item.id}}">
+          <view class="listTitle" wx:if="{{activeIndex==3}}">{{item.createUserName}}有问题像你求助哦</view>
+          <view class="orderInfo">
+            <view class='left'>
+              <image src='{{item.goodsPic}}'></image>
+            </view>
+            <view class='question left'>
+              <image wx:if="{{activeIndex==1||activeIndex==3}}" class="imageQ" src='../images/question.png'></image>
+            </view>
+            <view class='right'>
+              <text>{{item.content}}</text>
+              <text>
+                <text class='right color999 font28'>{{item.createTime}}</text>
+              </text>
+            </view>
           </view>
         </view>
       </view>
-    </view>
+    </block>
+    <block wx:if="{{activeIndex==2}}">
+      <view class='content' wx:for="{{orderList}}" wx:key="index" >
+        <view class="list" bindtap='skip' data-id="{{item.id}}">
+          <view class="listTitle" >{{item.content}}</view>
+          <view class="orderInfo">
+            <view class='left'>
+              <image src='{{item.goodsPic}}'></image>
+            </view>
+            <view class='left width510'>
+              <view class='question left' wx:for="{{item.answers}}" wx:key="index">
+                <image class="imageQ left mr10" src='../images/answer.png'></image>
+                <text class='left padding0 color333'>{{item.content}}</text>
+              </view>
+              <view class='creatTime'>
+                <text class='right color999 font28'>{{item.createTime}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </block>
   </view>
 </view>

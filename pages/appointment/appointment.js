@@ -1,6 +1,5 @@
 // pages/appointment/appointment.js
-const util = require('../../utils/util.js'),
-      dateTimePicker = require('../../utils/dateTimePicker.js');
+const app = getApp()
 
 Page({
 
@@ -8,179 +7,187 @@ Page({
    * 页面的初始数据
    */
   data: {
-    // list: [
-    //   {
-    //     name: '人数',
-    //     flag:'numbers',
-    //     array: [1,2,3,4,5,6],
-    //     text:'请选择您需要预约的人数',
-    //     indexs: 0
-    //   },
-    //   {
-    //     name: '设备/设施',
-    //     flag:'device',
-    //     array: ['设备', '设施', '测试'],
-    //     text:'请选择设备/设施',
-    //     indexs: 0
-    //   },
-    //   {
-    //     name: '服务人员',
-    //     flag:'serviceNum',
-    //     array: ['张三', '李四', '服务'],
-    //     text:'请选择您需要服务的人员',
-    //     indexs: 0
-    //   },
-    //   {
-    //     name: '服务项目',
-    //     flag: 'serviceName',
-    //     array: ['美容', '美发', '护肤'],
-    //     text:'请选择您需要的项目',
-    //     indexs: 0
-    //   },
-    // ],
-    num:{
-      numArray: [1, 2, 3, 4, 5],
-      text: '请选择您需要预约的人数'
-    },
-    device:{
-      deviceArray: ['设备', '设施', '测试'],
-      text: '请选择设备/设施',
-      modal: false
-    },
-    service:{
-      serviceArray: ['张三', '李四', '服务'],
-      text: '请选择您需要服务的人员',
-      modal: false
-    },
-    serviceName:{
-      serviceNameArray: ['美容', '美发', '护肤'],
-      text: '请选择您需要的项目',
-      modal:false
-    },
-    time:'',
-    appointTime:'结束时间',
-    dateTimeArray: null,
-    dateTime: null,
-    showModal:false
+    numText:'请选择您需要预约的人数',
+    deviceText:'请选择设备/设施',
+    serviceText:'请选择您需要服务的人员',
+    serviceNameText:'请选择您需要的项目',
+    startTime:'开始时间',
+    endTime:'结束时间',
+    showModal:false,
+    modal:'',
+    picker:false,
+    multiArray:[],
+    multiIndex:[0,0]
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function(options) {
-    var day=new Date();
-    let obj = dateTimePicker.dateTimePicker();
-    // 精确到分的处理，将数组的秒和年去掉
-    let lastArray = obj.dateTimeArray.pop();
-    let lastTime = obj.dateTime.pop();
-
+    let numArray=[];
+    for(let i=1;i<=20;i++){
+      numArray.push(i+'人');
+    }
     this.setData({
-      time: util.formatPicker(day),
-      dateTime: obj.dateTime,
-      dateTimeArray: obj.dateTimeArray,
+      numArray:numArray
+    })
+    let data={
+      shopId: wx.getStorageSync('shop').id
+    };
+    console.log(wx.getStorageSync('shop').id)
+    app.util.reqAsync('shop/getBespokeSettingInfoV2', data).then((res) => {
+      console.log(res.data.data)
+      this.setData({
+        data: res.data.data
+      })
+    }).catch((err) => {
+      console.log(err);
     })
   },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function() {
+  preventTouchMove: function () {
 
   },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function() {
-
+  start:function(){
+    this.change('start');
   },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function() {
-
+  end:function(){
+    if(this.data.startTime=='开始时间'){
+      wx.showToast({
+        title: '请先选择开始时间',
+        icon:'none'
+      })
+      return
+    }
+    this.change('end')
   },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function() {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function() {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function() {
-
-  },
-  //普通picker
+  //普通人数picker
   bindPickerChange: function (e) {
-    console.log(e.detail.value)
-    var text = "list["+e.currentTarget.dataset.index+"].text";
     this.setData({
-      [text]: this.data.list[e.currentTarget.dataset.index].array[e.detail.value]
+      numText: this.data.numArray[e.detail.value],
+      num: this.data.numArray[e.detail.value]
     })
   },
-  //时间日期picker
-  changeDateTime(e) {
-    this.setData({ dateTime: e.detail.value });
-  },
-  changeDateTimeColumn(e) {
-    var arr = this.data.dateTime, 
-        dateArr = this.data.dateTimeArray;
-
-    arr[e.detail.column] = e.detail.value;
-    //判断月份格式是否正确
-    dateArr[2] = dateTimePicker.getMonthDay(dateArr[0][arr[0]], dateArr[1][arr[1]]);
-
+  //时间日期
+  change:function(arr){
     this.setData({
-      dateTimeArray: dateArr,
-      dateTime: arr,
-      appointTime: dateArr[1][arr[1]] + '月' + dateArr[2][arr[2]] + '日' + dateArr[3][arr[3]] + ':' + dateArr[4][arr[4]]
-    });
+      showModal:true,
+      picker:true
+    })
+    var date1 = new Date(),
+        date2 = new Date(date1);
+    var multiArray = [];
+    date2.setDate(date1.getDate() + 30);
+    for (var i = Date.parse(app.util.formatPickerTime(date1)); i <= Date.parse(app.util.formatPickerTime(date2)); i += 3600000) {
+      if (multiArray.indexOf(app.util.formatPicker(new Date(i))) == -1) {
+        multiArray.push(app.util.formatPicker(new Date(i)));
+      }
+    }
+    if(arr=='start'){
+      var multiArray1 = [multiArray, ['7:30', '8:00', '8:30', '9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00']]
+      this.setData({
+        multiArray: multiArray1
+      })
+    }else{
+      var multiArray2 = [[this.data.start], ['7:30', '8:00', '8:30', '9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00']]
+      this.setData({
+        multiArray: multiArray2,
+        multiIndex:[0,this.data.index]
+      })
+    }  
   },
   showModal: function (e) {
-    var flag=e.currentTarget.id+".modal";
     this.setData({
-      [flag]:true,
+      modal: e.currentTarget.id+'-modal',
       showModal:true
+    })
+    this.selectComponent('#' + e.currentTarget.id +'-modal').onLoad();
+  },
+  close:function(){
+    this.setData({
+      picker:false,
+      showModal:false
     })
   },
   closeModal:function(e){
-    if(e.detail.flag==undefined){
-      var modal1="device.modal",
-          modal2="service.modal",
-          modal3="serName.modal";
+      var flag1=e.detail.flag1,
+          flag2=e.detail.flag2;
+      if(flag1!=undefined){
+        this.setData({
+          [flag1]: e.detail.text,
+          [flag2]: e.detail.id
+        })
+      }
       this.setData({
+        modal: '',
         showModal:false,
-        [modal1]:false,
-        [modal2]: false,
-        [modal3]: false,
+      })
+  },
+  getData:function(data){
+    app.util.reqAsync('shop/getBespokeSettingInfoV2', data).then((res) => {
+      this.setData({
+        data: res.data.data
+      })
+    }).catch((err) => {
+      console.log(err);
+    })
+  },
+  summary:function(e){
+    this.setData({
+      summary:e.detail.value
+    })
+  },
+  submit:function(){
+    let endTime=this.data.endTime,
+        num=this.data.num,
+        facilityId = this.data.facilityId,
+        waiterId = this.data.waiterId,
+        serviceId = this.data.serviceId
+        if (endTime == undefined ||endTime == ''|| num == undefined || facilityId == undefined || waiterId == undefined || serviceId ==undefined){
+          wx.showToast({
+            title: '请完善预约信息',
+            icon:'none'
+          })
+          return
+        }
+        wx.navigateTo({
+          url: 'success'
+        })
+  },
+  bindChange: function (e) {
+    let multiArray= this.data.multiArray,
+        newmultiArray=[];
+    for (let i = 0; i < multiArray[0].length;i++){
+      newmultiArray.push(multiArray[0][i].split(' ')[1])
+    }
+    let date = newmultiArray[e.detail.value[0]],
+        time = multiArray[1][e.detail.value[1]]
+    if (multiArray[0].length>1){
+      this.setData({
+        startTime: date + ' ' + time,
+        start: multiArray[0][e.detail.value[0]],
+        index: e.detail.value[1]
       })
     }else{
-      var text = e.detail.flag + ".text";
-      var modal = e.detail.flag + ".modal";
+      let startTime=this.data.startTime.split(' ')[1].split(':'),
+          endTime = time.split(':');
+      if (endTime[0] - startTime[0] == 0){
+        if(endTime[1]-startTime[1]<=0){
+          wx.showToast({
+            title: '结束时间必须比开始时间晚',
+            icon: 'none'
+          })
+          return
+        }
+      }else if(endTime[0] - startTime[0]<0){
+        wx.showToast({
+          title: '结束时间必须比开始时间晚',
+          icon:'none'
+        })
+        return
+      }
       this.setData({
-        [text]: e.detail.text,
-        showModal: false,
-        [modal]: false
+        endTime: date + ' ' + time
       })
-    }
+    }  
   }
 })

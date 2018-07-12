@@ -12,23 +12,22 @@ page, .main{
 .cate-box{
     height: 100%;
     box-sizing: border-box;
+    background-color: rgba(0, 0, 0, 1);
 }
 .top-bg{
-  width: 100%;
-  height: 450rpx;
   position: absolute;
-  top: 240rpx;
-  z-index: -1;
+  width: 100%;
+  height: 100%;
 }
 .btn-list{
   width: 80rpx;
   height: 600rpx;
   position: absolute;
   right: 30rpx;
-  bottom: 130rpx;
+  bottom: 150rpx;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-end;
   z-index: 99999;
 }
 .btn-img{
@@ -53,28 +52,28 @@ page, .main{
 }
 
 .bottom-box{
+  position: absolute;
+  display: flex;
+  align-items:center;
+  justify-content: center;
   width: 100%;
   height: 100rpx;
-  position: absolute;
   bottom: 30rpx;
 }
 .logo{
+  display: inline-block;
+  margin-left: 20rpx;
   width: 88rpx;
   height: 88rpx;
   border: 5rpx solid #b6b6b6;
   border-radius: 88rpx;
-  position: relative;
-  left: 40rpx;
-  display: inline-block;
 }
 .desc-box{
-  display: inline-block;
+  display: block;
+  flex: 1;
   position: relative;
-  left: 60rpx;
-  top: -20rpx;
   color: #b6b6b6;
-  padding-right: 10rpx;
-  border-right: dashed 2rpx #b6b6b6;
+  padding: 20rpx;
 }
 .desc-name{
   font-size: 28rpx;
@@ -83,12 +82,12 @@ page, .main{
   font-size: 24rpx;
 }
 .qrcode{
+  position: relative;
   display: inline-block;
   width: 50rpx;
   height: 50rpx;
-  position: relative;
-  left:70rpx;
-  top:-30rpx;
+  padding: 20rpx;
+  border-left: dashed 2rpx #b6b6b6;
 }
 #detail{
   background-color: #f8f8f8;
@@ -104,7 +103,7 @@ page, .main{
   position: relative;
   top: 30rpx;
   left: 30rpx;
-  margin-bottom: 30rpx;
+  margin-bottom: 60rpx;
 }
 .coupon-img{
   width: 160rpx;
@@ -175,8 +174,8 @@ page, .main{
   height:335rpx;
 }
 .item-img image{
-  width:100%;
-  height:100%;
+  width: 100%;
+  height: 100%;
 }
 .item-text{
   height: 24rpx;
@@ -226,6 +225,7 @@ putInCart-img{
 .swiper-item{
   display: block;
   height: 300rpx;
+  box-shadow: 0px 0px 15px #888888;
 }
 .page-section-title{
   margin-top: 60rpx;
@@ -240,10 +240,12 @@ putInCart-img{
   width: 100%;
 }
 .activity-desc-box{
-  width: 100%;
-  height: 70rpx;
   display: flex;
   justify-content: space-between;
+  flex: 1;
+  width: 100%;
+  height: 70rpx;
+  padding-left: 10rpx;
 }
 .activity-name{
   color: orange;
@@ -277,8 +279,7 @@ putInCart-img{
 .yuyue{
   width: 690rpx;
   height: 148rpx;
-  margin: 0 auto;
-  padding-top:15px;
+  margin: 15px auto 0;
   border-radius: 5rpx;
   overflow: hidden;
 }

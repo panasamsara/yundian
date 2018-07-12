@@ -5,29 +5,33 @@ Page({
    * 页面的初始数据
    */
   data: {
-    latitude: 23.099994,
-    longitude: 113.324520,
-    markers: [{
-      latitude: 23.099994,
-      longitude: 113.324520,
-      name: 'T.I.T 创意园'
-    }],
-    covers: [{
-      latitude: 23.099994,
-      longitude: 113.344520,
-      iconPath: 'images/location.png'
-    }, {
-      latitude: 23.099994,
-      longitude: 113.304520,
-      iconPath: 'images/location.png'
-    }]
+    
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-  
+    let latitude = wx.getStorageSync('shop').latitude,
+        longitude = wx.getStorageSync('shop').longitude,
+        shopName = wx.getStorageSync('shop').shopName,
+        address = wx.getStorageSync('shop').address
+    this.setData({
+      latitude: latitude,
+      longitude: longitude,
+      markers: [{
+        latitude: latitude,
+        longitude: longitude,
+        iconPath: 'images/location.png',
+        label:{
+          content: shopName+"&#10"+address,
+          borderRadius: 10,
+          bgColor:'#ffffff',
+          padding: 6,
+          textAlign: 'left'
+        }
+      }]
+    })
   },
 
   /**

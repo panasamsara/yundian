@@ -1,4 +1,5 @@
 var app = getApp();
+var userId = wx.getStorageSync('scSysUser').id;
 Page({
   data: {
     addressId: "",
@@ -70,7 +71,7 @@ Page({
     app.util.reqAsync('shop/recvAddrAddOrUpdate', {
       id: this.data.addressId,
       isDefault: isDefault,
-      customerId: 1870,
+      customerId: userId,
       phone:tel,
       name:name,
       address: address,

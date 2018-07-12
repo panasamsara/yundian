@@ -1,7 +1,7 @@
 <!--pages/store/store.wxml-->
 <view class='container store'>
   <view class='storeInfo'>
-    <image src='images/test.jpg' id='back'></image>
+    <image src='{{data.shopInfo.bgImage}}' id='back'></image>
     <view class='headBox'>
       <view class='headPic'>
         <image src="{{data.shopInfo.logoUrl}}"></image>
@@ -12,9 +12,6 @@
           <text class='fansNum'>{{data.fansCounter}}</text>
         </view>
       </view>
-      <!-- <view class='build'>
-        <image src="{{data.isMyConcern==true?'images/yundain_dpzy_yizhucehng.png':'images/yundain_dpzy_zhucehng.png'}}"></image>
-      </view> -->
     </view>
     <view class='products'>
       <view class='productsNum'>
@@ -40,34 +37,114 @@
   </view>
   <!-- 智经营 -->
   <view class="storeBody {{active == 'manage'?'show':'hidden'}}" id='storeManage'>
-    <view class='dynamic'>
+    <view id='dynamic'>
       <view class='title'>
-        <image src='images/yundain_dpzy_yddt.png' class='titleName'></image>
-        <navigator url='../dynamic/dynamic' hover-class='none'>
-           <image src='images/yundian_gengduohui.png' class='enter'></image>
-        </navigator>
+        <view class='titleBox'>
+          <image src='images/yundain_dpzy_yddt.png' class='titleName'></image>
+          <navigator url='dynamic/dynamic' hover-class='none'>
+            <image src='images/yundian_gengduohui.png' class='enter'></image>
+          </navigator>
+        </view>
       </view>
       <view class='body'>
-        <view>
-          <dynamic-view id='dynamic'></dynamic-view>
+      <!-- 云店动态 -->
+        <view class='dynamic' wx:if="{{data.resMap.circleName}}">
+          <view class='dynamicBox'>
+            <view class='headBox'>
+              <view class='headPic'>
+                <image src='{{data.resMap.circleLogo}}'></image>
+              </view>
+              <view class='infoBox'>
+                <text class='userName'>{{data.resMap.circleName}}</text>
+                <view class='store'>
+                  <image src='images/yundian_dpzy_dianou.png'></image>
+                  <text class='storeName'>{{data.resMap.shopName!=''?data.resMap.shopName:'暂无店铺'}}</text>
+                </view>
+              </view>
+              <view class='date'>
+                <text>{{data.resMap.videoAlbumTime}}</text>
+              </view>
+            </view>
+            <view class='dynamicText' wx:if="{{data.resMap.videoAlbumDescription!=''}}">
+              <text>{{data.resMap.videoAlbumDescription}}</text>
+            </view>
+            <view class='imageBox' wx:if="{{data.resMap.videoAlbumType==1}}">
+              <image wx:for="{{data.resMap.urls}}" wx:for-item="items" wx:key="index" src="{{items}}" data-src='{{items}}' bindtap='previewImage' data-index="{{data.resMap.index}}" class='type1' wx:if="{{data.resMap.mylength==1}}"></image>
+              <image wx:for="{{data.resMap.urls}}" wx:for-item="items" wx:key="index" src="{{items}}" data-src='{{items}}' bindtap='previewImage' data-index="{{data.resMap.index}}" class='type2' wx:if="{{data.resMap.mylength==2}}"></image>
+              <image wx:for="{{data.resMap.urls}}" wx:for-item="items" wx:key="index" src="{{items}}" data-src='{{items}}' bindtap='previewImage' data-index="{{data.resMap.index}}" class='type3' wx:if="{{data.resMap.mylength>=3}}"></image>
+            </view>
+            <view class='videoBox' wx:if="{{data.resMap.videoAlbumType==2}}">
+              <video src='{{item.urls[0]}}' id='myVideo' binderror="videoErrorCallback" poster='{{item.videoAlbumCoverUrl}}'></video>
+            </view>
+            <view class='readInfo'>
+              <view>
+                <text class='readNum'>{{data.resMap.videoAlbumTimes}}</text> 阅读
+              </view>
+              <view class='replyInfo'>
+                <view class='reply'>
+                  <image src='images/yundian_dpzy_pinglun.png'></image>
+                  <text class='replyNum'>{{data.resMap.totalCount}}</text>
+                </view>
+                <view class='like'>
+                  <image src='images/yundian_dpzy_dianzan.png'></image>
+                  <text class='likeNum'>{{data.resMap.totalLikeCount}}</text>
+                </view>
+              </view>
+            </view>
+          </view>
         </view>
-        <view class="blank {{dynamicList==''||dynamicList==undefined?'show':'hidden'}}">
+        <view class="blank" wx:else>
           <image src='images/yundian_zjy_yddt.png'></image>
           <navigator url="" hover-class='none'>
             <button type="default" plain="true" class='publish' hover-class='none'>发布云店动态</button>
           </navigator>
-        </view>
+        </view> 
       </view>
     </view>
-    <view class='headline'>
+    <!-- 云店头条 -->
+    <view id='headline'>
       <view class='title'>
-        <image src='images/yundain_dpzy_tdtt.png' class='titleName'></image>
-        <navigator url='' hover-class='none' open-type="">
-           <image src='images/yundian_gengduohui.png' class='enter'></image>
-        </navigator>
+        <view class='titleBox'>
+          <image src='images/yundain_dpzy_tdtt.png' class='titleName'></image>
+          <navigator url='headline/headline' hover-class='none'>
+            <image src='images/yundian_gengduohui.png' class='enter'></image>
+          </navigator>
+        </view>
       </view>
       <view class='body'>
-        <view class='blank'>
+        <view class='headline' wx:if="{{data.newCmsArticle[0].articleTitle}}"> 
+          <view class='headlineList'>
+            <view class='contentBox' wx:if="{{data.newCmsArticle[0].typeCode=='1001'}}">
+              <image src='{{data.newCmsArticle[0].scCmsResourcesList[0].resourcesUrl}}'></image>
+              <view class='text'>
+                <text class='titles'>{{data.newCmsArticle[0].articleTitle}}</text>
+                <text class='content'>{{data.newCmsArticle[0].articleContent?data.newCmsArticle[0].articleContent:''}}</text>
+              </view>
+            </view>
+            <view class='contentBox' wx:if="{{data.newCmsArticle[0].typeCode=='1002'}}">
+              <image src='{{data.newCmsArticle[0].scCmsResourcesList[0].resourcesUrl}}'></image>
+              <view class='text'>
+                <text class='titles'>{{data.newCmsArticle[0].articleTitle}}</text>
+                <text class='content'>{{data.newCmsArticle[0].scCmsResourcesList[0].resourcesRemarks?data.newCmsArticle[0].scCmsResourcesList[0].resourcesRemarks:''}}</text>
+              </view>
+            </view>
+            <view class='contentBox' wx:if="{{data.newCmsArticle[0].typeCode=='1003'}}">
+              <image src='{{data.newCmsArticle[0].scCmsResourcesList[0].videoCoverUrl}}'></image>
+              <view class='text'>
+                <text class='titles'>{{data.newCmsArticle[0].articleTitle}}</text>
+                <text class='content'>{{data.newCmsArticle[0].scCmsResourcesList[0].resourcesRemarks?data.newCmsArticle[0].scCmsResourcesList[0].resourcesRemarks:''}}</text>
+              </view>
+            </view>
+            <view class='infoBox'>
+              <text>{{data.newCmsArticle[0].scSysUser.username}}</text>
+              <view>
+                <text>{{data.newCmsArticle[0].visitorNum==null?0:item.visitorNum}}</text>浏览
+                <text>{{data.newCmsArticle[0].answerNumber}}</text>回复
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class='blank' wx:else>
           <image src='images/yundian_zjy_ydtt.png'></image>
           <navigator url="" hover-class="none">
             <button type="default" plain="true" class='publish' hover-class='none'>发布云店头条</button>
@@ -75,15 +152,30 @@
         </view>
       </view>
     </view>
-    <view class='player'>
+    <!-- 云店玩家圈 -->
+    <view id='player'>
       <view class='title'>
-        <image src='images/yundain_dpzy_wdwjq.png' class='titleName'></image>
-        <navigator url='' hover-class='none' open-type="switchTab">
-           <image src='images/yundian_gengduohui.png' class='enter'></image>
-        </navigator>
+        <view class='titleBox'>
+          <image src='images/yundain_dpzy_wdwjq.png' class='titleName'></image>
+          <navigator url='player/player' hover-class='none'>
+            <image src='images/yundian_gengduohui.png' class='enter'></image>
+          </navigator>
+        </view>
       </view>
       <view class='body'>
-        <view class='blank'>
+        <view class='player' wx:if="{{data.circleNew.name}}"> 
+          <view class='playerList'>
+            <image src='{{data.circleNew.logo}}' class='banner'></image>
+            <view class='playerTitle'>
+              <text>{{data.circleNew.name}}</text>
+              <image src='images/yundian_spxq_xuanzhong.png' class='titleBorder'></image>
+            </view>
+            <view class='text'>
+              <text>{{data.circleNew.title}}</text>
+            </view>
+          </view>
+        </view>
+        <view class='blank' wx:else>
           <image src='images/yundian_zjy_ydwjq.png'></image>
           <navigator url="" hover-class='none'>
             <button type="default" plain="true" class='publish' hover-class='none'>发布云店玩家圈</button>
@@ -91,20 +183,45 @@
         </view>
       </view>
     </view>
-    <view class='team'>
+    <!-- 云店粉团队 -->
+    <view id='fans'>
       <view class='title'>
-        <image src='images/yundain_dpzy_ydftd.png' class='titleName'></image>
-        <navigator url='' hover-class='none' open-type="switchTab">
-           <image src='images/yundian_gengduohui.png' class='enter'></image>
-        </navigator>
+        <view class='titleBox'>
+          <image src='images/yundain_dpzy_ydftd.png' class='titleName'></image>
+          <navigator url='fans/fans' hover-class='none'>
+            <image src='images/yundian_gengduohui.png' class='enter'></image>
+          </navigator>
+        </view>
       </view>
       <view class='body'>
-        <view class='blank'>
+        <view class='fans' wx:if="{{data.circleFansTeam.circleName}}">
+            <view class='banner'>
+              <image src="{{data.circleFansTeam.bgPic}}" class='bannerPic'></image>
+              <view class='teamInfo'>
+                <text class='detailName'>{{data.circleFansTeam.circleName}}</text>
+                <view class='sizeBox'>
+                  <image src='images/renshu.png' class='sizePic'></image>
+                  <text class='size'>{{data.circleFansTeam.isJoin}}人</text>
+                </view>
+              </view>
+              <image src='images/sanjiao.png' class='triangle'></image>
+            </view>
+            <scroll-view class="teamBox" scroll-x="true">
+              <view class='team' wx:for="{{data.circleFansTeam.groupList}}" wx:key="index">
+                <image src='{{item.logo}}'></image>
+                <view class='infoBox'>
+                  <text class='teamName'>{{item.detailName}}</text>
+                  <text class='total'>{{item.createPeople}}人</text>
+                </view> 
+              </view>
+            </scroll-view>
+        </view>
+        <view class='blank' wx:else>
           <image src='images/yundian_zjy_ydftd.png'></image>
           <navigator url="" hover-class='none'>
             <button type="default" plain="true" class='publish' hover-class='none'>发布云店粉团队</button>
           </navigator>
-        </view>
+        </view> 
       </view>
     </view>
   </view>
@@ -116,8 +233,8 @@
     </view>
     <view class='list'>
       <text>店铺二维码</text>
-      <navigator url='code/code'>
-        <image src='images/yundian_erweima.png' class='enter' bindtap='code'></image>
+      <navigator url='code/code?shopName={{data.shopInfo.shopName}}&url={{data.shopInfo.logoUrl}}&fans={{data.fansCounter}}&shopId={{data.shopInfo.shopId}}' hover-class='none'>
+        <image src='images/yundian_erweima.png' class='enter'></image>
       </navigator>
     </view>
     <view class='list phone'>
@@ -127,18 +244,17 @@
     <view class='list'>
       <text>店铺简介</text>
     </view>
-    <view class="list desc" wx:if="{{data.shopInfo.shopDesc!=null}}" bindtap='inputChange'>
+    <view class="list desc">
       <text>{{data.shopInfo.shopDesc}}</text>
-    </view>
-    <view class="list" wx:else>
-        <input class="weui-input" maxlength="22" placeholder="有你想要的一切(最多22字)" bindblur='briefChange' value='{{text}}' focus="{{focus}}"/>
     </view>
     <view class='list'>
       <text>店铺地址</text>
     </view>
     <view class='list address'>
       <text>{{data.shopInfo.address}}</text>
-      <image src='images/yundian_dpzy_ditudaohang.png' class='enter'></image>
+      <navigator url="location/location?longitude={{data.shopInfo.longitude}}&latitude={{data.shopInfo.latitude}}&shopName={{data.shopInfo.shopName}}&address={{data.shopInfo.address}}" hover-class='none'>
+        <image src='images/yundian_dpzy_ditudaohang.png' class='enter'></image>
+      </navigator>
     </view>   
   </view>
 </view>

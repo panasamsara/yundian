@@ -54,6 +54,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    var shop = wx.getStorageSync('shop');
     //获取评论列表
     this.data.shopId = 808;//options.shopId
     this.data.goodsId = 2117;//options.goodsId

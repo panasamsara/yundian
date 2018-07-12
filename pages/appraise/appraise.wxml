@@ -42,11 +42,11 @@
 <view class='detail-nav'>
   <view class='tabBar'>
     <navigator>
-      <view><image class='icon' src='../../images/1_03.gif'></image></view>
+      <view><image class='icon' src=''></image></view>
       <view class='text'>客服</view>
     </navigator>
     <navigator>
-      <view><image class='icon' src='../../images/1_05.gif'></image></view>
+      <view><image class='icon' src=''></image></view>
       <view class='text'>店铺</view>
     </navigator>       
   </view>

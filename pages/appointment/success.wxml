@@ -10,19 +10,19 @@
     <text>{{item.info}}</text>
   </view> -->
   <view class='list storeName'>
-    <text>乐町官方旗舰店</text>
+    <text>{{shopName}}</text>
   </view>
   <view class='list info'>
-    <text>06月28日11：00</text>
-    <text>1人|单人房</text>
+    <text>{{data.endTime}}</text>
+    <text>{{data.num}}|{{data.deviceText}}</text>
   </view>
   <view class='list service'>
-    <text>补水套餐</text>
-    <text>服务人员:王月月</text>
+    <text>{{data.serviceNameText}}</text>
+    <text>服务人员:{{data.serviceText}}</text>
   </view>
   <view class='list client'>
     <text>叶知秋</text>
     <text>12345678910</text>
   </view>
-  <button type='primary' id='submit'>确认</button>
+  <button type='primary' id='submit' bindtap='submit'>确认</button>
 </view>

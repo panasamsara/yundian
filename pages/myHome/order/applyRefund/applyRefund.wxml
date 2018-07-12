@@ -1,0 +1,58 @@
+<!--pages/myHome/order/applyRefund/applyRefund.wxml-->
+<view class="content">
+  <view class="type">
+    <view class="type-tit">
+      退款类型<text class="bitian">*</text>
+    </view>
+    <view class="type-val">
+      <text wx:if="{{orderStatus==0 || orderStatus==1}}">仅退款</text>
+      <text wx:if="{{orderStatus==2}}">退货并退款</text>
+    </view>
+  </view>
+  <view class="hr">
+  </view>
+  <view class="reson">
+    <view class="section__title">退款原因<text class="bitian">*</text></view>
+    <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
+      <view class="picker">
+        {{array[index]}}<image class="right-icon" src="../../../../images/down.png"></image> 
+      </view>
+    </picker>
+  </view>
+  <view class="money">
+    <view class="section__title">退款金额<text class="bitian">*</text></view>
+    <view class="money-val">
+      ￥<text>{{returnAmount}}</text>
+    </view>
+  </view>
+  <view class="remark">
+    <view class="type-tit">
+      退款退货说明
+    </view>
+    <view class="section">
+      <textarea bindblur="bindTextAreaBlur" placeholder="请填写退货退款说明" />
+    </view>
+  </view>
+  <view class="img">
+    <view class="section">
+      上传凭证（最多三张）
+    </view>
+    <view class="upload">
+      <view class="img-list" bindtap="selectImg">
+        <image wx:if="{{img1==''}}" src="../../../../images/add_img.png"></image>
+        <image wx:if="{{img1!=''}}" src="{{img1}}"></image>
+      </view>
+      <view class="img-list" bindtap="selectImg1">
+        <image wx:if="{{img2==''}}" src="../../../../images/add_img.png"></image>
+        <image wx:if="{{img2!=''}}" src="{{img2}}"></image>
+      </view>
+      <view class="img-list" bindtap="selectImg2">
+        <image wx:if="{{img3==''}}" src="../../../../images/add_img.png"></image>
+        <image wx:if="{{img3!=''}}" src="{{img3}}"></image>
+      </view>
+    </view>
+  </view>
+  <view class="sub">
+    <button class="sure" type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="sure" hover-class="other-button-hover"> 提交 </button>
+  </view>
+</view>

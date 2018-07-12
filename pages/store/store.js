@@ -1,5 +1,5 @@
 // pages/store/store.wxml.js
-const util = require('../../utils/util.js')
+const app=getApp();
 
 Page({
 
@@ -17,15 +17,17 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function(options) {
-    this.selectComponent("#dynamic").onLoad();
     let data = {
-      pageNo: 1,
-      shopId: 290,
-      pageSize: 10
+      customerId: wx.getStorageSync('scSysUser').id,
+      shopId: wx.getStorageSync('shop').id
     };
     // 店铺信息/云店简介
-    util.reqAsync('shop/getShopAbstractInfo', data).then((res) => {
-      console.log(res.data.data)
+    app.util.reqAsync('shop/getShopAbstractInfo', data).then((res) => {
+      if(res.data.data.resMap){
+        var map = res.data.data.resMap;
+        map.videoAlbumTime = app.util.formatStoreDate(map.videoAlbumTime);
+        map.mylength = map.urls.length;
+      }
       this.setData({
         data: res.data.data
       })
@@ -87,25 +89,33 @@ Page({
       active: e.currentTarget.id
     })
   },
-  briefChange: function(e) {
-    var desc = "data.shopInfo.shopDesc";
-    console.log(wx.getStorageSync('oldDesc'))
-    if (e.detail.value == '') {
-      this.setData({
-        [desc]: wx.getStorageSync('oldDesc')
-      })
-    } else {
-      this.setData({
-        [desc]: e.detail.value
-      })
-    }
-  },
-  inputChange: function(e) {
-    var desc = "data.shopInfo.shopDesc";
-    wx.setStorageSync('oldDesc', this.data.data.shopInfo.shopDesc);
-    this.setData({
-      [desc]: null,
-      focus: true
+  // briefChange: function(e) {
+  //   var desc = "data.shopInfo.shopDesc";
+  //   console.log(wx.getStorageSync('oldDesc'))
+  //   if (e.detail.value == '') {
+  //     this.setData({
+  //       [desc]: wx.getStorageSync('oldDesc')
+  //     })
+  //   } else {
+  //     this.setData({
+  //       [desc]: e.detail.value
+  //     })
+  //   }
+  // },
+  // inputChange: function(e) {
+  //   var desc = "data.shopInfo.shopDesc";
+  //   wx.setStorageSync('oldDesc', this.data.data.shopInfo.shopDesc);
+  //   this.setData({
+  //     [desc]: null,
+  //     focus: true
+  //   })
+  // }, 
+  previewImage: function (e) {
+    var current = e.target.dataset.src;
+    var imageList = this.data.data.resMap.urls;
+    wx.previewImage({
+      current: current,
+      urls: imageList
     })
   }
 })

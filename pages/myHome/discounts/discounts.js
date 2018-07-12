@@ -1,4 +1,5 @@
 var app=getApp();
+var userId = wx.getStorageSync('scSysUser').id;
 Page({
   data: {
     discounts:[]
@@ -17,7 +18,7 @@ Page({
       title: '加载中',
     })
     app.util.reqAsync('shop/getMyCouponList', {
-      customerId: 1870,
+      customerId: userId,
     }).then((res) => { 
       wx.hideLoading();
       this.setData({ discounts: res.data.data});

@@ -12,7 +12,7 @@
 	},
 	"compileType": "miniprogram",
 	"libVersion": "2.1.1",
-	"appid": "wxdd29a42e8274d46e",
+	"appid": "wxd471bb4262ac7505",
 	"projectname": "zshop_pro",
 	"svr": "",
 	"client": "",
@@ -40,9 +40,9 @@
 			"current": -1,
 			"list": [
 				{
-					"id": -1,
+					"id": 0,
 					"name": "云店动态",
-					"pathName": "pages/dynamic/dynamic",
+					"pathName": "pages/proList/proList",
 					"query": ""
 				},
 				{
@@ -163,6 +163,48 @@
 					"id": -1,
 					"name": "proList",
 					"pathName": "pages/proList/proList",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "ask",
+					"pathName": "pages/ask/ask",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "appraise",
+					"pathName": "pages/appraise/appraise",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "askDetail",
+					"pathName": "pages/askDetail/askDetail",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "photos",
+					"pathName": "pages/photos/photos",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "videoLists",
+					"pathName": "pages/videoLists/videoLists",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "video",
+					"pathName": "pages/video/video",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "secKill",
+					"pathName": "pages/secKill/secKill",
 					"query": ""
 				}
 			]

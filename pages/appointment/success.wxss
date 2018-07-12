@@ -1,6 +1,6 @@
 .container{
   padding: 30rpx;
-  letter-spacing: 1rpx;
+  letter-spacing: 2rpx;
 }
 
 .success .status{

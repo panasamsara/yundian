@@ -3,109 +3,106 @@
   <!--模态框  -->
   <view class="mask" catchtouchmove="preventTouchMove" wx:if="{{showModal}}"></view>
   <view class="modalDlg" wx:if="{{showModal}}">
-      <image class='new-coupon-img' src="./img/yundian_libaobeijing@2x.png"/>
-      <image class='lingqu-btn' bindtap="getCoupon" src="./img/yundian_libaolingquanniu@2x.png"/>
-      <image class='close-btn' bindtap="closeModal" src='./img/yundian_lipinguanbi@2x.png'></image>
+    <image class='new-coupon-img' src="./img/yundian_libaobeijing@2x.png" />
+    <image class='lingqu-btn' bindtap="getCoupon" src="./img/yundian_libaolingquanniu@2x.png" />
+    <image class='close-btn' bindtap="closeModal" src='./img/yundian_lipinguanbi@2x.png'></image>
   </view>
-  
-  <!-- <scroll-view class="categroy" scroll-y="{{isScroll}}" scroll-into-view="{{toView}}" scroll-with-animation="true" bindtouchstart = "handletouchtart" bindtouchmove="handletouchmove" bindtouchend="handletouchend">
-    <block> -->
-        <view id="top" class="cate-box">
-            
-            <image src='{{shopInformation.shopInfo.bgImage}}' class='top-bg' wx:if='{{showImg}}'></image>
-            <view class='video-bg'  wx:if='{{showVideo}}'>
-              <video class='video-ctx' id="myVideo" src="{{shopInformation.shopInfo.shopHomeConfig.videoPathList[0].filePath}}" binderror="videoErrorCallback"></video>
-            </view>
-            
-            <view class='btn-list'>
-              <view bindtap='showImgFuc'>
-                <!-- <view class='btn-img '></view> -->
-                 <image class="{{showImg?'btn-img-active':'btn-img'}}" src='./img/yundian_zhaopian@2x.png'></image> 
-                <text class='text-below'>照片</text>
-              </view>
-              <view bindtap='showVideoFuc'>
-                <image class="{{showVideo?'btn-img-active':'btn-img'}}" src='./img/yundian_shipin@2x.png'></image>
-                <text class='text-below'>视频</text>
-              </view>
-              <view bindtap='goTo720'>
-                <image class='btn-img' src='./img/720@2x.png'></image>
-                <text class='text-below'>全景</text>
-              </view>
-              <view>
-                <image class='btn-img' src='./img/yundian_zhibo@2x.png'></image>
-                <text class='text-below'>直播</text>
-              </view>
-            </view>
 
-            <view class='bottom-box'>
-              <image class='logo' src='{{shopInformation.shopInfo.logoUrl}}'></image>
-              <view class='desc-box'>
-                <view class='desc-name'>{{shopInformation.shopInfo.shopName}}</view>
-                <view class='fans-num'>粉丝数 <text>{{shopInformation.fansCounter}}</text></view>
-              </view>
-              <image class='qrcode' src='./img/qrcode.png'></image>
-            </view>
+  <view id="top" class="cate-box">
+    <image src='{{shopInformation.shopInfo.bgImage}}' mode='center' class='top-bg' wx:if='{{showImg}}'></image>
+    <view class='video-bg' wx:if='{{showVideo}}'>
+      <video class='video-ctx' id="myVideo" src="{{shopInformation.shopInfo.shopHomeConfig.videoPathList[0].filePath}}" binderror="videoErrorCallback"></video>
+    </view>
+
+    <view class='btn-list'>
+      <view bindtap='goPhotos'>
+        <!-- <view class='btn-img '></view> -->
+        <image class="btn-img" src='./img/yundian_zhaopian@2x.png'></image>
+        <text class='text-below'>照片</text>
+      </view>
+      <view bindtap='goVideoLists'>
+        <image class="btn-img" src='./img/yundian_shipin@2x.png'></image>
+        <text class='text-below'>视频</text>
+      </view>
+      <view bindtap='goTo720' wx:if='{{has720}}'>
+        <image class='btn-img' src='./img/720@2x.png'></image>
+        <text class='text-below'>全景</text>
+      </view>
+      <view bindtap='goLive' wx:if=''>
+        <image class='btn-img' src='./img/yundian_zhibo@2x.png'></image>
+        <text class='text-below'>直播</text>
+      </view>
+    </view>
+
+    <view class='bottom-box'>
+      <navigator url='../store/store'><image class='logo' src='{{shopInformation.shopInfo.logoUrl}}'></image></navigator>
+      <view class='desc-box'>
+        <view class='desc-name'>{{shopInformation.shopInfo.shopName}}</view>
+        <view class='fans-num'>粉丝数
+          <text>{{shopInformation.fansCounter}}</text>
         </view>
-    <!-- </block>
+      </view>
+      <navigator url='../store/code/code'><image class='qrcode' src='./img/qrcode.png'></image></navigator>
+    </view>
+  </view>
+  <!-- </block>
     <block> -->
-        <view id="detail" class="cate-box">
-            <view class='coupon'>
-              <image class='coupon-img' src='./img/coupon.png'></image>
-              <text class='coupon-txt'>新用户进店可领取专属兑换券</text>
-            </view>
-            <view class='yuyue' bindtap='goAppointment'>
-              <image src='./img/yuyue.png'></image>
-            </view>
-            <view class="activity-swiper">
-              <view class='main-top m-b-20'>
-                <text class='tips'>店铺活动</text>
-              </view> 
-              <swiper indicator-dots="{{indicatorDots}}"
-                autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
-                <block wx:for="{{shopInformation.goodsInfos}}" wx:key="*this">
-                  <swiper-item>
-                    <view class="swiper-item">
-                      <view class='activity-img'>
-                        <image src='{{item.pictureUrl}}' bindtap='goToActivityDetail' data-activityid='{{item.id}}'></image>
-                      </view>
-                      
-                      <view class='activity-desc-box'>
-                        <view>
-                          <view class='activity-name font-size-24'>{{item.goodsName}}</view>
-                          <view class='activity-detail font-size-24'>{{item.descTitle}}</view>
-                        </view>
-                        <view>
-                          <view class='font-size-24 text-align-right'>活动时间</view>
-                          <view class='font-size-24'>{{item.startTime}}</view>
-                        </view>
-                      </view>
-                    </view>
-                  </swiper-item>
-                </block>
-              </swiper>
-            </view>
+  <view id="detail" class="cate-box">
+    <view class='coupon'>
+      <image class='coupon-img' src='./img/coupon.png'></image>
+      <text class='coupon-txt'>新用户进店可领取专属兑换券</text>
+    </view>
+    <navigator class="yuyue" url="../appointment/appointment">
+      <image src='./img/yuyue.png'></image>
+    </navigator>
+    <view class="activity-swiper">
+      <view class='main-top m-b-20'>
+        <text class='tips'>店铺活动</text>
+      </view>
+      <swiper indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
+        <block wx:for="{{shopInformation.goodsInfos}}" wx:key="*this">
+          <swiper-item>
+            <view class="swiper-item">
+              <view class='activity-img'>
+                <image src='{{item.pictureUrl}}' bindtap='goToActivityDetail' data-activityid='{{item.id}}'></image>
+              </view>
 
-            <view class='tuijian'>
-              <view class='main-top'>
-                <!-- <image src='images/3.gif' class='top-img'></image> -->
-                <text class='tips'>精品推荐</text>
-              </view> 
-              <view class='item' wx:for="{{hotCommoditiesList}}" wx:key='key'>
-                <view class='item-img'>
-                  <image src='{{item.goodsLogo}}' bindtap="goToDetail" data-goodsid='{{item.goodsId}}'></image>
-                  <text class='item-text'>{{item.goodsName}}</text>
-                  <view class='item-bot'>
-                    <span class='price'>￥{{item.price}}</span>
-                    <view class='putInCart'>
-                      <image class='putInCart-img'  src='../../images/yundian_dpzy_gouwuchec@2x.png'></image>
-                    </view>
-                    
-                  </view>
+              <view class='activity-desc-box'>
+                <view>
+                  <view class='activity-name font-size-24'>{{item.goodsName}}</view>
+                  <view class='activity-detail font-size-24'>{{item.descTitle}}</view>
+                </view>
+                <view>
+                  <view class='font-size-24 text-align-right'>活动时间</view>
+                  <view class='font-size-24'>{{item.startTime}}</view>
                 </view>
               </view>
             </view>
+          </swiper-item>
+        </block>
+      </swiper>
+    </view>
+
+    <view class='tuijian' wx:if="{{hotCommoditiesList.length}}">
+      <view class='main-top'>
+        <!-- <image src='images/3.gif' class='top-img'></image> -->
+        <text class='tips'>精品推荐</text>
+      </view>
+      <view class='item' wx:for="{{hotCommoditiesList}}" wx:key='key'>
+        <view class='item-img'>
+          <image src='{{item.goodsLogo}}' mode='aspectFit' bindtap="goToDetail" data-goodsid='{{item.goodsId}}'></image>
+          <text class='item-text'>{{item.goodsName}}</text>
+          <view class='item-bot'>
+            <span class='price'>￥{{item.price}}</span>
+            <view class='putInCart'>
+              <image class='putInCart-img' src='../../images/yundian_dpzy_gouwuchec@2x.png'></image>
+            </view>
+          </view>
         </view>
-    <!-- </block>  -->
+      </view>
+    </view>
+  </view>
+  <!-- </block>  -->
 
 
 </view>

@@ -4,10 +4,6 @@ const app = getApp()
 Page({
   data: {
     show:'dynamic',
-    motto: 'Hello World',
-    userInfo: {},
-    hasUserInfo: false,
-    canIUse: wx.canIUse('button.open-type.getUserInfo'),
     navData: [
       {
         text: '云店动态',
@@ -30,26 +26,17 @@ Page({
         id: 'account'
       }
     ],
-    currentTab: 0,
-    navScrollLeft: 0
+    currentTab: 0
   },
   //事件处理函数
   onLoad: function () {
     wx.showLoading({
       title: '加载中',
     })
-    if(this.data.show=='dynamic'){
-      this.selectComponent("#dynamic").onLoad();
-    } else if (this.data.show == 'headline'){
-      this.selectComponent("#headline").onLoad();
-    } 
+    this.selectComponent('#' + this.data.show).onLoad();
   },
   onReachBottom:function (){
-    if (this.data.show == 'dynamic') {
-      this.selectComponent("#dynamic").onReachBottom();
-    } else if (this.data.show == 'headline') {
-      // this.selectComponent("#headline").onReachBottom();
-    } 
+    this.selectComponent('#' + this.data.show).onReachBottom();
   },
   switchNav(event) {
     var cur = event.currentTarget.dataset.current,

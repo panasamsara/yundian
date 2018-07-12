@@ -1,7 +1,7 @@
 /* pages/store/activityInfo/activityInfo.wxss */
 .container{
   padding: 30rpx 0;
-  letter-spacing: 1rpx;
+  letter-spacing: 2rpx;
 }
 
 .activityInfo .head{

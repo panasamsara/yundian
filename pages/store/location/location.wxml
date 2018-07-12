@@ -5,7 +5,6 @@
     latitude="{{latitude}}"
     longitude="{{longitude}}"
     markers="{{markers}}"
-    covers="{{covers}}"
     >
   </map>
 </view>

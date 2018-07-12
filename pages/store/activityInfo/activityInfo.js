@@ -1,5 +1,5 @@
 // pages/store/activityInfo/activityInfo.js
-const util = require('../../../utils/util.js')
+const app = getApp();
 
 Page({
 
@@ -14,16 +14,19 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    console.log(options);
     let data = {
-      goodsId: 2,
-      shopId: 1
+      goodsId: options.goodsId,
+      shopId:options.shopId
     }
-    util.reqAsync('shop/goodsDetail', data).then((res) => {
-      console.log(res.data.data)
-      this.setData({
-        data: res.data.data
-      })
+    console.log(data)
+    app.util.reqAsync('shop/goodsDetail', data).then((res) => {
+      if(res.data.data){
+        res.data.data.startTime = app.util.formatActivityDate(res.data.data.startTime);
+        res.data.data.endTime = app.util.formatActivityDate(res.data.data.endTime)
+        this.setData({
+          data: res.data.data
+        })
+      }
     }).catch((err) => {
       console.log(err);
     })

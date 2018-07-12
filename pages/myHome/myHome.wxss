@@ -16,7 +16,8 @@
 .headerToP .top{
   position: absolute;
   top: 0;
-  left: 325rpx;
+  left: 50%;
+  transform:translate(-50%);
 }
 .headerToP .top image{
   border-radius: 50%;
@@ -41,7 +42,7 @@
 }
 .onlineOrder{
   position: absolute;
-  top: -30rpx;
+  top: -40rpx;
   background: #fff;
   width: 690rpx;
   border-radius: 20rpx 20rpx 0 0;
@@ -58,11 +59,11 @@
   line-height: 60rpx;
   overflow:hidden;
   font-size: 30rpx;
-  padding: 10rpx 30rpx 30rpx 30rpx;
+  padding: 20rpx 30rpx 30rpx 30rpx;
 }
 .orderList{
   display: flex;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid #eee;
   padding-top: 40rpx;
 }
 .orderList view{
@@ -103,10 +104,10 @@
   margin-top: 20rpx;
 }
 .borderTop{
-  border-top: 1px solid #ddd;
+  border-top: 1px solid #eee;
 }
 .borderBottom{
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #eee;
 }
 .paddingBottom{
   padding-bottom: 50rpx;

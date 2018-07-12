@@ -3,8 +3,8 @@
     <view class="headerToP">
       <image class="bgimg" src='images/myhome.png'></image>
       <view class='top'>
-        <image class="" src="images/head.png"></image>
-        <text>爱丽丝</text>
+        <image class="" src="{{user.userpic}}"></image>
+        <text>{{user.username}}</text>
       </view>
     </view>
   </view>

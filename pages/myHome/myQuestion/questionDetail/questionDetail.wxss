@@ -30,7 +30,7 @@
     width: 340rpx;
     height: 310rpx;
     display: block;
-    margin: 300rpx auto 50rpx;
+    margin: 100rpx auto 50rpx;
 }
 .addessNull{
   text-align: center;
@@ -76,7 +76,7 @@
   color: #999;
 }
 .question{
-  margin-top: 60rpx;
+  margin-top: 40rpx;
   width: 120rpx;
 }
 .question .imageQ{
@@ -170,3 +170,17 @@
  border: 1rpx solid #ddd;
  margin-top: 10rpx;
 }
+.textp{
+  height: 50rpx !important;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+  width: 400rxp;
+}
+.content .textptwo{
+  overflow: hidden; 
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical; 
+} 

@@ -1,9 +1,9 @@
 //shopping-cart.js
 
-//此页面还差付款未做
+//此页面还差付款
 //获取应用实例
 const app = getApp();
-
+var user = wx.getStorageSync('scSysUser');
 Page({
   data: {
     winHeight: "",//窗口高度
@@ -71,7 +71,7 @@ Page({
   getData: function(){
     //调接口
     app.util.reqAsync('shop/orderList', {
-      customerId: 198,
+      customerId: user.id || 198,
       orderStatusVo: this.data.currentTab,
       pageNo: this.data.currentPage,
       pageSize: 10
@@ -90,7 +90,6 @@ Page({
           goodlist: oldData,
           length: oldData.length
         })
-        console.log(this.data.goodlist)
     }).catch((err) => {
       wx.showToast({
         title: '失败……',
@@ -138,11 +137,20 @@ Page({
       goodId = e.currentTarget.dataset.goodid;
     //评价
     wx.navigateTo({
-      url: '../appraise/appraise?shopId=' + shopId + '&goodId=' + goodId
+      url: '../appraise/appraise?shopId=' + shopId + '&goodsId=' + goodId
     })
   },
   returnGood: function(e){
     //申请退货
+    var orderNo = e.currentTarget.dataset.no,
+      orderStatus = e.currentTarget.dataset.statu,
+      returnAmount = e.currentTarget.dataset.money;
+    wx.navigateTo({
+      url: 'applyRefund/applyRefund?orderNo=' + orderNo + '&orderStatus=' + orderStatus + '&returnAmount=' + returnAmount
+    })
+  },
+  reimburse: function(e){
+    //申请退款
     var orderNo = e.currentTarget.dataset.no,
       orderStatus = e.currentTarget.dataset.statu,
       returnAmount = e.currentTarget.dataset.money;
@@ -168,7 +176,7 @@ Page({
   },
   shipments : function(e){
     var orderNo = e.currentTarget.dataset.no,
-      userId = 1;//用户id不知道哪里获得
+      userId = user.id;//用户id
     //提醒发货
     app.util.reqAsync('shop/orderRemind', {
       orderNo: orderNo,
@@ -183,6 +191,21 @@ Page({
         title: '失败……',
         icon: 'none'
       })
+    })
+  },
+  shopSkip: function(e){
+    var shopId = e.currentTarget.dataset.shopid;
+    var currUserId = user.id;//用户id
+    //跳到店铺
+    wx.navigateTo({
+      url: '../../store/store?shopId=' + shopId + '&currUserId=' + currUserId
+    })
+  },
+  orderSkip: function(e){
+    var orderNo = e.currentTarget.dataset.no;
+    //跳转到订单详情
+    wx.navigateTo({
+      url: '../orderDetail/orderDetail?orderNo=' + orderNo
     })
   },
   onReachBottom: function () {

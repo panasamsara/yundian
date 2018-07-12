@@ -1,0 +1,67 @@
+<!--pages/askDetail/askDetail.wxml-->
+<view class='top clearfix'>
+  <image src='{{picImg}}'></image>
+  <view class='text'>
+    <text class='text-top'>{{goodSName}}</text>
+    <text class='text-bot'>{{descTitle}}</text>
+  </view>
+  <view class='text-right'>
+    <text class='right-text'>3个回答</text>
+    <span>问</span>
+  </view>  
+</view>
+<!-- 主体部分 -->
+<view class='main'>
+  <view class='main-top clearfix'>
+    <view class='icon'>问</view>
+    <view class='content'>
+      <text class='txt'>{{content}}</text>
+      <text class='time'>2018-06-22</text>
+    </view>
+  </view>
+  <view class='item'>
+    <view class='itemtop clearfix'>
+      <image src=''></image>
+      <span class='name'>哆啦A梦</span>
+      <span class='time'>2018-02-18</span>
+    </view>
+    <view class='itembot clearfix'>
+      <text>颜色蛮多的,个人感觉这套比较划算</text>
+      <span class='pl40'>举报</span>
+      <span class='pl12'>2</span>
+      <image src='../../images/fullstar.png' bindtap='dianzan'></image>
+    </view>
+  </view>
+  <!-- <view class='item'>
+    <view class='itemtop clearfix'>
+      <image src='../../images/pic_03.gif'></image>
+      <span class='name'>哆啦A梦</span>
+      <span class='time'>2018-02-18</span>
+    </view>
+    <view class='itembot clearfix'>
+      <text>颜色蛮多的,个人感觉这套比较划算</text>
+      <span class='pl40'>举报</span>
+      <span class='pl12'>2</span>
+      <image src='../../images/fullstar.png'></image>
+    </view>
+  </view>
+  <view class='item'>
+    <view class='itemtop clearfix'>
+      <image src='../../images/pic_03.gif'></image>
+      <span class='name'>哆啦A梦</span>
+      <span class='time'>2018-02-18</span>
+    </view>
+    <view class='itembot clearfix'>
+      <text>颜色蛮多的,个人感觉这套比较划算</text>
+      <span class='pl40'>举报</span>
+      <span class='pl12'>2</span>
+      <image src='../../images/fullstar.png'></image>
+    </view>
+  </view>     -->
+</view>
+<view class='temp'></view>
+<!-- 底部悬浮栏 -->
+<view class='bottom'>
+  <input type='text' placeholder='只有买过的人才能回答' bindinput='inputvalue' value='{{myValue}}'></input>
+  <button type='submt' bindtap='addAswer'>发送</button>
+</view>

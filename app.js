@@ -28,10 +28,10 @@ App({
       //   icon: 'none'
       // })
     }).catch((err)=>{
-      // wx.showToast({
-      //   title: '失败……',
-      //   icon: 'none'
-      // })
+      wx.showToast({
+        title: '失败……',
+        icon: 'none'
+      })
     })
 
     // 登录
@@ -84,6 +84,19 @@ App({
         icon: 'none'
       })
     })
+  },
+  onLaunch: function(){
+    let that = this;
+    //  获取页面的有关信息,贝塞尔曲线会用到
+    wx.getSystemInfo({
+      success: function (res) {
+        wx.setStorageSync('systemInfo', res)
+        var ww = res.windowWidth;
+        var hh = res.windowHeight;
+        that.globalData.ww = ww;
+        that.globalData.hh = hh;
+      }
+    });
   },
   bezier: function (pots, amount) {
     console.log(pots)

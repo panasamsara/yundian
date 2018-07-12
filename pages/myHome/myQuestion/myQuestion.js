@@ -1,14 +1,16 @@
 var app=getApp();
+var userId = wx.getStorageSync('scSysUser').id;
 Page({
   data: {
     activeIndex: "1",
     orderList:[],
     listData: { 
       searchType: 1, 
-      createUser: 1870, 
-      pageSize: 10, 
+      createUser: userId, 
+      pageSize: 5, 
       pageNo: 1
-    }
+    },
+    total:""
   },
   onLoad: function (options) {
     this.getList();
@@ -23,6 +25,20 @@ Page({
 
   },
   onReachBottom: function () {
+    var newpage = Math.ceil(this.data.total / this.data.listData.pageSize);
+    console.log(this.data.listData.pageNo);
+    console.log(newpage);
+    if (this.data.listData.pageNo <= newpage) {
+      wx.showLoading({
+        title: '加载中',
+      })
+      this.getList();
+    } else {
+      wx.showToast({
+        title: '到底了哦',
+        icon: "none"
+      })
+    }
   },
   typeTop: function (e) {
     var index = e.currentTarget.dataset.index;
@@ -33,25 +49,35 @@ Page({
     }else{
       this.data.activeIndex = 3;
     }
-    var searchType ="listData.searchType"
-    this.setData({ activeIndex: this.data.activeIndex, [searchType]: this.data.activeIndex});
+    this.data.orderList.length = 0;
+    var searchType ="listData.searchType";
+    var page = "listData.pageNo";
+    this.setData({ activeIndex: this.data.activeIndex, [searchType]: this.data.activeIndex, [page]:1});
     this.getList();
+    console.log()
   },
   skip: function (e) {
     var id = e.currentTarget.dataset.id;
-    wx.navigateTo({ url: "/pages/myHome/myQuestion/questionDetail/questionDetail?id="+id })
+    var index = this.data.activeIndex;
+    wx.navigateTo({ url: "/pages/myHome/myQuestion/questionDetail/questionDetail?id=" + id + "&activeIndex=" + index});
   },
   getList: function () {
     wx.showLoading({
       title: '加载中',
     })
     app.util.reqAsync('shop/getMyQuestionByType', this.data.listData).then((res) => {
-      var orderListOld = [];
+      var orderListOld = this.data.orderList;
       var data = res.data.data;
       for (var i = 0; i < data.length; i++) {
         orderListOld.push(data[i]);
       }
-      this.setData({ orderList: orderListOld });
+      var desc = ++this.data.listData.pageNo;
+      var page = "listData.pageNo";
+      this.setData({
+        orderList: orderListOld,
+        total: res.data.total,
+        [page]: desc
+      });
       wx.hideLoading()
     }).catch((err) => {
       wx.hideLoading()

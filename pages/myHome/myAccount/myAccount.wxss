@@ -1,1 +1,227 @@
-/* pages/myhome/myAccount/myAccount.wxss */
+page{
+  overflow: hidden;
+}
+.mr30{
+  margin-right: 30rpx;
+}
+.colorfff{
+  color: #fff;
+}
+.mr60{
+  margin-right: 60rpx;
+}
+.left{
+  float: left;
+}
+.right{
+  float: right;
+}
+.font54{
+  font-size: 54rpx;
+}
+.header{
+  height: 360rpx;
+  width: 100%;
+}
+.header .bg{
+  width: 100%;
+  display: block;
+  height: 100%;
+}
+.shopIcon{
+  width: 40rpx;
+  height: 40rpx;
+  position: absolute;
+  top: 0;
+  right: -45rpx;
+}
+.shop{
+  position: absolute;
+  top: 20rpx;
+  left: 30rpx;
+  color: #fff;
+  font-size: 30rpx;
+}
+.scroll-view_H{
+  white-space: nowrap;
+  width: 100%;
+}
+.scroll-view-item_H{
+  display: inline-block;
+}
+.width90{
+  width: 90%;
+}
+ .margin87{
+  margin-left: 87rpx;
+}
+.margin57{
+  margin-left: 57rpx;
+} 
+.addpadding{
+  width: 90%;
+}
+.padding{
+  width: 100%;
+}
+.demo-text-1,.demo-text-2{
+  position: relative;
+}
+.nav{
+  font-size: 50rpx;
+  width: 576rpx;
+	border-radius: 18rpx 18rpx 0 0;
+  /* margin-left: 57rpx; */
+  margin-bottom: 30rpx;
+  background: #fff;
+}
+.nav .shopNav{
+  background-color: #303030;
+  padding: 30rpx;
+  border-radius: 18rpx 18rpx 0 0;
+}
+
+.nav .shopNav image{
+  width: 40rpx;
+  height: 46rpx;
+  vertical-align: middle;
+}
+.nav .shopNav .bg2{
+  width: 68rpx;
+  height: 170rpx;
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.shopNav{
+  position: relative;
+}
+.typetext{
+  position: absolute;
+  right: 0;
+  font-size: 28rpx;
+  color: #333;
+  width:38rpx; 
+  word-wrap:break-word;
+  word-break:break-all;
+  overflow: hidden;
+  white-space:normal;
+  top:20rpx;
+}
+.shopInfo{
+  overflow: hidden;
+}
+.shopInfo .left{
+  font-size: 26rpx;
+}
+.shopInfo .left view{
+  margin-top: 15rpx;
+  color: #e7e7e7;
+}
+.shopInfo .left view:first-child{
+  margin-top: 20rpx;
+}
+.shopInfo .right{
+  background: #fff;
+  color: #333;
+  border-radius: 15rpx;
+  text-align: center;
+  width: 114rpx;
+  margin-top: 40rpx;
+  margin-right: 50rpx;
+  font-size: 28rpx;
+  padding: 10rpx;
+}
+.shopInfo .right>view{
+  margin-top: 20rpx;
+}
+.activity{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+  padding: 20rpx 0 30rpx 0;
+  border-radius: 0 0 15rpx 15rpx;
+  box-shadow: 0px 5px 9px 0px 
+  rgba(0, 0, 0, 0.1);
+  height:560rpx;
+  overflow:scroll;
+}
+.activity .item{
+  margin-top: 30rpx;
+  width:155rpx;
+  height:145rpx;
+	background-color: #ffffff;
+	box-shadow: 0px 5px 9px 0px 
+		rgba(0, 0, 0, 0.18); 
+	border-radius: 15px;
+  margin-left: 30rpx;
+  position: relative;
+  color: #333;
+  font-size: 28rpx;
+}
+.item .sj{
+  position: absolute;
+  width: 47rpx;
+  height: 47rpx;
+  right: 0;
+  top: 0;
+}
+.item .typetext{
+  position: absolute;
+  font-size: 18rpx;
+  color: #333;
+  top:2rpx;
+  right:2rpx;
+  width: auto;
+  transform:rotate(40deg);
+  text-align: center;
+}
+.item .zs{
+  width: 100%;
+  height: 30rpx;
+  position: absolute;
+  bottom: 0;
+}
+.item .zstext{
+  position: absolute;
+  bottom: 0;
+  font-size: 18rpx;
+  width: 100%;
+  display: block;
+  text-align: center;
+  line-height: 30rpx;
+  letter-spacing: 4rpx;
+  color: #fff;
+}
+.item .itemName{
+  width: 100%;
+  text-align: center;
+  margin-top: 30rpx;
+  font-size: 26rpx;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.item .itemCi{
+  width: 100%;
+  text-align: center;
+  margin-top: 5rpx;
+}
+.page-section-spacing{
+  position:relative;
+  top:-72px;
+}
+.addessNull image{
+    width: 340rpx;
+    height: 310rpx;
+    display: block;
+    margin: 190rpx auto 50rpx;
+}
+.addessNull{
+  text-align: center;
+  font-size: 28rpx;
+  color: #999;
+}

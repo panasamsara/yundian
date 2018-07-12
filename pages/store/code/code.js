@@ -7,7 +7,6 @@ Page({
    * 页面的初始数据
    */
   data: {
-    storeUrl:'baidu.com',
     canvasHidden: false,
     imagePath: ''
   },
@@ -16,6 +15,15 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    var shop = wx.getStorageSync('shop');
+    console.log(shop)
+    this.setData({
+      shopName: shop.shopName,
+      url: shop.logoUrl,
+      fans: options.fans || 0,
+      storeUrl: "https://wxapp.izxcs.com/qrcode/shop/" + shop.id
+    })
+    console.log(this.data.storeUrl)
     // 页面初始化 options为页面跳转所带来的参数
     var size = this.setCanvasSize();//动态设置画布大小
     var initUrl = this.data.storeUrl;
@@ -89,7 +97,7 @@ Page({
   createQrCode: function (url, canvasId, cavW, cavH) {
     //调用插件中的draw方法，绘制二维码图片
     QR.api.draw(url, canvasId, cavW, cavH);
-    setTimeout(() => { this.canvasToTempImage(); }, 100);
+    setTimeout(() => { this.canvasToTempImage(); }, 500);
 
   },
   //获取临时缓存照片路径，存入data中

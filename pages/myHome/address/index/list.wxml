@@ -1,4 +1,4 @@
-<view>
+<view class="wrap">
   <block wx:if="{{address.length==0}}">
       <view class="addessNull">
         <image src="../../images/adderss.png"></image>

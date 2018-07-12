@@ -25,7 +25,9 @@
   font-size: 28rpx;
   color: #666;
 }
-
+.wrap{
+  padding-bottom: 100rpx;
+}
 /* 未选中的 背景样式 */
 radio .wx-radio-input{
    border-radius: 50%;/* 圆角 */

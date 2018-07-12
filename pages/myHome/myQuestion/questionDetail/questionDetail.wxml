@@ -1,108 +1,84 @@
 <view>
   <view class="wrap" >
-    <!-- 没有可使用的预约默认图 -->
-    <block>
-      <view class="addessNull" style='display:none;'>
-        <image src="../images/adderss.png"></image>
-        <view>暂时没有订单哦~</view>
-      </view>
-    </block> 
     <view class='content'>
-      <view class="list" bindtap='skip'>
+      <view class="list" bindtap='skip' wx:for="{{answerList}}" wx:key="{{item}}">
         <view class="orderInfo">
           <view class='left'>
-            <image src='../../images/1.gif'></image>
+            <image src='{{item.pictureUrl}}'></image>
           </view>
           <view class='left con'>
-            <text class='conTitle'>chanel彩妆套装</text>
-            <view class='color999 font28'>新款夏季连衣裙荷叶袖收腰ins热门款</view>
+            <text class='conTitle textp'>{{item.goodsName}}</text>
+            <view class='color999 font28 textptwo'>{{item.descTitle || ""}}</view>
           </view>
            <view class='question right'>
-            <!-- <text>
-              <text class='questionText'>问</text>
-            </text> -->
-            <view><image class="imageQ" src='../../images/question.png'></image></view>
-            <view>
-              15个问题
-            </view>
+            <block wx:if="{{activeIndex==2}}">
+              <view><image class="imageQ" src='../../images/answer.png'></image></view> 
+              <view>
+                {{questionList[0]["answerCount"]}}个回答
+              </view> 
+            </block>
+            <block wx:if="{{activeIndex==1||activeIndex==3}}">
+              <view><image class="imageQ" src='../../images/question.png'></image></view> 
+              <view>
+                {{questionList[0]["answerCount"]}}个问题
+              </view> 
+            </block>
           </view>
         </view>
       </view>
-      <view class="questionList">
+      <view class="questionList" wx:for="{{questionList}}" wx:key="{{item}}">
         <view>
          <view class='left'><image class="imageQ" src='../../images/question.png'></image></view>
           <view class='right conLeft'>
-            <view class='conTitle'>这一套划算吗？的hi五虎将丢维护费对我凤凰这一套划算吗？的hi五虎将丢维护费对我凤凰 </view>
-            <view class='timer'>2018-08-55</view>
+            <view class='conTitle'>{{item.content}} </view>
+            <view class='timer'>{{item.createTime}}</view>
           </view>
         </view>
-        <view class='touxiang'>
+        <block wx:if="{{item.answers.length==0}}">
+          <view class="addessNull">
+            <image src="../../images/adderss.png"></image>
+            <view>暂时没有回答哦~</view>
+          </view>
+        </block>  
+        <view class='touxiang' wx:for="{{answers}}" wx:key="{{item}}">
           <view class='left'>
-            <image src='../../images/1.gif'></image>
+            <image src='{{item.userHeardPic}}'></image>
           </view>
           <view class='right conLeft'>
             <view class='overHidden'>
-              <text class='conTitle left'>张****</text>
-              <text class='timer right'>2015-06-23</text>
+              <text class='conTitle left'>{{item.createUserName}}</text>
+              <text class='timer right'>{{item.createTime}}</text>
              </view>
             <view class='timer'>
-              颜色还挺多的，个人感觉这个比较划算
+              {{item.content}}
             </view>
             <view class='right timer collect'>
-              <text class='right mr15'>举报</text>
-              <text class='right mr15'>2</text>
-              <image class='right mr15' src='../../images/collect.png'></image>
-            </view>
-          </view>
-        </view>
-        <view class='touxiang'>
-          <view class='left'>
-            <image src='../../images/1.gif'></image>
-          </view>
-          <view class='right conLeft'>
-            <view class='overHidden'>
-              <text class='conTitle left'>张****</text>
-              <text class='timer right'>2015-06-23</text>
-             </view>
-            <view class='timer'>
-              颜色还挺多的，个人感觉这个比较划算
-              颜色还挺多的，个人感觉这个比较划算
-              颜色还挺多的，个人感觉这个比较划算
-            </view>
-            <view class='right timer collect'>
-              <text class='right mr15'>举报</text>
-              <text class='right mr15'>2</text>
-              <image class='right mr15' src='../../images/collect.png'></image>
-            </view>
-          </view>
-        </view>
-        <view class='touxiang'>
-          <view class='left'>
-            <image src='../../images/1.gif'></image>
-          </view>
-          <view class='right conLeft'>
-            <view class='overHidden'>
-              <text class='conTitle left'>张****</text>
-              <text class='timer right'>2015-06-23</text>
-             </view>
-            <view class='timer'>
-              颜色还挺多的，个人感觉这个比较划算
-              颜色还挺多的，个人感觉这个比较划算
-              颜色还挺多的，个人感觉这个比较划算
-            </view>
-            <view class='right timer collect'>
-              <text class='right mr15'>举报</text>
-              <text class='right mr15'>2</text>
-              <image class='right mr15' src='../../images/collect.png'></image>
+              <text class='right mr15' data-report="{{item.createUser}}" bindtap='report' data-id="{{item.id}}">举报</text>
+              <!-- <text class='right mr15'>{{item.isCanLiked}}</text>
+              <image class='right mr15' src='../../images/collect.png'></image> -->
             </view>
           </view>
         </view>
       </view>
     </view>
   </view>
-  <view class='send'>
-    <input class="weui-input left" auto-focus placeholder="只有买过的人才能回答"/>
-    <button class="mini-btn right" type="default" size="mini">按钮</button>
-  </view>
+  <block wx:if="{{activeIndex==1}}">
+    <view class='send'>
+      <input class="weui-input left" auto-focus placeholder="自己不能回答自己的问题哦" bindinput='bindinput' disabled='disabled'/>
+      <button class="mini-btn right" type="default" size="mini" disabled='disabled'>按钮</button>
+    </view>
+  </block>
+  <block wx:if="{{activeIndex==2||activeIndex==3}}">
+   <view class='send'>
+    <block wx:if="{{questionList[0].isCanAnswer==0}}">
+       <input class="weui-input left" auto-focus placeholder="我买过，我来答...." bindinput='bindinput' value="{{sendValue}}"/>
+      <button class="mini-btn right" type="default" size="mini" bindtap='send'>按钮</button> 
+    </block>
+    <block wx:if="{{questionList[0].isCanAnswer==1}}">
+      <input class="weui-input left" auto-focus disabled='disabled' placeholder="只有买过商品的人才可以回答"/>
+      <button class="mini-btn right" type="default" size="mini" bindtap='send' disabled='disabled'>按钮</button>
+    </block>
+  </view> 
+  </block>
 </view>
 

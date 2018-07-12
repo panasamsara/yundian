@@ -1,0 +1,19 @@
+<!--pages/secKill/secKill.wxml-->
+<view class='container secKill'>
+  <view wx:for="{{list}}" wx:key="index" class='list'>
+    <image src='{{item.url}}' class='pic'></image>
+    <view class='info'>
+      <text class='title'>{{item.title}}</text>
+      <view class='price'>
+        <text class='newPrice'>￥{{item.newPrice}}</text>
+        <text class='oldPrice'>￥{{item.oldPrice}}</text>
+      </view>
+      <view class='buyBox'>
+        <text class='end'>距结束{{item.time}}</text>
+        <view class='buy'>
+          <navigator>马上抢</navigator>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

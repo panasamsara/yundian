@@ -1,4 +1,6 @@
 {
+  "navigationBarTitleText": "云店玩家圈",
   "component": true,
-  "usingComponents": {}
+  "usingComponents": {},
+  "enablePullDownRefresh": true
 }

@@ -1,11 +1,6 @@
 <!--orderdetail.wxml-->
 <view class="">
 
-    <view class="goods-title-view">
-      <text class="line-left"></text>
-      <text class="good-title">选购商品</text>
-      <text class="line-right"></text>
-    </view>
 
   <!--底部商品-->
   <view class="goods" style="height: {{goodsH}}rpx;">
@@ -26,12 +21,12 @@
           <!--加减器-->
           <view class="cartcontrol-wrap">
             <view class="cartcontrol">
-                <block wx:for="{{shoppingCartGoodsId}}" wx:for-item="goodId">
+                <!-- <block wx:for="{{shoppingCartGoodsId}}" wx:for-item="goodId">
                   <view bindtap="decreaseGoodToCartFn"  class="cart-decrease {{(good.id == goodId) ? '': 'hidden'}}">
                     <image class="cart-decrease" id="decrease_{{good.id}}" src="./image/fenlei_shanjian@2x.png"></image>
                     <view class="inner icon-remove_circle_outline"></view>
                   </view>
-                </block>
+                </block> -->
                 <text class="cart-count">{{(shoppingCart[good.id]) ? shoppingCart[good.id]: ""}}</text>
                <image src="./image/fenlei_tianjia@2x.png" bindtap="touchOnGoods" id="add_{{good.id}}" class="cart-add icon-add_circle"></image>
             </view>  
@@ -47,43 +42,43 @@
   <view>
     <view class="shopcart">
       <view class="content">
-        <view class="content-left" bindtap="">
-          <!-- <view class="logo-wrapper">
+        <view class="content-left" bindtap="showShopCartFn">
+           <!-- <view class="logo-wrapper">
             <image class="logo" src="./image/fenlei_gouwuche@2x.png" style="background-image:url(./image/fenlei_gouwuche@2x.png)">
               <i class="icon-shopping_cart"></i>
             </image>
             <view class="num" wx:if="{{totalNum}}">{{totalNum}}</view>
-          </view> -->
+          </view>  -->
           <view class="price {{(totalPay > 0)? 'highlight':''}}">￥{{totalPay}}</view>
         </view>
         <view class="content-right">
-          <view bindtap="goToCart" class="pay payClass">去结算<text wx:if='{{totalNum >0}}'>{{totalNum}}</text>
+          <view bindtap="goToCart" class="pay payClass">去结算<text wx:if='{{totalNum >0}}'>（{{totalNum}}）</text>
           </view>
         </view>
       </view>
 
       
       <view class="shopcart-list {{(showShopCart && (totalPay > 0))?'':'hidden'}}">
-        <view class="list-header">
+        <!-- <view class="list-header">
           <view class="title"><text class="title-line">已选商品</text> <text class="empty" bindtap="clearShopCartFn">清空</text></view>
-        </view>
-        <scroll-view scroll-y style="max-height: 257px;">
+        </view> -->
+        <scroll-view scroll-y >
         <view class="list-content" >
           
             <view>
               <view class="food" wx:for="{{chooseGoodArr}}" wx:for-item="good">
-                <view class="name">{{good.name}}</view>
+                <view class="name">{{good.goodsName}}</view>
                 <view class="price">
                   <view>￥{{good.price}}</view>
                 </view>
 
                 <view class="cartcontrol-wrapper">
                     <view class="cartcontrol">
-                        <view bindtap="decreaseGoodToCartFn"  class="cart-decrease">
+                        <view bindtap="decreaseGoodToCartFn" data-stockid='{{good.stockId}}' class="cart-decrease">
                             <image id="decrease_{{good.id}}" class="cart-decrease" src="./image/fenlei_shanjian@2x.png"></image>
                             <view class="inner icon-remove_circle_outline"></view>
                         </view>
-                        <text class="cart-count">{{(shoppingCart[good.id]) ? shoppingCart[good.id]: ""}}</text>
+                        <text class="cart-count">{{good.number}}</text>
                         <image src="./image/fenlei_tianjia@2x.png" bindtap="addGoodToCartFn" id="add_{{good.id}}" class="cart-add icon-add_circle"></image>
                         
                     </view>  
@@ -122,7 +117,11 @@
     </view>
     <view class='stock-box-bottom'>
       <view class='stock-money'>￥2500</view>
-      <view class='stock-btn' bindtap='putInCart'>确认</view>
+      <view class='stock-btn' bindtap='choseStockYesBtn'>确认</view>
     </view>
   </view>
+</view>  
+
+<view class='mask' catchtouchmove='preventTouchMove' wx:if='{{showLoading}}'>
+  <view class='loading'>努力加载中...</view>
 </view>  

@@ -1,0 +1,14 @@
+<!--pages/photos/photos.wxml-->
+<view class='btn-group'>
+  <view class="leftBtn {{(photofrom == 0) ? 'btn-active':''}}" bindtap='photoType' data-type='0'>官方图片</view>
+  <view class="rightBtn {{(photofrom == 1) ? 'btn-active':''}}" bindtap='photoType' data-type='1'>网友晒图</view>
+</view>
+
+<view wx:if='{{!hasData}}'>
+  <image class='whitePic' src='../../images/yundian_zjy_yddt@2x.png'></image>
+  <view class='tips'>暂时没有内容哦</view>
+</view>
+
+<view class='content' wx:if='{{hasData}}'>
+  <image wx:for="{{photoLists}}" wx:for-item="list" src='{{list.contentUrl}}' class='photo-list'></image>
+</view>

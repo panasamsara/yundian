@@ -65,14 +65,14 @@ page,.content{
   position: relative;
 }
 .detail-top .detail-tit{
-  padding:0 85rpx;
+  padding:0 20rpx 0 85rpx;
 }
 .detail-top text:last-child{
   float: right;
   margin-right: 40rpx;
   color:#fb452c;
 }
-.detail-top image{
+.detail-top image:first-child{
   width: 34rpx;
   height: 35rpx;
   position: absolute;
@@ -351,7 +351,9 @@ page,.content{
   margin-top:15rpx;
 }
 .back{
-  width: 24rpx;
-  height: 30rpx;
-  margin-left: 200rpx;
+  width: 22rpx;
+  height:26rpx;
+}
+.detail-top .shop-info{
+  display: inline-block;
 }

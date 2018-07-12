@@ -22,10 +22,10 @@
         {{userInfo.recvAddress.address}}
       </view>
     </view>
-    <view wx:if="{{userInfo.recvAddress.address==''}}">
-      <navigator url="../myHome/address/index/list" hover-class="navigator-hover">请添加收货地址</navigator>
+    <view wx:if="{{userInfo.recvAddress.address==''}}" bindtap="addressSkip">
+      <navigator url="" hover-class="navigator-hover">请添加收货地址</navigator>
     </view>
-    <navigator url="../myHome/address/index/list" hover-class="navigator-hover"><image class="right-icon" src="../../../images/yundian_spxq_gengduo.png"></image></navigator>
+    <image bindtap="addressSkip" class="right-icon" src="../../../images/yundian_spxq_gengduo.png"></image>
   </view>
   <!--房间-->
   <view class="room" wx:if="{{isSend==1}}">
@@ -98,12 +98,12 @@
     <image src="img/close.png" bindtap="hide"></image>
     <view class="modal-title">选择房间</view>
     <view class="modal-content">
-      <view wx:if="{{roomInx==inx}}" class="room-list acv" wx:for="{{room}}" wx:for-item='rooms' wx:key="room" wx:for-index="inx" bindtap="selectRoom" data-index="{{inx}}" data-val="{{rooms.title}}">
+      <view  class="room-list {{roomInx==inx?'acv':''}}" wx:for="{{room}}" wx:for-item='rooms' wx:key="room" wx:for-index="inx" bindtap="selectRoom" data-index="{{inx}}" data-val="{{rooms.title}}" data-merchant="{{rooms.merchantId}}">
         {{rooms.title}}
       </view>
-      <view wx:if="{{roomInx!=inx}}" class="room-list" wx:for="{{room}}" wx:for-item='rooms' wx:key="room" wx:for-index="inx" bindtap="selectRoom" data-index="{{inx}}" data-val="{{rooms.title}}">
-        {{rooms.title}}
-      </view>
+    </view>
+    <view class="modal-btn">
+      <button class="knowBtn" bindtap="syre" data-index="{{roomInx}}" data-merchant="{{merchantId}}" data-val="{{roomVal}}">确认</button>
     </view>
   </view>
   </view>

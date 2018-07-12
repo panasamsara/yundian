@@ -1,6 +1,6 @@
 page{
   height:100%;
- 
+  position: relative;
 }
 .clearfix::after{
   content: '.';
@@ -23,6 +23,9 @@ swiper-item image{
 .detail text{
   display: block;
 }
+.rich-text{
+  width: 100%;
+}
 .detail .title{
   font-size: 30rpx;
   color:black;
@@ -39,17 +42,79 @@ swiper-item image{
 .detail span:first-child{
   margin-right: 120rpx;
 }
+.spellList{
+  padding:0 30rpx;
+}
+.spellList .top{
+  height:90rpx;
+  line-height: 90rpx;
+}
+.spellList .top>text{
+  font-size: 30rpx;
+  float: left;
+}
+.spellList .top>image{
+  width:15rpx;
+  height: 25rpx;
+  line-height: 90rpx;
+  margin-left: 355rpx;
+}
+.spellList .item{
+  padding:20rpx 0;
+  border-top:1rpx solid #e5e5e5;
+}
+.spellList .item>image{
+  width:100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  float:left;
+}
+.spellList .item>text{
+  float:left;
+  font-size: 30rpx;
+  margin-left: 20rpx;
+  margin-top: 36rpx;
+}
+.item .cont{
+  display: inline-block;
+  text-align: right;
+  font-size: 30rpx;
+  float:right;
+  margin-top:12rpx;
+}
+.item .cont>span{
+  color:#fb452c;
+}
+.item .cont view span{
+  color:#333333;
+  font-size: 26rpx;
+}
+.item button{
+  display: inline-block;
+  vertical-align: middle;
+  width:150rpx;
+  height: 70rpx;
+  color:#fff;
+  background-color: #fb452c;
+  text-align: center;
+  line-height: 70rpx;
+  border-radius: 8rpx;
+  float:right;
+  margin-top: 20rpx;
+  margin-left: 20rpx;
+}
 .dingwei{
    position: relative;
-   padding:15rpx 30rpx; 
+   padding:15rpx 30rpx 30rpx; 
 }
 .zw-pic image{
-  position: absolute;
+  /* position: absolute;
   top:0;
   right:0;
   bottom: 0;
   left:0;
-  margin: auto;
+  margin: auto; */
+  margin:0 auto;
 }
 .hide{
   display: none;
@@ -183,10 +248,49 @@ swiper-item image{
   height:20rpx;
   background-color:#e7e6e6;
 }
-.detial-text{
+.shop{
+  padding: 30rpx 30rpx 0;
+}
+.shop>image{
+  width:100rpx;
+  height: 100rpx;
+  float: left;
+  margin-right: 20rpx;
+  border-radius: 4rpx;
+}
+.shop .content{
+  float:left;
   font-size: 30rpx;
-  line-height: 60rpx;
-  padding-left: 30rpx;
+}
+.shop .content text{
+  display: block;
+  line-height: 54rpx;
+}
+.shop .content image{
+  width:30rpx;
+  height: 30rpx;
+  margin-top:9rpx;
+  margin-left: 7rpx;
+  float: left;
+}
+.shop .goShop{
+  float: right;
+  width:106rpx;
+  height: 48rpx;
+  font-size: 30rpx;
+  color:#fe4531;
+  border:2rpx solid #fe4531;
+  text-align: center;
+  line-height: 48rpx;
+  border-radius: 5rpx;
+  margin-top: 22rpx;
+}
+.tips>text{
+  padding:0 30rpx;
+  font-size: 30rpx;
+  color:#565656;
+  display: block;
+  line-height: 87rpx;
 }
 .detail-nav{
   display: flex;
@@ -243,4 +347,152 @@ button{
   font-size: 24rpx;
   text-align: center;
   color:#565656;
+}
+/* 遮罩层 */
+.shade{
+  width:100%;
+  height: 100%;
+  background-color:rgba(0, 0, 0, 0.3);
+  position: absolute;
+  top:0;
+  left: 0;
+}
+/* 弹出层 */
+.layer{
+  width:680rpx;
+  height: 860rpx;
+  background-color: #fff;
+  position: fixed;
+  top:200rpx;
+  left: 35rpx;
+  border-radius: 8rpx;
+}
+.layer .close{
+  width: 42rpx;
+  height: 42rpx;
+  color:#fff;
+  line-height: 36rpx;
+  text-align: center;
+  background-color: #fb452c;
+  border: 4rpx solid #fff;
+  border-radius: 50%;
+  position: absolute;
+  top:-30rpx;
+  right:-22rpx;
+  z-index: 2
+}
+.layer .top{
+  text-align: center;
+  height: 115rpx;
+  width:680rpx;
+  line-height: 115rpx;
+  font-size: 34rpx;
+  position: fixed;
+  top:265;
+  left: 35rpx;
+  background-color: #fff;
+  z-index: 1;
+  border-top-left-radius: 8rpx;
+  border-top-right-radius: 8rpx;
+}
+.layer .item{
+  padding:20rpx 20rpx;
+  border-top:1rpx solid #e5e5e5;
+}
+.mt{
+  margin-top: 115rpx
+}
+.layer .item>image{
+  width:100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  float:left;
+}
+.layer .item>text{
+  float:left;
+  font-size: 30rpx;
+  margin-left: 20rpx;
+  margin-top: 36rpx;
+}
+.item .cont{
+  display: inline-block;
+  text-align: right;
+  font-size: 30rpx;
+  float:right;
+  margin-top:12rpx;
+}
+.item .cont>span{
+  color:#fb452c;
+}
+.item .cont view span{
+  color:#333333;
+  font-size: 26rpx;
+}
+.item button{
+  display: inline-block;
+  vertical-align: middle;
+  width:150rpx;
+  height: 70rpx;
+  color:#fff;
+  background-color: #fb452c;
+  text-align: center;
+  line-height: 70rpx;
+  border-radius: 8rpx;
+  float:right;
+  margin-top: 20rpx;
+  margin-left: 20rpx;
+}
+/* 底部提示信息 */
+.layer .bot{
+  height: 76rpx;
+  line-height: 76rpx;
+  border-top: 1rpx solid #e5e5e5;
+  font-size: 30rpx;
+  color:#999;
+  text-align: center;
+}
+.layer2{
+  height: 725rpx;
+}
+.layer2 .title{
+  margin-top: 10rpx;
+  font-size: 36rpx;
+  line-height: 96rpx;
+  text-align: center;
+}
+.layer2 .cont{
+  font-size: 30rpx;
+  color:#666;
+  text-align: center;
+  margin-bottom: 50rpx;
+}
+.layer2 .cont>span{
+  color:#fb452c;
+}
+.pic-list{
+  margin-left: 88rpx;
+}
+.pic-list image{
+  width:100rpx;
+  height: 100rpx;
+  float:left;
+  border-radius: 50%;
+  margin-right: 30rpx;
+  margin-bottom: 30rpx;
+}
+.pic-list image:nth-child(4n){
+  margin-right: 0;
+}
+.layer2 .joinBuy{
+  width: 520rpx;
+  height: 70rpx;
+  text-align: center;
+  line-height: 70rpx;
+  color:#fff;
+  background-color:#fb452c;
+  font-size: 34rpx;
+  border-radius: 8rpx;
+  position: absolute;
+  left: 80rpx;
+  bottom: 30rpx;
 }

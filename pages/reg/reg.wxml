@@ -1,0 +1,5 @@
+<!--pages/reg/reg.wxml-->
+<text>注册页</text>
+<button open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber">注册/绑定智享城市APP</button>
+<open-data type="userAvatarUrl"></open-data>
+

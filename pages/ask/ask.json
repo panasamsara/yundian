@@ -1,3 +1,5 @@
 {
-  "navigationBarTitleText": "问大家"
+  "navigationBarTitleText": "问大家",
+  "enablePullDownRefresh": true,
+  "backgroundTextStyle":"dark"
 }

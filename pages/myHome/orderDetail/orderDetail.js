@@ -1,62 +1,33 @@
+//获取应用实例
+const app = getApp();
+var user = wx.getStorageSync('scSysUser');
+//此页面还差付款未做
 Page({
   winHeight: "",//窗口高度
   data: {
-    type: 2, //0 待付款，1 待发货 2 待收货 3待评价 4取消 5已退款 6申请退款审核中 7已评价
-    sentType:1, //1-快递 2-店内
-    typeVal:"代发货",
-    sentVal:"申通快递",
-    sentNumber:"1665656565656",
-    userName:"乐小李",
-    phone:15645956565,
-    address:"湖北省武汉市武昌区中北路青鱼嘴东沙大厦13楼湖北省武汉市武昌区中北路青鱼嘴东沙大厦13楼",
-    orderNum:1555656565656652,
-    orderTime:"2015-6-15 15:30:26",
-    shopName:"乐盯旗舰店",
-    payType:1,
-    paytypeVal:"智享账户支付",
-    discounts:20,
-    sentPrice:0,
-    paid:300,
-    goods: [
-      {
-        goodsName: '新款夏季连衣裙荷ins热门款',
-        size: '藕粉色-S码',
-        price: '300.00',
-        num: '10',
-        url: 'img/1.gif'
-      },
-      {
-        id: 0,
-        goodsName: '新款夏季连衣裙荷叶袖收腰ins热门款',
-        size: '藕粉色-S码',
-        price: '300.00',
-        num: '10',
-        url: 'img/1.gif'
-      }]
+    goods: [],
+    phone:"",//商家电话
+    time:0, //倒计时
+    createTime:'' //下单时间
   },
-  onLoad: function () {
-    var that = this;
-    //创建节点选择器
-    var query = wx.createSelectorQuery();
-    //选择id
-    query.select('#userInfo').boundingClientRect()
-    query.exec(function (res) {
-      //res就是 所有标签为userInfo的元素的信息 的数组
-      console.log(res);
-      //取高度
-      console.log(res[0].height);
-      var height = res[0].height + 420;
-      console.log(height);
-      that.setData({
-        winHeight: height
-      })
-    })
-
+  onLoad: function (option) {
     //调接口
-    app.util.reqAsync('shop/getOneOrderDetail', {
-      id: 54667
+    app.util.reqAsync('shop/orderDetail', {
+      orderNo: option.orderNo
     }).then((data) => {
-      console.log(data)
+      this.setData({
+        goods: data.data.data,
+        phone: data.data.data[0].shopInfo.phoneService,
+        createTime: data.data.data[0].orderInfo.createTime
+      })
+      if (data.data.data[0].orderInfo.orderStatusVo == 1){ //待付款
+        if (this.data.time!=0){
+        this.countTime();
+      }else{ //取消订单
+        this.cancel();
+      }   
+    }
+      
     }).catch((err) => {
       wx.showToast({
         title: '失败……',
@@ -67,7 +38,7 @@ Page({
   calling: function () {
     //拨打电话
     wx.makePhoneCall({
-      phoneNumber: '12345678900', //此号码并非真实电话号码，仅用于测试
+      phoneNumber: this.data.phone, //此号码并非真实电话号码，仅用于测试
       success: function () {
         console.log("拨打电话成功！")
       },
@@ -76,5 +47,150 @@ Page({
       }
     })
   },
-  
+  goodSkip: function(e){
+    //跳到商品详情
+    var shopId = e.currentTarget.dataset.shopid,
+      goodsId = e.currentTarget.dataset.goodsid;
+    wx.navigateTo({
+      url: '../../goodsDetial/goodsDetial?shopId=' + shopId + '&goodsId=' + goodsId
+    })
+  },
+  delete: function (e) {
+    var customerId = e.currentTarget.dataset.customerid,
+      orderNo = e.currentTarget.dataset.no;
+    //删除订单
+    app.util.reqAsync('shop/delOrder', {
+      orderNo: orderNo
+    }).then((data) => {
+      wx.navigateTo({
+        url: 'myHome/order/order?customerId=' + customerId
+      })
+    }).catch((err) => {
+      wx.showToast({
+        title: '失败……',
+        icon: 'none'
+      })
+    })
+  },
+  cancel: function (e) {
+    var orderNo = e.currentTarget.dataset.no,
+      customerId = e.currentTarget.dataset.customerid;
+    //取消订单
+    app.util.reqAsync('shop/cancelOrder', {
+      orderNo: orderNo
+    }).then((res) => {
+      wx.navigateTo({
+        url: 'myHome/order/order?customerId=' + customerId
+      })
+    }).catch((err) => {
+      wx.showToast({
+        title: '失败……',
+        icon: 'none'
+      })
+    })
+  },
+  audit: function () {
+    //退款中、退货中
+    wx.showToast({
+      title: '等待商家审核',
+      icon: 'none'
+    })
+  },
+  appraise: function (e) {
+    var shopId = e.currentTarget.dataset.shopid,
+      goodId = e.currentTarget.dataset.goodid;
+    //评价
+    wx.navigateTo({
+      url: '../appraise/appraise?shopId=' + shopId + '&goodsId=' + goodId
+    })
+  },
+  returnGood: function (e) {
+    //申请退货
+    var orderNo = e.currentTarget.dataset.no,
+      orderStatus = e.currentTarget.dataset.statu,
+      returnAmount = e.currentTarget.dataset.money;
+    wx.navigateTo({
+      url: 'applyRefund/applyRefund?orderNo=' + orderNo + '&orderStatus=' + orderStatus + '&returnAmount=' + returnAmount
+    })
+  },
+  reimburse: function (e) {
+    //申请退款
+    var orderNo = e.currentTarget.dataset.no,
+      orderStatus = e.currentTarget.dataset.statu,
+      returnAmount = e.currentTarget.dataset.money;
+    wx.navigateTo({
+      url: 'applyRefund/applyRefund?orderNo=' + orderNo + '&orderStatus=' + orderStatus + '&returnAmount=' + returnAmount
+    })
+  },
+  take: function (e) {
+    //确认收货
+    var orderNo = e.currentTarget.dataset.no,
+      customerId = e.currentTarget.dataset.customerid;//"fromBarCode":1 //是否扫码确认收货。可不填 ，不填则不是扫码确认收货
+    app.util.reqAsync('shop/confirmRecv', {
+      orderNo: orderNo,
+      customerId: customerId
+    }).then((res) => {      
+      wx.navigateTo({
+        url: 'myHome/order/order?customerId=' + customerId
+      })
+    }).catch((err) => {
+      wx.showToast({
+        title: '失败……',
+        icon: 'none'
+      })
+    })
+  },
+  shipments: function (e) {
+    var orderNo = e.currentTarget.dataset.no,
+      userId = user.id;//用户id
+    //提醒发货
+    app.util.reqAsync('shop/orderRemind', {
+      orderNo: orderNo,
+      userId: userId
+    }).then((res) => {
+      wx.showToast({
+        title: '已提醒卖家发货',
+        icon: 'none'
+      })
+    }).catch((err) => {
+      wx.showToast({
+        title: '失败……',
+        icon: 'none'
+      })
+    })
+  },
+  countTime: function(e){
+    //倒计时时分秒
+    //获取当前时间
+    var date = new Date();
+    var now = date.getTime();
+    //设置截止时间
+    var create = this.data.createTime;//下单时间
+    var hour = parseInt(new Date(create).getHours())+1;//时
+    var minute = new Date(create).getMinutes();//分
+    var seconds = new Date(create).getSeconds();//秒
+    var day = new Date(create).getDate(); //日
+    var month = parseInt(new Date(create).getMonth())+1;//月
+    var year = new Date(create).getFullYear();//年
+    var newTime = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + seconds;
+    var endTime = new Date(newTime).getTime();
+    //时间差
+    var leftTime = parseInt(endTime) - parseInt(now);
+    var d, h, m, s;
+    if (leftTime >= 0) {
+      d = Math.floor(leftTime / 1000 / 60 / 60 / 24);
+      h = Math.floor(leftTime / 1000 / 60 / 60 % 24);
+      m = Math.floor(leftTime / 1000 / 60 % 60);
+      s = Math.floor(leftTime / 1000 % 60);
+      this.setData({
+        time: h+'小时'+m+'分'+s+'秒'
+      })
+      setTimeout(this.countTime, 1000);
+    }else{
+      clearTimeout(this.countTime);//解除
+      this.setData({
+        time: 0
+      })
+    }  
+  }
 })

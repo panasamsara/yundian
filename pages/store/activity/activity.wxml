@@ -1,14 +1,16 @@
 <!--pages/store/activity/activity.wxml-->
 <view class='container activity'>
-  <view wx:for="{{list}}" class='list'>
-    <image src='{{item.url}}'></image>
-    <view class='act'>
-      <text id='title'>{{item.title}}</text>
-      <text>活动时间</text>
-    </view>
-    <view class='actInfo'>
-      <text id='activity'>{{item.activity}}</text>
-      <text id='time'>{{item.time}}</text>
-    </view>
+  <view wx:for="{{list}}" class='list' wx:key="index">
+    <navigator url="../activityInfo/activityInfo?goodsId={{item.id}}&shopId={{item.shopId}}">
+      <image src='{{item.pictureUrl}}'></image>
+      <view class='act'>
+        <text id='title'>{{item.descTitle}}</text>
+        <text>活动时间</text>
+      </view>
+      <view class='actInfo'>
+        <text id='activity'>{{item.goodsName}}</text>
+        <text id='time'>{{item.startTime}}-{{item.endTime}}</text>
+      </view>
+    </navigator>
   </view>
 </view>

@@ -1,6 +1,7 @@
 /* pages/store/code/code.wxss */
 .container{
   padding: 60rpx 70rpx;
+  letter-spacing: 2rpx;
 }
 
 .code .storeInfo,.code .storeCode{

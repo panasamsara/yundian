@@ -8,23 +8,13 @@ Page({
     interval:3000,     //自动切换时间间隔3s
     duration:1000,
     imgUrls:[], 
-    shopId:'' ,
-    goodsId:'',
-    //商品详情
-    detailImg:[
-      "http://7xnmrr.com1.z0.glb.clouddn.com/detail_1.jpg",
-      "http://7xnmrr.com1.z0.glb.clouddn.com/detail_2.jpg",
-      "http://7xnmrr.com1.z0.glb.clouddn.com/detail_3.jpg",
-      "http://7xnmrr.com1.z0.glb.clouddn.com/detail_4.jpg",
-      "http://7xnmrr.com1.z0.glb.clouddn.com/detail_5.jpg",
-      "http://7xnmrr.com1.z0.glb.clouddn.com/detail_6.jpg"    
-    ],
     hideView: true,
     num: 0,
-    shopId: '',
-    goodsId: '',
     //用户信息
-    userData: []
+    userData: [],
+    flag:false,
+    flag1:false,
+    flag2: false
   },
   previewImage:function(e){
     var current=e.target.dataset.src;
@@ -34,29 +24,30 @@ Page({
     })
   },
   onLoad: function(options){
-    //获取店铺信息
-    if (app.globalData.shopInfo) {
-      this.setData({
-        shopInformation: app.globalData.shopInfo,
-        hasShopInfo: true
-      })
-    }
+    var shop = wx.getStorageSync('shop');
     //获取商品详情
     app.util.reqAsync('shop/goodsDetail',{
       shopId: options.shopId,
       goodsId: options.goodsId
     }).then((res) =>{
-      var resData=res.data.data;     
-      this.setData({
-        shopId: options.shopId,
-        goodsId: options.goodsId,
-        goodsName: resData.goodsName,
-        descContent: resData.descContent,
-        batchPrice: resData.batchPrice,
-        stockBalance: resData.stockBalance,
-        payCount: resData.payCount,
-        imgUrls: [resData.imageList[0].smallFilePath, resData.imageList[0].smallFilePath, resData.imageList[0].smallFilePath]
-      })
+      var resData=res.data.data; 
+      if (resData){
+        // 富文本不能有id和#号，还要满足解析要求
+        // console.log(resData.descContent)
+        // var str = resData.descContent.replace(/id=\"\w+\"/g, '')
+        // str = str.replace(/(#\w{6})|(#\w{3})/g, function (color) {
+        //   return app.util.hexToRGB(color)
+        // });
+        this.setData({
+          goodsName: resData.goodsName,
+          descContent: resData.descContent,
+          batchPrice: resData.batchPrice,
+          stockBalance: resData.stockBalance,
+          payCount: resData.payCount,
+          imgUrls: [resData.imageList[0].smallFilePath, resData.imageList[0].smallFilePath, resData.imageList[0].smallFilePath]
+        })
+      }    
+
     });
     //获取商品评论
     app.util.reqAsync('shop/commentList',{
@@ -68,15 +59,21 @@ Page({
       pageSize: 2
     }).then((res)=>{
       var data = res.data.data;
-      for (var i = 0; i < data.length; i++) {
-        var key = 'creatTime';
-        var value = data[i].commentDate.slice(0, 11)
-        data[i][key] = value
-      };
-      this.setData({
-        userData: data,
-        all:data.length
-      });
+      if(data){
+        for (var i = 0; i < data.length; i++) {
+          var key = 'creatTime';
+          var value = data[i].commentDate.slice(0, 11)
+          data[i][key] = value
+        };
+        this.setData({
+          userData: data,
+          all: data.length
+        });
+      }else{
+        this.setData({
+          all:0
+        })
+      }
       //判断数据并显示隐藏占位图
       if (this.data.userData.length == 0) {
         this.setData({
@@ -103,21 +100,50 @@ Page({
       })
     })    
   },
-
+  //跳转到拼单
+  toLayer(){
+    this.setData({
+      flag:true ,
+      flag1:true
+    })
+  },
+  //关闭拼单弹出层
+  closeLayer(){
+    this.setData({
+      flag:false,
+      flag1:false,
+      flag2:false
+    })
+  },
+  //去拼单
+  toJoin(){
+    this.setData({
+      flag:true,
+      flag2:true
+    })
+  },
   //跳转到评价
   toAppraise(){
+    var shop = wx.getStorageSync('shop');
     var goodsId = this.data.goodsId;
-    var shopId = this.data.shopId;
+    var shopId = 808;
     wx.navigateTo({
       url: '../appraise/appraise?shopId=' + 288 + '&goodsId=' + goodsId
     })
   },
   //跳转到问答详情
   toAsk(){
+    var shop = wx.getStorageSync('shop');
     var goodsId = this.data.goodsId;
-    var shopId = this.data.shopId;    
+    var shopId = 808;    
     wx.navigateTo({
       url: '/pages/ask/ask?shopId=' + 288 + '&goodsId=' + goodsId,
+    })
+  },
+  //跳转到店铺
+  goShop(){
+    wx.switchTab({
+      url: '/pages/index/index'
     })
   },
   //跳转到购物车
@@ -132,8 +158,5 @@ Page({
       icon:'success',
       duration:2000
     })
-  },
-  preventTouchMove: function(){
-
   }
 })

@@ -1,9 +1,9 @@
 /* pages/store/player/player.wxss */
- .container{
-  padding: 50rpx;
+ .player{
+  padding: 0 50rpx 50rpx 50rpx;
 }
 
-.player .list{
+.player .playerList{
   margin-bottom: 40rpx;
 }
 
@@ -19,7 +19,7 @@
   height: 8rpx;
 }
 
-.player .title{
+.player .playerTitle{
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -33,4 +33,25 @@
   color: #666666;
   padding: 30rpx;
   letter-spacing: 2rpx;
+  word-break: break-all;
+}
+
+.blank{
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  letter-spacing: 2rpx;
+}
+
+.blank image{
+  width: 334rpx;
+  height: 330rpx;
+  margin-top: 250rpx;
+}
+
+.blank text{
+  font-size: 29rpx;
+  color: #969696;
+  line-height: 80rpx;
 }

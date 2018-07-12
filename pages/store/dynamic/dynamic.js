@@ -1,5 +1,5 @@
 // pages/store/dynamic/dynamic.js
-const util = require('../../../utils/util.js')
+const app = getApp();
 
 // pages/appointment/modal/device-modal.js
 Component({
@@ -14,7 +14,7 @@ Component({
    * 组件的初始数据
    */
   data: {
-    dynamicList: []
+    list: []
   },
 
   /**
@@ -22,10 +22,13 @@ Component({
    */
   methods: {
     onLoad: function (options) {
-      let data = {
-        sStartpage: 1,
-        shopId: 288,
-        merchantId: 571,
+      wx.showLoading({
+        title: '加载中',
+      })
+      var data = {
+        sStartpage: 0,
+        shopId: wx.getStorageSync('shop').id,
+        merchantId: wx.getStorageSync('shop').merchantId,
         sPagerows: 10
       };
       this.setData({
@@ -33,40 +36,8 @@ Component({
       });
       this.getData(data);
     },
-
-    /**
-     * 生命周期函数--监听页面初次渲染完成
-     */
-    onReady: function (res) {
-      this.videoContext = wx.createVideoContext('myVideo');
-    },
-
-    /**
-     * 生命周期函数--监听页面显示
-     */
-    onShow: function () {
-
-    },
-
-    /**
-     * 生命周期函数--监听页面隐藏
-     */
-    onHide: function () {
-
-    },
-
-    /**
-     * 生命周期函数--监听页面卸载
-     */
-    onUnload: function () {
-
-    },
-
-    /**
-     * 页面相关事件处理函数--监听用户下拉动作
-     */
     onReachBottom: function () {
-      var totalPage = Math.ceil(this.data.total / 10);
+      var totalPage = Math.ceil(this.data.total / 10-1);
       wx.showLoading({
         title: '加载中',
       })
@@ -89,27 +60,31 @@ Component({
 
     },
     getData: function (data) {
-      var oldData = this.data.dynamicList;
-      util.reqAsync('circleBack/getVideoList', data).then((res) => {
-        var dynamicList = res.data.data;
-        for (var i = 0; i < dynamicList.length; i++) {
-          dynamicList[i].videoAlbumTime = util.formatStoreDate(dynamicList[i].videoAlbumTime);
-          dynamicList[i].index = i;
-          dynamicList[i].mylength = dynamicList[i].urls.length;
+      var oldData = this.data.list;
+      app.util.reqAsync('circleBack/getVideoList', data).then((res) => {
+        console.log(res.data)
+        if(res.data.data){
+          var list = res.data.data;
+          for (var i = 0; i < list.length; i++) {
+            list[i].videoAlbumTime = app.util.formatStoreDate(list[i].videoAlbumTime);
+            list[i].index = i;
+            list[i].mylength = list[i].urls.length;
+          }
+          var newData = oldData.concat(list);
+          this.setData({
+            list: newData,
+            total: res.data.total
+          })
         }
-        var newData = oldData.concat(dynamicList);
-        this.setData({
-          dynamicList: newData,
-          total: res.data.total
-        })
         wx.hideLoading();
       }).catch((err) => {
         console.log(err);
+        wx.hideLoading();
       })
     },
     previewImage: function (e) {
       var current = e.target.dataset.src;
-      var imageList = this.data.dynamicList[e.target.dataset.index].urls;
+      var imageList = this.data.list[e.target.dataset.index].urls;
       wx.previewImage({
         current: current,
         urls: imageList

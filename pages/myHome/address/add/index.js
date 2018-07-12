@@ -1,5 +1,6 @@
 // pages/myhome/address/add/index.js
 var app = getApp();
+var userId = wx.getStorageSync('scSysUser').id;
 Page({
 
   /**

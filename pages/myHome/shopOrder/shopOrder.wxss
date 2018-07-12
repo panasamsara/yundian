@@ -1,3 +1,6 @@
+page{
+  padding-bottom: 50rpx;
+}
 .left{
   float: left;
 }

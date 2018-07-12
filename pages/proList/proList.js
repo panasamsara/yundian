@@ -11,6 +11,9 @@ Page({
     goodsInCategory: null,
     showStock: false,
     stocks: [],
+    chooseGoodEvent: null,
+    chosenStockId: null,
+    showLoading: true,
     stockHighLightIndex: 0,
     logs: [],
     starbg: '../../static/img/drawable-xxdpi/title-bar_collection_normal.png',
@@ -42,15 +45,12 @@ Page({
     // Do something when page ready.
   },
   onLoad: function (options) {
-    //获取店铺信息
-    if (app.globalData.shopInfo) {
-      this.setData({
-        shopInformation: app.globalData.shopInfo,
-        hasShopInfo: true
-      })
-      //获取店铺类别列表
-      this.getCategoryList(app.globalData.shopInfo.shopInfo.merchantId, app.globalData.shopInfo.shopInfo.id)
-    }
+    var shop = wx.getStorageSync('shop')
+    var user = wx.getStorageSync('scSysUser');
+    console.log(user)
+    //获取店铺类别列表
+    this.getCategoryList()
+
     let systemInfo = wx.getStorageSync('systemInfo');
     let mechine = options;//wx.getStorageSync('mechine');
     let _that = this;
@@ -64,17 +64,11 @@ Page({
       systemInfo: systemInfo,
       goodsH: systemInfo.windowHeight  - 48
     });
-    console.log(mechine)
+    // console.log(mechine)
 
+    this.shopCartList(user.id)
+  },
 
-  },
-  onShareAppMessage: function () {
-    let _that = this;
-    return {
-      title: _that.data.chessRoomDetail.shop.name,
-      path: "/pages/orderdetail/orderdetail?shopId=" + _that.data.mechine.shopId + "&id=" + _that.data.mechine.id + "&address=" + _that.data.mechine.address
-    }
-  },
 
   //左侧列表点击事件
   catClickFn: function (e) {
@@ -93,9 +87,9 @@ Page({
     // this.setData({
     //   toView: that.data.GOODVIEWID + categoryId
     // });
-
+    var shop = wx.getStorageSync('shop')
     //获取某个类别的商品
-    this.getShopGoodsMore(app.globalData.shopInfo.shopInfo.merchantId, app.globalData.shopInfo.shopInfo.id, categoryId)
+    this.getShopGoodsMore(shop.merchantId, shop.id, categoryId)
 
   },
   //添加商品到购物车
@@ -133,6 +127,12 @@ Page({
     });
 
     this._resetTotalNum();
+    var user = wx.getStorageSync('scSysUser');
+    var shop = wx.getStorageSync('shop')
+    //添加至购物车，参数： 用户id、商品id、店铺id、规格id
+    this.updateNewShopCartV2(user.id, _id, shop.id, this.data.chosenStockId)
+    //获取购物车列表
+    this.shopCartList(user.id)
   },
   touchOnGoods: function (e) {
     this.finger = {}; var topPoint = {};
@@ -154,32 +154,36 @@ Page({
 
     //topPoint['x'] = this.busPos['x'] + 80
     //this.linePos = app.bezier([this.finger, topPoint, this.busPos], 30);
-    // console.log(topPoint);
-    // console.log(this.finger);
+
     this.linePos = app.bezier([this.busPos, topPoint, this.finger], 30);
 
     let _id = e.target.id.split('_')[1];
     if (this.data.goodMap[_id].stockList.length != 0){
       this.setData({
         showStock: true,
-        stocks: this.data.goodMap[_id].stockList
+        stocks: this.data.goodMap[_id].stockList,
+        chooseGoodEvent: e
       })
     }else{
       this.startAnimation(e);
     }
-    console.log(1111111111)
-    console.log(_id)
-    console.log(1111111111)
     
   },
+  //选择规格
   choseStock: function(e){
     let _index = e.target.id.split('_')[1];
+    let _id = e.target.id.split('_')[2];
     this.setData({
-      stockHighLightIndex: _index
+      stockHighLightIndex: _index,
+      chosenStockId: _id
     });
   },
-  putInCart: function(){
-    
+  //选择规格的确认按钮
+  choseStockYesBtn: function(){
+    this.setData({
+      showStock: false,
+    });
+    this.startAnimation(this.data.chooseGoodEvent);
   },
   startAnimation: function (e) {
     var index = 0, that = this,
@@ -191,7 +195,7 @@ Page({
       bus_y: that.finger['y']
     })
     var len = bezier_points.length;
-    // console.log(len);
+
     index = len
     this.timer = setInterval(function () {
       index--;
@@ -210,7 +214,7 @@ Page({
   },
   //移除商品的事件
   decreaseGoodToCartFn: function (e) {
-    console.log(e)
+
     let shoppingCart = JSON.parse(JSON.stringify(this.data.shoppingCart));
     let shoppingCartGoodsId = [];
     let _id = e.target.id.split('_')[1];
@@ -238,6 +242,10 @@ Page({
     });
 
     this._resetTotalNum();
+    var user = wx.getStorageSync('scSysUser');
+    var shop = wx.getStorageSync('shop')
+    //参数： 用户id、商品id、店铺id、规格id
+    this.delNewShopCartGoods(user.id, _id, shop.id, e.currentTarget.dataset['stockid'])
   },
   //重新计算选择的商品的总数和总价
   _resetTotalNum: function () {
@@ -251,17 +259,17 @@ Page({
         let goodNum = Number(this.data.shoppingCart[shoppingCartGoodsId[i]]);
         totalNum += Number(goodNum);
         totalPay += Number(this.data.goodMap[shoppingCartGoodsId[i]].price) * goodNum;
-        chooseGoodArr.push(this.data.goodMap[shoppingCartGoodsId[i]]);
+        // chooseGoodArr.push(this.data.goodMap[shoppingCartGoodsId[i]]);
       }
     }
 
     this.setData({
       totalNum: totalNum,
       totalPay: totalPay.toFixed(2),
-      chooseGoodArr: chooseGoodArr
+      // chooseGoodArr: chooseGoodArr
     });
   },
-  //电器购物车，购物列表切换隐藏或者现实
+  //购物列表切换隐藏或者现实
   showShopCartFn: function (e) {
     if (this.data.totalPay > 0) {
       this.setData({
@@ -279,49 +287,18 @@ Page({
       shoppingCart: {}
     });
   },
-  //结算(无用)
-  goPayFn: function (e) {
-    let goodsIds = "",
-      quantitys = "",
-      _that = this;
 
-    for (let i = 0; i < this.data.shoppingCartGoodsId.length; i++) {
-      goodsIds += this.data.shoppingCartGoodsId[i] + ",";
-      quantitys += this.data.shoppingCart[this.data.shoppingCartGoodsId[i]] + ","
-    }
-
-    goodsIds = goodsIds.substring(0, goodsIds.length - 1);
-    quantitys = quantitys.substring(0, quantitys.length - 1);
-
-    let param = {
-      goodsIds: goodsIds,
-      quantitys: quantitys,
-      shopId: this.data.chessRoomDetail.shop.id,
-      type: 0,//订单类型 0是商品 1是麻将机
-      address: this.data.mechine.address
-    };
-    console.log(param)
-    //TODO调用后台接口
-    wx.request({
-      url: _that.data.url + 'momolewx/wx/order/goods/submit.do',
-      data: param,
-      method: 'POST',
-      header: { 'content-type': 'application/x-www-form-urlencoded' },
-      success: function (res) {
-        console.log(res)
-      }
-    })
-  },
   goToCart: function(){
     wx.switchTab({
       url: '../shoppingCart/shoppingCart',
     })
   },
   //获取店铺下类别
-  getCategoryList: function (merchantid, shopid){
+  getCategoryList: function (){
+    var shop = wx.getStorageSync('shop')
     util.reqAsync('shop/getShopGoodsCategoryList', {
-      merchantId: merchantid,
-      shopId: shopid
+      merchantId: shop.merchantId,
+      shopId: shop.id
     }).then((res) => {
       if (res.data.data) {
         this.setData({
@@ -329,8 +306,9 @@ Page({
         })
         //默认获取第所有类别的商品
         if (this.data.shopCategory) {
-          this.getShopGoodsMore(app.globalData.shopInfo.shopInfo.merchantId, app.globalData.shopInfo.shopInfo.id, null)
+          this.getShopGoodsMore(shop.merchantId, shop.id, null)
         }
+
       } else {}
     }).catch((err) => {
       wx.showToast({
@@ -349,7 +327,8 @@ Page({
     }).then((res) => {
       if (res.data.data) {
         _that.setData({
-          goodsInCategory: res.data.data
+          goodsInCategory: res.data.data,
+          showLoading: false
         })
         //首次进入 未传类别ID，将全部商品赋值给goodMap
         if (!categoryid && typeof categoryid != "undefined" && categoryid != 0){
@@ -361,7 +340,7 @@ Page({
           _that.setData({
             goodMap: goodMap
           })
-          console.log(_that.data.goodMap)
+
         }
       } 
     }).catch((err) => {
@@ -373,6 +352,80 @@ Page({
   },
   preventTouchMove: function(){
 
-  }
+  },
+  //云店接口，添加商品到购物车
+  updateNewShopCartV2: function (customerid, goodsid, shopid, stockid) {
+    util.reqAsync('shop/updateNewShopCartV2', {
+      customerId: customerid,
+      goodsId: goodsid,
+      number: 1,
+      shopId: shopid,
+      stockId: stockid
+    }).then((res) => {
+      // console.log(res.data.data)
+      var user = wx.getStorageSync('scSysUser');
+      this.shopCartList(user.id)
+    }).catch((err) => {
+      wx.showToast({
+        title: '失败……',
+        icon: 'none'
+      })
+    })
+  },
+  //云店接口，移除购物车商品
+  delNewShopCartGoods: function (customerid, goodsid, shopid, stockid) {
+    util.reqAsync('shop/delNewShopCartGoods', {
+      shopCarts: [{
+        customerId: customerid,
+        goodsId: goodsid,
+        number: 1,
+        shopId: shopid,
+        stockId: stockid
+      }]
+      
+    }).then((res) => {
+      // console.log(res.data.data)
+      var user = wx.getStorageSync('scSysUser');
+      this.shopCartList(user.id)
+    }).catch((err) => {
+      wx.showToast({
+        title: '失败……',
+        icon: 'none'
+      })
+    })
+  },
+  //云店接口，获取购物车列表
+  shopCartList: function (customerid) {
+    util.reqAsync('shop/shopCartList', {
+        customerId: customerid
+    }).then((res) => {
+      console.log(res.data)
+      let goods = res.data.data
+      let totalNum = 0
+      let totalPay = 0
+      let chooseGoodArr = [];
+      for (let i = 0; i < goods.length; i++){
+        let lists = goods[i].goodsList
+        for (let j = 0; j < lists.length; j++){
+          totalNum += lists[j].number;
+          totalPay += lists[j].number * lists[j].goodsPrice
+          chooseGoodArr.push(lists[j])
+        }
+      }
+      // console.log(totalNum)
+      // console.log(totalPay)
+      this.setData({
+        chooseGoodArr: chooseGoodArr,
+        totalNum: totalNum,
+        totalPay: totalPay
+      });
+    }).catch((err) => {
+      wx.showToast({
+        title: '失败……',
+        icon: 'none'
+      })
+    })
+  },
+  preventTouchMove: function(){}
 
 })

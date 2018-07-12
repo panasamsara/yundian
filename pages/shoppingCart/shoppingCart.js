@@ -1,22 +1,23 @@
 //shopping-cart.js
 //获取应用实例
 const app = getApp();
-
+var shop = wx.getStorageSync('shop');
+var user = wx.getStorageSync('scSysUser');
 Page({
   data: {
     delBtnWidth: 180,//删除按钮宽度单位（rpx）
     isAllSelect: false,
     totalMoney: 0,
     shopk: 0,//k表示有店铺多少被勾选了
-    goodlist:[]
+    goodlist:[],
+    customerId:''
   },
   onLoad: function () {
     //调接口
     app.util.reqAsync('shop/shopCartList', {
-      customerId: 198
+      customerId: user.id || 198 //用户主键
     }).then((res) => {
-    //  var shopId = wx.getStorage("shopId") || 808;
-      var shopId = 288;
+      var shopId = shop.shopId || 288;
       var data=[];
       for(var inx in res.data.data){
         res.data.data[inx].checked = false;
@@ -31,6 +32,7 @@ Page({
 
       this.setData({
         goodlist: data,
+        customerId: user.id || 198
       })
     }).catch((err) => {
       wx.showToast({
@@ -342,6 +344,7 @@ Page({
   default: function(e){
     //结算
     var selectGoods = [];
+    var orderbuy = [];//下单使用
     for (var n in this.data.goodlist[0].goodsList){
       if (this.data.goodlist[0].goodsList[n].checked){
         
@@ -357,12 +360,31 @@ Page({
           'stockName': this.data.goodlist[0].goodsList[n].stockName,
           'number': this.data.goodlist[0].goodsList[n].number,
           'goodsType': this.data.goodlist[0].goodsList[n].goodsType,
+        });
+        orderbuy.push({
+          'id': this.data.goodlist[0].goodsList[n].id,
+          'goodsPrice': this.data.goodlist[0].goodsList[n].goodsPrice,
+          'goodsType': this.data.goodlist[0].goodsList[n].goodsType,
+          'goodsNum': this.data.goodlist[0].goodsList[n].number,
+          'balance':'',//不知道是什么
+          'goodsIndex':n,
+          'remake':'',
+          'num': this.data.goodlist[0].goodsList[n].number,
+          'goodsName': this.data.goodlist[0].goodsList[n].goodsName,
+          'actualPayment': this.data.goodlist[0].goodsList[n].goodsPrice, //实付单价
+          'goodsPic': this.data.goodlist[0].goodsList[n].goodsImageUrl,
+          'unitPrice': this.data.goodlist[0].goodsList[n].goodsPrice,//单价
+          'goodsId': this.data.goodlist[0].goodsList[n].goodsId,
+          'customerId': this.data.goodlist[0].goodsList[n].customerId,
+          'stockId': this.data.goodlist[0].goodsList[n].stockId,
+          'shopId': this.data.goodlist[0].shopId
         })
       }
     }
 
     if (selectGoods.length>0){
       wx.setStorageSync('cart', selectGoods);
+      wx.setStorageSync('buyCart', orderbuy);
       wx.navigateTo({
         url: '../orderBuy/orderBuy?shopId=' + this.data.goodlist[0].shopId + '&shopName='+
         this.data.goodlist[0].shopName + '&customerId=' + this.data.goodlist[0].goodsList[0].customerId + '&totalMoney=' + this.data.totalMoney
@@ -376,5 +398,21 @@ Page({
       })
     }
     
+  },
+  goodsSkip :function(e){
+    //跳到商品
+    var shopId = e.currentTarget.dataset.shopid,
+      goodsId = e.currentTarget.dataset.goodsid;
+    wx.navigateTo({
+      url: '../goodsDetial/goodsDetial?shopId=' + shopId + '&goodsId=' + goodsId
+    })
+  },
+  shopSkip : function(e){
+    var shopId = e.currentTarget.dataset.shopid;
+    var currUserId = user.id;//用户id
+    //跳到店铺
+    wx.navigateTo({
+      url: '../store/store?shopId=' + shopId + '&currUserId=' + currUserId
+    })
   }
 })

@@ -28,22 +28,22 @@ Page({
   /**
    * 页面上拉触底事件的处理函数
    */
-  // onReachBottom: function () {
-  //   var totalPage = Math.ceil(this.data.total / 10 - 1);
-  //   wx.showLoading({
-  //     title: '加载中',
-  //   })
-  //   this.data.datas.sStartpage += 1;
-  //   if (this.data.datas.sStartpage > totalPage) {
-  //     wx.showToast({
-  //       title: '已经到底了',
-  //       icon: 'none'
-  //     })
-  //     return
-  //   }
-  //   let data = this.data.datas;
-  //   this.getData(data);
-  // },
+  onReachBottom: function () {
+    var totalPage = Math.ceil(this.data.total / 10 - 1);
+    wx.showLoading({
+      title: '加载中',
+    })
+    this.data.datas.pageNo += 1;
+    if (this.data.datas.pageNo > totalPage) {
+      wx.showToast({
+        title: '已经到底了',
+        icon: 'none'
+      })
+      return
+    }
+    let data = this.data.datas;
+    this.getData(data);
+  },
   getData: function (data) {
     let oldData = this.data.list;
     app.util.reqAsync('shop/getShopHomePageInfo', data).then((res) => {
@@ -56,7 +56,7 @@ Page({
         let newData = oldData.concat(list);
         this.setData({
           list: newData,
-          total: res.data.total
+          total: res.data.data.countGoodsInfo
         })
       }
       wx.hideLoading();

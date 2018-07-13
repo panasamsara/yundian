@@ -8,6 +8,7 @@ Page({
    */
   data: {
     list:[],
+    d:'0',
     h:'0',
     m:'0',
     s:'0'
@@ -21,14 +22,14 @@ Page({
       pageNo: 1,
       pageSize: 10,
       shopId: 288,
-      status: 1,    
+      status: 1  
     };
     this.setData({
       datas:data
     });
     this.getData(data);
     let _this=this
-    setInterval(function(){_this.count()},1000)
+    var timer=setInterval(function(){_this.count()},1000)
   },
   /**
    * 页面相关事件处理函数--监听用户下拉动作
@@ -57,12 +58,21 @@ Page({
   },
   getData:function(data){
     let oldData = this.data.list
+    app.util.reqAsync('shopSecondskilActivity/getServerNowTime').then((res) => {
+      if(res.data){
+        this.setData({
+          nowTime: res.data.data
+        })
+      }
+    }).catch((err)=>{
+        console.log(err)
+    })
     app.util.reqAsync('shopSecondskilActivity/selectPageList', data).then((res) => {
       if (res.data.data) {
         let list=res.data.data.list,
             newData = oldData.concat(list);
         for(let i=0;i<list.length;i++){
-          list[i].activityStartTime = Date.parse(list[i].activityStartTime);
+          list[i].activityStartTime = Date.parse(this.data.nowTime);
           list[i].activityEndTime = Date.parse(list[i].activityEndTime);
           list[i].count = list[i].activityEndTime - list[i].activityStartTime;
         }
@@ -76,17 +86,21 @@ Page({
     })
   },
   count:function(){
+    let _this=this;
     for(let i=0;i<this.data.list.length;i++){
       let leftTime=this.data.list[i].count;
           leftTime-=1000;
-      if(leftTime==0){
+      if(leftTime<=0){
+        _this.clearInterval(timer);
         return
       }
-      let h = Math.floor(leftTime / 1000 / 60 / 60 / 24),
+      let d = Math.floor(leftTime / 1000 / 60 / 60 / 24),
+          h = Math.floor(leftTime / 1000 / 60 / 60 % 24),
           m = Math.floor(leftTime / 1000 / 60 % 60),
           s = Math.floor(leftTime / 1000 % 60),
+          rh=d*24+h,
           count = "list[" + i + "].count",
-          hCount = "list[" + i + "].h",
+          rhCount = "list[" + i + "].rh",
           mCount = "list[" + i + "].m",
           sCount = "list[" + i + "].s";
       if(h<10){
@@ -100,7 +114,7 @@ Page({
       }
       this.setData({
         [count]:leftTime,
-        [hCount]:h,
+        [rhCount]:rh,
         [mCount]:m,
         [sCount]:s
       })

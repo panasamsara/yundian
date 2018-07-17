@@ -78,12 +78,6 @@ Page({
       title: '加载中',
     })
     app.util.reqAsync('shop/getMyOnlineOrderComponentV2', { "customerId": this.data.user.id}).then((res) => {
-      // this.data.shopList.forEach(function (item, index, arr){
-      //   arr[0].num = res.data.data.waitingOfPayNum;
-      //   arr[1].num = res.data.data.waitingOfSendNum;
-      //   arr[2].num = res.data.data.waitingOfReciveNum;
-      //   arr[3].num = res.data.data.waitingOfCommentNum;
-      // })
       this.setData({ 
         "shopList[0].num": res.data.data.waitingOfPayNum, 
         "shopList[1].num": res.data.data.waitingOfSendNum,
@@ -110,7 +104,7 @@ Page({
   },
   back:function(){
     wx.removeStorageSync('shop');
-    wx.navigateTo({ url: '/pages/scan/scan' });
+    wx.redirectTo({ url: '/pages/scan/scan' });
   },
   backOrder: function (e) {
     wx.navigateTo({ url: "/pages/myHome/order/order?index=0"});

@@ -57,7 +57,7 @@
   <!-- </block>
     <block> -->
   <view id="detail" class="cate-box">
-    <view class='coupon' bindtap='showQuanBox'>
+    <view class='coupon' bindtap='showQuanBox' wx:if="{{couponType1.length>0&&couponType2.length>0&&couponType3.length>0}}">
       <image class='coupon-img' src='./img/coupon.png'></image>
       <text class='coupon-txt'>新用户进店可领取专属兑换券</text>
       <image class='coupon-icon' src='../../images/yundian_zhankai@2x.png'></image>
@@ -67,36 +67,38 @@
       <image src='./img/yuyue.png'></image>
     </view>
 
-    <view class='main-top m-t-b-10'>
-      <view class='left-line'></view>
-      <view class='tips'>店铺活动</view>
-      <view class='left-line'></view>
-    </view>
-    <view class="activity-swiper">
-      <swiper indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
-        <block wx:for="{{shopInformation.goodsInfos}}" wx:key="index">
-          <swiper-item>
-            <view class="swiper-item">
-              <view class='activity-img'>
-                <image src='{{item.pictureUrl}}' bindtap='goToActivityDetail' data-activityid='{{item.id}}'></image>
-              </view>
-
-              <view class='activity-desc-box'>
-                <view>
-                  <view class='activity-name font-size-24'>{{item.goodsName}}</view>
-                  <view class='activity-detail font-size-24'>{{item.descTitle}}</view>
+    <view>
+      <view class='main-top m-t-b-10'>
+        <view class='left-line'></view>
+        <view class='tips'>店铺活动</view>
+        <view class='left-line'></view>
+      </view>
+      <view class="activity-swiper">
+        <swiper indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
+          <block wx:for="{{shopInformation.goodsInfos}}" wx:key="index">
+            <swiper-item>
+              <view class="swiper-item">
+                <view class='activity-img'>
+                  <image src='{{item.pictureUrl}}' bindtap='goToActivityDetail' data-activityid='{{item.id}}'></image>
                 </view>
-                <view>
-                  <view class='font-size-24 text-align-right'>活动时间</view>
-                  <view class='font-size-24'>{{item.startTime}}</view>
+
+                <view class='activity-desc-box'>
+                  <view>
+                    <view class='activity-name font-size-24'>{{item.goodsName}}</view>
+                    <view class='activity-detail font-size-24'>{{item.descTitle}}</view>
+                  </view>
+                  <view>
+                    <view class='font-size-24 text-align-right'>活动时间</view>
+                    <view class='font-size-24'>{{item.startTime}}</view>
+                  </view>
                 </view>
               </view>
-            </view>
-          </swiper-item>
-        </block>
-      </swiper>
+            </swiper-item>
+          </block>
+        </swiper>
+      </view>
     </view>
-
+    
     <view class='sec-kill-box' wx-if="{{list.length>=1}}">
       <view class='sec-kill-top'>
         <view class='sec-kill-title-img'>

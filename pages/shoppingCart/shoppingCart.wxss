@@ -17,7 +17,7 @@
 }
 .pric{
   width: 100%;
-  height: auto;
+  height: 60rpx;
   color:#fb452c;
 }
 .pric text:first-child{

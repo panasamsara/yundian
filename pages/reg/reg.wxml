@@ -1,5 +1,22 @@
 <!--pages/reg/reg.wxml-->
-<text>注册页</text>
-<button open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber">注册/绑定智享城市APP</button>
-<open-data type="userAvatarUrl"></open-data>
+<view class='reg'>
+  <image src='../../images/yundian_bangdingdianji_bg.png' id='bg'></image>
+  <view id='logo'>
+    <view><image src='../../images/yundian_bangdingdianji_logo.png'></image></view>
+    <text id='poster'>随时随地 快乐购物 智享生活</text>
+  </view>
+  <button open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber" id='login'>微信登录</button>
+  <text id='warn'>未注册的手机号将自动注册，且表示已同意 注册协议 和 隐私政策</text>
+  <view class='mask' wx:if="{{modal}}" bindtap='cancel'>
+    <view class='modal'>
+      <text class='title'>打开设置页面重新授权</text>
+      <view id='option'>
+        <view id='cancel' bindtap='cancel'>取消</view>
+        <button open-type='openSetting' bindopensetting="openSetting" id='confirm'>去设置</button>
+      </view>
+    </view>
+  </view>
+</view>
+
+
 

@@ -123,102 +123,6 @@ Page({
     
     this.mathTotal(goodStockMapArr)
 
-    // 更新 商品数量后，添加到购物车
-  /*  if (stockId){ 
-      console.log('有stockId')
-      if (stockId != 'null') { // 如果点击的商品有规格
-        console.log(stockId)
-        if (chooseGoodArr.length != 0) { //如果购物车有商品
-          for (let i = 0; i < chooseGoodArr.length; i++) { //循环购物车所有商品
-            console.log(333)
-            if (chooseGoodArr[i].stockId) { // 如果购物车商品下 有分规格
-              console.log(444)
-
-              if (chooseGoodArr[i].stockId == stockId) { // 如果新增的是 已有规格商品
-                console.log(555)
-                goods_number = chooseGoodArr[i].number + 1
-                this.updateNewShopCartV2(user.id, _id, shop.id, chooseGoodArr[i].stockId, this.data.goodMap[_id].goodsName, goods_number)
-              } else { //如果是 新增规格 在购物车不存在
-                console.log(666)
-
-                this.updateNewShopCartV2(user.id, _id, shop.id, chooseGoodArr[i].stockId, this.data.goodMap[_id].goodsName, chooseGoodArr[i].number)
-              }
-            } else {  // 该商品下 无规格
-              console.log(777)
-              goods_number = chooseGoodArr[i].number + 1
-              this.updateNewShopCartV2(user.id, _id, shop.id, this.data.chosenStockId, this.data.goodMap[_id].goodsName, goods_number)
-            }
-
-          }
-        } else { //如果购物车无商品
-          console.log(888)
-          this.updateNewShopCartV2(user.id, _id, shop.id, this.data.chosenStockId, this.data.goodMap[_id].goodsName, 1)
-        }
-
-      } else { // 如果点击的商品无规格
-        console.log(999)
-        //添加至购物车，参数(   用户id、商品id、店铺id、规格id、goodsName、goods_number  )
-        if (chooseGoodArr.length != 0) { //如果购物车有商品
-          for (let i = 0; i < chooseGoodArr.length; i++) { //循环购物车所有商品
-            console.log(333)
-            if (chooseGoodArr[i].stockId) { // 如果购物车商品下 有分规格
-              console.log(444)
-              console.log(chooseGoodArr[i].stockId)
-              if (chooseGoodArr[i].stockId == stockId) { // 如果新增的是 已有规格商品
-                console.log(555)
-                goods_number = chooseGoodArr[i].number + 1
-                this.updateNewShopCartV2(user.id, _id, shop.id, chooseGoodArr[i].stockId, this.data.goodMap[_id].goodsName, goods_number)
-              } else { //如果是 新增规格 在购物车不存在
-                console.log(666)
-                console.log(this.data.chosenStockId)
-                this.updateNewShopCartV2(user.id, _id, shop.id, this.data.chosenStockId, this.data.goodMap[_id].goodsName, 1)
-              }
-            } else {  // 该商品下 无规格
-              console.log(777)
-              goods_number = chooseGoodArr[i].number + 1
-              this.updateNewShopCartV2(user.id, _id, shop.id, this.data.chosenStockId, this.data.goodMap[_id].goodsName, goods_number)
-            }
-
-          }
-        } else { //如果购物车无商品
-          console.log(888)
-          this.updateNewShopCartV2(user.id, _id, shop.id, this.data.chosenStockId, this.data.goodMap[_id].goodsName, 1)
-        }
-
-      }
-    } else{ 
-      console.log('无stockId')
-      console.log(chooseGoodArr)
-      if (chooseGoodArr.length != 0) { //如果购物车有商品
-        for (let i = 0; i < chooseGoodArr.length; i++) { //循环购物车所有商品
-          console.log("3333333进入for")
-          if (chooseGoodArr[i].stockId) { // 如果购物车商品下 有分规格
-            console.log(444)
-            console.log(chooseGoodArr[i].stockId)
-            console.log(this.data.chosenStockId)
-            if (chooseGoodArr[i].stockId == this.data.chosenStockId) { // 如果新增的是 已有规格商品
-              console.log(555)
-              goods_number = chooseGoodArr[i].number + 1
-              this.updateNewShopCartV2(user.id, _id, shop.id, this.data.chosenStockId, this.data.goodMap[_id].goodsName, goods_number)
-            } else { //如果是 新增规格 在购物车不存在
-              console.log(666)
-              this.updateNewShopCartV2(user.id, _id, shop.id, this.data.chosenStockId, this.data.goodMap[_id].goodsName, chooseGoodArr[i].number)
-            }
-          } else {  // 该商品下 无规格
-            console.log(777)
-            goods_number = chooseGoodArr[i].number + 1
-            this.updateNewShopCartV2(user.id, _id, shop.id, this.data.chosenStockId, this.data.goodMap[_id].goodsName, goods_number)
-          }
-
-        }
-      } else { //如果购物车无商品
-        console.log(888)
-        this.updateNewShopCartV2(user.id, _id, shop.id, this.data.chosenStockId, this.data.goodMap[_id].goodsName, 1)
-      }
-    }
-    
-    */
-
   },
   //移除商品的事件
   decreaseGoodToCartFn: function (e) {
@@ -237,27 +141,6 @@ Page({
       }
     }
     this.mathTotal(goodStockMapArr)
-
-  /*  if (stockId != 'null') { // 如果点击的商品有规
-      for (let i = 0; i < chooseGoodArr.length; i++) { //循环购物车所有商品
-        if (chooseGoodArr[i].stockId) {
-          if (chooseGoodArr[i].stockId == stockId) { //找到该规格的商品
-            goods_number = chooseGoodArr[i].number - 1
-            this.updateNewShopCartV2(user.id, _id, shop.id, stockId, this.data.goodMap[_id].goodsName, goods_number)
-          }
-        }
-
-      }
-    } else {
-      //添加至购物车，参数(   用户id、商品id、店铺id、规格id、goodsName、goods_number  )
-      for (let i = 0; i < chooseGoodArr.length; i++) {
-        if (chooseGoodArr[i].goodsId == _id) {
-          goods_number = chooseGoodArr[i].number - 1
-          this.updateNewShopCartV2(user.id, _id, shop.id, stockId, this.data.goodMap[_id].goodsName, goods_number)
-        }
-      }
-
-    }*/
 
   },
 
@@ -419,6 +302,7 @@ Page({
       })
     })
   },
+
   //获取店铺类别下的商品，类别不传 则是所有商品
   getShopGoodsMore: function (merchantid, shopid, searchType, categoryid) {
     this.setData({
@@ -484,9 +368,10 @@ Page({
             hasGoodMap: true,
             goodStockMapArr: goodStockMapArr
           })
+          var user = wx.getStorageSync('scSysUser');
+          this.shopCartList(user.id)
         }
-        var user = wx.getStorageSync('scSysUser');
-        this.shopCartList(user.id)
+
       } 
     }).catch((err) => {
       console.log(err)
@@ -518,10 +403,10 @@ Page({
             chooseGoodArr.splice(i, 1)
           }
         }
-        this.setData({
-          chooseGoodArr: chooseGoodArr,
-          // goodStockMapArr: []
-        })
+        // this.setData({
+        //   chooseGoodArr: chooseGoodArr,
+        //   // goodStockMapArr: []
+        // })
       }
       
       if (res.data.code == 9){
@@ -543,8 +428,7 @@ Page({
           }
         })
       }
-      // var user = wx.getStorageSync('scSysUser');
-      // this.shopCartList(user.id)
+
     }).catch((err) => {
       console.log(err)
       // wx.showToast({
@@ -578,7 +462,8 @@ Page({
   //云店接口，获取购物车列表
   shopCartList: function (customerid) {
     this.setData({
-      shoppingCart: {}
+      shoppingCart: {},
+      chooseGoodArr: []
     })
     var shop = wx.getStorageSync('shop');
     util.reqAsync('shop/shopCartList', {

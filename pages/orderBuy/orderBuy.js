@@ -80,7 +80,7 @@ Page({
     var shopArea = shop.areaId;
     var shopCity = shop.cityId;
     var arr = JSON.parse(goods[0].deliveryCalcContent) || 0;
-    console.log(arr)
+    console.log(goods)
     this.setData({
       customerId: userid,
       shopId: shopid,
@@ -945,7 +945,8 @@ Page({
     })
   },
   bindTestCreateOrder: function (code) {
-    var data = {
+      var data = {
+      subject: this.data.goods[0].goodsName,
       requestBody: {
         body: '测试支付功能',
         out_trade_no: code,
@@ -953,6 +954,7 @@ Page({
         trade_type: 'JSAPI',
         openid: wx.getStorageSync('scSysUser').wxOpenId
       }
+      
     };
     //发起网络请求 微信统一下单   
     app.util.reqAsync('payBoot/wx/pay/unifiedOrder', data).then((res) => {
@@ -975,11 +977,20 @@ Page({
             nonceStr = wxResult.nonceStr;
             packages = 'prepay_id=' + wxResult.prepayId;
             paySign = res.data.data.paySign;
+            console.log(1)
           } else if(prepayInfo){
+            console.log(2)
             timeStamp = prepayInfo.timestamp;
             nonceStr = prepayInfo.nonceStr;
             packages = prepayInfo.packages;
             paySign = prepayInfo.paySign;
+          } else if (self.data.totalMoney=='0.00'){
+            console.log(self.data.totalMoney)
+            self.setData({
+              flagOrder: true,
+              isPay: 2
+            })
+            return false;
           }
           //发起支付
           wx.requestPayment({

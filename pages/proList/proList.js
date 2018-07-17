@@ -380,9 +380,11 @@ Page({
     var shop = wx.getStorageSync('shop');
     console.log(this.data.chooseGoodArr)
     let chooseGoodArr = this.data.chooseGoodArr
-    for (let i = 0; i < this.data.chooseGoodArr.length; i++){
+    for (let i = 0; i < chooseGoodArr.length; i++){
       this.updateNewShopCartV2(user.id, chooseGoodArr[i].goodsId, shop.id, chooseGoodArr[i].stockId, chooseGoodArr[i].goodsName, chooseGoodArr[i].number)
+      
     }
+
     wx.switchTab({
       url: '../shoppingCart/shoppingCart',
     })
@@ -507,6 +509,21 @@ Page({
       stockId: stockid, 
       goodsName: goodsName
     }).then((res) => {
+
+      let chooseGoodArr = this.data.chooseGoodArr
+      if(res.data.code ==1){
+        console.log("9999999999添加成功")
+        for (let i = 0; i < chooseGoodArr.length; i++) {
+          if (chooseGoodArr[i].goodsId == goodsid && chooseGoodArr[i].stockId == stockid) {
+            chooseGoodArr.splice(i, 1)
+          }
+        }
+        this.setData({
+          chooseGoodArr: chooseGoodArr,
+          // goodStockMapArr: []
+        })
+      }
+      
       if (res.data.code == 9){
         wx.showToast({
           title: res.data.msg,
@@ -526,8 +543,8 @@ Page({
           }
         })
       }
-      var user = wx.getStorageSync('scSysUser');
-      this.shopCartList(user.id)
+      // var user = wx.getStorageSync('scSysUser');
+      // this.shopCartList(user.id)
     }).catch((err) => {
       console.log(err)
       // wx.showToast({

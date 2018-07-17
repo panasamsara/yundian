@@ -16,8 +16,10 @@ Page({
     merchantId:'',//商户id
     totalMoney:0, //合计
     oldTotal: 0,//实际支付
+    showLoading: true,
     roomInx:'-1',
     deliveyMoney:0, //运费
+    deliveyArr:[],//运费数组
     isPay:0,//是否微信支付（0未支付1-成功2-失败）
     oldroom: '-1',//未再次选择之前的index
     roomVal:"",
@@ -57,7 +59,13 @@ Page({
     areaName:'',
     cityName:'',
     ProvinceName:'',
-    couponId:''//礼包id
+    couponId:'',//礼包id
+    shopProvince:'',//店铺省id
+    shopArea: '',//店铺区id
+    shopCity: '',//店铺市id
+    notInCityPrice:'',
+    inCityPrice:'',
+    inCityPriceDetails:''
   },
   onLoad: function (options) {
     var user = wx.getStorageSync('scSysUser');
@@ -68,13 +76,33 @@ Page({
     var username=wx.getStorageSync('scSysUser').username;
     //获取商品
     var goods = wx.getStorageSync('cart');
-    
+    var shopProvince = shop.provinceId;
+    var shopArea = shop.areaId;
+    var shopCity = shop.cityId;
+    var arr = JSON.parse(goods[0].deliveryCalcContent) || 0;
+    console.log(arr)
     this.setData({
       customerId: userid,
       shopId: shopid,
       username: username,
-      deliveyMoney: goods[0].deliveryCalcContent || 0
+      shopProvince: shopProvince,
+      shopArea: shopArea,
+      shopCity: shopCity,
+      deliveyArr: arr
     })
+    if (arr.length>0){
+      this.setData({
+        notInCityPrice: arr.notInCityPrice,
+        inCityPrice: arr.inCityPrice,
+        inCityPriceDetails: arr.inCityPriceDetails
+      })
+    }else{
+      this.setData({
+        notInCityPrice: '',
+        inCityPrice: '',
+        inCityPriceDetails: ''
+      })
+    }
     //是否可以店内下单并获得房间或者桌号
     app.util.reqAsync('shop/getShopTableNos', {
       shopId: this.data.shopId
@@ -230,7 +258,7 @@ Page({
             discount: counlits //优惠券
           }) 
         }
-
+        
       }).catch((err) => {
 
         wx.showToast({
@@ -248,8 +276,6 @@ Page({
       name: options.name || "",
       couponId: options.counid || ""
     });
-    this.discounts();
-
   },
   onShow:function(e){
     //获取地址
@@ -261,7 +287,8 @@ Page({
         userInfo: data.data.data,
         shopName: this.data.shopName
       })
-      if (data.data.data.recvAddress) {
+      var adrs = data.data.data.recvAddress||""
+      if (adrs!="") {
         var areaName = app.util.area.getAreaNameByCode(data.data.data.recvAddress.areaId);
         var cityName = app.util.area.getAreaNameByCode(data.data.data.recvAddress.cityId);
         var ProvinceName = app.util.area.getAreaNameByCode(data.data.data.recvAddress.provinceId);
@@ -337,10 +364,60 @@ Page({
         contactMobile: this.data.contactMobile,
         contactName: this.data.contactName
       })  
-      console.log("onshow");
-     
+
+      this.deliveryMone();
+      this.discounts();
     })  
                                                                   
+  },
+  deliveryMone: function (){
+    var darr = this.data.deliveyArr;
+    if (this.data.name=="包邮券"){
+      this.setData({
+        deliveyMoney: 0
+      })
+    }else{
+    
+      if (darr!=0){
+        console.log(1)
+        //比较是否在一个省
+        if (this.data.provinceId == this.data.shopProvince) {  //在一个省
+          if (this.data.cityId == this.data.shopCity) { //同一个市
+            var detail = darr.inCityPriceDetails;
+            var flagos = false; //默认不匹配区
+            for (var k in detail) {
+              if (this.data.areaId == detail[k].area) {
+                flagos = true;
+                console.log('匹配的区')
+                this.setData({
+                  deliveyMoney: darr.inCityPriceDetails[k].areaPrice
+                })
+                break;
+              }
+            }
+            if (flagos == false) { //无匹配的区
+              console.log('无匹配的区')
+              this.setData({
+                deliveyMoney: darr.inCityPrice
+              })
+            }
+           
+          } else { //不在一市
+            console.log('不在一个市')
+            this.setData({
+              deliveyMoney: darr.notInCityPrice
+            })
+          }
+        } else { //不在一个省
+          console.log('不在一个省')
+          this.setData({
+            deliveyMoney: darr.notInCityPrice
+          })
+        }
+      }
+     
+    }
+    
   },
   discounts: function (e) {
     if (this.data.isSend==0){
@@ -461,6 +538,7 @@ Page({
         name: ''
       })
     }
+    this.deliveryMone();
     this.discounts();
   },
   bindblur: function (e) {
@@ -550,6 +628,7 @@ Page({
       goods: this.data.goods,
       totalMoney: this.data.totalMoney
     });
+    this.deliveryMone();
     this.discounts();
   },
   show: function () {
@@ -634,10 +713,10 @@ Page({
 
   },
   sumb: function(e){
-    
     //下单
     this.setData({
-      goods: this.data.goods
+      goods: this.data.goods,
+      showLoading: false
     });
   
    wx.setStorageSync('isPay', 0);
@@ -724,6 +803,10 @@ Page({
       price: this.data.totalMoney,
       facilityId: this.data.facilityId
     }).then((data) => {
+      this.setData({
+        showLoading: true
+      })
+      
       if (data.data.code==9){ 
         wx.showToast({
           title: data.data.msg,
@@ -740,7 +823,6 @@ Page({
         
       }
       wx.setStorageSync('discount', '');
-      wx.setStorageSync('updataCart', '');
     })
   },
   sumb1:function(type){
@@ -813,6 +895,9 @@ Page({
         cityId: this.data.cityId,
         couponId: this.data.couponId  //优惠券id
      }).then((res) => {
+       this.setData({
+         showLoading: true
+       })
       if(res.data.code == 1) {
         if (type == 1) { //点击确认下单
           //是否微信支付弹窗
@@ -824,6 +909,9 @@ Page({
             success: function (res) {
               if (res.confirm) {
                 //用户点击确定（调微信支付接口）
+                self.setData({
+                  showLoading: false
+                })
                 self.bindTestCreateOrder(dt);
 
               } else if (res.cancel) {
@@ -848,7 +936,7 @@ Page({
         })
       }
       wx.setStorageSync('discount', '');
-      wx.setStorageSync('updataCart', '');
+
     }).catch((err) => {
       wx.showToast({
         title: '失败……',
@@ -868,6 +956,9 @@ Page({
     };
     //发起网络请求 微信统一下单   
     app.util.reqAsync('payBoot/wx/pay/unifiedOrder', data).then((res) => {
+      this.setData({
+        showLoading: true
+      })
       if(res.data.code == 1){
           //获取预支付信息
           var wxResult = res.data.data.wxResult;
@@ -898,9 +989,9 @@ Page({
             'signType': 'MD5',
             'paySign': paySign,
             'success': function (res) {
-              wx.showToast({
-                title: '支付成功',
-                icon: 'none'
+              self.setData({
+                flagOrder: true,
+                isPay: 2
               })
              },
             'fail': function (res) {
@@ -910,22 +1001,14 @@ Page({
                   title: '支付失败',
                   icon: 'none'
                 })
-                self.setData({
-                  flagOrder: true,
-                  isPay: 2
-                })
-              
-	            wx.navigateTo({
-	              url: '../shoppingCart/shoppingCart'
+                setTimeout(function(){
+                  wx.switchTab({
+                    url: '../shoppingCart/shoppingCart'
+                },3000);
 	            })
 	            
             },
             'complete': function (res) {
-              wx.setStorageSync('isPay', 1);
-              self.setData({
-                flagOrder: false,
-                isPay:1
-              })
               
             }
           })

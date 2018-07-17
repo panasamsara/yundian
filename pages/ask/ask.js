@@ -6,47 +6,70 @@ Page({
     myValue:'',
     askData:[],
     placeholder:'向买过的人提问',
-    tips:''
+    tips:'',
+    shopId:'',
+    goodsId:''
   },
-
+  // 获取页面信息
+  getData:function(){
+    var parm={
+      shopId: this.data.shopId,
+      goodsId: this.data.goodsId,
+      pageNo: 1,
+      pageSize:10
+    };
+    app.util.reqAsync('shop/getGoodsQuestions',parm).then((res)=>{
+      var data = res.data.data
+      for (var i = 0; i < data.length; i++) {
+        var key = 'time';
+        var value = data[i].createTime.slice(0, 11)
+        data[i][key] = value;
+      };
+      if (data.answers == null) {
+        this.setData({
+          isShow1: true,
+          isShow2: true
+        })
+      }
+      this.setData({
+        askAcount: res.data.total,
+        askData: data,
+        picImg: data[0].goodsPic
+      })
+    })
+  },
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    var user = wx.getStorageSync('scSysUser')
+    //获取商品信息
+    var goodsName = wx.getStorageSync('goodsInfo');
+    this.setData({
+      goodsId: options.goodsId,
+      shopId: options.shopId,
+      goodsName: goodsName,
+      userId: user.id
+    })
     var shop = wx.getStorageSync('shop');
-    app.util.reqAsync('shop/getGoodsQuestions',{
-      shopId: 808,//options.shopId
-      goodsId: 2117,//options.goodsId
-      pageNo:1,
-      pageSize:20
-    }).then((res) =>{
-      var data = res.data.data
-      // console.log(data)
-      for(var i=0;i<data.length;i++){
-        var key ='time';
-        var value = data[i].createTime.slice(0,11)
-        data[i][key]=value;
-      };
-      if(data.answers==null){
-        this.setData({
-           isShow1:true,
-           isShow2:true
-        })
-      }
-      this.setData({
-        askAcount:res.data.total,
-        askData:data,
-        picImg: data[0].goodsPic
-      })
-    }) 
-     
+    this.getData();    
   },
+  //下拉刷新
+  onPullDownRefresh: function () {
+    var that=this
+    wx.showNavigationBarLoading()//在标题栏中显示加载
+    setTimeout(function(){
+      that.getData();
+      wx.hideNavigationBarLoading()//完成停止加载
+      wx.stopPullDownRefresh();
+    },1500)
+  },  
   //跳转到问题详情页
   tosakDetail(e){
     // console.log(e)
     var questionId = e.currentTarget.dataset.questionid;
     wx.navigateTo({
-      url: '/pages/askDetail/askDetail?questionId=' + questionId +'&userId='+198,
+      url: '/pages/askDetail/askDetail?questionId=' + questionId + '&userId=' + this.data.userId,
     })
   },
   //获取input框的内容
@@ -59,10 +82,10 @@ Page({
   myAsk(){
     var shop = wx.getStorageSync('shop');
     var parm={
-      shopId: 808,
-      goodsId:'2117',
+      shopId: shop.id,
+      goodsId: this.data.goodsId,
       content: this.data.myValue,
-      createUser: 198
+      createUser: this.data.userId
     };
     app.util.reqAsync('shop/addQuestion',parm).then((res) =>{
       this.setData({
@@ -76,63 +99,6 @@ Page({
         duration: 2000
       });      
     })
-  },
-//下拉刷新
-  onPullDownRefresh:function(){
-    console.log('haha')
-    var that=this;
-    wx.showNavigationBarLoading()//在标题栏中显示加载
-    setTimeout(function(){
-      that.onLoading();
-      wx.hideNavigationBarLoading()//完成停止加载
-    },1500)
- },
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-  
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-  
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-  
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-  
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-  
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-  
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-  
   }
+
 })

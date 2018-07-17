@@ -1,9 +1,9 @@
 //shopping-cart.js
 
-//此页面还差付款
+
 //获取应用实例
 const app = getApp();
-var user = wx.getStorageSync('scSysUser');
+
 Page({
   data: {
     winHeight: "",//窗口高度
@@ -11,9 +11,13 @@ Page({
     currentTab: 0, //预设当前项的值
     scrollLeft: 0, //tab标题的滚动条位置
     goodlist: [], //"orderStatus" 订单状态（待发货0，配送中1，已收货2， 配送失败3, 取消4，异常订单5）
-    length:0
+    length:0,
+    customerId:''
   },
-  onLoad: function () {
+  onLoad: function (options) {
+    var user = wx.getStorageSync('scSysUser');
+    var userid = wx.getStorageSync('scSysUser').id;
+
     var that = this;
     // 高度自适应
     wx.getSystemInfo({
@@ -27,21 +31,27 @@ Page({
         });
       }
     });
-
-    this.getData(); //全部
-
-  },
-  // 滚动切换标签样式
-  switchTab: function (e) {
-    this.setData({
-      currentTab: e.detail.current,
-      currentPage:1,
-      goodlist: [], //"orderStatus" 订单状态（待发货0，配送中1，已收货2， 配送失败3, 取消4，异常订单5）
-      length: 0
+    that.setData({
+      currentTab: options.index ||0,
+      customerId: userid
     });
-    this.checkCor();
-    this.getData();
+    that.getData(); //全部
+    console.log(userid)
   },
+  // onShow:function(e){
+  //   this.getData(); 
+  // },
+  // 滚动切换标签样式
+  // switchTab: function (e) {
+  //   this.setData({
+  //     currentTab: e.detail.current,
+  //     currentPage:1,
+  //     goodlist: [], //"orderStatus" 订单状态（待发货0，配送中1，已收货2， 配送失败3, 取消4，异常订单5）
+  //     length: 0
+  //   });
+  //   this.checkCor();
+  //   this.getData();
+  // },
   // 点击标题切换当前页时改变样式
   swichNav: function (e) {
     var cur = parseInt(e.currentTarget.dataset.current);
@@ -54,6 +64,7 @@ Page({
         goodlist: [], //"orderStatus" 订单状态（待发货0，配送中1，已收货2， 配送失败3, 取消4，异常订单5）
         length: 0
       })
+      this.getData();
     }
   },
   //判断当前滚动超过一屏时，设置tab标题滚动条。
@@ -68,34 +79,76 @@ Page({
       })
     }
   },
-  getData: function(){
+  getData: function(type){
     //调接口
-    app.util.reqAsync('shop/orderList', {
-      customerId: user.id || 198,
-      orderStatusVo: this.data.currentTab,
-      pageNo: this.data.currentPage,
-      pageSize: 10
-    }).then((res) => {
-      var oldData = this.data.goodlist;
-      var data = res.data.data;
-      for (var ins in data) {
-        oldData.push(data[ins]);
-      }
-      for (var i in oldData){
-        oldData[i].total = oldData[i].orderItemList.length;
-      }
-      wx.hideLoading();
-      this.data.currentPage = ++this.data.currentPage;
-        this.setData({
-          goodlist: oldData,
-          length: oldData.length
+    if(type==1){
+      app.util.reqAsync('shop/orderList', {
+        customerId: this.data.customerId,
+        orderStatusVo: this.data.currentTab,
+        pageNo: Number(this.data.currentPage) + 1,
+        pageSize: 10
+      }).then((res) => {
+        if (res.data.code == 1) {
+           //下拉加载
+            var oldData = this.data.goodlist;
+            var data = res.data.data;
+            for (var ins in data) {
+              oldData.push(data[ins]);
+            }
+            for (var i in oldData) {
+              oldData[i].total = oldData[i].orderItemList.length;
+            }
+            wx.hideLoading();
+
+            this.data.currentPage = ++this.data.currentPage;
+            this.setData({
+              goodlist: oldData,
+              length: oldData.length
+            })
+          
+        } else {
+          wx.showToast({
+            title: res.data.msg,
+            icon: 'none'
+          })
+        }
+      }).catch((err) => {
+        wx.showToast({
+          title: '失败……',
+          icon: 'none'
         })
-    }).catch((err) => {
-      wx.showToast({
-        title: '失败……',
-        icon: 'none'
       })
-    })
+    }else{
+      app.util.reqAsync('shop/orderList', {
+        customerId: this.data.customerId,
+        orderStatusVo: this.data.currentTab,
+        pageNo: 1,
+        pageSize: 10
+      }).then((res) => {
+        if (res.data.code == 1) {
+          for (var i in res.data.data) {
+            res.data.data[i].total = res.data.data[i].orderItemList.length;
+          }
+            this.setData({
+              goodlist: res.data.data,
+              length: res.data.data.length
+            })
+           
+        } else {
+          wx.showToast({
+            title: res.data.msg,
+            icon: 'none'
+          })
+        }
+        console.log(this.data.length)
+      }).catch((err) => {
+        wx.showToast({
+          title: '失败……',
+          icon: 'none'
+        })
+      })
+    }
+    
   },
   delete: function(e){
     var orderNo = e.currentTarget.dataset.no;
@@ -103,7 +156,14 @@ Page({
     app.util.reqAsync('shop/delOrder', {
       orderNo: orderNo
     }).then((res) => {
-      this.getData();
+      if (res.data.code == 1) {
+        this.getData();
+      } else {
+        wx.showToast({
+          title: res.data.msg,
+          icon: 'none'
+        })
+      }
     }).catch((err) => {
       wx.showToast({
         title: '失败……',
@@ -117,7 +177,15 @@ Page({
     app.util.reqAsync('shop/cancelOrder', {
       orderNo: orderNo
     }).then((res) => {
-      this.getData();
+      if(res.data.code==1){
+        this.getData();
+      }else{
+        wx.showToast({
+          title: res.data.msg,
+          icon: 'none'
+        })
+      }
+      
     }).catch((err) => {
       wx.showToast({
         title: '失败……',
@@ -137,25 +205,69 @@ Page({
       goodId = e.currentTarget.dataset.goodid;
     //评价
     wx.navigateTo({
-      url: '../appraise/appraise?shopId=' + shopId + '&goodsId=' + goodId
+      url: '../../appraise/appraise?shopId=' + shopId + '&goodsId=' + goodId
     })
   },
   returnGood: function(e){
     //申请退货
-    var orderNo = e.currentTarget.dataset.no,
-      orderStatus = e.currentTarget.dataset.statu,
-      returnAmount = e.currentTarget.dataset.money;
-    wx.navigateTo({
-      url: 'applyRefund/applyRefund?orderNo=' + orderNo + '&orderStatus=' + orderStatus + '&returnAmount=' + returnAmount
+    var self = this;
+    var phone = e.currentTarget.dataset.phone;
+    wx.showModal({
+      title: '申请退货',
+      content: '是否拨打商家电话联系退货？',
+      success: function (res) {
+        if (res.confirm) {
+          wx.makePhoneCall({
+            phoneNumber: phone, //此号码并非真实电话号码，仅用于测试
+            success: function () {
+              console.log("拨打电话成功！")
+            },
+            fail: function () {
+              console.log("拨打电话失败！")
+            }
+          })
+        } else if (res.cancel) {
+          //用户点击取消
+
+        }
+      }
     })
+    // var orderNo = e.currentTarget.dataset.no,
+    //   orderStatus = e.currentTarget.dataset.statu,
+    //   returnAmount = e.currentTarget.dataset.money;
+    // wx.navigateTo({
+    //   url: 'applyRefund/applyRefund?orderNo=' + orderNo + '&orderStatus=' + orderStatus + '&returnAmount=' + returnAmount
+    // })
   },
   reimburse: function(e){
     //申请退款
-    var orderNo = e.currentTarget.dataset.no,
-      orderStatus = e.currentTarget.dataset.statu,
-      returnAmount = e.currentTarget.dataset.money;
-    wx.navigateTo({
-      url: 'applyRefund/applyRefund?orderNo=' + orderNo + '&orderStatus=' + orderStatus + '&returnAmount=' + returnAmount
+    // var orderNo = e.currentTarget.dataset.no,
+    //   orderStatus = e.currentTarget.dataset.statu,
+    //   returnAmount = e.currentTarget.dataset.money;
+    // wx.navigateTo({
+    //   url: 'applyRefund/applyRefund?orderNo=' + orderNo + '&orderStatus=' + orderStatus + '&returnAmount=' + returnAmount
+    // })
+    var self = this;
+    var phone = e.currentTarget.dataset.phone;
+    wx.showModal({
+      title: '申请退款',
+      content: '是否拨打商家电话联系退款？',
+      success: function (res) {
+        if (res.confirm) {
+          wx.makePhoneCall({
+            phoneNumber: phone, //此号码并非真实电话号码，仅用于测试
+            success: function () {
+              console.log("拨打电话成功！")
+            },
+            fail: function () {
+              console.log("拨打电话失败！")
+            }
+          })
+        } else if (res.cancel) {
+          //用户点击取消
+
+        }
+      }
     })
   },
   take: function(e){
@@ -166,7 +278,15 @@ Page({
       orderNo: orderNo,
       customerId: customerId
     }).then((res) => {
-      this.getData();
+      if (res.data.code==1){
+        this.getData();
+      }else{
+        wx.showToast({
+          title: res.data.msg,
+          icon: 'none'
+        })
+      }
+      
     }).catch((err) => {
       wx.showToast({
         title: '失败……',
@@ -176,16 +296,24 @@ Page({
   },
   shipments : function(e){
     var orderNo = e.currentTarget.dataset.no,
-      userId = user.id;//用户id
+      userId = this.data.customerId;//用户id
     //提醒发货
     app.util.reqAsync('shop/orderRemind', {
       orderNo: orderNo,
       userId: userId
     }).then((res) => {
-      wx.showToast({
-        title: '已提醒卖家发货',
-        icon: 'none'
-      })
+      if (res.data.code==1){
+        wx.showToast({
+          title: '已提醒卖家发货',
+          icon: 'none'
+        })
+      }else{
+        wx.showToast({
+          title: res.data.msg,
+          icon: 'none'
+        })
+      }
+      
     }).catch((err) => {
       wx.showToast({
         title: '失败……',
@@ -193,14 +321,16 @@ Page({
       })
     })
   },
-  shopSkip: function(e){
-    var shopId = e.currentTarget.dataset.shopid;
-    var currUserId = user.id;//用户id
-    //跳到店铺
-    wx.navigateTo({
-      url: '../../store/store?shopId=' + shopId + '&currUserId=' + currUserId
-    })
-  },
+  // shopSkip: function(e){
+  //   var shopId = e.currentTarget.dataset.shopid;
+  //   var currUserId = this.data.customerId;//用户id
+  //   console.log(shopId)
+  //   console.log(currUserId)
+  //   //跳到店铺
+  //   wx.navigateTo({
+  //     url: '../../store/store?shopId=' + shopId + '&currUserId=' + currUserId
+  //   })
+  // },
   orderSkip: function(e){
     var orderNo = e.currentTarget.dataset.no;
     //跳转到订单详情
@@ -215,7 +345,7 @@ Page({
       wx.showLoading({
         title: '加载中',
       })
-      this.getData();
+      this.getData(1);
     } else {
       wx.showToast({
         title: '到底了哦',
@@ -223,25 +353,164 @@ Page({
       })
     }
   },
-  onPullDownRefresh: function () {
-    //上拉刷新
-    //票判断不为0,点击tab为空的时候不可以下拉;
-    if (this.data.goodlist.length != 0) {
-      wx.showLoading({
-        title: '加载中',
-      });
-      // 下拉每次清空数组
-      this.data.goodlist.lengthh = 0;
-      var newpage = Math.ceil(this.data.length / this.data.currentPage);
-      if (this.data.currentPage <= newpage) {
-        this.getData();
+  // onPullDownRefresh: function () {
+  //   wx.showToast({
+  //     title: '刷新中',
+  //     icon: "none"
+  //   })
+  //   //上拉刷新
+  //   this.getData();
+  // },
+  pay:function(e){
+    var self = this;
+    var dt = e.currentTarget.dataset.no;
+    wx.showModal({
+      title: '支付方式',
+      content: '是否微信支付？',
+      success: function (res) {
+        if (res.confirm) {
+          //用户点击确定（调微信支付接口）
+          self.bindTestCreateOrder(dt);
+
+        } else if (res.cancel) {
+          //用户点击取消
+          
+        }
+      }
+    })
+  },
+  bindTestCreateOrder: function (code) {
+    var data = {
+      requestBody: {
+        body: '测试支付功能',
+        out_trade_no: code,
+        notify_url: 'https://wxapp.izxcs.com/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
+        trade_type: 'JSAPI',
+        openid: wx.getStorageSync('scSysUser').wxOpenId
+      }
+    };
+    //发起网络请求 微信统一下单   
+    app.util.reqAsync('payBoot/wx/pay/unifiedOrder', data).then((res) => {
+      console.log(res.data.data);
+      if (res.data.code == 1) {
+        //获取预支付信息
+        var wxResult = res.data.data.wxResult;
+        var prepayInfo = res.data.data.prepayInfo;
+        var self = this;
+        //预支付参数
+        var timeStamp = '';
+        var nonceStr = '';
+        var packages = '';
+        var paySign = '';
+
+        if (wxResult) {
+          timeStamp = res.data.data.timeStamp;
+          nonceStr = wxResult.nonceStr;
+          packages = 'prepay_id=' + wxResult.prepayId;
+          paySign = res.data.data.paySign;
+        } else if (prepayInfo) {
+          timeStamp = prepayInfo.timestamp;
+          nonceStr = prepayInfo.nonceStr;
+          packages = prepayInfo.packages;
+          paySign = prepayInfo.paySign;
+        }
+        //发起支付
+        wx.requestPayment({
+          'timeStamp': timeStamp,
+          'nonceStr': nonceStr,
+          'package': packages,
+          'signType': 'MD5',
+          'paySign': paySign,
+          'success': function (res) {
+            console.log('成功' + res)
+            wx.showToast({
+              title: '支付成功',
+              icon: 'none'
+            })
+            self.getData(); 
+           },
+          'fail': function (res) {
+           console.log('失败'+res)
+            //支付失败
+            wx.showToast({
+              title: '支付失败',
+              icon: 'none'
+            })
+            self.getData(); 
+
+
+          },
+          'complete': function (res) {
+           
+            self.getData(); 
+          }
+        })
+
       } else {
         wx.showToast({
-          title: '到底了哦',
-          icon: "none"
+          title: res.data.msg,
+          icon: 'none'
         })
       }
-      wx.stopPullDownRefresh();
-    }
-  },
+
+    }).catch((err) => {
+      wx.showToast({
+        title: '失败……',
+        icon: 'none'
+      })
+    });
+  }
+  // bindTestCreateOrder: function (code) {
+  //   //微信支付
+  //   var data = {
+  //     requestBody: {
+  //       body: '测试支付功能',
+  //       out_trade_no: code,
+  //       notify_url: 'https://wxapp.izxcs.com/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
+  //       trade_type: 'JSAPI',
+  //       openid: wx.getStorageSync('scSysUser').wxOpenId
+  //     }
+  //   };
+  //   //发起网络请求 微信统一下单   
+  //   app.util.reqAsync('payBoot/wx/pay/unifiedOrder', data).then((res) => {
+  //     //发起支付
+  //     var wxResult = res.data.data.wxResult;
+  //     var paySign = res.data.data.paySign;
+  //     var timeStamp = res.data.data.timeStamp;
+  //     var self = this;
+  //     wx.requestPayment({
+  //       'timeStamp': timeStamp,
+  //       'nonceStr': wxResult.nonceStr,
+  //       'package': 'prepay_id=' + wxResult.prepayId,
+  //       'signType': 'MD5',
+  //       'paySign': paySign,
+  //       'success': function (res) { },
+  //       'fail': function (res) {
+  //         //支付失败或者未支付跳到购物车
+  //         wx.showToast({
+  //           title: '支付失败',
+  //           icon: 'none'
+  //         })
+         
+          
+  //         self.getData(); 
+
+  //       },
+  //       'complete': function (res) {
+  //         wx.showToast({
+  //           title: '支付成功',
+  //           icon: 'none'
+  //         })
+        
+  //         self.getData(); 
+  //       }
+  //     })
+
+  //   }).catch((err) => {
+  //     wx.showToast({
+  //       title: '失败……',
+  //       icon: 'none'
+  //     })
+  //   });
+  // }
 })

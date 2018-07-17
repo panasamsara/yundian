@@ -39,6 +39,7 @@
   color: #666666;
   margin-left: 25rpx;
   letter-spacing: 2rpx;
+  word-break: break-all; 
 }
 
 .headline .infoBox{

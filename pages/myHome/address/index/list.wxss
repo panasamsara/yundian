@@ -88,10 +88,19 @@ radio .wx-radio-input.wx-radio-input-checked::before{
     width: 340rpx;
     height: 310rpx;
     display: block;
-    margin: 190rpx auto 50rpx;
+    margin: 190rpx auto 20rpx;
 }
 .addessNull{
   text-align: center;
   font-size: 28rpx;
   color: #999;
+}
+.sendAdd{
+  width: 241rpx;
+	height: 72rpx;
+	background-color: #ff7878;
+	border-radius: 10rpx;
+  color: #fff;
+  line-height: 72rpx;
+  margin: 40rpx auto;
 }

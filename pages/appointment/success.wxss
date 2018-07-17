@@ -51,3 +51,8 @@
   background: -moz-linear-gradient(right, #ff894f, #fe5c45); /* Firefox 3.6 - 15 */
   background: linear-gradient(to right, #ff894f , #fe5c45); /* 标准的语法 */
 }
+
+.success .timeBox{
+  display: flex;
+  flex-direction: column;
+}

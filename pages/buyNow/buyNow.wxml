@@ -1,0 +1,26 @@
+<!--pages/buyNow/buyNow.wxml-->
+<view class='bgpic'>
+  <image src='{{pictureUrl}}'></image>
+</view>
+<view class='main'>
+  <view class='top'>
+    <image src='{{pictureUrl}}'></image>
+    <text class='price'>¥{{groupBuyingPrice}}</text>
+    <text class='count'>库存 {{stockBalance}}</text>
+    <view class='size clearfix'>
+      <block wx:for='{{stockData}}' wx:key='key'>
+        <span class='{{num==item.id?"ac":""}}' bindtap='chose' data-id='{{item.id}}' data-dt='{{item}}'>{{item.stockName}}</span>      
+      </block>
+    </view>
+  <view class='buyCount clearfix'>
+    <view class='left'>购买数量</view>
+    <view class='right clearfix'>
+      <span bindtap="minus">-</span>
+      <span>{{number}}</span>
+      <span bindtap='add'>+</span>
+    </view>
+  </view>    
+  </view>
+  <view class='tot' bindtap='buyNow'>立即购买</view>
+</view>
+

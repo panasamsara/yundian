@@ -1,6 +1,5 @@
 // pages/myhome/address/add/index.js
 var app = getApp();
-var userId = wx.getStorageSync('scSysUser').id;
 Page({
 
   /**
@@ -10,7 +9,12 @@ Page({
     redClick: 0,
     show:false,
     region: [],
-    areaCodes: []
+    areaCodes: [],
+    userId:""
+  },
+  onLoad: function (options) {
+    var userId = wx.getStorageSync('scSysUser').id;
+    this.setData({ userId: userId });
   },
   addressTap: function () {
     // 设置默认地址接口
@@ -49,7 +53,7 @@ Page({
     })
     app.util.reqAsync('shop/recvAddrAddOrUpdate', {
       name: name,
-      customerId: 1870,
+      customerId: this.data.userId,
       address: address, 
       phone: tel, 
       isDefault: this.data.redClick, 

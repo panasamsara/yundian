@@ -1,5 +1,8 @@
+
 page{
-  height:100%;
+  /* height:100%; */  
+}
+.page_main{
   position: relative;
 }
 .clearfix::after{
@@ -17,6 +20,36 @@ swiper-item image{
   width:100%;
   height: 100%;
 }
+/* 倒计时区 */
+.countDown{
+  width:100%;
+  height: 100rpx;
+}
+.countDown .left{
+  box-sizing: border-box;
+  padding-left: 20rpx;
+  width:100%;
+  height: 100%;
+  line-height: 100rpx;
+  background-color: #fb452c;
+  float:left;
+  font-size: 46rpx;
+  color:#fff; 
+}
+.countDown .left>span{
+  font-size: 30rpx;
+  padding-left: 10rpx;
+  position: relative;
+}
+.countDown .left>span::after{
+  content: '';  
+  height: 1rpx;
+  width:126rpx;
+  background-color: #fff;
+  position: absolute;
+  left: 10rpx;
+  top:20rpx;
+}
 .detail{
   padding:30rpx;
 }
@@ -30,6 +63,7 @@ swiper-item image{
   font-size: 30rpx;
   color:black;
   text-align: justify;
+  word-break:break-all;
 }
 .detail .price{
   color:red;
@@ -41,6 +75,12 @@ swiper-item image{
 }
 .detail span:first-child{
   margin-right: 120rpx;
+}
+.descrip{
+  padding: 0 30rpx;
+}
+.descrip>text{
+  font-size: 30rpx;
 }
 .spellList{
   padding:0 30rpx;
@@ -127,8 +167,8 @@ swiper-item image{
   line-height: 60rpx;
 }
 .dingwei>image{
-  width:15rpx;
-  height: 25rpx;
+  width:20rpx;
+  height: 30rpx;
   position: absolute;
   right:30rpx;
   top:30rpx;
@@ -293,7 +333,6 @@ swiper-item image{
   line-height: 87rpx;
 }
 .detail-nav{
-  display: flex;
   flex-direction: row;
   align-items: center;
   float:left;
@@ -305,27 +344,16 @@ swiper-item image{
   width:100%;
   height:100rpx;
 }
-.tabBar{
-  width:40%;
-  height:100%;
-}
-
-.tabBar view image{
-  padding-top:10rpx;
-  width:50rpx;
-  height:45rpx;
-
-}
 button{
+  float: right;
   color:#fff;
   text-align: center;
   text-decoration: none;
-  display: inline-block;
   font-size:30rpx;
   border-radius: 0;
   height:100%;
   line-height: 100rpx;
-  width:30%;
+  width:220rpx;
   outline: none;
 }
 .add{
@@ -388,7 +416,7 @@ button{
   line-height: 115rpx;
   font-size: 34rpx;
   position: fixed;
-  top:265;
+  top:200rpx;
   left: 35rpx;
   background-color: #fff;
   z-index: 1;
@@ -399,9 +427,10 @@ button{
   padding:20rpx 20rpx;
   border-top:1rpx solid #e5e5e5;
 }
-.mt{
+.layer .item:first-child{
   margin-top: 115rpx
 }
+
 .layer .item>image{
   width:100rpx;
   height: 100rpx;

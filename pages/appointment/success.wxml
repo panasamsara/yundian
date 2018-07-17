@@ -13,7 +13,10 @@
     <text>{{shopName}}</text>
   </view>
   <view class='list info'>
-    <text>{{data.endTime}}</text>
+    <view class='timeBox'>
+      <text>{{data.startTime}}</text>
+      <text>{{data.endTime}}</text>
+    </view>
     <text>{{data.num}}|{{data.deviceText}}</text>
   </view>
   <view class='list service'>
@@ -21,8 +24,8 @@
     <text>服务人员:{{data.serviceText}}</text>
   </view>
   <view class='list client'>
-    <text>叶知秋</text>
-    <text>12345678910</text>
+    <text>{{data.name}}</text>
+    <text>{{data.phone}}</text>
   </view>
   <button type='primary' id='submit' bindtap='submit'>确认</button>
 </view>

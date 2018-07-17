@@ -1,17 +1,27 @@
 <view class='discount'>
-  <view class='list' bindtap='skip' wx:for="{{discounts}}" data-id="{{item.couponLogId}}" wx:key="index">
-   <image class="bg" src='../images/yundian_youhuiquan.png'></image>
-   <view class='con'>
-      <view class='listTop'>
-      <view class='left'>
-       <image src='../images/discount.png'></image>
-      </view>
-      <view class='left'>
-        <view>礼品城市</view>
-        <view>{{item.instruction}}</view>
-      </view>
+  <block wx-if="{{discounts.length==0}}">
+    <view class="addessNull">
+      <image src="../images/zwyhq.png"></image>
+      <view>暂时没有优惠券哦</view>
     </view>
-    <view class='time'><text class='mr10'>有效期至:</text>{{item.endTime}}</view>
-   </view>
-  </view>
+  </block>
+   <block wx-if="{{discounts.length>0}}">
+    <view class='list' bindtap='skip' wx:for="{{discounts}}" data-id="{{item.id}}" wx:key="index" data-couponLogId="{{item.couponLogId}}" data-couponType="{{item.couponType}}" data-canLimitGoods="{{item.canLimitGoods}}">
+    <image class="bg" src='../images/yundian_youhuiquan.png'></image>
+    <view class='con'>
+        <view class='listTop'>
+        <view class='left'>
+        <image src='../images/discount.png'></image>
+        </view>
+        <view class='left'>
+          <view>礼品城市</view>
+          <view>{{item.instruction}}</view>
+          <view class='good' wx:if="{{item.canLimitGoods==1}}">指定商品可用</view>
+          <view class='good' wx:if="{{item.canLimitGoods==0}}"></view>
+        </view>
+      </view>
+      <view class='time'><text class='mr10'>有效期至:</text>{{item.endTime}}</view>
+    </view>
+    </view>
+     </block>
 </view>

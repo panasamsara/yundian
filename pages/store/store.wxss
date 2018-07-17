@@ -51,7 +51,7 @@ page {
   font-size: 34rpx;
 }
 
-.fans {
+#fans {
   font-size: 26rpx;
 }
 

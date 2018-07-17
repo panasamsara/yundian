@@ -40,6 +40,9 @@
   width: 690rpx;
   font-size: 32rpx;
   color: #333;
+  height: 970rpx;
+  overflow-y: auto;
+  padding-bottom: 30rpx;
 }
 
 .person {
@@ -92,7 +95,7 @@
 .des {
   font-size: 32rpx;
   text-align: center;
-  margin-top: 100rpx;
+  margin-top: 40rpx;
 }
 
 .offOrder {
@@ -103,6 +106,11 @@
   width: 100%;
   height: 100rpx;
   line-height: 100rpx;
+  color: white;
+  background: -webkit-linear-gradient(left, #ff894f , #fe5c45); /* Safari 5.1 - 6.0 */
+  background: -o-linear-gradient(right, #ff894f, #fe5c45); /* Opera 11.1 - 12.0 */
+  background: -moz-linear-gradient(right, #ff894f, #fe5c45); /* Firefox 3.6 - 15 */
+  background: linear-gradient(to right, #ff894f , #fe5c45); /* 标准的语法 */
 }
 
 .mask {

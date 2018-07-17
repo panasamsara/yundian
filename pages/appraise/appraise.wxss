@@ -11,6 +11,7 @@
   top:0;
   left: 0;
   width:100%;
+  background-color: #fff;
   padding:25rpx 0 23rpx 0;
   border-top:1px solid #e5e5e5;
   box-shadow:0px 5px 5px #ececec ;
@@ -48,9 +49,11 @@
   display:block;
   line-height: 32rpx;
 }
+.main{
+  padding-top:130rpx;
+}
 .user{
   margin:0 30rpx;
-  padding-top:130rpx;
   border-bottom: 1rpx solid #e5e5e5;
 }
 .user:last-child{

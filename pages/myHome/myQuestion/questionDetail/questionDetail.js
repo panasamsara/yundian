@@ -1,12 +1,11 @@
 var app=getApp();
-var userId = wx.getStorageSync('scSysUser').id;
 Page({
   data: {
     answerList:[],
     questionList:[],
     listData: { 
       questionId: "",
-      createUser: userId,
+      createUser: "",
       pageSize: 10, 
       pageNo: 1 
     },
@@ -16,8 +15,10 @@ Page({
     total:""
   },
   onLoad: function (options) {
+    var userId = wx.getStorageSync('scSysUser').id;
+    var newId = "listData.createUser";
     var quesId ="listData.questionId";
-    this.setData({ [quesId]: options.id, activeIndex: options.activeIndex});
+    this.setData({ [quesId]: options.id, activeIndex: options.activeIndex, [newId]: userId});
     this.getList();
   },
   getList: function () {
@@ -30,6 +31,7 @@ Page({
       var newAnswer = [];
       var newQuestion = [];
       var newAnswers = oldAnswers.concat(data.questionDetail.answers);
+      console.log(newAnswers);
       this.setData({
         answers: newAnswers
       })
@@ -52,6 +54,8 @@ Page({
     this.setData({ sendValue: sendValue})
   },
   send:function(){
+    var desc = "listData.pageNo";
+    this.setData({ [desc]: 1 });
     if (app.util.isEmpty(this.data.sendValue)){
       wx.showToast({
         title: '回答内容不能为空',

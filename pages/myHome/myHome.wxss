@@ -5,12 +5,12 @@
   float: right;
 }
 .header{
-  height: 330rpx;
+  height: 416rpx; 
   width: 100%;
 }
 .headerToP .bgimg{
   width: 100%;
-  height: 330rpx;
+  height: 416rpx; 
   display: block;
 }
 .headerToP .top{
@@ -22,27 +22,26 @@
 .headerToP .top image{
   border-radius: 50%;
   display: block;
-  width: 130rpx;
-  height: 130rpx;
-  margin: 40rpx auto 0;
+  width: 144rpx;
+  height: 144rpx;
+  margin: 66rpx auto 0;
 }
 .headerToP text{
   text-align: center;
-  font-size: 32rpx;
-  margin-top: 20rpx;
+  font-size: 34rpx;
+  margin-top: 24rpx;
+  margin-bottom: 40rpx;
   display: block;
   color: #fff;
 }
 
 .order{
-  height: 500rpx;
   width: 100%;
   position:relative;
-  top:-20px;
 }
 .onlineOrder{
   position: absolute;
-  top: -40rpx;
+  top: -102rpx;
   background: #fff;
   width: 690rpx;
   border-radius: 20rpx 20rpx 0 0;
@@ -59,7 +58,7 @@
   line-height: 60rpx;
   overflow:hidden;
   font-size: 30rpx;
-  padding: 20rpx 30rpx 30rpx 30rpx;
+  padding:28rpx 30rpx 22rpx 30rpx;
 }
 .orderList{
   display: flex;
@@ -68,6 +67,21 @@
 }
 .orderList view{
   flex: 5;
+  position: relative;
+}
+.msg,.msgtitle{
+  position: absolute;
+}
+.orderList .msg{
+  width: 33rpx;
+  height: 34rpx;
+  right: 50rpx;
+  top: -17rpx;
+}
+.orderList .msgtitle{
+  color: #fff;
+  font-size: 16rpx;
+  /* top: 10rpx; */
 }
 .orderList view image{
   width: 48rpx;
@@ -83,11 +97,19 @@
   color: #333;
   margin-top: 20rpx;
   margin-bottom: 30rpx;
+  left:20rpx;
+  top:-31rpx;
+}
+.shop{
+  font-size: 50rpx;
+}
+.shoporder{
+  overflow: hidden;
 }
 .shoporder view{
   width: 230rpx;
   float: left;
-  padding-top: 80rpx;
+  padding-top: 60rpx;
 }
 .shoporder view image{
   width: 50rpx;
@@ -112,7 +134,15 @@
 .paddingBottom{
   padding-bottom: 50rpx;
 }
-.navigator{
+/* .navigator{
   display: flex;
   width: 100%;
+} */
+button[type=warn]{
+  width: 690rpx;
+  margin-top: 60rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  font-size: 30rpx;
+  letter-spacing: 2rpx;
 }

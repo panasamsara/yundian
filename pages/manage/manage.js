@@ -25,10 +25,16 @@ Page({
     currentTab: 0
   },
   //事件处理函数
-  onLoad: function () {
+  onLoad: function (options) {
     wx.showLoading({
       title: '加载中',
     })
+    if(options&&options.url){
+      this.setData({
+        show: options.url,
+        currentTab: options.index
+      })
+    }
     this.selectComponent('#' + this.data.show).onLoad();
   },
   onReachBottom:function (){

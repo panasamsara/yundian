@@ -13,7 +13,8 @@ Component({
    * 组件的初始数据
    */
   data: {
-    list:[]
+    list:[],
+    blank:false
   },
 
   /**
@@ -52,7 +53,6 @@ Component({
       this.getData(data);
     },
     getData:function(data){
-      console.log(data)
       var oldData = this.data.list;
       app.util.reqAsync('circle/getCircleByShopId', data).then((res) => {
         if(res.data.data){
@@ -61,6 +61,10 @@ Component({
           this.setData({
             list: newData,
             total: res.data.total
+          })
+        }else{
+          this.setData({
+            blank:true
           })
         }
         wx.hideLoading();

@@ -37,7 +37,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": -1,
+			"current": 19,
 			"list": [
 				{
 					"id": -1,
@@ -205,6 +205,30 @@
 					"id": -1,
 					"name": "趣拼团",
 					"pathName": "pages/groupBuy/groupBuy",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "我的",
+					"pathName": "pages/myHome/myHome",
+					"query": ""
+				},
+				{
+					"id": 29,
+					"name": "扫一扫",
+					"pathName": "pages/scan/scan",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "我的优惠券",
+					"pathName": "pages/myHome/discounts/discounts",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "地址列表",
+					"pathName": "pages/myHome/address/index/list",
 					"query": ""
 				}
 			]

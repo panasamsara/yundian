@@ -22,8 +22,7 @@ Page({
       shopId: wx.getStorageSync('shop').id
     };
     // 店铺信息/云店简介
-    app.util.reqAsync('shop/getShopAbstractInfo', data).then((res) => {
-      console.log(wx.getStorageSync('scSysUser').id, wx.getStorageSync('shop').id)
+    app.util.reqAsync('shop/getShopInfoAbstract', data).then((res) => {
       if(res.data.data.resMap){
         var map = res.data.data.resMap,
             articleContent=res.data.data.newCmsArticle[0]
@@ -38,58 +37,22 @@ Page({
       this.setData({
         data: res.data.data
       })
+      // 判断用户类型
+      let merchantId = res.data.data.shopInfo.merchantId;
+      if(merchantId){
+        if (merchantId == wx.getStorageSync('scSysUser').id){
+          this.setData({
+            type:1
+          })
+        }else{
+          this.setData({
+            type:2
+          })
+        }
+      }
     }).catch((err) => {
       console.log(err);
     })
-  },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function() {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function() {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function() {
-
   },
   tabChange: function(e) {
     this.setData({

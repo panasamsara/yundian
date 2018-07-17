@@ -80,7 +80,7 @@ page{
   display: block;
   color: #2c2c2c;
   font-size: 0.8rem;
-  width: 200rpx;
+  width: 300rpx;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box; /** 将对象作为伸缩盒子模型 **/
@@ -92,10 +92,17 @@ page{
   width: 20px;
 }
 .foods-item .price{
-  font-size: 0.8rem;
+  font-size: 34rpx;
   color: #FF5035;
   position: absolute;
   bottom: 0;
+  left: 20rpx;
+}
+.foods-item .yangjiao{
+  font-size: 26rpx;
+  color: #FF5035;
+  position: absolute;
+  bottom: 5rpx;
 }
 .cartcontrol-wrap{
   position: absolute;
@@ -161,7 +168,7 @@ page{
   line-height:24px;
   text-align:center;
   font-size:10px;
-  color:rgb(147, 153, 159);
+  color:rgb(0, 0, 0);
   line-height:20px;
   float:left;
   font-size:17px;
@@ -276,7 +283,7 @@ page{
 .shopcart-list{
   position:absolute;
   left:0;
-  bottom:49px;
+  bottom:48px;
   z-index:-1;
   width:100%;
   background: #fff;
@@ -323,6 +330,10 @@ page{
   line-height: 24px;
   font-size: 14px;
   color: rgb(7, 17, 27);
+  width: 300rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .list-content .price{
@@ -376,14 +387,22 @@ page{
   background-color: rgba(102, 102, 102, 0.4)
 }
 .stock-box{
+  position: absolute;
   width: 650rpx;
   height: 600rpx;
+  top:200rpx;
   background-color: #fff;
   margin-left: 50rpx;
-  margin-right: 50rpx;
-  margin-top: 200rpx;
+  margin-right: 35rpx;
   border-radius: 10rpx;
-  overflow: hidden;
+  /* overflow: hidden; */
+}
+.mask-close-btn{
+  position: absolute;
+  width: 54rpx;
+  height: 55rpx;
+  top: -20rpx;
+  right: -20rpx;
 }
 .stock-box-title{
   width: 100%;
@@ -400,6 +419,7 @@ page{
   font-size: 28rpx;
   height: 80rpx;
   line-height: 80rpx;
+  padding-left:10rpx;
 }
 .stock-box-content-content{
   width: 100%;
@@ -407,6 +427,8 @@ page{
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
+  justify-content: flex-start;
+  margin-left:9rpx;
 }
 .stock-list{
   width: 180rpx;
@@ -440,28 +462,32 @@ page{
     -webkit-line-clamp: 1; /** 显示的行数 **/
 }
 .stock-box-bottom{
-  width: 100%;
-  height: 100rpx;
+  width: 650rpx;
+  height: 120rpx;
   line-height: 100rpx;
-  padding-left: 20rpx;
-  padding-right: 30rpx;
   position: relative;
   bottom: 0;
   background-color: #eee;
   font-size: 34rpx;
   color: #f60436;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 .stock-money{
   width: 200rpx;
   display: inline-block;
+  padding-left:15rpx;
+  padding-top:12rpx;
+  font-size:42rpx;
+  font-weight:700;
 }
 .stock-btn{
   display: inline-block;
   width: 200rpx;
   height: 80rpx;
   line-height: 80rpx;
-  margin-top: 10rpx;
-  margin-right: 50rpx;
+  margin-top: 20rpx;
+  margin-right: 35rpx;
   border-radius: 10rpx;
   background-color: #fb452d;
   color: #fff;
@@ -478,4 +504,16 @@ page{
 .loading{
   text-align: center;
   margin-top: 400rpx;
+}
+.jiesuan-yangjiao{
+  font-size: 26rpx;
+  font-weight: 700;
+}
+.list-yangjiao{
+  font-size: 24rpx;
+  font-weight: 700;
+}
+.stock-yangjiao{
+  font-size: 34rpx;
+  font-weight: 700;
 }

@@ -9,7 +9,7 @@
         <text class='oldPrice'>￥{{item.minOriginalPrice}}</text>
       </view>
       <view class='buyBox'>
-        <view class='end'>距结束<text>{{item.rh}}</text>:<text>{{item.m}}</text>:<text>{{item.s}}</text></view>
+        <view class='end'>距结束<text>{{item.rh?item.rh:0}}</text>:<text>{{item.m?item.m:0}}</text>:<text>{{item.s?item.s:0}}</text></view>
         <view class='buy'>
           <navigator url="">马上抢</navigator>
         </view>

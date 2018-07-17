@@ -1,3 +1,5 @@
+
+<view class='page_main'>
 <!-- banner区 -->
 <swiper indicator-dots='{{indicatorDots}}' autoplay='{{autoplay}}' interval='{{interval}}' duration='{{duration}}'>
   <block wx:for="{{imgUrls}}" wx:key='key'>
@@ -7,33 +9,39 @@
   </block>
 </swiper>
 <scroll-view scroll-y="true">
+<!-- 倒计时 -->
+  <view class='countDown clearfix {{flagCount?"show":"hide"}}'>
+    <view class='left'>¥{{groupBuyingPrice}}<span>¥{{batchPrice}}</span></view>
+  </view>
   <view class='detail'>
     <text class='title'>{{goodsName}}</text>
-    <rich-text class="rich-text" nodes="{{descContent}}"></rich-text>
     <text class='price'>¥{{batchPrice}}</text>
     <view><span>库存 {{stockBalance}}</span><span>销量 {{payCount}}</span></view>
   </view>
   <view class='separate'></view>
+  <!-- <view class='descrip'>
+    <text class='{{descContent==""?"hide":"show"}}' >{{descContent}}</text>
+  </view> -->
   <!-- 拼单 -->
-  <view class='spellList'>
+  <view class='spellList {{flagSpellList?"show":"hide"}}'>
     <view class='top'>
-      <text>29人在拼单, 可直接参与</text>
+      <text>{{groupBuyingAllNum}}人在拼单, 可直接参与</text>
       <image src='../../images/yundian_spxq_gengduo.png' bindtap='toLayer'></image>
     </view>
-    <view class='item clearfix'>
-      <image src=''></image>
-      <text>喵喵喵</text>
-      <button bindtap='toJoin'>去拼单</button>      
-      <view class='cont'>还差<span>3人</span>拼成<view><span>剩余15:30:26</span></view></view>
+    <view class='item clearfix' wx:for='{{plistData}}' wx:key='key'>
+      <image src='{{item.userPic}}'></image>
+      <text>{{item.userName}}</text>
+      <button bindtap='toLayer'>去拼单</button>      
+      <view class='cont'>还差<span>{{item.totalNum}}人</span>拼成<view><span>剩余{{item.rh}}天:{{item.m}}分:{{item.s}}秒</span></view></view>
     </view>
-    <view class='item clearfix'>
+    <!-- <view class='item clearfix'>
       <image src=''></image>
       <text>喵喵喵</text>
       <button bindtap='toJoin'>去拼单</button>      
       <view class='cont'>还差<span>3人</span>拼成<view><span>剩余15:30:26</span></view></view>
-    </view>    
+    </view>     -->
   </view>
-  <view class='separate'></view>
+  <!-- <view class='separate'></view> -->
   <!-- 商品评价 -->
   <view class='dingwei'>
     <text class='appraise'>商品评价({{all}})</text>
@@ -41,7 +49,7 @@
     <view class='user' wx:for="{{userData}}" wx:key="key">
       <view class='user-top'>
         <image src='{{item.memberImgName}}'></image>
-        <span>{{item.userCode}}</span> 
+        <span>{{item.anonymous==1?'匿名评价':item.userCode}}</span> 
         <view class='right'>
           <view class='star'>
             <block wx:for="{{item.score}}" wx:key="name">
@@ -54,79 +62,64 @@
         </view> 
       </view>
       <text class='text-remark'>{{item.commentContent}}</text>
-      <view class='user-pic clearfix' wx:for="{{item.imgNameList}}" wx:key="name">
-        <image src='{{item}}'></image>
+      <view class='user-pic clearfix' wx:for="{{item.commentUploadList}}" wx:key="name">
+        <image src='{{item.filePath}}'></image>
       </view>
       <view class='user-info clearfix'>
-        <span>规格: {{item.stockName}}</span>
+        <span class='{{item.stockName==null?"hide":"show"}}'>规格: {{item.stockName}}</span>
         <span>{{item.creatTime}}</span>
       </view>
     </view>
-    <view class='zw-pic {{hideView?"hide":"show"}}'>
+    <view class='zw-pic {{hideView1?"hide":"show"}}'>
       <view><image src='../../images/empty.png'></image></view>
     </view>    
-    <image src='../../images/yundian_spxq_gengduo.png' bindtap='toAppraise' class='{{hideView?"show":"hide"}}'></image>  
+    <image src='../../images/yundian_spxq_gengduo.png' bindtap='toAppraise' class='{{hideView1?"show":"hide"}}'></image>  
   </view>  
    
   <!-- 问大家 -->
   <view class='dingwei'>
     <text>问大家({{askAcount}})</text>
-    <image src='../../images/yundian_spxq_gengduo.png' bindtap='toAsk' class='{{hideView?"show":"hide"}}'></image> 
+    <image src='../../images/yundian_spxq_gengduo.png' bindtap='toAsk' class='{{hideView2?"show":"hide"}}'></image> 
     <view wx:for="{{askData}}" wx:key="key">
       <view class='ask'>
         <view class='ask-icon'>问</view>
         <text>{{item.content}}</text>
-        <span>{{item.answers}}个回答</span>
+        <span>{{item.answerCount==null?0:item.answerCount}}个回答</span>
       </view> 
       <view class='answer'>
         <view class='answer-icon'>答</view>
-        <text>{{item.answerCount}}</text>
+        <text>{{item.answers[0]?item.answers[0].content:'暂无回答'}}</text>
       </view>    
     </view>
-    <view class='zw-pic {{hideView?"hide":"show"}}'>
+    <view class='zw-pic {{hideView2?"hide":"show"}}'>
       <view><image src='../../images/empty.png'></image></view>
     </view>    
   </view> 
   <view class='separate'></view>
 
   <view class='shop clearfix'>
-    <image src=''></image>
+    <image src='{{picImg}}'></image>
     <view class='content'>
-      <text>乐町官方旗舰店</text>
-      <block wx:for='{{4}}' wx:key='key'>
+      <text>{{shopName}}</text>
+      <block wx:for='{{score}}' wx:key='key'>
         <image src='../../images/fullstar.png'></image>
       </block>
-      <block wx:for='{{1}}' wx:key='key'>
+      <block wx:for='{{5-score}}' wx:key='key'>
         <image src='../../images/emptystar.png'></image>
       </block>      
     </view>
     <view class='goShop' bindtap='goShop'>进店></view>
   </view>
   <view class='tips'>
-    <text>嬉皮生活, 有你有我! 生活的精彩, 由你的加入开始</text>
+    <text>{{shopDesc}}</text>
   </view> 
  <view class='separate'></view>
- <view class='temp'></view>
 </scroll-view>
 <!-- 底部悬浮栏 -->
-<view class='detail-nav'>
-  <view class='tabBar'>
-    <view class='tab-list' bindtap='chat'>
-      <view class='icon-img'>
-        <image class='icon' src='../../images/1_03.gif'></image>
-      </view>
-      <view class='text'>客服</view>
-    </view>
-    <view class='tab-list'>
-      <view class='icon-img'>
-        <image class='icon' src='../../images/car.png'></image>
-      </view>
-      <view class='text'>店铺</view>
-    </view>       
-  </view>
-  <button class='add' bindtap='addCar'>加入购物车</button>
-  <button class='buy' bindtap='immeBuy'>立即购买</button>
-</view>
+  <view class='detail-nav'>
+   <button class='add' bindtap='addCar'>加入购物车</button>
+  <button class='buy' bindtap='immeBuy'>立即购买</button> 
+</view>  
 <!-- 遮罩层 -->
 <view class='shade {{flag?"show":"hide"}}'></view>
 <!-- 弹出层 -->
@@ -134,42 +127,12 @@
   <view class='close' bindtap='closeLayer'>×</view>
   <view class='top'>正在拼单</view>
   <scroll-view scroll-y style='height:860rpx'>
-    <view class='item clearfix mt'>
-      <image src=''></image>
-      <text>喵喵喵</text>
-      <button>去拼单</button>      
-      <view class='cont'>还差<span>3人</span>拼成<view><span>剩余15:30:26</span></view></view>
+    <view class='item clearfix' wx:for='{{allListData}}' wx:key='key'>
+      <image src='{{item.userPic}}'></image>
+      <text>{{item.userName}}</text>
+      <button data-groupBuyingId='{{item.groupBuyingId}}' data-cUser='{{item.cUser}}' data-status='{{item.status}}' bindtap='toJoin'>去拼单</button>      
+      <view class='cont'>还差<span>{{item.totalNum}}人</span>拼成<view><span>剩余15:30:26</span></view></view>
     </view>
-    <view class='item clearfix'>
-      <image src=''></image>
-      <text>喵喵喵</text>
-      <button>去拼单</button>      
-      <view class='cont'>还差<span>3人</span>拼成<view><span>剩余15:30:26</span></view></view>
-    </view>
-    <view class='item clearfix'>
-      <image src=''></image>
-      <text>喵喵喵</text>
-      <button>去拼单</button>      
-      <view class='cont'>还差<span>3人</span>拼成<view><span>剩余15:30:26</span></view></view>
-    </view>  
-    <view class='item clearfix'>
-      <image src=''></image>
-      <text>喵喵喵</text>
-      <button>去拼单</button>      
-      <view class='cont'>还差<span>3人</span>拼成<view><span>剩余15:30:26</span></view></view>
-    </view> 
-    <view class='item clearfix'>
-      <image src=''></image>
-      <text>喵喵喵</text>
-      <button>去拼单</button>      
-      <view class='cont'>还差<span>3人</span>拼成<view><span>剩余15:30:26</span></view></view>
-    </view> 
-    <view class='item clearfix'>
-      <image src=''></image>
-      <text>喵喵喵</text>
-      <button>去拼单</button>      
-      <view class='cont'>还差<span>3人</span>拼成<view><span>剩余15:30:26</span></view></view>
-    </view> 
     <!-- 底部提示信息             -->
     <view class='bot'>仅显示10个正在拼单的人</view>
   </scroll-view>        
@@ -180,11 +143,12 @@
   <view class='title'>参与喵喵喵的拼单</view> 
   <view class='cont'>仅剩<span>3个</span>名额, 20:06:59后结束</view>
   <view class='pic-list clearfix'>
-    <image src=''></image>
+    <image src='{{item.userPic}}' wx:for='{{picData}}'wx:key='key'></image>
     <!-- <image src='../../images/pic_03.gif'></image>
     <image src='../../images/pic_03.gif'></image>
     <image src='../../images/pic_03.gif'></image>
     <image src='../../images/pic_03.gif'></image> -->
   </view> 
-  <view class='joinBuy'>参与并拼单</view>    
+  <view class='joinBuy' bindtap='joinBuy'>参与并拼单</view>    
+</view>
 </view>

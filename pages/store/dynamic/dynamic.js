@@ -14,7 +14,8 @@ Component({
    * 组件的初始数据
    */
   data: {
-    list: []
+    list: [],
+    blank:false
   },
 
   /**
@@ -62,7 +63,6 @@ Component({
     getData: function (data) {
       var oldData = this.data.list;
       app.util.reqAsync('circleBack/getVideoList', data).then((res) => {
-        console.log(res.data)
         if(res.data.data){
           var list = res.data.data;
           for (var i = 0; i < list.length; i++) {
@@ -74,6 +74,10 @@ Component({
           this.setData({
             list: newData,
             total: res.data.total
+          })
+        }else{
+          this.setData({
+            blank:true
           })
         }
         wx.hideLoading();

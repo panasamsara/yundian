@@ -44,7 +44,7 @@
     </view>
   </view>
 </view>
-<view class="blank" wx:else>
+<view class="blank" wx-if="{{blank}}">
   <image src='../images/yundian_zjy_yddt.png'></image>
   <text>暂时没有动态更新哦</text>
 </view> 

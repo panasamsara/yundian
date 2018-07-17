@@ -1,11 +1,37 @@
-<!--pages/scan/scan.wxml-->
 <view class='container'>
-  <view wx:if="{{histories && histories.length > 0}}">历史记录列表</view>
+   <!-- <view wx:if="{{histories && histories.length > 0}}">历史记录列表</view>
   <block wx:for="{{histories}}" wx:key="{{index}}">
     <view class="" bindtap='toShop' data-index='{{index}}'>
       <image src="{{item.bgImage}}"></image>
       <view>{{item.shopName}}</view>
     </view>
-  </block>
-<view class='scanBlock' bindtap='scanCode'>点击扫码</view>
+  </block>  -->
+   <view class='wrap' wx:if="{{histories.length == 0}}">
+    <image class="bgNull" src='../../images/bgNull.png'></image> 
+    <view class='scanBlock' bindtap='scanCode'><image class="sys" src="../../images/sys.png"></image>扫一扫打开店铺</view>
+  </view> 
+
+   <view class='wrap' wx:if="{{histories && histories.length > 0}}">
+    <image class='bgNull' src="../../images/bg.png"></image>
+    <view class='wrapList'>
+      <view>最近访问店铺</view>
+      <view class='wrapShop'>
+        <view class='content'>
+          <view class='child' bindtap='toShop' wx:for="{{histories}}" wx:key="{{index}}" data-index='{{index}}'>
+            <image class="logo" src="{{item.bgImage}}"></image>
+            <view class='left'>
+              <view>{{item.shopName}}</view>
+            </view>
+            <image class="right" src='../../images/jt.png'></image>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class='bottomStys'>
+      <view class='scanBlock' bindtap='scanCode'>
+        <image class="sys" src="../../images/sys.png"></image>扫一扫打开店铺</view>
+    </view>
+  </view> 
+
+
 </view>

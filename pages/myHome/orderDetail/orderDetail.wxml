@@ -15,34 +15,34 @@
             等待取货
           </view>
           <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==3}}">
-            {{item.orderInfo.orderStatusStr}}
+            等待收货
           </view>
           <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==6}}">
             已申请退款，等待商家审核
           </view>
           <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==4}}">
-            {{item.orderInfo.orderStatusStr}}
+            等待评价
           </view>
           <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==5}}">
-            {{item.orderInfo.orderStatusStr}}
+            已取消
           </view>
           <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==7}}">
             已申请退货，等待商家审核
           </view>
           <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==8}}">
-            {{item.orderInfo.orderStatusStr}}
+            已退款
           </view>
           <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==9}}">
-            {{item.orderInfo.orderStatusStr}}
+            已退货
           </view>
           <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==10}}">
-            {{item.orderInfo.orderStatusStr}}
+            已评论
           </view>
         </view>
         <!--用户信息-->
         <view class="user-info" id="userInfo">
           <!--配送方式-->
-          <view class="send-type" wx:if="{{item.orderInfo.deliveryType==0 || item.orderInfo.deliveryType==1}}">
+          <view class="send-type" wx:if="{{item.orderInfo.orderStatusVo==2 || item.orderInfo.orderStatusVo==3 || item.orderInfo.orderStatusVo==4}}">
             <view class="express" wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType==2}}">
               <view class="express-type">
                 <image src="../images/express.png"></image>
@@ -68,7 +68,7 @@
               <text class="siz-three">{{item.orderInfo.contactName}}</text><text class="siz-three">{{item.orderInfo.contactMobile}}</text>
             </view>
             <view class="user-address siz-four" wx:if="{{item.orderInfo.address}}">
-              {{item.orderInfo.address}}
+              {{provinceName}}{{cityName}}{{areaName}}{{item.orderInfo.address}}
             </view>
             <view class="user-address siz-four" wx:else>
               暂无
@@ -77,15 +77,22 @@
         </view>
       </view>  
       <!--订单编号-下单时间-->
-      <view class="order-box" wx:if="{{item.orderInfo.deliveryType!=0 && item.orderInfo.deliveryType!=1}}" style="margin-top:80rpx">
+      <view class="order-box a" wx:if="{{(item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType == 2) || item.orderInfo.orderStatusVo==3}}" style="margin-top:150rpx">
         <view class="order-type siz-three">{{item.orderInfo.orderStatusStr}}</view>
         <view class="order-num siz-four">订单编号：{{item.orderInfo.orderNo}}</view>
         <view class="order-time siz-four">下单时间：{{item.orderInfo.createTime}}</view>
       </view>
-      <view class="order-box" wx:if="{{item.orderInfo.deliveryType==0 && item.orderInfo.deliveryType==1}}" style="margin-top:250rpx">
+      <view class="order-box b" wx:else style="margin-top:90rpx">
         <view class="order-type siz-three">{{item.orderInfo.orderStatusStr}}</view>
         <view class="order-num siz-four">订单编号：{{item.orderInfo.orderNo}}</view>
         <view class="order-time siz-four">下单时间：{{item.orderInfo.createTime}}</view>
+      </view>
+      <!--自提二维码 (等待取货)-->
+       <view class="ziti" wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType == 2}}"> 
+        <view class="number">
+          <text class="siz-four">序列号：{{item.orderInfo.serialNumber}}</text>
+          <text class="siz-four">请到此店兑换此码</text>
+        </view>
       </view>
       <!--商品-->
       <view class="detail">
@@ -100,7 +107,7 @@
               <image class='good-img' src='{{items.pictureUrl}}'></image>
             </view>
             <view class='right-info'>
-              <text>{{items.goodsName}}</text>
+              <text class="order-tit">{{items.goodsName}}</text>
               <text wx:if="{{items.stockName}}">{{items.stockName}}</text>
               <view class='detail-down'>
                 <text>￥{{items.goodsPrice}}</text>
@@ -136,7 +143,7 @@
       </view>
     </scroll-view>  
     <view class="ctronl-btn">
-      <button wx:if="{{item.orderInfo.orderStatusVo==1}}" class='cancel-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="cancel" hover-class="other-button-hover" data-no="{{item.orderInfo.orderNo}}" data-customerid="{{item.orderInfo.customerId}}"> 取消订单 </button>
+    <button wx:if="{{item.orderInfo.orderStatusVo==1}}" class='cancel-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="cancel" hover-class="other-button-hover" data-no="{{item.orderInfo.orderNo}}"> 取消订单 </button>
       <button wx:if="{{item.orderInfo.orderStatusVo==1}}" class='pay-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="pay" hover-class="other-button-hover" data-no="{{item.orderInfo.orderNo}}"> 付款 </button>
       <button wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType!=2}}" class='reimburse-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="reimburse" hover-class="other-button-hover" data-no="{{item.orderInfo.orderNo}}" data-statu="{{item.orderStatus}}" data-money="{{item.orderInfo.amount}}"> 申请退款 </button>
       <button wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType!=2}}" class='shipments-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="shipments" hover-class="other-button-hover" data-no="{{item.orderInfo.orderNo}}"> 提醒发货 </button>

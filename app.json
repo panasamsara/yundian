@@ -40,6 +40,7 @@
     "pages/chatList/chatList",
     "pages/manage/manage",
     "pages/orderBuy/orderBuy",
+    "pages/orderBuy/discount/discount",
     "pages/store/dynamic/dynamic",
     "pages/720/720",
     "pages/store/headline/headline",
@@ -52,7 +53,8 @@
     "pages/videoLists/videoLists",
     "pages/video/video",
     "pages/secKill/secKill",
-    "pages/groupBuy/groupBuy"
+    "pages/groupBuy/groupBuy",
+    "pages/buyNow/buyNow"
   ],
   "window": {
     "backgroundTextStyle": "light",

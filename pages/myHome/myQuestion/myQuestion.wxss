@@ -121,7 +121,7 @@
 .width510{
   width: 510rpx;
   position: relative;
-  height: 188rpx; 
+  height: 182rpx; 
   overflow: hidden; 
   text-overflow: ellipsis;
   -webkit-line-clamp: 3;

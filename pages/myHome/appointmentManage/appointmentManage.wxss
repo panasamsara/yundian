@@ -40,7 +40,7 @@
     width: 340rpx;
     height: 310rpx;
     display: block;
-    margin: 300rpx auto 50rpx;
+    margin: 300rpx auto 20rpx;
 }
 .addessNull{
   text-align: center;

@@ -5,21 +5,21 @@
   </view>
   <view class='content' wx:for="{{orderList}}" wx:key="index">
     <view class="info">
-    <view class='person'>
-      <view>
-        <text>房间：</text>
-        <text>3号房</text>
-      </view>
-      <view>
-        <text>商家店名：</text>
-        <text>{{item.shopName}}</text>
-      </view>
-      <view>
-        <text>订单编号：</text>
-        <text>26559595</text>
+      <view class='person'>
+        <view wx:if="{{item.facilityTypeName}}">
+          <text>房间：</text>
+          <text>{{item.facilityTypeName}}</text>
+        </view>
+        <view>
+          <text>商家店名：</text>
+          <text>{{item.shopName}}</text>
+        </view>
+        <view>
+          <text>订单编号：</text>
+          <text>{{item.id}}</text>
+        </view>
       </view>
     </view>
-  </view>
     <view class="list" bindtap='skip' data-id="{{item.id}}" data-index="{{index}}">
       <view class='shop'>
         <view class='left'>

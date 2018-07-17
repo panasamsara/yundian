@@ -50,16 +50,17 @@
   </view>
   <view class='list name'>
     <text class='listLabel'>姓名</text>
-    <view class='info'>乐小丽</view>
+    <view class='info'>{{name?name:''}}</view>
   </view>
   <view class='list'>
     <text class='listLabel'>电话</text>
-    <view class='info'>12345678910</view>
+    <view class='info'>{{phone?phone:''}}</view>
   </view>
   <view class='list remark'>
     <text class='listLabel'>备注</text>
     <view class='info'>
-      <input class="weui-input" placeholder="如有特殊要求可在此填写" bindblur='summary'/>
+      <textarea placeholder="如有特殊要求可在此填写" bindblur='summary' maxlength='25' wx:if="{{change=='area'}}" value='{{summary}}'></textarea>
+      <text wx:if="{{change=='text'}}">{{summary}}</text>
     </view>
   </view>
   <view class='appoint' bindtap='submit'>

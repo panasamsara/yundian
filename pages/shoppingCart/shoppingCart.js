@@ -1,8 +1,10 @@
+import util from '../../utils/util.js';
 //shopping-cart.js
 //获取应用实例
+
 const app = getApp();
-var shop = wx.getStorageSync('shop');
-var user = wx.getStorageSync('scSysUser');
+
+
 Page({
   data: {
     delBtnWidth: 180,//删除按钮宽度单位（rpx）
@@ -10,38 +12,63 @@ Page({
     totalMoney: 0,
     shopk: 0,//k表示有店铺多少被勾选了
     goodlist:[],
-    customerId:''
+    customerId:'',
+    shopid:""
   },
   onLoad: function () {
-    //调接口
-    app.util.reqAsync('shop/shopCartList', {
-      customerId: user.id || 198 //用户主键
-    }).then((res) => {
-      var shopId = shop.shopId || 288;
-      var data=[];
-      for(var inx in res.data.data){
-        res.data.data[inx].checked = false;
-        if (shopId == res.data.data[inx].shopId){
-          data.push(res.data.data[inx]);
-        }
-      }
-      for(var ins in data){
-        data[0].goodsList[ins].checked = false;
-        data[0].goodsList[ins].txtStyle = "";       
-      } 
-
-      this.setData({
-        goodlist: data,
-        customerId: user.id || 198
-      })
-    }).catch((err) => {
-      wx.showToast({
-        title: '失败……',
-        icon: 'none'
-      })
+    var shop = wx.getStorageSync('shop');
+    var user = wx.getStorageSync('user');
+    var userid = wx.getStorageSync('scSysUser').id;
+    var shopid = wx.getStorageSync('shop').id;
+    this.getData();
+    this.setData({
+      customerId: userid,
+      shopid: shopid
     })
     this.initEleWidth();
+    console.log("购物车启动")
+    console.log(userid)
+    console.log(shopid)
+  },
+  onShow:function(e){
+    this.getData();
+    this.setData({
+    //  goodlist: this.data.goodlist,
+      isAllSelect: false,
+      totalMoney: 0,
+    })
+  },
+  getData:function(e){
+    //调接口
+    app.util.reqAsync('shop/shopCartList', {
+      customerId: this.data.customerId //用户主键
+    }).then((res) => {
+      var shopId = this.data.shopid;
+      var data = [];
+      console.log(res.data.data)
+      var da=res.data.data || [];
+      if (da.length > 0) {
+        for (var inx in res.data.data) {
+          res.data.data[inx].checked = false;
+          if (shopId == res.data.data[inx].shopId) {
+            data.push(res.data.data[inx]);
+          }
+        }
+        if (data.length>0){
+          for (var ins in data[0].goodsList) {
+            data[0].goodsList[ins].checked = false;
+            data[0].goodsList[ins].txtStyle = "";
+          }
+        }
+        
 
+        this.setData({
+          goodlist: data,
+          customerId: this.data.customerId
+        })
+      }
+
+    })
   },
   shopSelect: function (e) {
     var id = e.target.dataset.id,
@@ -64,13 +91,13 @@ Page({
       }
       this.data.shopk--;
     }
-    this.sum();//合计
     this.setData({
       goodlist: this.data.goodlist,
-      totalMoney: this.data.totalMoney,
       isAllSelect: this.data.isAllSelect,
       shopk: this.data.shopk
     })
+    this.sum();//合计
+    
   },
   switchSelect: function (e) {
     //单个勾选取消
@@ -150,6 +177,40 @@ Page({
       totalMoney: this.data.totalMoney
     });
   },
+  bindblur:function(e){
+    //填写数量   
+    var isInt = /^[1-9]+\d*$/;
+    if (e.detail.value) {
+      if (isInt.exec(e.detail.value)) {
+        var val = e.detail.value;
+        var index = parseInt(e.target.dataset.index), //当前index
+          pinx = parseInt(e.target.dataset.pindex); //父级index
+        this.data.goodlist[pinx].goodsList[index].number = val;
+        this.setData({
+          goodlist: this.data.goodlist
+        });
+
+        this.sum();//合计
+      } else {
+        var index = parseInt(e.target.dataset.index), //当前index
+          pinx = parseInt(e.target.dataset.pindex); //父级index
+        wx.showToast({
+          title: '请输入正确的数量',
+          icon: 'none'
+        })
+        this.data.goodlist[pinx].goodsList[index].number = this.data.goodlist[pinx].goodsList[index].number;
+        this.setData({
+          goodlist: this.data.goodlist
+        });
+      }
+    } else {
+      var val = e.detail.value;
+      wx.showToast({
+        title: '请输入正确的数量',
+        icon: 'none'
+      })
+    }
+  },
   bindPlus: function (e) {
     //加数量
     var id = e.target.dataset.id,
@@ -175,13 +236,19 @@ Page({
     for (var i = 0; i < this.data.goodlist.length; i++) {
       for (var k = 0; k < this.data.goodlist[i].goodsList.length; k++) {
         if (this.data.goodlist[i].goodsList[k].checked) { //合计
-          this.data.totalMoney = this.data.totalMoney + (parseInt(this.data.goodlist[i].goodsList[k].goodsPrice) * parseInt(this.data.goodlist[i].goodsList[k].number));
+          if (this.data.goodlist[i].goodsList[k].stockName!=""){
+            this.data.totalMoney = this.data.totalMoney + (Number(this.data.goodlist[i].goodsList[k].stockPrice) * parseInt(this.data.goodlist[i].goodsList[k].number));
+            
+        }else{
+            this.data.totalMoney = this.data.totalMoney + (Number(this.data.goodlist[i].goodsList[k].goodsPrice) * parseInt(this.data.goodlist[i].goodsList[k].number));
+            
+        }
         }
       }
     };
     this.setData({
       goodlist: this.data.goodlist,
-      totalMoney: this.data.totalMoney
+      totalMoney: (this.data.totalMoney).toFixed(2)
     });
   },
   touchS: function (e) {
@@ -271,7 +338,7 @@ Page({
       shopId = e.currentTarget.dataset.shopid,//店铺ID
       index = parseInt(e.currentTarget.dataset.index), //当前index
       pinx = parseInt(e.currentTarget.dataset.pindex),
-      customerId = e.currentTarget.dataset.customerId;
+      customerId =this.data.customerId;
       //根据会员ID和商品ID删除购物车中的一款产品
       app.util.reqAsync('shop/delShopCartGoodsByUidAndGid', {
         customerId: customerId,
@@ -280,9 +347,17 @@ Page({
         shopId: shopId
       }).then((res) => {
         this.data.goodlist[pinx].goodsList.splice(index, 1); // 删除购物车列表里这个商品
-        this.setData({
-          goodlist: this.data.goodlist,
-        });
+        if (this.data.goodlist[pinx].goodsList.length>0){
+          this.setData({
+            goodlist: this.data.goodlist,
+          });
+        }else{
+          this.setData({
+            goodlist: [],
+            isAllSelect: false
+          });
+        }
+        
         this.sum();//合计
       }).catch((err) => {
         wx.showToast({
@@ -322,16 +397,21 @@ Page({
          for (var n in indexArr) {
            this.data.goodlist[0].goodsList.splice(indexArr[n], 1);
          }
-         this.setData({
-           goodlist: this.data.goodlist
-         });
-         this.sum();//合计
-       }).catch((err) => {
-         wx.showToast({
-           title: '失败……',
-           icon: 'none'
-         })
-       }) 
+         if (this.data.goodlist[0].goodsList.length>0){
+           this.setData({
+             goodlist: this.data.goodlist
+           });
+           this.sum();//合计
+         }else{
+           this.setData({
+             goodlist: [],
+             isAllSelect:false,
+             totalMoney:0
+           });
+         }
+         console.log(this.data.goodlist.length)
+         
+       })
      }else{
        wx.showToast({
          title: '请选中商品', //数据返回提示，查看后台PHP
@@ -342,56 +422,74 @@ Page({
      }
   },
   default: function(e){
-    //结算
-    var selectGoods = [];
-    var orderbuy = [];//下单使用
-    for (var n in this.data.goodlist[0].goodsList){
-      if (this.data.goodlist[0].goodsList[n].checked){
-        
-        selectGoods.push({
-          'id': this.data.goodlist[0].goodsList[n].id,
-          'customerId': this.data.goodlist[0].goodsList[n].customerId,
-          'shopId': this.data.goodlist[0].shopId,
-          'goodsId': this.data.goodlist[0].goodsList[n].goodsId,
-          'stockId': this.data.goodlist[0].goodsList[n].stockId,
-          'goodsName': this.data.goodlist[0].goodsList[n].goodsName,
-          'goodsPrice': this.data.goodlist[0].goodsList[n].goodsPrice,
-          'goodsImageUrl': this.data.goodlist[0].goodsList[n].goodsImageUrl,
-          'stockName': this.data.goodlist[0].goodsList[n].stockName,
-          'number': this.data.goodlist[0].goodsList[n].number,
-          'goodsType': this.data.goodlist[0].goodsList[n].goodsType,
-        });
-        orderbuy.push({
-          'id': this.data.goodlist[0].goodsList[n].id,
-          'goodsPrice': this.data.goodlist[0].goodsList[n].goodsPrice,
-          'goodsType': this.data.goodlist[0].goodsList[n].goodsType,
-          'goodsNum': this.data.goodlist[0].goodsList[n].number,
-          'balance':'',//不知道是什么
-          'goodsIndex':n,
-          'remake':'',
-          'num': this.data.goodlist[0].goodsList[n].number,
-          'goodsName': this.data.goodlist[0].goodsList[n].goodsName,
-          'actualPayment': this.data.goodlist[0].goodsList[n].goodsPrice, //实付单价
-          'goodsPic': this.data.goodlist[0].goodsList[n].goodsImageUrl,
-          'unitPrice': this.data.goodlist[0].goodsList[n].goodsPrice,//单价
-          'goodsId': this.data.goodlist[0].goodsList[n].goodsId,
-          'customerId': this.data.goodlist[0].goodsList[n].customerId,
-          'stockId': this.data.goodlist[0].goodsList[n].stockId,
-          'shopId': this.data.goodlist[0].shopId
-        })
-      }
-    }
+    if (this.data.goodlist.length>0){
+      this.setData({
+        goodlist: this.data.goodlist
+      });
+      if (this.data.customerId) {
+        //结算
+        var selectGoods = [];
+        var orderbuy = [];//下单使用
+        for (var n in this.data.goodlist[0].goodsList) {
+          if (this.data.goodlist[0].goodsList[n].checked) {
+            selectGoods.push({
+              'id': this.data.goodlist[0].goodsList[n].id,
+              'customerId': this.data.goodlist[0].goodsList[n].customerId,
+              'shopId': this.data.goodlist[0].shopId,
+              'goodsId': this.data.goodlist[0].goodsList[n].goodsId,
+              'stockId': this.data.goodlist[0].goodsList[n].stockId,
+              'goodsName': this.data.goodlist[0].goodsList[n].goodsName,
+              'goodsPrice': this.data.goodlist[0].goodsList[n].goodsPrice,
+              'stockPrice': this.data.goodlist[0].goodsList[n].stockPrice,
+              'goodsImageUrl': this.data.goodlist[0].goodsList[n].goodsImageUrl,
+              'stockName': this.data.goodlist[0].goodsList[n].stockName,
+              'number': this.data.goodlist[0].goodsList[n].number,
+              'goodsType': this.data.goodlist[0].goodsList[n].goodsType,
+              'balance': '',
+              'goodsIndex': n,
+              'remake': '',
+              'deliveryCalcContent': this.data.goodlist[0].goodsList[n].deliveryCalcContent,
+              'actualPayment':this.data.goodlist[0].goodsList[n].stockPrice, //实付单价
+              'goodsPic': this.data.goodlist[0].goodsList[n].goodsImageUrl,
+              'unitPrice': this.data.goodlist[0].goodsList[n].goodsPrice,//单价
+            });
+  
+          }
+        }
 
-    if (selectGoods.length>0){
-      wx.setStorageSync('cart', selectGoods);
-      wx.setStorageSync('buyCart', orderbuy);
-      wx.navigateTo({
-        url: '../orderBuy/orderBuy?shopId=' + this.data.goodlist[0].shopId + '&shopName='+
-        this.data.goodlist[0].shopName + '&customerId=' + this.data.goodlist[0].goodsList[0].customerId + '&totalMoney=' + this.data.totalMoney
-      })
+        if (selectGoods.length > 0) {
+          wx.setStorageSync('cart', selectGoods);
+          wx.navigateTo({
+            url: '../orderBuy/orderBuy?shopId=' + this.data.goodlist[0].shopId + '&shopName=' +
+            this.data.goodlist[0].shopName + '&customerId=' + this.data.goodlist[0].goodsList[0].customerId + '&totalMoney=' + this.data.totalMoney
+          })
+
+          wx.setStorageSync('updataCart',"");
+          this.data.goodlist[0].checked = false;
+          for (var a in this.data.goodlist[0].goodsList) {
+            this.data.goodlist[0].goodsList[n].checked=false;
+          }
+          
+        } else {
+          wx.showToast({
+            title: '请选中商品', //数据返回提示，查看后台PHP
+            icon: 'none',
+            duration: 2000,
+            mask: true
+          })
+        }
+
+      } else {
+        wx.showToast({
+          title: '请先登录', //数据返回提示，查看后台PHP
+          icon: 'none',
+          duration: 2000,
+          mask: true
+        })
+      } 
     }else{
       wx.showToast({
-        title: '请选中商品', //数据返回提示，查看后台PHP
+        title: '请先添加商品', //数据返回提示，查看后台PHP
         icon: 'none',
         duration: 2000,
         mask: true
@@ -409,7 +507,7 @@ Page({
   },
   shopSkip : function(e){
     var shopId = e.currentTarget.dataset.shopid;
-    var currUserId = user.id;//用户id
+    var currUserId = this.data.customerId;//用户id
     //跳到店铺
     wx.navigateTo({
       url: '../store/store?shopId=' + shopId + '&currUserId=' + currUserId

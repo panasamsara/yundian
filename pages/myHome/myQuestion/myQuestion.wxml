@@ -1,4 +1,3 @@
-pages/myhome/myQuestion/myQuestion.wxml
 <view>
   <view class="header">
     <view class="manageTitle">
@@ -11,15 +10,17 @@ pages/myhome/myQuestion/myQuestion.wxml
     <!-- 没有可使用的预约默认图 -->
     <block wx:if="{{orderList.length==0}}">
       <view class="addessNull">
-        <image src="../images/adderss.png"></image>
+        <image wx:if="{{activeIndex==1}}" src="../images/zwtw.png"></image>
+        <image wx:if="{{activeIndex==2}}" src="../images/zwhd.png"></image>
+        <image wx:if="{{activeIndex==3}}" src="../images/zwpj.png"></image>
         <view wx:if="{{activeIndex==1}}">还没有提问,快去提问吧~</view>
         <view wx:if="{{activeIndex==2}}">还没有回答,快去回答吧~</view>
         <view wx:if="{{activeIndex==3}}">还没有邀请你的回答哦~</view>
       </view>
     </block> 
     <block wx:if="{{activeIndex==1 || activeIndex==3}}">
-      <view class='content' wx:for="{{orderList}}" wx:key="index" >
-        <view class="list" bindtap='skip' data-id="{{item.id}}">
+      <view class='content' >
+        <view class="list"  wx:for="{{orderList}}" wx:key="index" bindtap='skip' data-id="{{item.id}}">
           <view class="listTitle" wx:if="{{activeIndex==3}}">{{item.createUserName}}有问题像你求助哦</view>
           <view class="orderInfo">
             <view class='left'>
@@ -39,8 +40,8 @@ pages/myhome/myQuestion/myQuestion.wxml
       </view>
     </block>
     <block wx:if="{{activeIndex==2}}">
-      <view class='content' wx:for="{{orderList}}" wx:key="index" >
-        <view class="list" bindtap='skip' data-id="{{item.id}}">
+      <view class='content'  >
+        <view class="list" wx:for="{{orderList}}" wx:key="index" bindtap='skip' data-id="{{item.id}}">
           <view class="listTitle" >{{item.content}}</view>
           <view class="orderInfo">
             <view class='left'>

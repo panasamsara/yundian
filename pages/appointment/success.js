@@ -28,61 +28,12 @@ Page({
       shopName: wx.getStorageSync('shop').shopName
     })
   },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
-  },
   submit:function(){
   let datas=this.data.data,
       data={
         summary: datas.summary||'',
         facilityName: datas.deviceText,
-        customer: "吕莲莲",
+        customer: datas.name,
         bespokeBeginTime: datas.appointStart,
         bespokeEndTime: datas.appointEnd,
         facilityId: datas.facilityId,
@@ -94,7 +45,7 @@ Page({
         shopId: wx.getStorageSync('shop').id,
         merchantId: wx.getStorageSync('shop').merchantId,
         waiter: datas.serviceText,
-        mobile: "13813852226",
+        mobile: datas.phone,
         waiterId: datas.waiterId
       }
     app.util.reqAsync('shop/addBespokeV2', data).then((res) => {
@@ -109,6 +60,7 @@ Page({
           })
         },1000)
       }else{
+        console.log(res)
         wx.showToast({
           title: res.data.msg,
           icon: 'none'

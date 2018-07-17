@@ -1,13 +1,16 @@
 var app = getApp();
-var userId = wx.getStorageSync('scSysUser').id;
 Page({
   data: {
-    address:[]
+    address:[],
+    userId:""
   },
   onLoad: function (options) {
+    var userId = wx.getStorageSync('scSysUser').id;
+    this.setData({ userId: userId });
     this.getAddress();
   },
   onShow: function () {
+
     this.getAddress();
   },
   radioChange: function(e) {
@@ -16,7 +19,7 @@ Page({
     app.util.reqAsync('shop/recvAddrAddOrUpdate', {
       id: nowId,
       isDefault: 0,
-      customerId: userId,
+      customerId: this.data.userId,
     }).then((res) => {
       this.getAddress();
       wx.showToast({
@@ -86,7 +89,7 @@ Page({
       title: '加载中',
     })
     app.util.reqAsync('shop/recvAddrList', {
-      customerId: 1870
+      customerId: this.data.userId
     }).then((res) => {
       wx.hideLoading();
       res.data.data.forEach(function(i, v){

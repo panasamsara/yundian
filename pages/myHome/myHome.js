@@ -23,7 +23,7 @@ Page({
         path: '/pages/myHome/myAccount/myAccount'
       },
       {
-        icon: './images/youhuidiscount .png',
+        icon: './images/youhuidiscount.png',
         text: '优惠券',
         path: '/pages/myHome/discounts/discounts',
       },
@@ -38,64 +38,67 @@ Page({
         path: '/pages/myHome/myQuestion/myQuestion',
       },
     ],
+    shopList:[
+      {
+        icon: './images/daifukuan.png',
+        text: '待付款',
+        path: '/pages/myHome/order/order?index=1',
+        num: ""
+      },
+      {
+        icon: './images/daifahuo.png',
+        text: '待发货',
+        path: '/pages/myHome/order/order?index=2',
+        num: ""
+      },
+      {
+        icon: './images/daishouhuo.png',
+        text: '待收货',
+        path: '/pages/myHome/order/order?index=3',
+        num: ""
+      },
+      {
+        icon: './images/daipingjia.png',
+        text: '待评价',
+        path: '/pages/myHome/order/order?index=4',
+        num: ""
+      },
+      // {
+      //   icon: './images/shouhou.png',
+      //   text: '售后',
+      //   path: '/pages/myHome/order/order?index=4'
+      // },
+    ],
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
   onLoad: function (options) {
     this.setData({
       user: wx.getStorageSync('scSysUser')
+    });
+    wx.showLoading({
+      title: '加载中',
     })
-  },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-  
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-  
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-  
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-  
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-  
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-  
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-  
+    app.util.reqAsync('shop/getMyOnlineOrderComponentV2', { "customerId": this.data.user.id}).then((res) => {
+      // this.data.shopList.forEach(function (item, index, arr){
+      //   arr[0].num = res.data.data.waitingOfPayNum;
+      //   arr[1].num = res.data.data.waitingOfSendNum;
+      //   arr[2].num = res.data.data.waitingOfReciveNum;
+      //   arr[3].num = res.data.data.waitingOfCommentNum;
+      // })
+      this.setData({ 
+        "shopList[0].num": res.data.data.waitingOfPayNum, 
+        "shopList[1].num": res.data.data.waitingOfSendNum,
+        "shopList[2].num": res.data.data.waitingOfReciveNum,
+        "shopList[3].num": res.data.data.waitingOfCommentNum
+        })
+      console.log(this.data.shopList);
+      wx.hideLoading();
+    }).catch((err) => {
+      wx.hideLoading()
+      wx.showToast({
+        title: '失败……',
+        icon: 'none'
+      })
+    })
   },
   navigateTo(e) {
     const path = e.currentTarget.dataset.path;
@@ -104,5 +107,15 @@ Page({
     }else{
       wx.navigateTo({ url: path });
     }
+  },
+  back:function(){
+    wx.removeStorageSync('shop');
+    wx.navigateTo({ url: '/pages/scan/scan' });
+  },
+  backOrder: function (e) {
+    wx.navigateTo({ url: "/pages/myHome/order/order?index=0"});
+  },
+  backShop:function (e) {
+    wx.navigateTo({ url: e.currentTarget.dataset.path });
   },
 })

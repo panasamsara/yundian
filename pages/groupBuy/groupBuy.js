@@ -16,7 +16,7 @@ Page({
   onLoad: function (options) {
     let data={
       pageNo: 1,
-      shopId: 288,
+      shopId: wx.getStorageSync('shop').id,
       pageSize: 10
     }
     this.setData({
@@ -60,8 +60,10 @@ Page({
           total: res.data.total
         })
       }
+      wx.hideLoading();
     }).catch((err)=>{
         console.log(err)
+        wx.hideLoading();
     })
   }
 })

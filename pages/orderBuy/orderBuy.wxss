@@ -17,6 +17,22 @@ page,.content{
   font-family: PingFang-SC-Medium;
   margin-bottom: 20rpx;
 }
+.pric{
+  width: 100%;
+  height: 60rpx;
+  color:#fb452c;
+}
+.pric text:first-child{
+  font-size: 30rpx !important;
+  float: left;
+  padding:10rpx 0 0 0;
+  color:#fb452c !important;
+}
+.pric text:last-child{
+  font-size: 38rpx;
+  float: left !important;
+  color:#fb452c !important;
+}
 .buy-type .section__title{
   display: inline-block;
   float: left;
@@ -155,8 +171,24 @@ page,.content{
   padding:31rpx 31rpx 31rpx 0;
 }
 .right-info text:first-child{
-  display: block;
+  display: -webkit-box;
   margin-bottom: 10rpx;
+  -webkit-line-clamp:2;  
+  -webkit-box-orient:vertical;  
+  text-overflow:ellipsis;
+  text-overflow: -o-ellipsis-lastline;
+  overflow:hidden; 
+}
+.goodname{
+   width:400rpx;
+   display:-webkit-box;
+margin-bottom:10rpx;
+word-break:break-all;
+display:-webkit-box;
+-webkit-line-clamp:2;
+-webkit-box-orient:vertical;
+overflow:hidden;
+
 }
 .right-info text:nth-child(2){
   background: #f3f3f3;
@@ -198,6 +230,8 @@ page,.content{
   border:1rpx solid #ccc;
   border-radius:5px;
   margin:15rpx auto 0;
+  height:50rpx;
+  line-height:50rpx;
 }
 .stepper .minus{
   float: left;
@@ -210,6 +244,8 @@ page,.content{
   text-align: center;
   border-right: 1rpx solid #ccc;
   border-left: 1rpx solid #ccc;
+  height:50rpx;
+  line-height:50rpx;
 }
 .stepper .add{
   padding: 0 20rpx;
@@ -232,6 +268,7 @@ page,.content{
 .discount-box .shop-discount image{
   width: 24rpx;
   height: 30rpx; 
+  margin-left:10rpx;
 }
 .discount-room{
   display: inline-block;
@@ -322,6 +359,9 @@ page,.content{
   border-radius: 10rpx;
   float: left;
   margin:30rpx 0 0 15rpx;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
 }
 .modal-content .room-list.acv{
   background: #fb452c;
@@ -381,4 +421,15 @@ page,.content{
 }
 .order-tip .modal-btn text:last-child{
   color:#ff8979;
+}
+.add-adree{
+  height:100rpx;
+  line-height:100rpx;
+  padding-left: 31rpx;
+  background:#fff;
+  border-top:1px solid #e4e4e4;
+  font-size:30rpx;
+  color:#333;
+  font-family:PingFang-SC-Medium;
+  margin-bottom:20rpx;
 }

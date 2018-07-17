@@ -1,6 +1,4 @@
 import util from '../../utils/util.js';
-
-// pages/scan/scan.js
 Page({
 
   /**
@@ -30,68 +28,26 @@ Page({
     if (!histories || histories.length == 0) return;
     // 获取上一次的本地shopId
   },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-  
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-  
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-  
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-  
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-  
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-  
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-  
-  },
-  // ------------- 以下为自定义方法 --------------
-
-  /**
-   * 扫码，根据shopId跳转
-   */
   scanCode: function () {
     wx.scanCode({
       success: (res) => {
+       
+        wx.showLoading({
+          title: '加载中',
+        })
         var path = res.result;
-        var shopId = path.match(/\d+$/g)[0]
+        // 获取二维码链接中的参数
+        let params = util.getParams(path)
+        let shopId = params.shopId
+        // var shopId = path.match(/\d+$/g)[0]
         wx.setStorageSync('shop', { id: shopId });
         util.setHistories({ id: shopId })
-        wx.navigateBack()
+        setTimeout(function(){
+          wx.reLaunch({
+            url: '/pages/index/index'
+          })
+          wx.hideLoading()
+        },1000)
       }
     })
   },
@@ -99,6 +55,8 @@ Page({
   toShop: function (e) {
     var index = e.currentTarget.dataset.index;
     wx.setStorageSync('shop', this.data.histories[index]);
-    wx.navigateBack()
+    wx.reLaunch({
+      url: '/pages/index/index'
+    })
   }
 })

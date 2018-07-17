@@ -1,0 +1,34 @@
+<view class='discount'>
+  <view class='list'  wx:for="{{discount}}" data-id="{{item.couponLogId}}" wx:key="index">
+    <view wx:if="{{item.status==1}}" class='gray' bindtap='skip' data-id="{{item.couponLogId}}" data-name="{{item.name}}" data-amountMin="{{item.amountMin}}" data-amount="{{item.amount}}" data-instruction="{{item.instruction}}" data-counid="{{item.id}}">
+      <image class="bg" src='../../myHome/images/yundian_youhuiquan.png'></image>
+        <view class='con'>
+          <view class='listTop'>
+          <view class='left'>
+          <image src='../../myHome/images/discount.png'></image>
+          </view>
+          <view class='left'>
+            <view>礼品城市</view>
+            <view>{{item.instruction}}</view>
+          </view>
+        </view>
+        <view class='time'><text class='mr10'>有效期至:</text>{{item.endTime}}</view>
+      </view>
+    </view>
+    <view wx:if="{{item.status==0 || item.status==2}}" >
+      <image class="bg" src='../../myHome/images/yundian_youhuiquan.png'></image>
+        <view class='con'>
+          <view class='listTop'>
+          <view class='left'>
+          <image src='../../myHome/images/discount.png'></image>
+          </view>
+          <view class='left'>
+            <view>礼品城市<text class="no-userful">(此券不可用)</text></view>
+            <view>{{item.instruction}}</view>
+          </view>
+        </view>
+        <view class='time'><text class='mr10'>有效期至:</text>{{item.endTime}}</view>
+      </view>
+    </view>
+  </view>
+</view>

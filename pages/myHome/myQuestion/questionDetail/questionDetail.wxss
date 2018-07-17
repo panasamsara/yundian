@@ -169,6 +169,7 @@
  height: 68rpx;
  border: 1rpx solid #ddd;
  margin-top: 10rpx;
+  padding: 0; 
 }
 .textp{
   height: 50rpx !important;

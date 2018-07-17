@@ -1,17 +1,21 @@
 var app=getApp();
-var userId = wx.getStorageSync('scSysUser').id;
 Page({
   data: {
     activeIndex: "0",
     orderList:[],
     listData:{
       pagination: { rows: 3, page: 1 },
-      customerId: userId,
+      customerId: "",
       bespokeStatus: 0
     },
     total:""
   },
-  onLoad: function (options) {
+  onShow:function(){
+    var userId = wx.getStorageSync('scSysUser').id;
+    var newId = "listData.customerId";
+    var page ='listData.pagination.page'
+    this.setData({ [newId]: userId, [page]:1});
+    this.setData({ orderList: []});
     this.getList();
   },
   getList:function(){
@@ -57,26 +61,26 @@ Page({
     var id = e.currentTarget.dataset.id;
     wx.navigateTo({ url:"./manageDetail/manageDetail?id="+id})
   },
-  onPullDownRefresh: function () {
-    //票判断不为0,点击tab为空的时候不可以下拉;
-    if (this.data.orderList.length != 0){
-      wx.showLoading({
-        title: '加载中',
-      });
-      // 下拉每次清空数组
-      this.data.orderList.length = 0;
-      var newpage = Math.ceil(this.data.total / this.data.listData.pagination.rows);
-      if (this.data.listData.pagination.page <= newpage) {
-        this.getList();
-      } else {
-        wx.showToast({
-          title: '到底了哦',
-          icon: "none"
-        })
-      }
-      wx.stopPullDownRefresh();
-    }
-  },
+  // onPullDownRefresh: function () {
+  //   //票判断不为0,点击tab为空的时候不可以下拉;
+  //   if (this.data.orderList.length != 0){
+  //     wx.showLoading({
+  //       title: '加载中',
+  //     });
+  //     // 下拉每次清空数组
+  //     this.data.orderList.length = 0;
+  //     var newpage = Math.ceil(this.data.total / this.data.listData.pagination.rows);
+  //     if (this.data.listData.pagination.page <= newpage) {
+  //       this.getList();
+  //     } else {
+  //       wx.showToast({
+  //         title: '到底了哦',
+  //         icon: "none"
+  //       })
+  //     }
+  //     wx.stopPullDownRefresh();
+  //   }
+  // },
   onReachBottom: function () {
     var newpage = Math.ceil(this.data.total / this.data.listData.pagination.rows);
     if (this.data.listData.pagination.page <= newpage) {

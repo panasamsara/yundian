@@ -1,10 +1,10 @@
 <view class='discountDetail'>
-  <view class='list'>
+  <view class='list' wx:if="{{couponType=='06'}}">
     <view class='con'>
-      <image class="shopIcon" src='{{discounts.shopLogoUrl}}'></image>
-      <view class='shopname color333 font30'>{{discounts.shopName}}</view>
-      <view class='font32'>{{discounts.couponInstruction}}</view>
-      <view class='color999 font28'>有效期至：{{discounts.couponEndTime}}至{{discounts.userCouponExpireTime}}</view>
+      <image class="shopIcon" src='{{discountsNew.shopLogoUrl}}'></image>
+      <view class='shopname color333 font30'>{{discountsNew.shopName}}</view>
+      <view class='font32'>{{discountsNew.couponInstruction}}</view>
+      <view class='color999 font28'>有效期至：{{discountsNew.couponEndTime}}至{{discountsNew.userCouponExpireTime}}</view>
     </view>
     <view class='info'>
       <view class='color30'>使用说明</view>
@@ -12,8 +12,28 @@
       <view>2.本店只适用于云店消费</view>
       <view>3.退款仅退实际支付金额</view>
       <view>4.最终解释权归商家所有</view>
+      <view wx:if="{{canLimitGoods==1}}">5.限指定商品使用</view>
     </view>
     <view class="cicrl cicleLeft"></view>
     <view class="cicrl cicleRight"></view>
   </view>
+  <view class='list' wx:else>
+    <view class='con'>
+      <image class="shopIcon" src='{{discounts.shopLogoUrl}}'></image>
+      <view class='shopname color333 font30'>{{discounts.shopName}}</view>
+      <view class='font32'>{{discounts.instruction}}</view>
+      <view class='color999 font28'>有效期至：{{discounts.beginTime}}至{{discounts.endTime}}</view>
+    </view>
+    <view class='info'>
+      <view class='color30'>使用说明</view>
+      <view>1.本优惠券不可叠加使用</view>
+      <view>2.本店只适用于云店消费</view>
+      <view>3.退款仅退实际支付金额</view>
+      <view>4.最终解释权归商家所有</view>
+      <view wx:if="{{canLimitGoods==1}}">5.限指定商品使用</view>
+    </view>
+    <view class="cicrl cicleLeft"></view>
+    <view class="cicrl cicleRight"></view>
+  </view>
+
 </view>

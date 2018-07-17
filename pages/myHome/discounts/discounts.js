@@ -1,10 +1,12 @@
 var app=getApp();
-var userId = wx.getStorageSync('scSysUser').id;
 Page({
   data: {
-    discounts:[]
+    discounts:[],
+    userId:""
   },
   onLoad: function (options) {
+    var userId = wx.getStorageSync('scSysUser').id;
+    this.setData({ userId: userId });
     this.getList();
   },
   onPullDownRefresh: function () {
@@ -18,7 +20,7 @@ Page({
       title: '加载中',
     })
     app.util.reqAsync('shop/getMyCouponList', {
-      customerId: userId,
+      customerId: this.data.userId,
     }).then((res) => { 
       wx.hideLoading();
       this.setData({ discounts: res.data.data});
@@ -32,6 +34,9 @@ Page({
   },
   skip: function (e) {
     var id = e.currentTarget.dataset.id;
-    wx.navigateTo({ url: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + id })
+    var couponLogId = e.currentTarget.dataset.couponlogid;
+    var couponType = e.currentTarget.dataset.coupontype;
+    var canLimitGoods = e.currentTarget.dataset.canlimitgoods;
+    wx.navigateTo({ url: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + id + "&couponLogId=" + couponLogId + "&couponType=" + couponType + "&canLimitGoods=" +canLimitGoods});
   }
 })

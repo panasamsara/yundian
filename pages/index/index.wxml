@@ -7,30 +7,38 @@
     <image class='lingqu-btn' bindtap="getCoupon" src="./img/yundian_libaolingquanniu@2x.png" />
     <image class='close-btn' bindtap="closeModal" src='./img/yundian_lipinguanbi@2x.png'></image>
   </view>
+  <image class='newCouponBag' wx:if='{{showCoupnBox}}' bindtap='openCouponBag' src='../../images/yundian_libaoxiao@2x.png'></image>
 
   <view id="top" class="cate-box">
-    <image src='{{shopInformation.shopInfo.bgImage}}' mode='center' class='top-bg' wx:if='{{showImg}}'></image>
-    <view class='video-bg' wx:if='{{showVideo}}'>
+    <view class="bg-mask"></view>
+    <image src='{{shopInformation.bgImageLong}}' mode='scaleToFill' class='top-bg' wx:if='{{showImg}}'></image>
+    <!-- <image class='up-icon' src='../../images/yundian_dpzy_shangla@2x.png'></image> -->
+    <image class='up-icon' src='../../images/up.gif'></image>
+    <!-- <view class='video-bg' wx:if='{{showVideo}}'>
       <video class='video-ctx' id="myVideo" src="{{shopInformation.shopInfo.shopHomeConfig.videoPathList[0].filePath}}" binderror="videoErrorCallback"></video>
-    </view>
+    </view> -->
 
     <view class='btn-list'>
-      <view bindtap='goPhotos'>
+      <view bindtap='goPhotos' wx:if='{{showBtnList}}'>
         <!-- <view class='btn-img '></view> -->
         <image class="btn-img" src='./img/yundian_zhaopian@2x.png'></image>
         <text class='text-below'>照片</text>
       </view>
-      <view bindtap='goVideoLists'>
+      <view bindtap='goVideoLists' wx:if='{{showBtnList}}'>
         <image class="btn-img" src='./img/yundian_shipin@2x.png'></image>
         <text class='text-below'>视频</text>
       </view>
-      <view bindtap='goTo720' wx:if='{{has720}}'>
+      <view bindtap='goTo720' wx:if='{{has720 && showBtnList}}'>
         <image class='btn-img' src='./img/720@2x.png'></image>
         <text class='text-below'>全景</text>
       </view>
       <view bindtap='goLive' wx:if=''>
         <image class='btn-img' src='./img/yundian_zhibo@2x.png'></image>
         <text class='text-below'>直播</text>
+      </view>
+      <view>
+         <image bindtap='hideBtnList' wx:if='{{showBtnList}}' class='btn-img-show' src='./img/hide.png'></image> 
+         <image bindtap='showBtnList' wx:if='{{hideBtnList}}' class='btn-img-show' src='./img/show.png'></image> 
       </view>
     </view>
 
@@ -42,23 +50,29 @@
           <text>{{shopInformation.fansCounter}}</text>
         </view>
       </view>
-      <navigator url='../store/code/code'><image class='qrcode' src='./img/qrcode.png'></image></navigator>
+      <navigator url='../store/code/code'><image class='qrcode' src='../../images/yundian_erweima@2x.png'></image></navigator>
     </view>
+
   </view>
   <!-- </block>
     <block> -->
   <view id="detail" class="cate-box">
-    <view class='coupon'>
+    <view class='coupon' bindtap='showQuanBox'>
       <image class='coupon-img' src='./img/coupon.png'></image>
       <text class='coupon-txt'>新用户进店可领取专属兑换券</text>
+      <image class='coupon-icon' src='../../images/yundian_zhankai@2x.png'></image>
     </view>
-    <navigator class="yuyue" url="../appointment/appointment">
+
+    <view class="yuyue" bindtap='goAppointment' wx:if="{{shopInformation.isReserve}}">
       <image src='./img/yuyue.png'></image>
-    </navigator>
+    </view>
+
+    <view class='main-top m-t-b-10'>
+      <view class='left-line'></view>
+      <view class='tips'>店铺活动</view>
+      <view class='left-line'></view>
+    </view>
     <view class="activity-swiper">
-      <view class='main-top m-b-20'>
-        <text class='tips'>店铺活动</text>
-      </view>
       <swiper indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
         <block wx:for="{{shopInformation.goodsInfos}}" wx:key="index">
           <swiper-item>
@@ -83,7 +97,7 @@
       </swiper>
     </view>
 
-    <view class='sec-kill-box'>
+    <view class='sec-kill-box' wx-if="{{list.length>=1}}">
       <view class='sec-kill-top'>
         <view class='sec-kill-title-img'>
           <image src='../../images/yundian_zhixiangmiaosha@2x.png'></image>
@@ -93,28 +107,22 @@
         </view>
       </view>
       <view class='sec-kill-content-box'>
-        <view class='sec-kill-content'>
-          <image class='sec-kill-img' src='{{hotCommoditiesList[0].goodsLogo}}'></image>
+
+        <view class='sec-kill-content' wx:for="{{list}}" wx:key="index">
+          <image class='sec-kill-img' src='{{item.goodsPic}}'></image>
           <view class='sec-kill-detail'>
-            <view class='now-price'>￥<text class='now-price-num'>300</text> </view>
-            <view class='old-price'>￥300</view>
+            <view class='now-price'>￥<text class='now-price-num-sec'>{{item.minPrice}}</text> </view>
+            <view class='old-price'>￥{{item.minOriginalPrice}}</view>
             <view class='end-word'>距结束</view>
-            <view class='end-time'>12：23：56</view>
+            <view class='end-time'>
+              <text>{{item.rh?item.rh:0}}</text>:<text>{{item.m?item.m:0}}</text>:<text>{{item.s?item.s:0}}</text>
+            </view>
           </view>
         </view>
 
-        <view class='sec-kill-content'>
-          <image class='sec-kill-img' src='{{hotCommoditiesList[0].goodsLogo}}'></image>
-          <view class='sec-kill-detail'>
-            <view class='now-price'>￥<text class='now-price-num'>300</text> </view>
-            <view class='old-price'>￥300</view>
-            <view class='end-word'>距结束</view>
-            <view class='end-time'>12：23：56</view>
-          </view>
-        </view>
       </view>
     </view>
-    <view class='sec-kill-box'>
+    <view class='sec-kill-box' wx-if="{{groupBuyList.length>=1}}">
       <view class='sec-kill-top'>
         <view class='group-buy-title-img'>
           <image src='../../images/yundian_qupintuan@2x.png'></image>
@@ -124,39 +132,32 @@
         </view>
       </view>
       <view class='sec-kill-content-box'>
-        <view class='sec-kill-content'>
-          <image class='sec-kill-img' src='{{hotCommoditiesList[0].goodsLogo}}'></image>
+
+        <view class='sec-kill-content' wx:for="{{groupBuyList}}" wx:key="index">
+          <image class='sec-kill-img' src='{{item.pictureUrl}}'></image>
           <view class='sec-kill-detail'>
-            <view class='now-price'>￥<text class='now-price-num'>300</text> </view>
-            <view class='old-price'>￥300</view>
-            <view class='pingdan'>已拼<text>220</text>单</view>
-            <view class='ping-group'><text class='ping-group-num'>2</text>人团</view>
+            <view class='now-price'>￥<text class='now-price-num'>{{item.discountPrice}}</text> </view>
+            <view class='old-price-group'>￥{{item.originalPrice}}</view>
+             <view class='pingdan'>已拼<text>{{item.num}}</text>单</view> 
+            <view class='ping-group'><text class='ping-group-num'>{{item.population}}</text>人团</view>
           </view>
         </view>
 
-        <view class='sec-kill-content'>
-          <image class='sec-kill-img' src='{{hotCommoditiesList[0].goodsLogo}}'></image>
-          <view class='sec-kill-detail'>
-            <view class='now-price'>￥<text class='now-price-num'>300</text> </view>
-            <view class='old-price'>￥300</view>
-            <view class='pingdan'>已拼<text>220</text>单</view>
-            <view class='ping-group'><text class='ping-group-num'>2</text>人团</view>
-          </view>
-        </view>
       </view>
     </view>
 
-    <view class='tuijian' wx:if="{{hotCommoditiesList.length}}">
+    <view class='tuijian' wx:if="{{hotCommoditiesList.hotCommoditiesList.length}}">
       <view class='main-top'>
-        <!-- <image src='images/3.gif' class='top-img'></image> -->
-        <text class='tips'>精品推荐</text>
+        <view class='left-line'></view>
+        <view class='tips'>{{hotCommoditiesList.goodsTitle}}</view>
+        <view class='left-line'></view>
       </view>
-      <view class='item' wx:for="{{hotCommoditiesList}}" wx:key='key'>
+      <view class='item' wx:for="{{hotCommoditiesList.hotCommoditiesList}}" wx:key='key'>
         <view class='item-img'>
           <image src='{{item.goodsLogo}}' mode='aspectFit' bindtap="goToDetail" data-goodsid='{{item.goodsId}}'></image>
           <text class='item-text'>{{item.goodsName}}</text>
           <view class='item-bot'>
-            <span class='price'>￥{{item.price}}</span>
+            <span class='price'>￥<text class='priceAmount'>{{item.price}}</text></span>
             <view class='putInCart'>
               <!-- <image class='putInCart-img' src='../../images/yundian_dpzy_gouwuchec@2x.png'></image> -->
             </view>
@@ -166,6 +167,43 @@
     </view>
   </view>
   <!-- </block>  -->
-
-
+  <view class='mask' catchtouchmove='preventTouchMove' bindtap='closeQuanBox' wx:if='{{showQuanBox}}'></view> 
+  <scroll-view scroll-y class='quan-box'  wx:if='{{showQuanBox}}'>
+    <!-- 优惠券 -->
+    <view id='couponType1' wx:if="{{couponType1.name}}">
+      <text class='header'>{{couponType1.name}}</text>
+      <view class='quan-box-detail' bindtap='get' data-id="{{couponType1.id}}">
+        <image class='quan-box-bg' src='../../images/yundian_dpzy_youhuiquan@2x.png'></image>
+        <view class='quan-box-content'>
+            <view class='quan-price-box'>￥<text class='quan-price'>{{couponType1.amount}}</text></view>
+            <view>满{{couponType1.amountMin}}元可使用</view>
+            <view>有效期{{couponType1.beginTime}}-{{couponType1.endTime}}</view>
+        </view>
+      </view>
+    </view>
+    <!-- 代金券 -->
+    <view id='couponType2' wx:if="{{couponType2.name}}">
+      <text class='header'>{{couponType2.name}}</text>
+      <view class='quan-box-detail' bindtap='get' data-id="{{couponType2.id}}">
+        <image class='quan-box-bg' src='../../images/yundian_dpzy_youhuiquan@2x.png'></image>
+        <view class='quan-box-content'>
+            <view class='quan-price-box'>￥<text class='quan-price'>{{couponType2.amount}}</text></view>
+            <view>{{couponType2.instruction}}</view>
+            <view>有效期{{couponType1.beginTime}}-{{couponType1.endTime}}</view>
+        </view>
+      </view>
+    </view>
+    <!-- 包邮 -->
+    <view id='couponType3' wx:if="{{couponType3.name}}">
+      <text class='header'>{{couponType3.name}}</text>
+      <view class='quan-box-detail' bindtap='get' data-id="{{couponType3.id}}">
+        <image class='quan-box-bg' src='../../images/yundian_dpzy_youhuiquan@2x.png'></image>
+        <view class='quan-box-content'>
+            <view class='quan-price-box'>￥<text class='quan-price'>包邮券</text></view>
+            <view>满{{couponType3.amountMin}}元可包邮</view>
+            <view>有效期{{couponType3.beginTime}}-{{couponType3.endTime}}</view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
 </view>

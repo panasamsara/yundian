@@ -36,7 +36,7 @@
         </view>
         <block wx:if="{{item.answers.length==0}}">
           <view class="addessNull">
-            <image src="../../images/adderss.png"></image>
+            <image src="../../images/zwhd.png"></image>
             <view>暂时没有回答哦~</view>
           </view>
         </block>  
@@ -65,18 +65,18 @@
   <block wx:if="{{activeIndex==1}}">
     <view class='send'>
       <input class="weui-input left" auto-focus placeholder="自己不能回答自己的问题哦" bindinput='bindinput' disabled='disabled'/>
-      <button class="mini-btn right" type="default" size="mini" disabled='disabled'>按钮</button>
+      <button class="mini-btn right" type="default" size="mini" disabled='disabled'>发送</button>
     </view>
   </block>
   <block wx:if="{{activeIndex==2||activeIndex==3}}">
    <view class='send'>
     <block wx:if="{{questionList[0].isCanAnswer==0}}">
        <input class="weui-input left" auto-focus placeholder="我买过，我来答...." bindinput='bindinput' value="{{sendValue}}"/>
-      <button class="mini-btn right" type="default" size="mini" bindtap='send'>按钮</button> 
+      <button class="mini-btn right" type="default" size="mini" bindtap='send'>发送</button> 
     </block>
     <block wx:if="{{questionList[0].isCanAnswer==1}}">
       <input class="weui-input left" auto-focus disabled='disabled' placeholder="只有买过商品的人才可以回答"/>
-      <button class="mini-btn right" type="default" size="mini" bindtap='send' disabled='disabled'>按钮</button>
+      <button class="mini-btn right" type="default" size="mini" bindtap='send' disabled='disabled'>发送</button>
     </block>
   </view> 
   </block>

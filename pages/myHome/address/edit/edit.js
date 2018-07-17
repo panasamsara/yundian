@@ -1,5 +1,4 @@
 var app = getApp();
-var userId = wx.getStorageSync('scSysUser').id;
 Page({
   data: {
     addressId: "",
@@ -11,9 +10,11 @@ Page({
     tel:"",
     address:"",
     region: [],
-    areaCodes: []
+    areaCodes: [],
+    userId:""
   },
   onLoad: function (options) {
+    var userId=wx.getStorageSync('scSysUser').id;
     var arr=[];
     arr.push(options.ProvinceName);
     arr.push(options.cityName);
@@ -24,7 +25,8 @@ Page({
       address: options.address,
       addressId: options.id,
       redClick: options.isDefault,
-      region:arr
+      region:arr,
+      userId: userId
     });
 
   },
@@ -71,7 +73,7 @@ Page({
     app.util.reqAsync('shop/recvAddrAddOrUpdate', {
       id: this.data.addressId,
       isDefault: isDefault,
-      customerId: userId,
+      customerId: this.data.userId,
       phone:tel,
       name:name,
       address: address,

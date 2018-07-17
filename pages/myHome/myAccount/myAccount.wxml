@@ -1,92 +1,97 @@
 <view>
   <view class='header'>
-    <image class="bg" src="../images/myAccountbg.png"></image>
+    <block wx:if="{{index==0&&arrayImg[index]!=arrayImg[0]}}">
+      <image class="bg" src="{{arrayImg[0]}}"></image>
+    </block>
+    <block wx:else if="{{index!=null}}">
+      <image class="bg" src="{{arrayImg[index]}}"></image>
+    </block>
     <view class='shop'>
       <picker bindchange="bindPickerChange" value="{{index}}" range="{{arrayName}}">
         <view class="picker" wx:if="{{index==''}}">{{arrayName[0]}}</view>
         <view class="picker" wx:else>{{arrayName[index]}}</view>
       </picker>
-       <image class="shopIcon" src="../images/shopIcon.png"></image>
+      <image class="shopIcon" src="../images/shopIcon.png"></image>
     </view>
-   
+    <view class='zhezhao'></view>
   </view>
 
-    <view class="page-section-spacing">
-      <scroll-view class="scroll-view_H" scroll-x="true" bindscroll="scroll" style="width:100%">
-        <view id="demo1" class="scroll-view-item_H demo-text-1 {{accountList[0].mems?'addpadding':'padding'}}"  wx:if="{{accountList[0].fans}}">
-          <view class="nav {{accountList[0].mems?'margin57':'margin87'}}">
-            <view class='shopNav'>
-              <view class='navTitle'>
-                <text class="mr30 colorfff">{{accountList[0].fans.businessName}}</text>
-                <image class="mr60" src='../images/hg.png'></image>
-                <image class="mr20" src='../images/zh.png'></image>
-                <image class='bg2' src='../images/bgaccount.png'></image>
-                <view class='typetext'>粉账户</view>
+  <view class="page-section-spacing">
+    <scroll-view class="scroll-view_H" scroll-x="true" bindscroll="scroll" style="width:100%">
+      <view id="demo1" class="scroll-view-item_H demo-text-1 {{accountList[0].mems?'addpadding':'padding'}}" wx:if="{{accountList[0].fans}}">
+        <view class="nav {{accountList[0].mems?'margin57':'margin87'}}">
+          <view class='shopNav'>
+            <view class='navTitle'>
+              <text class="mr30 colorfff">{{accountList[0].fans.businessName}}</text>
+              <image class="mr60" src='../images/hg.png'></image>
+              <image class="mr20" src='../images/zh.png'></image>
+              <image class='bg2' src='../images/bgaccount.png'></image>
+              <view class='typetext'>粉账户</view>
+            </view>
+            <view class='shopInfo'>
+              <view class='left'>
+                <view>余额：</view>
+                <view class='font54'>{{accountList[0].fans.balance}}</view>
+                <view>到期时间：{{accountList[0].fans.periodTime}}</view>
               </view>
-              <view class='shopInfo'>
-                <view class='left'>
-                  <view>余额：</view>
-                  <view class='font54'>{{accountList[0].fans.balance}}</view>
-                  <view>到期时间：{{accountList[0].fans.periodTime}}</view>
-                </view>
-                <view class='right'>
-                  <view>活动经费</view>
-                  <view>{{accountList[0].fans.finance}}</view>
-                </view>
+              <view class='right'>
+                <view>活动经费</view>
+                <view>{{accountList[0].fans.finance}}</view>
               </view>
             </view>
-            <view class='activity'>
-              <view class='item' wx:for="{{accountList[0].fans.memberRemainServices}}" wx:key="{{index}}">
-                <!-- <image class="sj" src="../images/sj.png"></image>
+          </view>
+          <view class='activity'>
+            <view class='item' wx:for="{{accountList[0].fans.memberRemainServices}}" wx:key="{{index}}">
+              <!-- <image class="sj" src="../images/sj.png"></image>
                 <text class='typetext sjtext'>14</text> -->
-                <view class='itemName'>{{item.cardName}}</view>
-                <view class='itemCi'>{{item.remainNum}}/{{item.totalNum}}</view>
-                <!-- <image class="zs" src="../images/zs.png"></image>
+              <view class='itemName'>{{item.cardName}}</view>
+              <view class='itemCi'>{{item.remainNum}}/{{item.totalNum}}</view>
+              <!-- <image class="zs" src="../images/zs.png"></image>
                 <text class='zstext'>赠送</text> -->
-              </view>
             </view>
           </view>
         </view>
-        <view id="demo2" class="scroll-view-item_H demo-text-2"  wx:if="{{accountList[0].mems}}" > 
-          <view class='nav' style="margin-right:57rpx">
-            <view class='shopNav'>
-              <view class='navTitle'>
-                <text class="mr30 colorfff">{{accountList[0].mems.businessName}}</text>
-                <!-- <image class="mr60" src='../images/hg.png'></image> -->
-                <image class="mr20" src='../images/zh.png'></image>
-                <image class='bg2' src='../images/bgaccount.png'></image>
-                <view class='typetext'>会员账户</view>
-              </view>
-               <view class='shopInfo'>
-                <view class='left'>
-                  <view>余额：</view>
-                  <view class='font54'>0.00</view>
-                  <view>到期时间：------</view>
-                </view>
-                <view class='right'>
-                  <view>活动经费</view>
-                  <view>0.00</view>
-                </view>
-              </view> 
+      </view>
+      <view id="demo2" class="scroll-view-item_H demo-text-2" wx:if="{{accountList[0].mems}}">
+        <view class='nav' style="margin-right:57rpx">
+          <view class='shopNav'>
+            <view class='navTitle'>
+              <text class="mr30 colorfff">{{accountList[0].mems.businessName}}</text>
+              <!-- <image class="mr60" src='../images/hg.png'></image> -->
+              <image class="mr20" src='../images/zh.png'></image>
+              <image class='bg2' src='../images/bgaccount.png'></image>
+              <view class='typetext padding'>会员账户</view>
             </view>
-            <view class='activity'>
-              <view class='item' wx:for="{{accountList[0].mems.memberRemainServices}}" wx:key="{{index}}">
-                <!-- <image class="sj" src="../images/sj.png"></image> -->
-                <!-- <text class='typetext sjtext'>14</text> -->
-                <view class='itemName'>{{item.cardName}}</view>
-                <view class='itemCi'>{{item.remainNum}}/{{item.totalNum}}</view>
-                <!-- <image class="zs" src="../images/zs.png"></image>
-                <text class='zstext'>赠送</text> -->
+            <view class='shopInfo'>
+              <view class='left'>
+                <view>余额：</view>
+                <view class='font54'>0.00</view>
+                <view>到期时间：------</view>
+              </view>
+              <view class='right'>
+                <view>活动经费</view>
+                <view>0.00</view>
               </view>
             </view>
           </view>
+          <view class='activity'>
+            <view class='item' wx:for="{{accountList[0].mems.memberRemainServices}}" wx:key="{{index}}">
+              <!-- <image class="sj" src="../images/sj.png"></image> -->
+              <!-- <text class='typetext sjtext'>14</text> -->
+              <view class='itemName'>{{item.cardName}}</view>
+              <view class='itemCi'>{{item.remainNum}}/{{item.totalNum}}</view>
+              <!-- <image class="zs" src="../images/zs.png"></image>
+                <text class='zstext'>赠送</text> -->
+            </view>
+          </view>
         </view>
-      </scroll-view>
-    </view>
+      </view>
+    </scroll-view>
+  </view>
   <block wx:if="{{accountList.length==0}}">
     <view class="addessNull">
-        <image src="../images/adderss.png"></image>
-        <text>您还不是会员哦~~</text>
-      </view>
+      <image src="../images/zwhyk.png"></image>
+      <text>暂无会员卡</text>
+    </view>
   </block>
 </view>

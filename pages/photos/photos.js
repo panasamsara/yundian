@@ -123,6 +123,19 @@ Page({
    */
   onShareAppMessage: function () {
   
+  },
+  imgYuLan: function(e){
+    var src = e.currentTarget.dataset['src'];//获取data-src
+    var imgList = e.currentTarget.dataset['list'];//获取data-list
+    let lists = []
+    for (let i = 0; i < imgList.length; i++){
+      lists.push(imgList[i].contentUrl)
+    }
+    console.log(imgList)
+    wx.previewImage({
+      current: src, // 当前显示图片的http链接
+      urls: lists // 需要预览的图片http链接列表 必须是数组
+    })
   }
 
 })

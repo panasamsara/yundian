@@ -7,11 +7,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    list:[],
-    d:'0',
-    h:'0',
-    m:'0',
-    s:'0'
+    list:[]
   },
 
   /**
@@ -21,7 +17,7 @@ Page({
     let data={
       pageNo: 1,
       pageSize: 10,
-      shopId: 288,
+      shopId: wx.getStorageSync('shop').id,
       status: 1  
     };
     this.setData({
@@ -81,8 +77,10 @@ Page({
           total: res.data.data.total
         })
       }
+      wx.hideLoading();
     }).catch((err) => {
-      console.log(err)
+      console.log(err);
+      wx.hideLoading();
     })
   },
   count:function(){
@@ -90,9 +88,8 @@ Page({
     for(let i=0;i<this.data.list.length;i++){
       let leftTime=this.data.list[i].count;
           leftTime-=1000;
-      if(leftTime<=0){
-        _this.clearInterval(timer);
-        return
+      if (leftTime <= 0) {
+        leftTime = 0;
       }
       let d = Math.floor(leftTime / 1000 / 60 / 60 / 24),
           h = Math.floor(leftTime / 1000 / 60 / 60 % 24),
@@ -103,8 +100,8 @@ Page({
           rhCount = "list[" + i + "].rh",
           mCount = "list[" + i + "].m",
           sCount = "list[" + i + "].s";
-      if(h<10){
-        h="0"+h;
+      if(rh<10){
+        rh="0"+rh;
       }
       if (m < 10) {
         m = "0" + m;

@@ -13,7 +13,8 @@ Component({
    * 组件的初始数据
    */
   data: {
-    list: []
+    list: [],
+    blank:false
   },
 
   /**
@@ -67,6 +68,10 @@ Component({
           this.setData({
             list: newData,
             total: res.data.total
+          })
+        }else{
+          this.setData({
+            blank:true
           })
         }
         wx.hideLoading();

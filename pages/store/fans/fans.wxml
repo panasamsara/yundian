@@ -23,7 +23,7 @@
     </scroll-view>
   </view>
 </view>
-<view class="blank" wx:else>
+<view class="blank" wx-if="{{blank}}">
   <image src='../images/yundian_zjy_yddt.png'></image>
   <text>暂无粉天地</text>
 </view> 

@@ -1,5 +1,5 @@
 var app = getApp();
-var userId = wx.getStorageSync('scSysUser').id;
+// var userId = ;
 Page({
   data: {
     activeIndex: "0",
@@ -8,32 +8,35 @@ Page({
     listData: {
       deliverStatus: 0,
       pageSize: 10,
-      userId: userId,
+      userId: "",
       pageNo: 1
     }
   },
   onLoad: function (options) {
+    var userId = wx.getStorageSync('scSysUser').id;
+    var newId ="listData.userId";
+    this.setData({ [newId]: userId});
     this.getList();
   },
   onPullDownRefresh: function () {
-    //票判断不为0,点击tab为空的时候不可以下拉;
-    if (this.data.orderList.length != 0) {
-      wx.showLoading({
-        title: '加载中',
-      });
-      // 下拉每次清空数组
-      this.data.orderList.length = 0;
-      var newpage = Math.ceil(this.data.total / this.data.listData.pageSize);
-      if (this.data.listData.pageNo <= newpage) {
-        this.getList();
-      } else {
-        wx.showToast({
-          title: '到底了哦',
-          icon: "none"
-        })
-      }
-      wx.stopPullDownRefresh();
-    }
+    // //票判断不为0,点击tab为空的时候不可以下拉;
+    // if (this.data.orderList.length != 0) {
+    //   wx.showLoading({
+    //     title: '加载中',
+    //   });
+    //   // 下拉每次清空数组
+    //   this.data.orderList.length = 0;
+    //   var newpage = Math.ceil(this.data.total / this.data.listData.pageSize);
+    //   if (this.data.listData.pageNo <= newpage) {
+    //     this.getList();
+    //   } else {
+    //     wx.showToast({
+    //       title: '到底了哦',
+    //       icon: "none"
+    //     })
+    //   }
+    //   wx.stopPullDownRefresh();
+    // }
   },
   onReachBottom: function () {
     var newpage = Math.ceil(this.data.total / this.data.listData.pageSize);

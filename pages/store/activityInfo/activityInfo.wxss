@@ -8,6 +8,8 @@
   padding: 0 35rpx;
   margin-bottom: 20rpx;
   color: #333333;
+  border-top: solid 1rpx #ebebeb;
+  border-bottom: solid 1rpx #ebebeb;
 }
 
 .activityInfo .head text{

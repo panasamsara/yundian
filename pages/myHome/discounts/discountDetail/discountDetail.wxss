@@ -22,7 +22,6 @@
   background: #f17168;
 }
 .list{
-  height: 630rpx;
   width: 710rpx;
   background: #fff;
   margin: 0 20rpx;

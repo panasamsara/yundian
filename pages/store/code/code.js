@@ -20,63 +20,13 @@ Page({
     this.setData({
       shopName: shop.shopName,
       url: shop.logoUrl,
-      fans: options.fans || 0,
-      storeUrl: "https://wxapp.izxcs.com/qrcode/shop/" + shop.id
+      fans: shop.fansCounter||0,
+      storeUrl: "http://share.zxtest.izxcs.com//yueba/yundian/shareGift/ewm.html?apptype=cityshop&subtype=shophome&fromscan=yes&visitFrom=1&cloud_store&sn=17&yw=shop&cp=1&shopId=" + shop.id
     })
-    console.log(this.data.storeUrl)
     // 页面初始化 options为页面跳转所带来的参数
     var size = this.setCanvasSize();//动态设置画布大小
     var initUrl = this.data.storeUrl;
     this.createQrCode(initUrl, "mycanvas", size.w, size.h);
-  },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-  
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-  
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-  
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-  
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-  
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-  
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-  
   },
   //适配不同屏幕大小的canvas
   setCanvasSize: function () {

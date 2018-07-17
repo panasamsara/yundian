@@ -8,13 +8,26 @@ Page({
     interval:3000,     //自动切换时间间隔3s
     duration:1000,
     imgUrls:[], 
-    hideView: true,
+    hideView1: true,
+    hideView2:true,
     num: 0,
+    shopId:'',
+    goodsId:'',
     //用户信息
     userData: [],
+    //商品信息
+    goodsData:{},
     flag:false,
     flag1:false,
-    flag2: false
+    flag2: false,
+    //拼单部分参数
+    groupBuyingId: '',//对应拼团表的id
+    status:'',//状态
+    cUser:'',//发起拼团者id,
+    list:[],
+    flagCount:'',
+    flagSpellList:''
+
   },
   previewImage:function(e){
     var current=e.target.dataset.src;
@@ -24,41 +37,89 @@ Page({
     })
   },
   onLoad: function(options){
+     if (options.groupBuyingId && options.cUser && options.status){
+       this.setData({
+         groupBuyingId: options.groupBuyingId,
+         cUser: options.cUser,
+         status: options.status,
+         flagCount:true,
+         flagSpellList:true
+       });
+       var parm = {
+         shopId: 111 ,// options.shopId,//
+         goodsId: 101  // options.goodsId //     
+       }
+       this.getData(parm);
+       var timer = setInterval(() => { this.count() }, 1000);       
+     }else{
+       this.setData({
+         flagCount:false,
+         flagSpellList:false
+       })
+     }
+
+    
+    //获取店铺信息
     var shop = wx.getStorageSync('shop');
+    this.setData({
+      shopId: options.shopId,
+      goodsId: options.goodsId,      
+      shopName:shop.shopName,
+      picImg: shop.logoUrl,
+      shopDesc: shop.shopDesc,
+      score: shop.score
+    });
+ 
+
+
     //获取商品详情
     app.util.reqAsync('shop/goodsDetail',{
       shopId: options.shopId,
       goodsId: options.goodsId
     }).then((res) =>{
-      var resData=res.data.data; 
+      var resData=res.data.data;
+       console.log(resData)
       if (resData){
-        // 富文本不能有id和#号，还要满足解析要求
-        // console.log(resData.descContent)
-        // var str = resData.descContent.replace(/id=\"\w+\"/g, '')
-        // str = str.replace(/(#\w{6})|(#\w{3})/g, function (color) {
-        //   return app.util.hexToRGB(color)
-        // });
+        wx.setStorageSync('stock', resData.stockList)
+        if (resData.descContent==null){
+          this.setData({
+            descContent: ''
+          })
+        }else{
+          var content = resData.descContent.replace(/<(style|script|iframe)[^>]*?>[\s\S]+?<\/\1\s*>/gi, '').replace(/<[^>]+?>/g, '').replace(/\s+/g, ' ').replace(/ /g, ' ').replace(/>/g, ' '); 
+          this.setData({
+            descContent: content
+          })         
+        }
         this.setData({
-          goodsName: resData.goodsName,
-          descContent: resData.descContent,
-          batchPrice: resData.batchPrice,
-          stockBalance: resData.stockBalance,
-          payCount: resData.payCount,
-          imgUrls: [resData.imageList[0].smallFilePath, resData.imageList[0].smallFilePath, resData.imageList[0].smallFilePath]
+          goodsData: resData,
+          goodsName: resData.goodsName,//商品名称
+          goodsType: resData.goodsType,//商品类别
+          shopId: resData.shopId,//店铺id
+          id: resData.id,//id
+          deliveryCalcContent: resData.deliveryCalcContent,//商品运费
+          stockList: resData.stockList,//商品规格
+          batchPrice: app.util.formatMoney(resData.price,2),//商品价格
+          stockBalance: resData.stockBalance,//库存
+          payCount: resData.payCount,//销量
+          picUrl: resData.pictureUrl,//商品图片地址
+          imgUrls: [resData.pictureUrl, resData.pictureUrl, resData.pictureUrl]
         })
-      }    
-
+        //存储商品信息
+        wx.setStorageSync('goodsInfo', resData.goodsName)         
+      } 
     });
     //获取商品评论
     app.util.reqAsync('shop/commentList',{
       type: 0,
       hasPicture: 0,
-      shopId: 808,
-      goodsId: 2117,
+      shopId: options.shopId,
+      goodsId: options.goodsId,
       pageNo: 1,
       pageSize: 2
     }).then((res)=>{
       var data = res.data.data;
+      // console.log(data)
       if(data){
         for (var i = 0; i < data.length; i++) {
           var key = 'creatTime';
@@ -67,7 +128,7 @@ Page({
         };
         this.setData({
           userData: data,
-          all: data.length
+          all: res.data.total
         });
       }else{
         this.setData({
@@ -77,67 +138,141 @@ Page({
       //判断数据并显示隐藏占位图
       if (this.data.userData.length == 0) {
         this.setData({
-          hideView: false
+          hideView1: false
         })
       } else {
         this.setData({
-          hideView: true
+          hideView1: true
         })
       }     
     });
 
     //获取问答内容
     app.util.reqAsync('shop/getGoodsQuestions', {
-      shopId: 808,//options.shopId
-      goodsId: 2117,//options.goodsId
+      shopId: options.shopId,
+      goodsId: options.goodsId,
       pageNo: 1,
       pageSize: 2
     }).then((res) => {
-      var data = res.data.data
+      var data = res.data.data 
+      // console.log(data)
       this.setData({
         askAcount: res.data.total,
         askData: data
-      })
-    })    
+      });
+      if (this.data.askData.length == 0){
+        this.setData({
+          hideView2: false
+        })
+      }else{
+        hideView2: true
+      }
+    });  
   },
-  //跳转到拼单
-  toLayer(){
-    this.setData({
-      flag:true ,
-      flag1:true
-    })
-  },
-  //关闭拼单弹出层
-  closeLayer(){
-    this.setData({
-      flag:false,
-      flag1:false,
-      flag2:false
-    })
-  },
-  //去拼单
-  toJoin(){
-    this.setData({
-      flag:true,
-      flag2:true
-    })
-  },
+  // 获取拼单详情
+  // getData: function (parm) {
+  //   app.util.reqAsync('shopSecondskilActivity/getServerNowTime').then((res) => {
+  //     if (res.data) {
+  //       this.setData({
+  //         nowTime: res.data.data
+  //       })
+  //     }
+  //   })
+  //   app.util.reqAsync('shop/goodsDetailAddGroupBuying',parm).then((res) => {
+  //     if(res.data){
+  //       var oldData = this.data.list;
+  //       var data = res.data.data
+  //       var list = data.groupBuyingList;
+
+  //       var newData = oldData.concat(list);
+  //       for (var i = 0; i < list.length; i++) {
+  //         list[i].activityStartTime = Date.parse(this.data.nowTime);
+  //         list[i].activityEndTime = Date.parse(list[i].endTime);
+  //         list[i].count = list[i].activityEndTime - list[i].activityStartTime;
+  //       };
+  //       this.setData({
+  //         list: newData,
+  //         groupBuyingPrice: data.groupBuyingPrice,
+  //         groupBuyingAllNum: data.groupBuyingAllNum,
+  //         plistData: data.groupBuyingList
+  //       })
+  //     }
+  //   })
+  // },  
+  // //跳转到拼单
+  // toLayer(){   
+  //   this.setData({
+  //     flag:true ,
+  //     flag1:true
+  //   });
+  //   app.util.reqAsync('shop/getSmallGroupListYQ',{
+  //     groupBuyingId:'',// this.data.groupBuyingId,//对应拼团表的id"
+  //     status:'',// this.data.status,   //状态：0未生效，1成功,2过期"
+  //     cUser:'',// this.data.cUser,   //发起拼组者id",
+  //     pageNo: 1,
+  //     pageSize: 10        
+  //   }).then((res)=>{
+  //     var data=res.data.data;
+  //     this.setData({
+  //       allListData:data
+  //     })
+  //   })
+  // },
+  // //关闭拼单弹出层
+  // closeLayer(){
+  //   this.setData({
+  //     flag:false,
+  //     flag1:false,
+  //     flag2:false
+  //   })
+  // },
+  // //去拼单
+  // toJoin(e){         //需要的数据已存到e里面
+  //   this.setData({
+  //     flag:true,
+  //     flag1:false,
+  //     flag2:true
+  //   });
+  //   app.util.reqAsync('shop/getSmallGroupUserListYQ',{
+  //     groupId:'',
+  //     smallGroupId:'' ,//   #（选填）对应拼组表id",
+  //     status:'', //状态：0已付款，1申请退款",
+  //     cUser:'',   //参与者用户id",
+  //     pageNo:'', 
+  //     pageSize: ''    
+  //   }).then((res)=>{
+  //     var data=res.data.data 
+  //     this.setData({
+  //       picData:data
+  //     })
+  //   })
+  // },
+  // //参与并拼单
+  // joinBuy(e){
+  //   var pictureUrl = this.data.goodsData.pictureUrl;//图片地址
+  //   var groupBuyingPrice = this.data.groupBuyingPrice;//价格
+  //   var stockBalance = this.data.stockBalance;//库存
+  //   wx.navigateTo({
+  //     url: '../buyNow/buyNow?pictureUrl=' + pictureUrl + '&groupBuyingPrice=' + groupBuyingPrice + '&stockBalance=' + stockBalance
+  //   })
+
+  // },
   //跳转到评价
   toAppraise(){
     var shop = wx.getStorageSync('shop');
     var goodsId = this.data.goodsId;
-    var shopId = 808;
+    var shopId = this.data.shopId;
     wx.navigateTo({
-      url: '../appraise/appraise?shopId=' + 288 + '&goodsId=' + goodsId
+      url: '../appraise/appraise?shopId=' + shopId + '&goodsId=' + goodsId
     })
   },
   //跳转到问答详情
   toAsk(){
     var shop = wx.getStorageSync('shop');
     var goodsId = this.data.goodsId;
-    var shopId = 808;    
+    var shopId = this.data.shopId;    
     wx.navigateTo({
-      url: '/pages/ask/ask?shopId=' + 288 + '&goodsId=' + goodsId,
+      url: '/pages/ask/ask?shopId=' + shopId + '&goodsId=' + goodsId
     })
   },
   //跳转到店铺
@@ -147,16 +282,87 @@ Page({
     })
   },
   //跳转到购物车
+  immeBuy(){
+    var orderbuy = [];
+    orderbuy.push({
+      'id':this.data.id,
+      'customerId': wx.getStorageSync('scSysUser').id,
+      'shopId': this.data.shopId,
+      'goodsId': this.data.goodsId,
+      'stockId': this.data.stockList[0] ? this.data.stockList[0].id:'',
+      'goodsName': this.data.goodsName,
+      'goodsPrice':this.data.batchPrice,
+      'goodsImageUrl':this.data.picUrl,
+      'stockName':this.data.goodsName,
+      'number':1,
+      'goodsType': this.data.goodsType,
+      'deliveryCalcContent': this.data.deliveryCalcContent == null ? 0 : this.data.deliveryCalcContent,
+    });
+    console.log(orderbuy)
+    wx.setStorageSync('buyCart', orderbuy);   
+    wx.navigateTo({
+      url: '/pages/orderBuy/orderBuy',
+   })
+  },
+  //立即购买
   addCar(){
+    // var orderbuy = [];//下单使用
+    // orderbuy.push({
+    //   'id': this.data.id,
+    //   'goodsPrice': this.data.batchPrice,
+    //   'goodsType': this.data.goodsType,
+    //   'goodsNum': 1,
+    //   'balance': '',//不知道是什么
+    //   'goodsIndex': '',
+    //   'remake': '',
+    //   'num': 1,
+    //   'goodsName': this.data.goodsName,
+    //   'actualPayment': this.data.batchPrice, //实付单价
+    //   'goodsPic': this.data.batchPrice,
+    //   'unitPrice': this.data.batchPrice,//单价
+    //   'goodsId': this.data.goodsId,
+    //   'customerId': wx.getStorageSync('scSysUser').id,
+    //   'stockId': this.data.stockList[0].id,
+    //   'shopId': this.data.shopId
+    // })
+    // wx.setStorageSync('buyCart', orderbuy);
     wx.switchTab({
-      // url: '/pages/shopping-cart/shopping-cart',
+      url: '/pages/proList/proList',
     })
   },
-  immeBuy(){
-    wx.showToast({
-      title:'购买成功',
-      icon:'success',
-      duration:2000
-    })
-  }
+  // 倒计时方法
+  count(){
+    let _this = this;
+    for (let i = 0; i < this.data.list.length; i++) {
+      let leftTime = this.data.list[i].count;
+      leftTime -= 1000;
+      if (leftTime <= 0) {
+        leftTime=0
+      }
+      let d = Math.floor(leftTime / 1000 / 60 / 60 / 24),
+        h = Math.floor(leftTime / 1000 / 60 / 60 % 24),
+        m = Math.floor(leftTime / 1000 / 60 % 60),
+        s = Math.floor(leftTime / 1000 % 60),
+        rh =h,
+        count = "plistData[" + i + "].count",
+        rhCount = "plistData[" + i + "].rh",
+        mCount = "plistData[" + i + "].m",
+        sCount = "plistData[" + i + "].s";
+      if (h < 10) {
+        h = "0" + h;
+      }
+      if (m < 10) {
+        m = "0" + m;
+      }
+      if (s < 10) {
+        s = "0" + s;
+      }
+      this.setData({
+        [count]: leftTime,
+        [rhCount]: rh,
+        [mCount]: m,
+        [sCount]: s
+      })
+    }
+  }  
 })

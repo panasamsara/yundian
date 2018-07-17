@@ -14,6 +14,8 @@ const formatTime = date => {
 // 测试链接
 const URL_QRCODE = 'https://wxapp.izxcs.com/qrcode/shop/';
 const URL = 'https://wxapp.izxcs.com/zxcity_restful/ws/rest';  
+// const URL = 'http://192.168.11.152:8080/zxcity_restful/ws/rest';
+
 
 const formatNumber = n => {
   n = n.toString()
@@ -50,6 +52,13 @@ const formatPickerTime = date => {
   const minute = date.getMinutes()
   const second = date.getSeconds()
   return [year, month, day].map(formatNumber).join('/');
+}
+
+//时间格式
+const formatTimeArray = date => {
+  const hour = date.getHours()
+  const minute = date.getMinutes()
+  return [hour,minute].map(formatNumber).join(':');
 }
 
 
@@ -120,6 +129,17 @@ function getLocalTime(now) {
   var minute = now.getMinutes();
   var second = now.getSeconds();
   return year + "-" + month + "-" + date + " " + hour + ":" + minute //+ ":" + second; 
+}
+function getParams(url) {
+  var params = new Object();
+  if (url.indexOf("?") != -1) {
+    var str = url.substr(1);
+    var strs = str.split("&");
+    for (var i = 0; i < strs.length; i++) {
+      params[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+    }
+  }
+  return params;
 }
 
 // 设置历史记录
@@ -226,6 +246,7 @@ module.exports = {
   formatActivityDate: formatActivityDate,
   formatAppoint: formatAppoint,
   formatPickerTime: formatPickerTime,
+  formatTimeArray: formatTimeArray,
   reqAsync: reqAsync,
   isEmpty: isEmpty,
   inArray: inArray,
@@ -236,5 +257,6 @@ module.exports = {
   hasShop: hasShop,
   setHistories: setHistories,
   URL_QRCODE: URL_QRCODE,
-  hexToRGB: hexToRGB
+  hexToRGB: hexToRGB,
+  getParams: getParams
 }

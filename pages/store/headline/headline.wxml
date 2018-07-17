@@ -31,7 +31,7 @@
     </view>
   </view>
 </view>
-<view class="blank" wx:else>
+<view class="blank" wx-if="{{blank}}">
   <image src='../images/yundian_zjy_ydtt.png'></image>
   <text>暂时没有资讯哦</text>
 </view>

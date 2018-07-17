@@ -13,7 +13,7 @@ Component({
    * 组件的初始数据
    */
   data: {
-
+    blank:false
   },
 
   /**
@@ -32,9 +32,15 @@ Component({
     },
     getData: function (data) {
       app.util.reqAsync('fans/getFansTeamForShop', data).then((res) => {
-        this.setData({
-          datas:res.data.data,
-        })
+        if(res.data.data){
+          this.setData({
+            datas: res.data.data,
+          })
+        }else{
+          this.setData({
+            blank:true
+          })
+        }       
         wx.hideLoading();
       }).catch((err) => {
         console.log(err);

@@ -36,6 +36,7 @@
   float:left;
   font-size: 30rpx;
   vertical-align: top;
+  word-break:break-all;
 }
 .text-top{
   display:block;

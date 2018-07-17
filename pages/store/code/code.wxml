@@ -16,7 +16,7 @@
         </view>
       </image>
     </view>
-    <text id='scan'>扫一扫二维码图案,进入店铺</text>
+    <text id='scan'>扫一扫二维码图案,进入智享城市APP店铺</text>
   </view>
   <view class="canvas-box">
     <canvas  hidden="{{canvasHidden}}" style="width: 686rpx;height: 686rpx;background:#f1f1f1;" canvas-id="mycanvas"/>

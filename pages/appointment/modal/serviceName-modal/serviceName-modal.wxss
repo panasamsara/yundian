@@ -11,5 +11,5 @@
 }
 
 .serviceNameModal scroll-view{
-  height: 620rpx;
+  height: 520rpx;
 }

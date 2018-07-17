@@ -11,33 +11,18 @@
   <!--线上订单  -->
   <view class="order">
      <view class="onlineOrder">
-      <view class="title">
+      <view class="title" bindtap='backOrder'>
         <text class="left">线上订单</text>
         <image class="right" src="images/right_icon.png"></image>
       </view>
       <view class="orderList">
-         <navigator url="/pages/myHome/order/order" hover-class="none" class="navigator"> 
-          <view>
-            <image src="images/daifukuan.png"></image>
-            <text>待付款</text>
-          </view>
-          <view>
-            <image src="images/daifahuo.png"></image>
-            <text>待发货</text>
-          </view>
-          <view>
-            <image src="images/daishouhuo.png"></image>
-            <text>待收货</text>
-          </view>
-          <view>
-            <image src="images/daipingjia.png"></image>
-            <text>待评价</text>
-          </view>
-          <view>
-            <image src="images/shouhou.png"></image>
-            <text>售后</text>
-          </view>
-        </navigator>
+        <view wx:for="{{shopList}}" wx:key="index" bindtap='backShop' data-path='{{item.path}}'>
+
+           <image class="msg" wx:if="{{item.num>0}}" src="images/msg.png"></image>
+           <text class="msgtitle" wx:if="{{item.num>0}}">{{item.num}}</text>
+          <image src="{{item.icon}}"></image>
+          <text>{{item.text}}</text>
+        </view>
       </view>
       <view class="shoporder borderTop">
         <block wx:for="{{items}}" wx:key="{{item.id}}">
@@ -47,6 +32,7 @@
           </view>
         </block>
       </view>
+      <button type="warn" plain="{{plain}}" bindtap="warn" bindtap='back'>退出当前店铺</button>
     </view> 
   </view>
 </view>

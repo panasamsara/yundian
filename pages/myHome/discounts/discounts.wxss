@@ -18,23 +18,24 @@
 .con{
   width: 100%;
   position: absolute;
-  top: 0;
+  top: 20rpx;
 }
 .listTop{
   overflow: hidden;
   padding-bottom: 30rpx;
   color: #333;
-  padding: 20rpx 0 30rpx 30rpx;
+  padding: 0rpx 0 0rpx 30rpx;
 }
 .listTop view:first-child{
   font-size: 30rpx;
-  height: 54rpx;
-  line-height: 54rpx;
+  height: 46rpx;
+  line-height: 46rpx;
   font-weight: bold;
 }
 .listTop view:last-child{
   font-size: 34rpx;
   font-weight: bold;
+  margin-top:7rpx;
 }
 .listTop .left image{
   width: 54rpx;
@@ -43,6 +44,24 @@
 }
 .time{
   color: #999;
+  font-size: 24rpx;
+  padding:25rpx 0 15rpx 30rpx;
+
+  position:absolute;
+  top:130rpx;
+}
+.good{
+  color: rgba(254,115,45,1);
+  font-size: 24rpx !important;
+}
+.addessNull image{
+    width: 384rpx;
+    height: 198rpx;
+    display: block;
+    margin: 300rpx auto 20rpx;
+}
+.addessNull{
+  text-align: center;
   font-size: 28rpx;
-  padding: 20rpx 0 20rpx 30rpx;
+  color: #999;
 }

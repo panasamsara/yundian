@@ -8,15 +8,17 @@
       </view>
       <view class='infoBox'>
         <text class='storeName'>{{data.shopInfo.shopName}}</text>
-        <view class='fans'>粉丝数:
+        <view id='fans'>粉丝数:
           <text class='fansNum'>{{data.fansCounter}}</text>
         </view>
       </view>
     </view>
     <view class='products'>
       <view class='productsNum'>
+      <navigator url="../proList/proList" hover-class='none' open-type='switchTab'>
         <text class='num'>{{data.goodsNum}}</text>
         <view>全部商品</view>
+      </navigator>
       </view>
       <image src='images/whiteline.png'></image>
       <view class='updateNum'>
@@ -41,7 +43,7 @@
       <view class='title'>
         <view class='titleBox'>
           <image src='images/yundain_dpzy_yddt.png' class='titleName'></image>
-          <navigator url='dynamic/dynamic' hover-class='none'>
+          <navigator url='../manage/manage?url=dynamic&index=0' hover-class='none'>
             <image src='images/yundian_gengduohui.png' class='enter'></image>
           </navigator>
         </view>
@@ -93,12 +95,16 @@
             </view>
           </view>
         </view>
-        <view class="blank" wx:else>
-          <image src='images/yundian_zjy_yddt.png'></image>
-          <navigator url="" hover-class='none'>
-            <button type="default" plain="true" class='publish' hover-class='none'>发布云店动态</button>
-          </navigator>
-        </view> 
+        <!-- 动态空白页 -->
+         <view class="blank" wx:else>
+            <block>
+              <image src='images/yundian_zjy_yddt.png'></image>
+              <navigator url="" hover-class='none' wx-if="{{type==1}}">
+                <button type="default" plain="true" class='publish' hover-class='none'>发布云店动态</button>
+              </navigator>
+              <text wx-if="{{type==2}}">暂时没有动态更新哦</text>
+            </block>
+        </view>  
       </view>
     </view>
     <!-- 云店头条 -->
@@ -106,7 +112,7 @@
       <view class='title'>
         <view class='titleBox'>
           <image src='images/yundain_dpzy_tdtt.png' class='titleName'></image>
-          <navigator url='headline/headline' hover-class='none'>
+          <navigator url='../manage/manage?url=headline&index=1' hover-class='none'>
             <image src='images/yundian_gengduohui.png' class='enter'></image>
           </navigator>
         </view>
@@ -114,7 +120,7 @@
       <view class='body'>
         <view class='headline' wx:if="{{data.newCmsArticle[0].articleTitle}}"> 
           <view class='headlineList'>
-            <view class='contentBox' wx:if="{{data.newCmsArticle[0].typeCode=='1001'}}">
+            <view class='contentBox'>
               <image src='{{data.newCmsArticle[0].scCmsResourcesList[0].resourcesUrl}}'></image>
               <view class='text'>
                 <text class='titles'>{{data.newCmsArticle[0].articleTitle}}</text>
@@ -130,12 +136,16 @@
             </view>
           </view>
         </view>
+        <!-- 头条空白页 -->
         <view class='blank' wx:else>
-          <image src='images/yundian_zjy_ydtt.png'></image>
-          <navigator url="" hover-class="none">
-            <button type="default" plain="true" class='publish' hover-class='none'>发布云店头条</button>
-          </navigator>
-        </view>
+          <block>
+            <image src='images/yundian_zjy_ydtt.png'></image>
+            <navigator url="" hover-class="none" wx-if="{{type==1}}">
+              <button type="default" plain="true" class='publish' hover-class='none'>发布云店头条</button>
+            </navigator>
+            <text wx-if="{{type==2}}">暂时没有资讯哦</text>
+          </block>
+        </view>  
       </view>
     </view>
     <!-- 云店玩家圈 -->
@@ -143,7 +153,7 @@
       <view class='title'>
         <view class='titleBox'>
           <image src='images/yundain_dpzy_wdwjq.png' class='titleName'></image>
-          <navigator url='player/player' hover-class='none'>
+          <navigator url='../manage/manage?url=player&index=2' hover-class='none'>
             <image src='images/yundian_gengduohui.png' class='enter'></image>
           </navigator>
         </view>
@@ -161,12 +171,16 @@
             </view>
           </view>
         </view>
+        <!-- 云店玩家圈空白页 -->
         <view class='blank' wx:else>
-          <image src='images/yundian_zjy_ydwjq.png'></image>
-          <navigator url="" hover-class='none'>
-            <button type="default" plain="true" class='publish' hover-class='none'>发布云店玩家圈</button>
-          </navigator>
-        </view>
+          <block>
+            <image src='images/yundian_zjy_ydwjq.png'></image>
+            <navigator url="" hover-class='none' wx-if="{{type==1}}">
+              <button type="default" plain="true" class='publish' hover-class='none'>发布云店玩家圈</button>
+            </navigator>
+            <text wx-if="{{type==2}}">暂无玩家圈</text>
+          </block>
+        </view> 
       </view>
     </view>
     <!-- 云店粉团队 -->
@@ -174,7 +188,7 @@
       <view class='title'>
         <view class='titleBox'>
           <image src='images/yundain_dpzy_ydftd.png' class='titleName'></image>
-          <navigator url='fans/fans' hover-class='none'>
+          <navigator url='../manage/manage?url=fans&index=3' hover-class='none'>
             <image src='images/yundian_gengduohui.png' class='enter'></image>
           </navigator>
         </view>
@@ -202,12 +216,16 @@
               </view>
             </scroll-view>
         </view>
+        <!-- 云店粉团队空白页 -->
         <view class='blank' wx:else>
-          <image src='images/yundian_zjy_ydftd.png'></image>
-          <navigator url="" hover-class='none'>
-            <button type="default" plain="true" class='publish' hover-class='none'>发布云店粉团队</button>
-          </navigator>
-        </view> 
+          <block>
+            <image src='images/yundian_zjy_ydftd.png'></image>
+            <navigator url="" hover-class='none' wx-if="{{type==1}}">
+              <button type="default" plain="true" class='publish' hover-class='none'>发布云店粉团队</button>
+            </navigator>
+            <text wx-if="{{type==2}}">暂无粉天地</text>
+          </block>
+        </view>  
       </view>
     </view>
   </view>
@@ -225,13 +243,13 @@
     </view>
     <view class='list phone'>
       <text>联系电话</text>
-      <text class='phoneNum'>{{data.shopInfo.phone!=null?data.shopInfo.phone:''}}</text>
+      <text class='phoneNum'>{{data.shopInfo.phoneService!=null?data.shopInfo.phoneService:"暂无"}}</text>
     </view>
     <view class='list'>
       <text>店铺简介</text>
     </view>
     <view class="list desc">
-      <text>{{data.shopInfo.shopDesc}}</text>
+      <text>{{data.shopInfo.shopDesc?data.shopInfo.shopDesc:"暂无简介"}}</text>
     </view>
     <view class='list'>
       <text>店铺地址</text>

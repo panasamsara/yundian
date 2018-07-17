@@ -12,31 +12,31 @@
   </view>
   <!--地址-->
   <view class="address-box" wx:if="{{isSend==0}}">
-    <view wx:if="{{userInfo.recvAddress.address!=''}}">
+    <view wx:if="{{address!=''}}" bindtap="addressSkip">
       <view class="user-info">
         收货人：{{userInfo.recvAddress.name}}
         <text>{{userInfo.recvAddress.phone}}</text>
       </view>
       <view class="address">
         <image src="img/address-gray.png"></image>
-        {{userInfo.recvAddress.address}}
+        {{ProvinceName}}-{{cityName}}-{{areaName}} {{userInfo.recvAddress.address}}
       </view>
     </view>
-    <view wx:if="{{userInfo.recvAddress.address==''}}" bindtap="addressSkip">
+    <view class='add-adree' wx:if="{{address==''}}" bindtap="addressSkip">
       <navigator url="" hover-class="navigator-hover">请添加收货地址</navigator>
     </view>
     <image bindtap="addressSkip" class="right-icon" src="../../../images/yundian_spxq_gengduo.png"></image>
   </view>
   <!--房间-->
-  <view class="room" wx:if="{{isSend==1}}">
+  <view class="room" wx:if="{{isSend==1}}" bindtap="show">
     <text>房间</text>
-    <text wx:if="{{roomInx=='-1'}}" bindtap="show">请选择房间</text>
-    <text wx:if="{{roomInx!='-1'}}" bindtap="show">{{roomVal}}</text>
+    <text wx:if="{{roomInx=='-1'}}" >请选择房间</text>
+    <text wx:if="{{roomInx!='-1'}}" >{{roomVal}}</text>
   </view>
   <!--商品-->
   <view class="detail">
     <view class='detail-top'>
-      <image class="shop-icon" src="../../../images/1_05.gif"></image>
+      <image class="shop-icon" src="../../images/1_05.gif"></image>
       <text class='detail-tit'>{{shopName}}</text>
     </view>
     <view class="total-num">
@@ -49,18 +49,23 @@
               <image class='good-img' src='{{items.goodsImageUrl}}'></image>
           </view>
           <view class='right-info'>
-            <text>{{items.goodsName}}</text>
+            <text class='goodname'>{{items.goodsName}}</text>
             <text wx:if="{{items.stockName!=''}}">{{items.stockName}}</text>
             <view class='detail-down'>
-              <text>￥{{items.goodsPrice}}</text>
-              <view class="stepper">
-              <!-- 减号 -->
-                <text class="minus" data-index="{{index}}" bindtap="bindMinus">-</text>
-              <!-- 数值 -->
-                <input type="number" bindchange="bindManual" value="{{items.number}}" />
-              <!-- 加号 -->
-                <text class="add normal" data-index="{{index}}" bindtap="bindPlus">+</text>
+              <view class="pric">
+                <text>￥</text>
+                <text wx:if="{{items.stockName!=''}}">{{items.stockPrice}}</text>
+                <text wx:if="{{items.stockName==''}}">{{items.goodsPrice}}</text>
               </view>
+              <view>x{{items.number}}</view>
+              <!-- <view class="stepper">-->
+              <!-- 减号 -->
+                <!-- <text class="minus" data-index="{{index}}" bindtap="bindMinus">-</text> -->
+              <!-- 数值 -->
+                <!-- <input type="number" data-pindex="{{inx}}" data-index="{{index}}" bindinput="bindblur" value="{{items.number}}" maxlength="3" /> -->
+              <!-- 加号 -->
+                <!-- <text class="add normal" data-index="{{index}}" bindtap="bindPlus">+</text> -->
+              <!-- </view> -->
             </view>
           </view>
         </view>
@@ -68,15 +73,15 @@
     </view>
     <!--选择快递时才有店铺优惠he配送费-->
     <view class="discount-box">
-      <view class="shop-discount" wx:if="{{isSend==0}}">
+      <view class="shop-discount" wx:if="{{isSend==0}}" bindtap="selectCounp">
         <text>店铺优惠</text>
-        <view class="discount-room">
-          <text></text>
+        <view class="discount-room" >
+          <text>{{instruction}}</text>
           <image src="../../../images/yundian_spxq_gengduo.png"></image>
         </view>
       </view>
       <view class="send-price" wx:if="{{isSend==0 && isService==0}}">
-        <text>配送费</text><text>￥0.00</text>
+        <text>配送费</text><text>￥{{deliveyMoney}}</text>
       </view>
       <view class="price">
         <text>商品总额</text><text>￥{{totalMoney}}</text>
@@ -86,10 +91,10 @@
   <!--合计-->
   <view class="ctronl-btn">
     <view class="sun-price">
-      合计：<text>￥{{totalMoney}}</text>
+      合计：<text>￥{{oldTotal}}</text>
     </view>
     <button class='account-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}"
-         bindtap="default" hover-class="other-button-hover"> 确认下单</button>
+         bindtap="sumb" hover-class="other-button-hover"> 确认下单</button>
   </view>
 </view>
 <!--房间弹出窗-->
@@ -98,15 +103,16 @@
     <image src="img/close.png" bindtap="hide"></image>
     <view class="modal-title">选择房间</view>
     <view class="modal-content">
-      <view  class="room-list {{roomInx==inx?'acv':''}}" wx:for="{{room}}" wx:for-item='rooms' wx:key="room" wx:for-index="inx" bindtap="selectRoom" data-index="{{inx}}" data-val="{{rooms.title}}" data-merchant="{{rooms.merchantId}}">
+      <view  class="room-list {{roomInx==inx?'acv':''}}" wx:for="{{room}}" wx:for-item='rooms' wx:key="room" wx:for-index="inx" bindtap="selectRoom" data-index="{{inx}}" data-val="{{rooms.title}}" data-merchant="{{rooms.merchantId}}" data-facilityid="{{rooms.id}}">
         {{rooms.title}}
       </view>
     </view>
     <view class="modal-btn">
-      <button class="knowBtn" bindtap="syre" data-index="{{roomInx}}" data-merchant="{{merchantId}}" data-val="{{roomVal}}">确认</button>
+      <button class="knowBtn" bindtap="syre" data-index="{{roomInx}}" data-merchant="{{merchantId}}" data-val="{{roomVal}}" data-facilityid="{{facilityId}}">确认</button>
     </view>
   </view>
-  </view>
+</view>
+
 
   <!--下单成功-->
   <view class="modal-box order-tip" hidden="{{flagOrder}}" >
@@ -116,7 +122,7 @@
       <text>下单成功!</text>
       <text>选择继续购物或查看此订单</text>
     </view>
-    <view class="modal-btn">
+    <view class="modal-btn">  
       <text class="knowBtn" bindtap="goShop">继续购物</text>
       <text class="knowBtn" bindtap="look">查看订单</text>
     </view>

@@ -3,10 +3,10 @@
   <image src='{{picImg}}'></image>
   <view class='text'>
     <text class='text-top'>{{goodSName}}</text>
-    <text class='text-bot'>{{descTitle}}</text>
+    <text class='text-bot'>{{descTitle==null?'':descTitle}}</text>
   </view>
   <view class='text-right'>
-    <text class='right-text'>3个回答</text>
+    <text class='right-text'>{{answerCount}}个回答</text>
     <span>问</span>
   </view>  
 </view>
@@ -19,45 +19,18 @@
       <text class='time'>2018-06-22</text>
     </view>
   </view>
-  <view class='item'>
+  <view class='item {{flag?"hide":"show"}}' wx:for='{{answerData}}' wx:key='key'>
     <view class='itemtop clearfix'>
-      <image src=''></image>
-      <span class='name'>哆啦A梦</span>
-      <span class='time'>2018-02-18</span>
+      <image src='{{item.userHeardPic}}'></image>
+      <span class='name'>{{item.createUserName}}</span>
+      <span class='time'>{{item.createTime}}</span>
     </view>
     <view class='itembot clearfix'>
-      <text>颜色蛮多的,个人感觉这套比较划算</text>
-      <span class='pl40'>举报</span>
-      <span class='pl12'>2</span>
-      <image src='../../images/fullstar.png' bindtap='dianzan'></image>
+      <text>{{item.content}}</text>
+      <!-- <span class='pl12'>2</span>
+      <image src='../../images/fullstar.png' bindtap='dianzan'></image> -->
     </view>
   </view>
-  <!-- <view class='item'>
-    <view class='itemtop clearfix'>
-      <image src='../../images/pic_03.gif'></image>
-      <span class='name'>哆啦A梦</span>
-      <span class='time'>2018-02-18</span>
-    </view>
-    <view class='itembot clearfix'>
-      <text>颜色蛮多的,个人感觉这套比较划算</text>
-      <span class='pl40'>举报</span>
-      <span class='pl12'>2</span>
-      <image src='../../images/fullstar.png'></image>
-    </view>
-  </view>
-  <view class='item'>
-    <view class='itemtop clearfix'>
-      <image src='../../images/pic_03.gif'></image>
-      <span class='name'>哆啦A梦</span>
-      <span class='time'>2018-02-18</span>
-    </view>
-    <view class='itembot clearfix'>
-      <text>颜色蛮多的,个人感觉这套比较划算</text>
-      <span class='pl40'>举报</span>
-      <span class='pl12'>2</span>
-      <image src='../../images/fullstar.png'></image>
-    </view>
-  </view>     -->
 </view>
 <view class='temp'></view>
 <!-- 底部悬浮栏 -->

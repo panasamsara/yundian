@@ -1,18 +1,21 @@
 var app=getApp();
-var userId = wx.getStorageSync('scSysUser').id;
 Page({
   data: {
     activeIndex: "1",
     orderList:[],
     listData: { 
       searchType: 1, 
-      createUser: userId, 
+      createUser: "", 
+      // createUser: 80572, 
       pageSize: 5, 
       pageNo: 1
     },
     total:""
   },
   onLoad: function (options) {
+    var userId = wx.getStorageSync('scSysUser').id;
+    var newId = "listData.createUser";
+    this.setData({ [newId]: userId });
     this.getList();
   },
   onShow: function () {

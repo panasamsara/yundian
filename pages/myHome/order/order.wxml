@@ -17,8 +17,8 @@
       <span>待评价</span>
     </view>
   </scroll-view>
-  <swiper class="tab-content" current="{{currentTab}}" duration="300" bindchange="switchTab" style="height:{{winHeight}}rpx" >
-    <swiper-item wx:for="{{[0,1,2,3,4]}}">
+  <view class="tab-content" current="{{currentTab}}" duration="300" style="height:{{winHeight}}rpx" >
+    <view>
       <view  class="scoll-h" lower-threshold="0" style="height:{{winHeight}}rpx">
         <block wx:if="{{length>0}}" wx:for='{{goodlist}}' wx:for-index="inx"  wx:key="*this" wx:for-item='item'>
           <view class='detail' data-index="{{inx}}">
@@ -28,18 +28,29 @@
                 <text class='detail-tit'>{{item.shopName}}</text>  
                 <image class="back" src='../../../images/yundian_spxq_gengduo.png'></image>
               </view>
-              <text >{{item.orderStatusStr}}</text>
+              <text wx:if="{{item.orderStatusVo==1}}">等待付款</text>
+              <text wx:if="{{item.orderStatusVo==2&&item.deliveryType==2}}">等待取货</text>
+              <text wx:if="{{item.orderStatusVo==2&&item.deliveryType!=2}}">等待发货</text>
+              <text wx:if="{{item.orderStatusVo==3}}">等待收货</text>
+              <text wx:if="{{item.orderStatusVo==4}}">等待评价</text>
+              <text wx:if="{{item.orderStatusVo==5}}">已取消</text>
+              <text wx:if="{{item.orderStatusVo==6}}">申请退款</text>
+              <text wx:if="{{item.orderStatusVo==7}}">申请退货</text>
+              <text wx:if="{{item.orderStatusVo==8}}">已退款</text>
+              <text wx:if="{{item.orderStatusVo==9}}">已退货</text>
+              <text wx:if="{{item.orderStatusVo==10}}">已评论</text>
             </view>
-            <view class='goods' wx:for='{{item.orderItemList}}' wx:for-item='items' wx:key="goods" bindtap="orderSkip" data-no="{{item.orderNo}}">
+            <view class='goods' wx:for='{{item.orderItemList}}' wx:for-item='items' wx:key="goods"  data-no="{{item.orderNo}}">
               <view class='good-content' data-pindex="{{inx}}" data-index="{{index}}" data-id="{{items.id}}" >
-                <view class='good-left' data-pindex="{{inx}}" data-index="{{index}}" data-id="{{items.id}}">
+                <view class='good-left' data-pindex="{{inx}}" data-index="{{index}}" data-id="{{items.id}}" data-no="{{item.orderNo}}" bindtap="orderSkip">
                   <image class='good-img' src='{{items.pictureUrl}}'></image>
                 </view>
                 <view class='right-info'>
-                  <text>{{items.goodsName}}</text>
+                  <text class='order-tit'>{{items.goodsName}}</text>
                   <text wx:if="{{items.stockName}}">{{items.stockName}}</text>
                   <view class='detail-down'>
-                    <text>￥</text><text>{{items.goodsPrice}}</text>
+                    <span class="small-size red">￥</span>
+                    <text >{{items.goodsPrice}}</text>
                     <text>x{{items.goodsNum}}</text>
                   </view>
                     <button wx:if="{{item.orderStatusVo==4}}" class='appraise-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="appraise" hover-class="other-button-hover" data-no="{{item.orderNo}}" data-shopid="{{item.bussinessId}}" data-goodid="{{items.goodsId}}"> 评价 </button> 
@@ -48,15 +59,15 @@
             </view>  
             <view class='list-total'>
           <view class="total-num">共<span>{{item.total}}</span>件商品</view>
-          <view class='total-price'>合计：<span>￥{{item.amount}}</span>（含运费<span>{{item.deliveryMoney}}</span>）</view>
+          <view class='total-price'>合计：<text class="small-size1">￥</text><span class="red">{{item.amount}}</span>（含运费<span>{{item.deliveryMoney}}</span>）</view>
         </view>
         <view class="ctronl-btn">
                <button wx:if="{{item.orderStatusVo==1}}" class='cancel-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="cancel" hover-class="other-button-hover" data-no="{{item.orderNo}}"> 取消订单 </button>
                <button wx:if="{{item.orderStatusVo==1}}" class='pay-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="pay" hover-class="other-button-hover" data-no="{{item.orderNo}}"> 付款 </button>
-               <button wx:if="{{item.orderStatusVo==2 && item.deliveryType!=2}}" class='reimburse-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="reimburse" hover-class="other-button-hover" data-no="{{item.orderNo}}" data-statu="{{item.orderStatus}}" data-money="{{item.amount}}"> 申请退款 </button>
+               <button wx:if="{{item.orderStatusVo==2 && item.deliveryType!=2}}" class='reimburse-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="reimburse" hover-class="other-button-hover" data-no="{{item.orderNo}}" data-statu="{{item.orderStatus}}" data-money="{{item.amount}}" data-phone="{{item.phoneService}}"> 申请退款 </button>
                <button wx:if="{{item.orderStatusVo==2 && item.deliveryType!=2}}" class='shipments-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="shipments" hover-class="other-button-hover" data-no="{{item.orderNo}}"> 提醒发货 </button>
-               <button wx:if="{{item.orderStatusVo==2 && item.deliveryType==2}}" class='take-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="take" hover-class="other-button-hover" data-no="{{item.orderNo}}" data-customerid="{{item.customerId}}"> 确认收货 </button>
-              <button wx:if="{{item.orderStatusVo==4}}" class='return-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="returnGood" hover-class="other-button-hover" data-no="{{item.orderNo}}" data-statu="{{item.orderStatus}}" data-money="{{item.amount}}"> 申请退货 </button>
+               <button wx:if="{{item.orderStatusVo==3}}" class='take-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="take" hover-class="other-button-hover" data-no="{{item.orderNo}}" data-customerid="{{item.customerId}}"> 确认收货 </button>
+              <button wx:if="{{item.orderStatusVo==4}}" class='return-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="returnGood" hover-class="other-button-hover" data-no="{{item.orderNo}}" data-statu="{{item.orderStatus}}" data-money="{{item.amount}}" data-phone="{{item.phoneService}}"> 申请退货 </button>
               <button wx:if="{{item.orderStatusVo==5 || item.orderStatusVo==8 || item.orderStatusVo==9 || item.orderStatusVo==10}}" class='delete-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="delete" hover-class="other-button-hover" data-no="{{item.orderNo}}" data-shopid="{{item.bussinessId}}" data-customerid="{{item.customerId}}" data-goodid="{{items.goodsId}}" > 删除订单
                </button>
                <button wx:if="{{item.orderStatusVo==6}}" class='audit-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="audit" hover-class="other-button-hover" data-no="{{item.orderNo}}"> 退款中 </button>
@@ -65,16 +76,18 @@
             </view>
         </block>
         <block wx:if="{{length==0}}">
-          <image class="empty" src="../../../images/empty.png"></image>
+          <view class="empty-box">
+            <image class="empty" src="../images/yundian_kby_meiyoudingdan@2x.png"></image>
+          </view>  
         </block>
       </view>
-    <view class="weui-loadmore weui-loadmore_line" hidden='{{hasmoreData}}'>
+    <!-- <view class="weui-loadmore weui-loadmore_line" hidden='{{hasmoreData}}'>
       <view class="weui-loadmore__tips weui-loadmore__tips_in-line">暂无更多数据</view>
-    </view>
-    <view class="weui-loadmore" hidden='{{hiddenloading}}'>
+    </view> -->
+    <!-- <view class="weui-loadmore" hidden='{{hiddenloading}}'>
       <view class="weui-loading"></view>
       <view class="weui-loadmore__tips">正在加载</view>
+    </view> -->
     </view>
-    </swiper-item>
-  </swiper>
+  </view>
 </view>

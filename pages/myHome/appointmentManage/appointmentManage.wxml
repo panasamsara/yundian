@@ -11,7 +11,7 @@
     <!-- 没有可使用的预约默认图 -->
     <block wx:if="{{orderList.length==0}}">
       <view class="addessNull">
-        <image src="../images/adderss.png"></image>
+        <image src="../images/zwyy.png"></image>
         <view>暂时没有预约哦~</view>
       </view>
     </block>

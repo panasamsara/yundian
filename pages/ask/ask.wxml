@@ -2,8 +2,8 @@
 <view class='top clearfix'>
   <image src='{{picImg}}'></image>
   <view class='text'>
-    <text class='text-top'>CHANEL限量彩妆套装</text>
-    <text class='text-bot'>2017年全新礼盒每人限购一套春季新品限量</text>
+    <text class='text-top'>{{goodsName}}</text>
+    <text class='text-bot'></text>
   </view>
   <view class='text-right'>
     <text class='right-text'>{{askAcount}}个问题</text>
@@ -19,10 +19,10 @@
     </view> 
     <view class='answer {{isShow1?"show":"hide"}}'>
       <view class='answer-icon'>答</view>
-      <text>{{item.answerCount}}</text>
+      <text>{{item.answers[0]?item.answers[0].content:'暂无回答'}}</text>
     </view>  
     <view class='check clearfix {{isShow2?"show":"hide"}}' bindtap='tosakDetail' data-questionId='{{item.id}}'>
-      <span>查看全部{{item.answers}}个回答</span>
+      <span>查看全部{{item.answers.length}}个回答</span>
       <span>{{item.time}}</span>
     </view>
   </view>     

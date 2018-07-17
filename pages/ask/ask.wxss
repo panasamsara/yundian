@@ -38,6 +38,7 @@
 .text-top{
   display: inline-block;
   padding-bottom: 35rpx;
+  word-break:break-all;
 }
 .text-bot{
   color:#959595;
@@ -109,9 +110,10 @@
   right:0;
   top:0;
 }
-.answer text{
+.answer span{
   color:#8e8e8e;
-  padding-top: 20rpx;
+  vertical-align: middle;
+  font-size: 30rpx;
 }
 .main .check{
   font-size: 24rpx;

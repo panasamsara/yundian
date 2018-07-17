@@ -1,7 +1,7 @@
 <!--pages/store/activityInfo/activityInfo.wxml-->
 <view class='container activityInfo'>
   <view class='head'>
-    <text>{{data.descTitle}},{{data.goodsName}}</text>
+    <text>{{data.goodsName}}</text>
     <view>
       <text class='time'>活动时间</text>
       <text class='time'>{{data.startTime}}-{{data.endTime}}</text>

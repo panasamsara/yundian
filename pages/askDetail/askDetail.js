@@ -4,27 +4,44 @@ Page({
 
   data: {
     myAswer:'',
-    tips:''
+    tips:'',
+    flag:''
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    this.setData({
+      questionId: options.questionId,
+      userId: options.userId
+    });
     app.util.reqAsync('shop/getQuestionDetail',{
-      questionId: '5b4402c944f4ddd5889da30a',// options.questionId,
-      userId :198 ,
+      questionId: options.questionId,// ,
+      userId: options.userId,
       pageNo :1,
-      pageSize :10     
+      pageSize :''     
     }).then((res)=>{
       var data=res.data.data;
-      console.log(data)
+      if (data.questionDetail.answers.length == 0) {
+        this.setData({
+          flag: true
+        })
+      }else{
+        this.setData({
+          flag:false
+        });
+      };
       this.setData({
         picImg: data.goodsInfo.pictureUrl,
         goodSName: data.goodsInfo.goodsName,
         descTitle: data.goodsInfo.descTitle,
-        content: data.questionDetail.content
-      })
+        content: data.questionDetail.content,
+        answerCount: data.questionDetail.answerCount,
+        answerData: data.questionDetail.answers
+      })      
+
+
     })
   
   },
@@ -39,12 +56,11 @@ Page({
   addAswer(){
     app.util.reqAsync('shop/addAnswer',{
       id:2117,
-      questionId:'5b4402c944f4ddd5889da30a',
-      createUser: 198,
+      questionId: this.data.questionId,
+      createUser: this.data.userId,
       content:this.data.myAswer,
       anonymous:0
     }).then((res)=>{
-      console.log(res)
       this.setData({
         tips:res.data.msg,
         myValue:''
@@ -67,52 +83,4 @@ Page({
   //   })
   // },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-  
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-  
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-  
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-  
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-  
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-  
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-  
-  }
 })

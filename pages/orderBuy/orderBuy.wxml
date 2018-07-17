@@ -50,14 +50,14 @@
           </view>
           <view class='right-info'>
             <text class='goodname'>{{items.goodsName}}</text>
-            <text wx:if="{{items.stockName!=''}}">{{items.stockName}}</text>
+            <text class='stock-info' wx:if="{{items.stockName!=''}}">{{items.stockName}}</text>
             <view class='detail-down'>
               <view class="pric">
                 <text>￥</text>
                 <text wx:if="{{items.stockName!=''}}">{{items.stockPrice}}</text>
                 <text wx:if="{{items.stockName==''}}">{{items.goodsPrice}}</text>
               </view>
-              <view>x{{items.number}}</view>
+              <view class='nums'>x{{items.number}}</view>
               <!-- <view class="stepper">-->
               <!-- 减号 -->
                 <!-- <text class="minus" data-index="{{index}}" bindtap="bindMinus">-</text> -->

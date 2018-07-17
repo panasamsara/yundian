@@ -34,12 +34,12 @@ page{
   text-align: center;
   border-top-left-radius: 10rpx;
   border-bottom-left-radius: 10rpx;
+  margin-left:210rpx;
 }
 .btn-group{
   width: 100%;
   height: 60rpx;
-  padding-top: 20rpx;
-  padding-left: 210rpx;
+  margin-top: 20rpx;
 }
 .rightBtn{
   border: 1rpx solid #333;

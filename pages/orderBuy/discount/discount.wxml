@@ -1,4 +1,7 @@
 <view class='discount'>
+  <view class="nose" bindtap="noSe">
+      暂不使用
+  </view>
   <view class='list'  wx:for="{{discount}}" data-id="{{item.couponLogId}}" wx:key="index">
     <view wx:if="{{item.status==1}}" class='gray' bindtap='skip' data-id="{{item.couponLogId}}" data-name="{{item.name}}" data-amountMin="{{item.amountMin}}" data-amount="{{item.amount}}" data-instruction="{{item.instruction}}" data-counid="{{item.id}}">
       <image class="bg" src='../../myHome/images/yundian_youhuiquan.png'></image>

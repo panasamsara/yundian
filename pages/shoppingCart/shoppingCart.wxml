@@ -18,7 +18,7 @@
             </view>
             <view class='right-info'>
               <text>{{items.goodsName}}</text>
-              <text wx:if="{{items.stockName!=''}}">{{items.stockName}}</text>
+              <text class="stock-info" wx:if="{{items.stockName!=''}}">{{items.stockName}}</text>
               <view class='detail-down'>
                 <view class='pric'>
                   <text class="small-size">￥</text><text wx:if="{{items.stockId}}">{{items.stockPrice}}</text>

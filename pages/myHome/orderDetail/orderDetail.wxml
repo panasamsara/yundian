@@ -43,14 +43,7 @@
         <view class="user-info" id="userInfo">
           <!--配送方式-->
           <view class="send-type" wx:if="{{item.orderInfo.orderStatusVo==2 || item.orderInfo.orderStatusVo==3 || item.orderInfo.orderStatusVo==4}}">
-            <view class="express" wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType==2}}">
-              <view class="express-type">
-                <image src="../images/express.png"></image>
-                <text class="siz-three">快递公司：</text>
-              </view>
-              <text class="siz-four">快递单号：</text>
-            </view>
-            <view class="express" wx:elif="{{item.orderInfo.orderStatusVo ==3 }}"> 
+            <view class="express" wx:if="{{item.orderInfo.orderStatusVo ==3 }}">  <!--待收货-->
               <view class="express-type">
                 <image src="../images/express.png"></image>
                 <text class="siz-three">快递公司：{{item.orderInfo.extend1}}</text>
@@ -77,7 +70,7 @@
         </view>
       </view>  
       <!--订单编号-下单时间-->
-      <view class="order-box a" wx:if="{{(item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType == 2) || item.orderInfo.orderStatusVo==3}}" style="margin-top:150rpx">
+      <view class="order-box a" wx:if="{{ item.orderInfo.orderStatusVo==3}}" style="margin-top:150rpx">
         <view class="order-type siz-three">{{item.orderInfo.orderStatusStr}}</view>
         <view class="order-num siz-four">订单编号：{{item.orderInfo.orderNo}}</view>
         <view class="order-time siz-four">下单时间：{{item.orderInfo.createTime}}</view>
@@ -88,11 +81,18 @@
         <view class="order-time siz-four">下单时间：{{item.orderInfo.createTime}}</view>
       </view>
       <!--自提二维码 (等待取货)-->
-       <view class="ziti" wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType == 2}}"> 
-        <view class="number">
-          <text class="siz-four">序列号：{{item.orderInfo.serialNumber}}</text>
-          <text class="siz-four">请到此店兑换此码</text>
+      <view class='storeCode ziti' wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType == 2}}">
+        <view class="code-img">
+            <view class="img-box">
+              <image bindtap="previewImg" mode="scaleToFill" src="{{imagePath}}">
+              </image>
+            </view>
         </view>
+        <text class="siz-four">序列号：{{item.orderInfo.serialNumber}}</text>
+        <text class="siz-four">请到此店兑换此码</text>
+      </view>
+      <view class="canvas-box">
+        <canvas  hidden="{{canvasHidden}}" style="width: 686rpx;height: 686rpx;background:#f1f1f1;" canvas-id="mycanvas"/>
       </view>
       <!--商品-->
       <view class="detail">
@@ -110,7 +110,8 @@
               <text class="order-tit">{{items.goodsName}}</text>
               <text wx:if="{{items.stockName}}">{{items.stockName}}</text>
               <view class='detail-down'>
-                <text>￥{{items.goodsPrice}}</text>
+                <span class="small-size1 red">￥</span>
+                <text class="red">{{items.goodsPrice}}</text>
                 <text>x{{items.goodsNum}}</text>
               </view>
                <button wx:if="{{item.orderStatusVo==4}}" class='appraise-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="appraise" hover-class="other-button-hover" data-no="{{item.orderNo}}" data-shopid="{{item.bussinessId}}" data-goodid="{{items.goodsId}}"> 评价 </button> 
@@ -135,11 +136,26 @@
       <!--金额相关-->
       <view class="money-box">
         <view class="siz-four" >优惠
-          <text wx:if="{{item.coupon}}">￥{{item.coupon.couponType?'包邮':item.coupon.amount + '.00'}}</text>
-          <text wx:else>￥0.00</text>
+          <view class="rgt">
+          <span class="small-size2">￥</span>
+          <text wx:if="{{item.coupon}}">{{item.coupon.couponType?'包邮':item.coupon.amount + '.00'}}</text>
+          <text wx:else>0.00</text>
+          </view>
+          
         </view>
-        <view class="siz-four">运费<text>￥{{item.orderInfo.deliveryMoney}}</text></view>
-        <view><text class="siz-three">实付金额</text><text class="true-price">￥{{item.orderInfo.amount}}</text></view>
+        <view class="siz-four">运费
+          <view class="rgt">
+            <span class="small-size2">￥</span>
+            <text>{{item.orderInfo.deliveryMoney}}</text>
+          </view>
+       
+        </view>
+        <view><text class="siz-three">实付金额</text>
+          <view class="rgt shif">
+            <span class="small-size2 red">￥</span>
+            <text class="true-price">{{item.orderInfo.amount}}</text>
+          </view>
+        </view>
       </view>
     </scroll-view>  
     <view class="ctronl-btn">

@@ -54,3 +54,15 @@
   height: 100prx;
   border-radius: 100%;
 }
+.nose{
+ position:fixed;
+  width:100%;
+  bottom:0;
+  border-top:1rpx solid #ccc;
+  height:70rpx;
+  font-size:32rpx;
+  background:#fff;
+  color:#999;
+  text-align:center;
+  line-height:70rpx;
+}

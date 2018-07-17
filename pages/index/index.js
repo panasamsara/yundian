@@ -89,7 +89,6 @@ Page({
        }else{
          res.data.data.bgImageLong = '../images/bg1.jpg'
        }
-       
        wx.setStorageSync('shop', shop);
        app.util.setHistories(shop)
        this.setData({ shopInformation: res.data.data });

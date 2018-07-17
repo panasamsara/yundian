@@ -22,7 +22,7 @@
       <text>{{item.answers[0]?item.answers[0].content:'暂无回答'}}</text>
     </view>  
     <view class='check clearfix {{isShow2?"show":"hide"}}' bindtap='tosakDetail' data-questionId='{{item.id}}'>
-      <span>查看全部{{item.answers.length}}个回答</span>
+      <span>查看全部{{item.answerCount==null?0:item.answerCount}}个回答</span>
       <span>{{item.time}}</span>
     </view>
   </view>     

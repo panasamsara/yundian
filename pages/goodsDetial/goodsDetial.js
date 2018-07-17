@@ -97,16 +97,18 @@ Page({
           goodsType: resData.goodsType,//商品类别
           shopId: resData.shopId,//店铺id
           id: resData.id,//id
+          shopName: resData.shopName,//店铺名
           deliveryCalcContent: resData.deliveryCalcContent,//商品运费
           stockList: resData.stockList,//商品规格
-          batchPrice: app.util.formatMoney(resData.price,2),//商品价格
+          batchPrice: app.util.formatMoney(resData.price,2),//
+          price: resData.price,//商品价格
           stockBalance: resData.stockBalance,//库存
           payCount: resData.payCount,//销量
           picUrl: resData.pictureUrl,//商品图片地址
           imgUrls: [resData.pictureUrl, resData.pictureUrl, resData.pictureUrl]
         })
         //存储商品信息
-        wx.setStorageSync('goodsInfo', resData.goodsName)         
+        wx.setStorageSync('goodsInfo', resData)        
       } 
     });
     //获取商品评论
@@ -155,7 +157,6 @@ Page({
       pageSize: 2
     }).then((res) => {
       var data = res.data.data 
-      // console.log(data)
       this.setData({
         askAcount: res.data.total,
         askData: data
@@ -281,51 +282,14 @@ Page({
       url: '/pages/index/index'
     })
   },
-  //跳转到购物车
-  immeBuy(){
-    var orderbuy = [];
-    orderbuy.push({
-      'id':this.data.id,
-      'customerId': wx.getStorageSync('scSysUser').id,
-      'shopId': this.data.shopId,
-      'goodsId': this.data.goodsId,
-      'stockId': this.data.stockList[0] ? this.data.stockList[0].id:'',
-      'goodsName': this.data.goodsName,
-      'goodsPrice':this.data.batchPrice,
-      'goodsImageUrl':this.data.picUrl,
-      'stockName':this.data.goodsName,
-      'number':1,
-      'goodsType': this.data.goodsType,
-      'deliveryCalcContent': this.data.deliveryCalcContent == null ? 0 : this.data.deliveryCalcContent,
-    });
-    console.log(orderbuy)
-    wx.setStorageSync('buyCart', orderbuy);   
+  //跳转到立即购买
+  tobuy(){
     wx.navigateTo({
-      url: '/pages/orderBuy/orderBuy',
-   })
+      url: '/pages/buyNow/buyNow',
+    })
   },
-  //立即购买
+  //购物车
   addCar(){
-    // var orderbuy = [];//下单使用
-    // orderbuy.push({
-    //   'id': this.data.id,
-    //   'goodsPrice': this.data.batchPrice,
-    //   'goodsType': this.data.goodsType,
-    //   'goodsNum': 1,
-    //   'balance': '',//不知道是什么
-    //   'goodsIndex': '',
-    //   'remake': '',
-    //   'num': 1,
-    //   'goodsName': this.data.goodsName,
-    //   'actualPayment': this.data.batchPrice, //实付单价
-    //   'goodsPic': this.data.batchPrice,
-    //   'unitPrice': this.data.batchPrice,//单价
-    //   'goodsId': this.data.goodsId,
-    //   'customerId': wx.getStorageSync('scSysUser').id,
-    //   'stockId': this.data.stockList[0].id,
-    //   'shopId': this.data.shopId
-    // })
-    // wx.setStorageSync('buyCart', orderbuy);
     wx.switchTab({
       url: '/pages/proList/proList',
     })

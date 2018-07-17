@@ -90,6 +90,8 @@ page{
 .foods-item .content{
   position: relative;
   width: 20px;
+  margin-bottom:-5rpx;
+
 }
 .foods-item .price{
   font-size: 34rpx;
@@ -107,7 +109,7 @@ page{
 .cartcontrol-wrap{
   position: absolute;
   right: 0;
-  bottom: 20px;
+  bottom: 15px;
 }
 .cartcontrol{
   font-size: 0;
@@ -137,6 +139,8 @@ page{
   background-repeat:no-repeat;
   background-size: contain;
   background-position:center;
+  margin-bottom:-3rpx;
+
 }
 .inner{
   display: inline-block;

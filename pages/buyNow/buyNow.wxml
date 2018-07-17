@@ -5,8 +5,8 @@
 <view class='main'>
   <view class='top'>
     <image src='{{pictureUrl}}'></image>
-    <text class='price'>¥{{groupBuyingPrice}}</text>
-    <text class='count'>库存 {{stockBalance}}</text>
+    <text class='price'>¥{{stockPrice}}</text>
+    <text class='count'>库存 {{balance}}</text>
     <view class='size clearfix'>
       <block wx:for='{{stockData}}' wx:key='key'>
         <span class='{{num==item.id?"ac":""}}' bindtap='chose' data-id='{{item.id}}' data-dt='{{item}}'>{{item.stockName}}</span>      

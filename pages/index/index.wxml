@@ -13,7 +13,7 @@
     <view class="bg-mask"></view>
     <image src='{{shopInformation.bgImageLong}}' mode='scaleToFill' class='top-bg' wx:if='{{showImg}}'></image>
     <!-- <image class='up-icon' src='../../images/yundian_dpzy_shangla@2x.png'></image> -->
-    <image class='up-icon' src='../../images/up.gif'></image>
+    <image class='up-icon' src='../../images/new_shop_home_image.gif'></image>
     <!-- <view class='video-bg' wx:if='{{showVideo}}'>
       <video class='video-ctx' id="myVideo" src="{{shopInformation.shopInfo.shopHomeConfig.videoPathList[0].filePath}}" binderror="videoErrorCallback"></video>
     </view> -->
@@ -67,7 +67,12 @@
       <image src='./img/yuyue.png'></image>
     </view>
 
-    <view>
+    <view wx:if="{{shopInformation.goodsInfos.length<=0&&list.length<=0&&groupBuyList.length<=0&&hotCommoditiesList.hotCommoditiesList==undefined}}" class="activityBlank">
+      <view><image src='img/yundian_kby_meiyoudianpu.png'></image></view>
+      <text>暂时没有数据哦</text>
+    </view>
+    
+    <view wx:if="{{shopInformation.goodsInfos.length>0}}">
       <view class='main-top m-t-b-10'>
         <view class='left-line'></view>
         <view class='tips'>店铺活动</view>
@@ -97,8 +102,8 @@
           </block>
         </swiper>
       </view>
-    </view>
-    
+    </view>   
+    <!-- 智享秒杀 -->
     <view class='sec-kill-box' wx-if="{{list.length>=1}}">
       <view class='sec-kill-top'>
         <view class='sec-kill-title-img'>
@@ -124,6 +129,8 @@
 
       </view>
     </view>
+
+    <!-- 趣拼团 -->
     <view class='sec-kill-box' wx-if="{{groupBuyList.length>=1}}">
       <view class='sec-kill-top'>
         <view class='group-buy-title-img'>

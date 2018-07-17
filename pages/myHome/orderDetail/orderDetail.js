@@ -1,5 +1,5 @@
 //获取应用实例
-//var QR = require("../../../utils/qrcode.js");
+var QR = require("../../../utils/qrcode.js");
 const app = getApp();
 
 Page({
@@ -16,7 +16,9 @@ Page({
     orderNo:'',
     areaName:'',
     cityName:'',
-    provinceName:''
+    provinceName:'',
+    canvasHidden: false,
+    imagePath: ''
   },
   onLoad: function (options) {
     var user = wx.getStorageSync('scSysUser');
@@ -35,6 +37,7 @@ Page({
         var areaName = app.util.area.getAreaNameByCode(data.data.data[0].orderInfo.areaId);
         var cityName = app.util.area.getAreaNameByCode(data.data.data[0].orderInfo.cityId);
         var ProvinceName = app.util.area.getAreaNameByCode(data.data.data[0].orderInfo.provinceId);
+        console.log(data.data.data[0].orderInfo.serialNumber)
         this.setData({
           goods: data.data.data,
           phone: data.data.data[0].shopInfo.phoneService,
@@ -42,7 +45,8 @@ Page({
           orderStatusVo: data.data.data[0].orderInfo.orderStatusVo,
           areaName: areaName,
           cityName: cityName,
-          ProvinceName: ProvinceName
+          ProvinceName: ProvinceName,
+          storeUrl: 'life:' + data.data.data[0].orderInfo.serialNumber
         })
         if (data.data.data[0].orderInfo.orderStatusVo == 1) { //待付款
           
@@ -58,7 +62,10 @@ Page({
           icon: 'none'
         })
       }
-      
+      // 页面初始化 options为页面跳转所带来的参数
+      var size = this.setCanvasSize();//动态设置画布大小
+      var initUrl = this.data.storeUrl;
+      this.createQrCode(initUrl, "mycanvas", size.w, size.h);
     }).catch((err) => {
       wx.showToast({
         title: '失败……',
@@ -107,6 +114,54 @@ Page({
       })
     })
     
+  },//适配不同屏幕大小的canvas
+  setCanvasSize: function () {
+    var size = {};
+    try {
+      var res = wx.getSystemInfoSync();
+      var scale = 750 / 686;//不同屏幕下canvas的适配比例；设计稿是750宽
+      var width = res.windowWidth / scale;
+      var height = width;//canvas画布为正方形
+      size.w = width;
+      size.h = height;
+    } catch (e) {
+      // Do something when catch error
+      console.log("获取设备信息失败" + e);
+    }
+    return size;
+  },
+  createQrCode: function (url, canvasId, cavW, cavH) {
+    //调用插件中的draw方法，绘制二维码图片
+    QR.api.draw(url, canvasId, cavW, cavH);
+    setTimeout(() => { this.canvasToTempImage(); }, 500);
+
+  },
+  //获取临时缓存照片路径，存入data中
+  canvasToTempImage: function () {
+    var that = this;
+    wx.canvasToTempFilePath({
+      canvasId: 'mycanvas',
+      success: function (res) {
+        var tempFilePath = res.tempFilePath;
+        console.log(tempFilePath);
+        that.setData({
+          imagePath: tempFilePath,
+          canvasHidden:true
+        });
+      },
+      fail: function (res) {
+        console.log(res);
+      }
+    });
+  },
+  //点击图片进行预览，长按保存分享图片
+  previewImg: function (e) {
+    var img = this.data.imagePath;
+    console.log(img);
+    wx.previewImage({
+      current: img, // 当前显示图片的http链接
+      urls: [img] // 需要预览的图片http链接列表
+    })
   },
   calling: function () {
     //拨打电话
@@ -292,14 +347,15 @@ Page({
   shipments: function (e) {
     var orderNo = this.data.orderNo,
       userId = this.data.userid;//用户id
+    console.log(userId)
     //提醒发货
     app.util.reqAsync('shop/orderRemind', {
       orderNo: orderNo,
-      userId: userid
+      userId: userId
     }).then((res) => {
       if(res.data.code==1){
         wx.showToast({
-          title: '已提醒卖家发货',
+          title: '已提醒卖家发货,请勿重复提醒',
           icon: 'none'
         })
       }else{

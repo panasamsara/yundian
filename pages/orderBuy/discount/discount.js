@@ -30,6 +30,13 @@ Page({
       url: '../orderBuy?name=' + name + '&amountMin=' + amountMin + '&amount=' + amount + '&instruction=' + instruction + '&shopId=' + this.data.shopId + '&shopName=' +
       this.data.shopName + '&customerId=' + this.data.customerId + '&totalMoney=' + this.data.totalMoney + '&counid=' + id
     })
+  },
+  noSe:function(e){
+    //暂不使用
+    wx.navigateTo({
+      url: '../orderBuy?name=' + '' + '&amountMin=' + "" + '&amount=' + "" + '&instruction=' + "" + '&shopId=' + this.data.shopId + '&shopName=' +
+      this.data.shopName + '&customerId=' + this.data.customerId + '&totalMoney=' + this.data.totalMoney + '&counid=' + ""
+    })
   }
   
   

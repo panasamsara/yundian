@@ -33,10 +33,9 @@ page,.content{
   text-align: center;
 }
 .tab-item.active span{
-  padding: 0 0 10rpx 0; 
-  border-bottom:1.5rpx solid #fb452c;
+  padding: 0 0 12rpx 0; 
+  border-bottom:4rpx solid #fb452c;
   color:#fb452c;
-  font-family: PingFang-SC-Medium;
 }
 .detail{
   width: 100%;

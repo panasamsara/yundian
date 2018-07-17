@@ -1,6 +1,5 @@
 page,.content{
   height: 100%;
-  font-family: PingFang-SC-Regular;
   background: #f8f8f8;
   width: 100%;
   font-size: 28rpx;
@@ -14,13 +13,28 @@ page,.content{
   border-top:1px solid #e4e4e4;
   font-size: 30rpx;
   color:#333;
-  font-family: PingFang-SC-Medium;
   margin-bottom: 20rpx;
 }
+.stock-info{
+  display:-webkit-box;
+  margin-bottom:10rpx;
+  word-break:break-all;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.nums{
+  display:inline-block;
+  text-align:right;
+  height:60rpx;
+  line-height:60rpx;
+}
 .pric{
-  width: 100%;
+  width: 80%;
   height: 60rpx;
   color:#fb452c;
+  float: left;
 }
 .pric text:first-child{
   font-size: 30rpx !important;
@@ -89,7 +103,6 @@ page,.content{
   line-height: 120rpx;
   background: #fff;
   font-size: 30rpx;
-  font-family: PingFang-SC-Medium;
 }
 .room text{
   padding: 0 30rpx;
@@ -182,19 +195,18 @@ page,.content{
 .goodname{
    width:400rpx;
    display:-webkit-box;
-margin-bottom:10rpx;
-word-break:break-all;
-display:-webkit-box;
--webkit-line-clamp:2;
--webkit-box-orient:vertical;
-overflow:hidden;
-
+  margin-bottom:10rpx;
+  word-break:break-all;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
 }
 .right-info text:nth-child(2){
-  background: #f3f3f3;
   color:#989898;
-  padding:5rpx 10rpx;
+  padding:0 0;
   margin-bottom:10rpx;
+  font-size:28rpx;
 }
 .right-info .detail-down{
   margin-top:15rpx;
@@ -221,7 +233,6 @@ overflow:hidden;
   line-height: 100rpx;
   padding-left: 30rpx;
   font-size: 30rpx;
-  font-family: PingFang-SC-Medium;
 }
 /*加减*/
 .stepper{
@@ -286,7 +297,6 @@ overflow:hidden;
   background: #fff;
   z-index:33;
   background: #fff;
-  font-family: PingFang-SC-Medium;
 }
 .ctronl-btn .sun-price{
   display: inline-block;
@@ -335,7 +345,6 @@ overflow:hidden;
 }
 .modal-body .modal-title{
   font-size: 33rpx;
-  font-family: PingFang-SC-Medium;
   height: 100rpx;
   line-height: 100rpx;
   text-align: center;
@@ -373,7 +382,6 @@ overflow:hidden;
   line-height: 70rpx;
   color:#fff;
   font-size: 34rpx;
-  font-family: PingFang-SC-Medium;
   background: linear-gradient(to right, #fe4b2c, #fe6e2c);
 }
 /*下单成功*/
@@ -430,6 +438,5 @@ overflow:hidden;
   border-top:1px solid #e4e4e4;
   font-size:30rpx;
   color:#333;
-  font-family:PingFang-SC-Medium;
   margin-bottom:20rpx;
 }

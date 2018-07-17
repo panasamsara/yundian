@@ -106,18 +106,31 @@ Page({
     let chooseGoodArr = this.data.chooseGoodArr
 
     let goodStockMapArr = this.data.goodStockMapArr
-    if (stockId){
+
+    if (stockId != 'null' && stockId && stockId != undefined){
       for (let i = 0; i < goodStockMapArr.length; i++) {
         if (goodStockMapArr[i].goodsId == _id && goodStockMapArr[i].stockId == stockId) {
           goodStockMapArr[i].number += 1
         }
       }
     }else{
-      for (let i = 0; i < goodStockMapArr.length; i++) {
-        if (goodStockMapArr[i].goodsId == _id && goodStockMapArr[i].stockId == this.data.chosenStockId) {
-          goodStockMapArr[i].number += 1
+      if (this.data.goodMap[_id].stockList.length !=0 ){
+        console.log(7777)
+        for (let i = 0; i < goodStockMapArr.length; i++) {
+          if (goodStockMapArr[i].stockId == this.data.chosenStockId) {
+            goodStockMapArr[i].number += 1
+
+          }
+        }
+      }else{
+        console.log(8888)
+        for (let i = 0; i < goodStockMapArr.length; i++) {
+          if (goodStockMapArr[i].goodsId == _id ) {
+            goodStockMapArr[i].number += 1
+          }
         }
       }
+      
     }
 
     
@@ -135,9 +148,19 @@ Page({
     let chooseGoodArr = this.data.chooseGoodArr
 
     let goodStockMapArr = this.data.goodStockMapArr
-    for (let i = 0; i < goodStockMapArr.length; i++) {
-      if (goodStockMapArr[i].goodsId == _id && goodStockMapArr[i].stockId == stockId) {
-        goodStockMapArr[i].number -= 1
+    if (stockId != 'null' && stockId && stockId != undefined) {
+      console.log(7777)
+      for (let i = 0; i < goodStockMapArr.length; i++) {
+        if (goodStockMapArr[i].goodsId == _id && goodStockMapArr[i].stockId == stockId) {
+          goodStockMapArr[i].number -= 1
+        }
+      }
+    } else {
+      console.log(888888)
+      for (let i = 0; i < goodStockMapArr.length; i++) {
+        if (goodStockMapArr[i].goodsId == _id) {
+          goodStockMapArr[i].number -= 1
+        }
       }
     }
     this.mathTotal(goodStockMapArr)

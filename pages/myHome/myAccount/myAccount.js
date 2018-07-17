@@ -14,6 +14,7 @@ Page({
   },
   onLoad: function(options) {
     var shop = wx.getStorageSync('shop');
+    var user = wx.getStorageSync('scSysUser');
     this.setData({
       shop: shop
     })
@@ -27,7 +28,7 @@ Page({
     var shopImg = [];
     var shopId = [];
     app.util.reqAsync('member/getShopInfosByUserId', {
-      "userId": "573"
+      "userId": user.id
     }).then((res) => {
       console.log(res);
       res.data.data.forEach(function (item, index) {

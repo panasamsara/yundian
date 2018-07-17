@@ -13,6 +13,14 @@ page,.content{
   width: 100%;
   height: 256rpx;
 }
+
+.code-img{
+  text-align: center;
+}
+.code-img image{
+  width: 320rpx;
+  height: 320rpx;
+}
 .order-tit{
   width: 400rpx;
    -webkit-line-clamp:2;  
@@ -307,4 +315,24 @@ page,.content{
 }
 .ziti text:last-child{
   color:orange;
+}
+.small-size1{
+  font-size: 25rpx;
+  color:#fb452c;
+}
+.red{
+  color:#fb452c;
+}
+.rgt{
+  float: right;
+}
+.detail-down>.red{
+  background: #f8f8f8 !important;
+  color:#fb452c !important;
+}
+.small-size2{
+  font-size: 22rpx;
+}
+.shif{
+  font-size: 30rpx;
 }

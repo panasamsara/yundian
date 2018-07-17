@@ -29,7 +29,7 @@
                   </view>
                 </block> -->
                 <text class="cart-count">{{(shoppingCart[good.id]) ? shoppingCart[good.id]: ""}}</text>
-               <image src="./image/fenlei_tianjia@2x.png" bindtap="touchOnGoods" id="add_{{good.id}}" class="cart-add icon-add_circle"></image>
+               <image src="./image/yundian_sygouwuche@2x.png" bindtap="touchOnGoods" id="add_{{good.id}}" class="cart-add icon-add_circle"></image>
             </view>  
           </view>
         </view>        

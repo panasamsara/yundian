@@ -20,6 +20,7 @@ Page({
     };
     app.util.reqAsync('shop/getGoodsQuestions',parm).then((res)=>{
       var data = res.data.data
+      console.log(data)
       for (var i = 0; i < data.length; i++) {
         var key = 'time';
         var value = data[i].createTime.slice(0, 11)
@@ -33,8 +34,7 @@ Page({
       }
       this.setData({
         askAcount: res.data.total,
-        askData: data,
-        picImg: data[0].goodsPic
+        askData: data
       })
     })
   },
@@ -44,15 +44,17 @@ Page({
   onLoad: function (options) {
     var user = wx.getStorageSync('scSysUser')
     //获取商品信息
-    var goodsName = wx.getStorageSync('goodsInfo');
+    var goodInfo = wx.getStorageSync('goodsInfo');
     this.setData({
       goodsId: options.goodsId,
       shopId: options.shopId,
-      goodsName: goodsName,
-      userId: user.id
+      goodsName: goodInfo.goodsName,
+      userId: user.id,
+      picImg: goodInfo.pictureUrl 
     })
     var shop = wx.getStorageSync('shop');
-    this.getData();    
+    this.getData();  
+    console.log(goodInfo)  
   },
   //下拉刷新
   onPullDownRefresh: function () {

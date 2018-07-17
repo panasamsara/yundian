@@ -144,17 +144,10 @@ swiper-item image{
   margin-left: 20rpx;
 }
 .dingwei{
-   position: relative;
    padding:15rpx 30rpx 30rpx; 
 }
-.zw-pic image{
-  /* position: absolute;
-  top:0;
-  right:0;
-  bottom: 0;
-  left:0;
-  margin: auto; */
-  margin:0 auto;
+.zw-pic{
+  text-align: center;
 }
 .hide{
   display: none;
@@ -162,16 +155,16 @@ swiper-item image{
 .show{
   display: block;
 }
-.dingwei>text{
+.dingwei .tab>text{
   font-size: 30rpx;
   line-height: 60rpx;
+  float:left; 
 }
-.dingwei>image{
+.dingwei .tab>image{
   width:20rpx;
   height: 30rpx;
-  position: absolute;
-  right:30rpx;
-  top:30rpx;
+  float:right;
+  padding-top: 12rpx;
 }
 .user{
   border-bottom: 1rpx solid #e5e5e5;
@@ -241,25 +234,25 @@ swiper-item image{
   float:right;
 }
 .ask text,.answer text{
+  float:left;
   width:440rpx;
   line-height: 40rpx;
   font-size: 26rpx;
-  display: inline-block;
 }
 .ask{
   position: relative;
   margin: 20rpx 0 12rpx 0;
 }
 .ask .ask-icon,.answer .answer-icon{
-  display: inline-block;
+  float:left;
   width: 36rpx;
   height:32rpx;
   color:#fff;
   font-size: 24rpx;
   text-align: center;
   line-height: 32rpx;
-  margin-right:10rpx;
-  vertical-align: middle;
+  margin-right:10rpx; 
+  margin-top: 5rpx; 
 }
 .ask .ask-icon{
   background-color:#75e7c5;
@@ -289,7 +282,7 @@ swiper-item image{
   background-color:#e7e6e6;
 }
 .shop{
-  padding: 30rpx 30rpx 0;
+  padding: 30rpx 30rpx 50rpx;
 }
 .shop>image{
   width:100rpx;
@@ -350,11 +343,13 @@ button{
   text-align: center;
   text-decoration: none;
   font-size:30rpx;
-  border-radius: 0;
   height:100%;
   line-height: 100rpx;
   width:220rpx;
-  outline: none;
+  border-radius: 0;
+}
+button::after {
+    border-radius: 0;
 }
 .add{
   background-color: #ffc770;

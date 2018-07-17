@@ -990,6 +990,7 @@ Page({
               flagOrder: true,
               isPay: 2
             })
+            //要再次调接口（待接口）
             return false;
           }
           //发起支付

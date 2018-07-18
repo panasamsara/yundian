@@ -1,4 +1,4 @@
-//获取应用实例(确认下单就只剩下微信支付接口调试以及在店内扫码直接显示房间以及店铺优惠选择)
+//获取应用实例
 const app = getApp();
 Page({
   data: {
@@ -462,7 +462,12 @@ Page({
           return false;
         }
       } else if (this.data.name == "代金券") {
-        var countMoney = Number(newmoney) - Number(this.data.amounts);
+        if (Number(this.data.totalMoney) - Number(this.data.amounts)>-1){
+          var countMoney = Number(newmoney) - Number(this.data.amounts);
+        }else{
+          var countMoney = Number(newmoney) - Number(this.data.totalMoney);
+        }
+        
         if (countMoney > 0) {
           this.setData({
             oldTotal: countMoney
@@ -759,6 +764,7 @@ Page({
     var userName = this.data.username;//用户名
     var bussinessType = 1;
     var payStatus = this.data.isPay;//支付状态（未支付0，成功1，失败2）
+    console.log(this.data.goods)
     for (var i in this.data.goods) {
       var goos = this.data.goods[i];
       if (goos.stockId){
@@ -832,8 +838,16 @@ Page({
     var merchantId = this.data.merchantId;//商户主键
     var userName = this.data.username;//用户名
     var bussinessType = 1;
-    var deliveryMoney = 0;//快递金额
-    var payStatus = this.data.isPay;//支付状态（未支付0，成功1，失败2）
+    var deliveryMoney = this.data.deliveyMoney;//快递金额
+    console.log("快递金额" + deliveryMoney)
+    if (this.data.totalMoney == "0.00"){//总价为0专用
+    console.log("总价为0")
+      var payStatus =  1;
+    }else{
+      console.log('总价不为0')
+      var payStatus = this.data.isPay;//支付状态（未支付0，成功1，失败2）
+    }
+    
    
       for (var i in this.data.goods) {
 
@@ -899,36 +913,44 @@ Page({
          showLoading: true
        })
       if(res.data.code == 1) {
-        if (type == 1) { //点击确认下单
-          //是否微信支付弹窗
-          var self = this;
-          var dt = res.data.data;
-          wx.showModal({
-            title: '支付方式',
-            content: '是否微信支付？',
-            success: function (res) {
-              if (res.confirm) {
-                //用户点击确定（调微信支付接口）
-                self.setData({
-                  showLoading: false
-                })
-                self.bindTestCreateOrder(dt);
-
-              } else if (res.cancel) {
-                //用户点击取消
-                wx.setStorageSync('isPay', 0);
-                self.setData({
-                  isPay:0
-                })
-                
-                wx.switchTab({
-                  url: '../shoppingCart/shoppingCart'
-                });
-
-              }
-            }
+        if (this.data.totalMoney=="0.00"){  //金额为0直接成功下单绕过支付
+          self.setData({
+            flagOrder: true,
+            isPay: 1
           })
+        }else{
+          if (type == 1) { //点击确认下单
+            //微信支付弹窗
+            var self = this;
+            var dt = res.data.data;
+            wx.showModal({
+              title: '支付方式',
+              content: '是否微信支付？',
+              success: function (res) {
+                if (res.confirm) {
+                  //用户点击确定（调微信支付接口）
+                  self.setData({
+                    showLoading: false
+                  })
+                  self.bindTestCreateOrder(dt);
+
+                } else if (res.cancel) {
+                  //用户点击取消
+                  wx.setStorageSync('isPay', 0);
+                  self.setData({
+                    isPay: 0
+                  })
+
+                  wx.switchTab({
+                    url: '../shoppingCart/shoppingCart'
+                  });
+
+                }
+              }
+            })
+          }
         }
+        
       }else{
         wx.showToast({
           title: res.data.msg,
@@ -977,21 +999,11 @@ Page({
             nonceStr = wxResult.nonceStr;
             packages = 'prepay_id=' + wxResult.prepayId;
             paySign = res.data.data.paySign;
-            console.log(1)
           } else if(prepayInfo){
-            console.log(2)
             timeStamp = prepayInfo.timestamp;
             nonceStr = prepayInfo.nonceStr;
             packages = prepayInfo.packages;
             paySign = prepayInfo.paySign;
-          } else if (self.data.totalMoney=='0.00'){
-            console.log(self.data.totalMoney)
-            self.setData({
-              flagOrder: true,
-              isPay: 2
-            })
-            //要再次调接口（待接口）
-            return false;
           }
           //发起支付
           wx.requestPayment({
@@ -1003,7 +1015,7 @@ Page({
             'success': function (res) {
               self.setData({
                 flagOrder: true,
-                isPay: 2
+                isPay: 1
               })
              },
             'fail': function (res) {
@@ -1012,6 +1024,9 @@ Page({
                 wx.showToast({
                   title: '支付失败',
                   icon: 'none'
+                })
+                self.setData({
+                  isPay: 2
                 })
                 setTimeout(function(){
                   wx.switchTab({

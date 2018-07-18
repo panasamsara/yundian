@@ -7,8 +7,8 @@
       </view>
   </block>
   <block wx:if="{{address.length>0}}">
-     <radio-group bindchange="radioChange">
-      <view class='list' wx:for="{{address}}" wx:key="index">
+     <radio-group bindchange="radioChange" class="warplist">
+      <view class='list border-bottom' wx:for="{{address}}" wx:key="index">
         <view class='userInfo'>
           <text class='ml'>{{item.name}}</text>
           <text>{{item.phone}}</text>

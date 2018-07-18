@@ -41,12 +41,18 @@ Page({
      var self = this;
    },
    onLoad: function (e) {
+     console.log(e);
      // 【扫码进入】，获取店铺ID，存入本地，请求店铺数据
      var isScanCode = e.scancode_time;
      if (isScanCode) {
+       console.log(1111);
         var path = encodeURI(e.q);
+        console.log(path);
         var shopId = path.match(/\d+$/g)[0];
         wx.setStorageSync('shop', { id: shopId});
+     }
+     if (e.shopId){
+       wx.setStorageSync('shop', { id: e.shopId });
      }
     // 若无店铺及店铺ID，则跳转到扫码界面
      if (!util.hasShop()) return;

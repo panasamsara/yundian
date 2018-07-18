@@ -25,7 +25,11 @@
       <span>查看全部{{item.answerCount==null?0:item.answerCount}}个回答</span>
       <span>{{item.time}}</span>
     </view>
-  </view>     
+  </view>  
+  <view class='zw-pic {{isShow3?"show":"hide"}}'>
+    <image src='../../images/ask.png'></image>
+    <text>还没有问题,快去提问吧~</text>
+  </view>   
 </view>
 <view class='temp'></view>
 <view class='bottom'>

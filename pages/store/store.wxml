@@ -201,7 +201,7 @@
                 <text class='detailName'>{{data.circleFansTeam.circleName}}</text>
                 <view class='sizeBox'>
                   <image src='images/renshu.png' class='sizePic'></image>
-                  <text class='size'>{{data.circleFansTeam.isJoin}}人</text>
+                  <text class='size'>{{data.circleFansTeam.personCount}}人</text>
                 </view>
               </view>
               <image src='images/sanjiao.png' class='triangle'></image>
@@ -211,7 +211,7 @@
                 <image src='{{item.logo}}'></image>
                 <view class='infoBox'>
                   <text class='teamName'>{{item.detailName}}</text>
-                  <text class='total'>{{item.createPeople}}人</text>
+                  <text class='total'>{{item.personCount}}</text>
                 </view> 
               </view>
             </scroll-view>

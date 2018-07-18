@@ -14,18 +14,18 @@
   </view>
   <view class='list info'>
     <view class='timeBox'>
-      <text>{{data.startTime}}</text>
-      <text>{{data.endTime}}</text>
+      <text>{{data.bespokeBeginTime}}</text>
+      <text>{{data.bespokeEndTime}}</text>
     </view>
-    <text>{{data.num}}|{{data.deviceText}}</text>
+    <text>{{data.receptionNum}}|{{data.facilityName}}</text>
   </view>
   <view class='list service'>
-    <text>{{data.serviceNameText}}</text>
-    <text>服务人员:{{data.serviceText}}</text>
+    <text>{{data.serviceName}}</text>
+    <text>服务人员:{{data.waiter}}</text>
   </view>
   <view class='list client'>
-    <text>{{data.name}}</text>
-    <text>{{data.phone}}</text>
+    <text>{{data.customer}}</text>
+    <text>{{data.mobile}}</text>
   </view>
   <button type='primary' id='submit' bindtap='submit'>确认</button>
 </view>

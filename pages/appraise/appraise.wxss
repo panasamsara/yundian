@@ -1,4 +1,7 @@
 /* pages/appraise/appraise.wxss */
+.page{
+  position: relative;
+}
 .clearfix::after{
   content: '.';
   display: block;
@@ -31,13 +34,27 @@
 .noactive{
   color:#000;
 }
-.zw-pic image{
+.zw-pic{
+  width: 340rpx;
+  height: 218rpx;
   position: absolute;
   top:0;
   right:0;
   bottom: 0;
   left:0;
   margin: auto;
+  text-align: center;
+}
+.zw-pic image{
+
+  width: 340rpx;
+  height: 218rpx;
+}
+.zw-pic>text{
+  line-height: 60rpx;
+  display: block;
+  font-size: 30rpx;
+  color: #aaa;
 }
 .hide{
   display: none;

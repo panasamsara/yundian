@@ -14,10 +14,10 @@ page{
 }
 /* 设置swiper属性 */
 swiper{
-  height:310rpx;
+  height:644rpx;
 }
 swiper-item image{
-  width:100%;
+  width:750rpx;
   height: 100%;
 }
 /* 倒计时区 */
@@ -60,18 +60,23 @@ swiper-item image{
   width: 100%;
 }
 .detail .title{
-  font-size: 30rpx;
+  padding-top: 15rpx;
+  font-size: 34rpx;
   color:black;
   text-align: justify;
   word-break:break-all;
 }
 .detail .price{
+  padding-top: 15rpx;
   color:red;
-  font-size: 40rpx;
+  font-size: 44rpx;
+  font-weight: bold;
 }
 .detail span{
   font-size: 30rpx;
-  color:#939393;
+  color:#999;
+  display: inline-block;
+  padding-top: 15rpx;
 }
 .detail span:first-child{
   margin-right: 120rpx;
@@ -148,6 +153,17 @@ swiper-item image{
 }
 .zw-pic{
   text-align: center;
+}
+.zw-pic>image{
+  padding-top:40rpx;
+  width:340rpx;
+  height: 218rpx;
+}
+.zw-pic>text{
+  line-height: 60rpx;
+  display: block;
+  font-size: 30rpx;
+  color: #aaa;
 }
 .hide{
   display: none;
@@ -245,20 +261,11 @@ swiper-item image{
 }
 .ask .ask-icon,.answer .answer-icon{
   float:left;
+}
+.ask .ask-icon>image,.answer .answer-icon>image{
   width: 36rpx;
-  height:32rpx;
-  color:#fff;
-  font-size: 24rpx;
-  text-align: center;
-  line-height: 32rpx;
-  margin-right:10rpx; 
-  margin-top: 5rpx; 
-}
-.ask .ask-icon{
-  background-color:#75e7c5;
-}
-.answer .answer-icon{
-  background-color:#fe7879;
+  height: 38rpx;
+  margin-right: 10rpx;
 }
 .ask span{
   position: absolute;
@@ -279,10 +286,10 @@ swiper-item image{
 }
 .separate{
   height:20rpx;
-  background-color:#e7e6e6;
+  background-color:#f8f8f8;
 }
 .shop{
-  padding: 30rpx 30rpx 50rpx;
+  padding: 30rpx 30rpx 0;
 }
 .shop>image{
   width:100rpx;
@@ -308,22 +315,22 @@ swiper-item image{
 }
 .shop .goShop{
   float: right;
-  width:106rpx;
-  height: 48rpx;
-  font-size: 30rpx;
-  color:#fe4531;
-  border:2rpx solid #fe4531;
-  text-align: center;
-  line-height: 48rpx;
-  border-radius: 5rpx;
-  margin-top: 22rpx;
+}
+.shop .goShop>image{
+  width:110rpx;
+  height: 52rpx;
+  margin-top:13rpx; 
+}
+.mb{
+  margin-bottom: 100rpx;
 }
 .tips>text{
   padding:0 30rpx;
   font-size: 30rpx;
   color:#565656;
   display: block;
-  line-height: 87rpx;
+  line-height: 45rpx;
+  word-break:break-all;
 }
 .detail-nav{
   flex-direction: row;
@@ -345,18 +352,18 @@ button{
   font-size:30rpx;
   height:100%;
   line-height: 100rpx;
-  width:220rpx;
+  width:100%;
   border-radius: 0;
 }
 button::after {
     border-radius: 0;
 }
 .add{
-  background-color: #ffc770;
+  background-color: #fb452c;
 }
-.buy{
-  background-color:#ff894c;
-}
+/* .buy{
+  background-color:#fe732d;
+} */
 
 .chat-view{
   width: 100%;

@@ -25,7 +25,6 @@ Page({
     };
     app.util.reqAsync('shop/commentList',parm).then((res)=>{
       var data = res.data.data;
-      console.log(data)
       for (var i = 0; i < data.length; i++) {
         var key = 'creatTime';
         var value = data[i].commentDate.slice(0, 11)
@@ -83,12 +82,17 @@ Page({
         pageNo: this.data.pageNo,
         pageSize: 20        
       }).then((res)=>{
-        console.log(res)
-        var data=res.data.data
-        this.setData({
-          userData:data,
-          hideView:true
-        })
+        var data=res.data.data;
+        if(data.length==0){
+          this.setData({
+            hideView:false
+          })
+        }else{
+          this.setData({
+            userData: data,
+            hideView: true
+          })
+        }
       })
     }else{
       this.getData(e.currentTarget.dataset.type);
@@ -107,7 +111,6 @@ Page({
     // console.log(this.data.pageNo)
     // var num=this.data.num
     // this.getData(num)
-    console.log(444)
   }
 
 })

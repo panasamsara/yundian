@@ -1,7 +1,7 @@
 <!--pages/appointment/appointment.wxml-->
 <view class='container appointment'>
    <view class="list" id='date'>
-    <view class="listLabel">时间</view>
+    <view class="listLabel">时间<text class='req'> (必填) </text></view>
     <view class='picker'>
       <view class='detail'>
         <text id='startTime' bindtap='start'>{{startTime}}</text> 至 <text id='endTime' bindtap='end'>{{endTime}}</text>

@@ -4,10 +4,7 @@ Page({
   data:{
     shopInformation: {},//商铺信息
     indicatorDots:true, //是否显示面板指示点
-    autoplay:true,     //是否自动切换
-    interval:3000,     //自动切换时间间隔3s
-    duration:1000,
-    imgUrls:[], 
+    // imgUrls:[], 
     hideView1: true,
     hideView2:true,
     num: 0,
@@ -29,13 +26,14 @@ Page({
     flagSpellList:''
 
   },
-  previewImage:function(e){
-    var current=e.target.dataset.src;
-    wx.previewImage({
-      current:current,//当前显示图片的http链接
-      urls: this.data.imgUrls //需要预览的图片http链接列表
-    })
-  },
+  // previewImage:function(e){
+  //   console.log(e)
+  //   var current=e.target.dataset.src;
+  //   wx.previewImage({
+  //     current:current,//当前显示图片的http链接
+  //     urls: this.data.imgUrls.bigFilePath //需要预览的图片http链接列表
+  //   })
+  // },
   onLoad: function(options){
      if (options.groupBuyingId && options.cUser && options.status){
        this.setData({
@@ -105,8 +103,9 @@ Page({
           stockBalance: resData.stockBalance,//库存
           payCount: resData.payCount,//销量
           picUrl: resData.pictureUrl,//商品图片地址
-          imgUrls: [resData.pictureUrl, resData.pictureUrl, resData.pictureUrl]
+          imgUrls: resData.imageList
         })
+        console.log(this.data.imgUrls)
         //存储商品信息
         wx.setStorageSync('goodsInfo', resData)        
       } 

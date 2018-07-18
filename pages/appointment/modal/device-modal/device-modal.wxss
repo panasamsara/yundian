@@ -36,16 +36,18 @@
 }
 
 .modal .chose{
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  text-align: center;
   width: 200rpx;
   height: 75rpx;
+  line-height: 73rpx;
   font-size: 32rpx;
   border: solid 1rpx #999999;
   border-radius: 10rpx;
   margin: 0 27.5rpx 30rpx 0; 
   box-sizing: border-box;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden; 
 }
 
 .modal .chose:nth-child(3n){

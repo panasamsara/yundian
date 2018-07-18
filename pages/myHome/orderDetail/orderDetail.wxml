@@ -91,7 +91,7 @@
         <text class="siz-four">序列号：{{item.orderInfo.serialNumber}}</text>
         <text class="siz-four">请到此店兑换此码</text>
       </view>
-      <view class="canvas-box">
+      <view class="canvas-box"  wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType == 2}}">
         <canvas  hidden="{{canvasHidden}}" style="width: 686rpx;height: 686rpx;background:#f1f1f1;" canvas-id="mycanvas"/>
       </view>
       <!--商品-->

@@ -1,6 +1,7 @@
 <!--pages/buyNow/buyNow.wxml-->
 <view class='bgpic'>
   <image src='{{pictureUrl}}'></image>
+  <view class='shade'></view>
 </view>
 <view class='main'>
   <view class='top'>
@@ -15,9 +16,9 @@
   <view class='buyCount clearfix'>
     <view class='left'>购买数量</view>
     <view class='right clearfix'>
-      <span bindtap="minus">-</span>
-      <span>{{number}}</span>
-      <span bindtap='add'>+</span>
+      <span bindtap="minus" class='light bet'>-</span>
+      <span class='dark middle'>{{number}}</span>
+      <span bindtap='add' class='dark bet'>+</span>
     </view>
   </view>    
   </view>

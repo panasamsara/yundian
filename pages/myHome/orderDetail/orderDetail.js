@@ -46,16 +46,16 @@ Page({
           areaName: areaName,
           cityName: cityName,
           ProvinceName: ProvinceName,
-          storeUrl: 'life:' + data.data.data[0].orderInfo.serialNumber
+          storeUrl: data.data.data[0].orderInfo.serialNumber
         })
         if (data.data.data[0].orderInfo.orderStatusVo == 1) { //待付款
           
             this.countTime();
         
         }
-        this.setData({
-          no: this.data.orderNo
-        })
+        // this.setData({
+        //   no: this.data.orderNo
+        // })
       } else {
         wx.showToast({
           title: data.data.msg,
@@ -321,7 +321,7 @@ Page({
   take: function (e) {
     //确认收货
     var orderNo = this.data.orderNo,
-      customerId = e.currentTarget.dataset.customerid;//"fromBarCode":1 //是否扫码确认收货。可不填 ，不填则不是扫码确认收货
+      customerId = this.data.userid;//"fromBarCode":1 //是否扫码确认收货。可不填 ，不填则不是扫码确认收货
     app.util.reqAsync('shop/confirmRecv', {
       orderNo: orderNo,
       customerId: customerId

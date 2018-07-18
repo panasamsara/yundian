@@ -79,7 +79,7 @@
         <view class='left-line'></view>
       </view>
       <view class="activity-swiper">
-        <swiper indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
+        <swiper class='activity-swiper-box' indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
           <block wx:for="{{shopInformation.goodsInfos}}" wx:key="index">
             <swiper-item>
               <view class="swiper-item">
@@ -88,11 +88,11 @@
                 </view>
 
                 <view class='activity-desc-box'>
-                  <view>
+                  <view class='activity-desc-container'>
                     <view class='activity-name font-size-24'>{{item.goodsName}}</view>
                     <view class='activity-detail font-size-24'>{{item.descTitle}}</view>
                   </view>
-                  <view>
+                  <view class='activity-desc-container'>
                     <view class='font-size-24 text-align-right'>活动时间</view>
                     <view class='font-size-24'>{{item.startTime}}</view>
                   </view>
@@ -118,7 +118,7 @@
         <view class='sec-kill-content' wx:for="{{list}}" wx:key="index">
           <image class='sec-kill-img' src='{{item.goodsPic}}'></image>
           <view class='sec-kill-detail'>
-            <view class='now-price'>￥<text class='now-price-num-sec'>{{item.minPrice}}</text> </view>
+            <view class='now-price'> <text class='miaosha-yangjiao'>￥</text><text class='now-price-num-sec'>{{item.minPrice}}</text> </view>
             <view class='old-price'>￥{{item.minOriginalPrice}}</view>
             <view class='end-word'>距结束</view>
             <view class='end-time'>
@@ -145,8 +145,8 @@
         <view class='sec-kill-content' wx:for="{{groupBuyList}}" wx:key="index">
           <image class='sec-kill-img' src='{{item.pictureUrl}}'></image>
           <view class='sec-kill-detail'>
-            <view class='now-price'>￥<text class='now-price-num'>{{item.discountPrice}}</text> </view>
-            <view class='old-price-group'>￥{{item.originalPrice}}</view>
+            <view class='now-price'> <text class='pintuan-yangjiao'>￥</text><text class='now-price-num'>{{item.discountPrice}}</text> </view>
+            <view class='old-price'>￥{{item.originalPrice}}</view>
              <view class='pingdan'>已拼<text>{{item.num}}</text>单</view> 
             <view class='ping-group'><text class='ping-group-num'>{{item.population}}</text>人团</view>
           </view>
@@ -161,18 +161,22 @@
         <view class='tips'>{{hotCommoditiesList.goodsTitle}}</view>
         <view class='left-line'></view>
       </view>
-      <view class='item' wx:for="{{hotCommoditiesList.hotCommoditiesList}}" wx:key='key'>
-        <view class='item-img'>
-          <image src='{{item.goodsLogo}}' mode='aspectFit' bindtap="goToDetail" data-goodsid='{{item.goodsId}}'></image>
-          <text class='item-text'>{{item.goodsName}}</text>
-          <view class='item-bot'>
-            <span class='price'>￥<text class='priceAmount'>{{item.price}}</text></span>
-            <view class='putInCart'>
-              <!-- <image class='putInCart-img' src='../../images/yundian_dpzy_gouwuchec@2x.png'></image> -->
+      <view class='item-box'>
+        <view class='item' wx:for="{{hotCommoditiesList.hotCommoditiesList}}" wx:key='key'>
+          <view class='item-img'>
+            <image src='{{item.goodsLogo}}' mode='aspectFit' bindtap="goToDetail" data-goodsid='{{item.goodsId}}'></image>
+            <text class='item-text'>{{item.goodsName}}</text>
+            <view class='item-bot'>
+              <span class='price'>￥<text class='priceAmount'>{{item.price}}</text></span>
+              <view class='putInCart'>
+                <!-- <image class='putInCart-img' src='../../images/yundian_dpzy_gouwuchec@2x.png'></image> -->
+              </view>
             </view>
           </view>
         </view>
       </view>
+      
+
     </view>
   </view>
   <!-- </block>  -->

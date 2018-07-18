@@ -184,17 +184,21 @@ const appLogin = () => {
       reqAsync('payBoot/wx/miniapp/login', {
         code: res.code
       }).then((res) => {
+        console.log(res)
         // 失败则跳到注册页
         if (res.data.code != 1) {
           loginFailed()
           wx.navigateTo({ url: '/pages/reg/reg' })
           return
         }
+        // 未注册用户跳转到注册页面
+        if (res.data.data.scSysUser == null) {
+          wx.navigateTo({ url: '/pages/reg/reg' });
+        }
         // 成功则设置本地数据
         wx.setStorageSync('loginToken', res.data.data.loginToken);
         wx.setStorageSync('scSysUser', res.data.data.scSysUser);
-        // 未注册用户跳转到注册页面
-        if (!isAppUser()) wx.navigateTo({ url: '/pages/reg/reg' });
+        // if (!isAppUser()) wx.navigateTo({ url: '/pages/reg/reg' });
       })
     },
     fail: loginFailed

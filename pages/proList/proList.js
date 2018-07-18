@@ -54,8 +54,7 @@ Page({
     var shop = wx.getStorageSync('shop')
     var user = wx.getStorageSync('scSysUser');
     console.log(user)
-    //获取店铺类别列表
-    this.getCategoryList()
+    
 
     let systemInfo = wx.getStorageSync('systemInfo');
     let mechine = options;//wx.getStorageSync('mechine');
@@ -72,11 +71,19 @@ Page({
     });
     // console.log(mechine)
 
-    this.shopCartList(user.id)
   },
   onShow: function(){
-    // var user = wx.getStorageSync('scSysUser');
-    // this.shopCartList(user.id)
+    //获取店铺类别列表
+    this.getCategoryList()
+  },
+  onHide: function () {
+    this.setData({
+      goodStockMapArr: [],
+      totalNum: 0,
+      totalPay: 0,
+      chooseGoodArr: [],
+      shoppingCart: {}
+    });
   },
 
   //左侧列表点击事件
@@ -104,6 +111,14 @@ Page({
     let shoppingCart = this.data.shoppingCart
     let goods_number = 1
     let chooseGoodArr = this.data.chooseGoodArr
+
+    if (this.data.goodMap[_id].stockBalance == 0){
+      wx.showToast({
+        title: '库存不足',
+        icon: 'none'
+      })
+      return false
+    }
 
     let goodStockMapArr = this.data.goodStockMapArr
 
@@ -135,6 +150,10 @@ Page({
 
     
     this.mathTotal(goodStockMapArr)
+    // 添加成功后，清除之前选中的规格
+    this.setData({
+      chosenStockId: null
+    })
 
   },
   //移除商品的事件
@@ -163,6 +182,7 @@ Page({
         }
       }
     }
+
     this.mathTotal(goodStockMapArr)
 
   },
@@ -191,6 +211,7 @@ Page({
     this.linePos = app.bezier([this.busPos, topPoint, this.finger], 30);
 
     let _id = e.target.id.split('_')[1];
+
     if (this.data.goodMap[_id].stockList.length != 0){
       this.setData({
         showStock: true,
@@ -341,7 +362,6 @@ Page({
     }).then((res) => {
       console.log("所有商品")
       console.log(res.data.data)
-      let goodStockMapArr = []
       
       if (res.data.data) {
         _that.setData({
@@ -351,6 +371,8 @@ Page({
         //首次进入 未传类别ID，将全部商品赋值给goodMap
         if (!categoryid && typeof categoryid != "undefined" && categoryid != 0){
           let goodMap= []
+          let goodStockMapArr = [] //不同规格商品的数组（结构同购物车商品类似）
+
           for (let i = 0; i < res.data.data.length; i++){
             let goods = res.data.data
             goodMap[goods[i].id] = goods[i];
@@ -393,6 +415,48 @@ Page({
           })
           var user = wx.getStorageSync('scSysUser');
           this.shopCartList(user.id)
+        }
+
+        let goodMap = this.data.goodMap
+        let goodStockMapArr = this.data.goodStockMapArr
+
+        if (searchType == 3) {    //如果选中套盒，将商品加入goodMap、goodStockMapArr（所有商品获取不到套盒 后端杜海sql改不了）
+          for (let i = 0; i < res.data.data.length; i++) {
+            let goods = res.data.data
+            goodMap[goods[i].id] = goods[i];
+            if (goods[i].stockList.length != 0) {
+              for (let j = 0; j < goods[i].stockList.length; j++) {
+                let goodStockMap = {}
+                goodStockMap.goodsName = goods[i].goodsName
+                goodStockMap.goodsId = goods[i].id
+                goodStockMap.stockId = goods[i].stockList[j].id
+                goodStockMap.number = 0
+                goodStockMap.goodsPrice = goods[i].price
+                goodStockMap.stockPrice = goods[i].stockList[j].stockPrice
+                goodStockMap.stockPrice = goods[i].stockList[j].stockPrice
+
+                goodStockMapArr.push(goodStockMap)
+              }
+            } else {
+              let goodStockMap = {}
+              goodStockMap.goodsName = goods[i].goodsName
+              goodStockMap.goodsId = goods[i].id
+              goodStockMap.stockId = null
+              goodStockMap.number = 0
+              goodStockMap.goodsPrice = goods[i].price
+              goodStockMap.stockPrice = null
+              goodStockMap.stockBalance = goods[i].stockBalance
+
+              goodStockMapArr.push(goodStockMap)
+            }
+
+          }
+          _that.setData({
+            goodMap: goodMap,
+            hasGoodMap: true,
+            goodStockMapArr: goodStockMapArr
+          })
+
         }
 
       } 
@@ -560,7 +624,7 @@ Page({
     
     let totalNum = 0
     let totalPay = 0
-    let shoppingCart = JSON.parse(JSON.stringify(this.data.shoppingCart));
+    let shoppingCart = {};
     let chooseGoodArr = []
     for (let x = 0; x < goodStockMapArr.length; x++){
       if (goodStockMapArr[x].number > 0){
@@ -585,8 +649,9 @@ Page({
         }
       }
     }
+
     // 计算一个 商品（包含不同规格）的总数量
-    var goodsObj = JSON.parse(JSON.stringify(this.data.shoppingCart));
+    var goodsObj = {} //初始化对象，键是商品id，值是不同规格商品的数组
     for (let i = 0; i < uniqGoodsIdArrnew.length; i++) {
       goodsObj[uniqGoodsIdArrnew[i]] = []
       for (let j = 0; j < chooseGoodArr.length; j++) {
@@ -595,6 +660,7 @@ Page({
         }
       }
     }
+
     for (let i = 0; i < uniqGoodsIdArrnew.length; i++) {
       let goodid = uniqGoodsIdArrnew[i]
       shoppingCart[goodid] = 0
@@ -606,7 +672,7 @@ Page({
     this.setData({
       goodStockMapArr: goodStockMapArr,
       totalNum: totalNum,
-      totalPay: totalPay,
+      totalPay: util.formatMoney(totalPay, 2),
       chooseGoodArr: chooseGoodArr,
       shoppingCart: shoppingCart
     })

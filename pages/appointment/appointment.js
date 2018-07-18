@@ -101,7 +101,6 @@ Page({
         })
     //右边营业时间数组
     //营业时间是否跨天
-    console.log(this.data.data.businessStartTime, this.data.data.businessEndTime)
     if (date1.setHours(em, es) - date1.setHours(sm, ss)>0){ //不跨天
       for (let i = date1.setHours(sm, ss); i <= (date1.setHours(em, es)); i += 1800000) {
         timeArray.push(app.util.formatTimeArray(new Date(i)))
@@ -250,17 +249,36 @@ Page({
   },
   submit:function(){
     let endTime=this.data.endTime,
-        num=this.data.num,
-        facilityId = this.data.facilityId,
-        waiterId = this.data.waiterId,
-        serviceId = this.data.serviceId
-        if (endTime == undefined ||endTime == '结束时间'|| num == undefined || serviceId ==undefined){
+        num=this.data.num||'',
+        facilityId = this.data.facilityId||'',
+        waiterId = this.data.waiterId||'',
+        serviceId = this.data.serviceId||''
+        if (endTime == undefined ||endTime == '结束时间'){
           wx.showToast({
             title: '请完善预约信息',
             icon:'none'
           })
           return
         }
+        let pageData = {
+          summary: this.data.summary || '',
+          facilityName: this.data.deviceText,
+          customer: this.data.name,
+          bespokeBeginTime: this.data.startTime,
+          bespokeEndTime: this.data.endTime,
+          facilityId: this.data.facilityId,
+          receptionNum: this.data.num,
+          serviceName: this.data.serviceNameText,
+          customerId: wx.getStorageSync('scSysUser').id,
+          serviceId: this.data.serviceId,
+          shopName: wx.getStorageSync('shop').shopName,
+          shopId: wx.getStorageSync('shop').id,
+          merchantId: wx.getStorageSync('shop').merchantId,
+          waiter: this.data.serviceText,
+          mobile: this.data.phone,
+          waiterId: this.data.waiterId
+        }
+        wx.setStorageSync('pageData', pageData)
         wx.navigateTo({
           url: 'success'
         })
@@ -301,14 +319,6 @@ Page({
         })
         return
       } 
-      // else if (nowDate.setHours(time.split(':')[0], time.split(':')[1])-nowDate.setHours(sm,ss)<0){
-      //   wx.showToast({
-      //     title: '预约时间不能在营业时间之外',
-      //     icon: 'none'
-      //   })
-      //   return
-      // }
-      // if()
       this.setData({
         endTime: date + ' ' + time
       })

@@ -9,10 +9,20 @@ page{
   display: block;
   clear: both;
 }
-
+.bgpic{
+  position: relative;
+}
 .bgpic>image{
   width:100%;
   height:700rpx;
+}
+.bgpic .shade{
+  position: absolute;
+  top:0;
+  left: 0;
+  width:100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3)
 }
 .main{
   width:100%;
@@ -56,12 +66,15 @@ page{
 
 }
 .main .top .size>span{
-  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   float: left;
-  width:150rpx;
+  width: 150rpx;
   height: 70rpx;
   background-color: #e5e5e5;
   margin-right: 40rpx;
+  margin-top: 20rpx;
   border-radius: 35rpx;
   font-size: 34rpx;
   line-height: 70rpx;
@@ -78,15 +91,27 @@ page{
 .buyCount .right{
   float: right;
 }
-.buyCount .right>span{
+.buyCount .right span{
   float: left;
   width:80rpx;
   height: 70rpx;
-  background-color: #f4f4f4;
+  font-weight: bold;
   margin-right: 2rpx;
   text-align: center;
   line-height: 70rpx;
   font-size: 30rpx;
+}
+.light{
+  background-color: #f8f8f8;
+}
+.dark{
+    background-color: #f4f4f4;
+}
+.middle{
+  color:#333;
+}
+.bet{
+  color: #999;
 }
 .main .tot{
   height: 100rpx;

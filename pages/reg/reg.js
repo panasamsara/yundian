@@ -66,7 +66,7 @@ Page({
   },
   getPhoneNumber: function (e) {
     if (e.detail.errMsg =="getPhoneNumber:ok"){
-      wx.showLoading({ title: '登陆中，请稍候……', mask: true })
+      // wx.showLoading({ title: '登陆中，请稍候……', mask: true })
       // 根据手机号 登陆绑定/注册 智享城市app账户
       app.util.reqAsync('payBoot/wx/miniapp/phone', {
         loginToken: wx.getStorageSync('loginToken'),
@@ -77,12 +77,16 @@ Page({
           wx.hideLoading()
           if (res.code == 1) {
             wx.setStorageSync('scSysUser', res.data);
-            wx.navigateBack()
           }
           wx.showToast({
             title: res.data.msg,
             icon:'none'
           })
+          setTimeout(function () {
+            wx.switchTab({
+              url: '../index/index'
+            })
+          }, 500)
         })
         .catch((err) => {
           wx.hideLoading()

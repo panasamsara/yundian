@@ -45,7 +45,6 @@ Page({
     }).then((res) => {
       var shopId = this.data.shopid;
       var data = [];
-      console.log(res.data.data)
       var da=res.data.data || [];
       if (da.length > 0) {
         for (var inx in res.data.data) {
@@ -100,12 +99,15 @@ Page({
     
   },
   switchSelect: function (e) {
+   
     //单个勾选取消
-    var id = e.target.dataset.id,
-      index = parseInt(e.target.dataset.index), //当前index
-      pinx = parseInt(e.target.dataset.pindex), //父级index
+    var id = e.currentTarget.dataset.id,
+      index = parseInt(e.currentTarget.dataset.index), //当前index
+      pinx = parseInt(e.currentTarget.dataset.pindex), //父级index
       shopList = this.data.goodlist[pinx],
       k = 0;//标记多少个店铺全选
+    console.log(shopList)
+    
     shopList.goodsList[index].checked = !shopList.goodsList[index].checked;
     if (shopList.goodsList[index].checked) { //勾选
       for (var b = 0; b < shopList.goodsList.length; b++) {
@@ -113,15 +115,24 @@ Page({
           k++;
         }
       }
+      console.log(k)
       if (k == shopList.goodsList.length) {
         shopList.checked = true;
         this.data.shopk++;
       }
+      console.log(this.data.shopk)
       //全选是否生效
       if (this.data.shopk == this.data.goodlist.length) {
         this.data.isAllSelect = true; //全选按钮
       }
+      console.log(this.data.goodlist.length)
     } else {
+      if (this.data.shopk==0){
+        this.data.shopk =0;
+      }else{
+        this.data.shopk--;
+      }
+      
       shopList.goodsList[index].checked = false;
       shopList.checked = false;
       this.data.isAllSelect = false;
@@ -316,7 +327,6 @@ Page({
     try {
       var res = wx.getSystemInfoSync().windowWidth;
       var scale = (750 / 2) / (w / 2);//以宽度750px设计稿做宽度的自适应
-      // console.log(scale);
       real = Math.floor(res / scale);
       return real;
     } catch (e) {
@@ -373,7 +383,6 @@ Page({
       data = this.data.goodlist;//商品数据
      for (var inx in data ){
        for (var list in data[inx].goodsList){
-         console.log(data[inx].goodsList[list].checked)
          if (data[inx].goodsList[list].checked){
            var stockId = data[inx].goodsList[list].stockId || "";
            shopCarts.push({
@@ -409,7 +418,6 @@ Page({
              totalMoney:0
            });
          }
-         console.log(this.data.goodlist.length)
          
        })
      }else{
@@ -432,6 +440,11 @@ Page({
         var orderbuy = [];//下单使用
         for (var n in this.data.goodlist[0].goodsList) {
           if (this.data.goodlist[0].goodsList[n].checked) {
+            if (this.data.goodlist[0].goodsList[n].stockPrice){
+              var actupay = this.data.goodlist[0].goodsList[n].stockPrice
+            }else{
+              var actupay = this.data.goodlist[0].goodsList[n].goodsPrice
+            }
             selectGoods.push({
               'id': this.data.goodlist[0].goodsList[n].id,
               'customerId': this.data.goodlist[0].goodsList[n].customerId,
@@ -449,7 +462,7 @@ Page({
               'goodsIndex': n,
               'remake': '',
               'deliveryCalcContent': this.data.goodlist[0].goodsList[n].deliveryCalcContent,
-              'actualPayment':this.data.goodlist[0].goodsList[n].stockPrice, //实付单价
+              'actualPayment': actupay, //实付单价
               'goodsPic': this.data.goodlist[0].goodsList[n].goodsImageUrl,
               'unitPrice': this.data.goodlist[0].goodsList[n].goodsPrice,//单价
             });
@@ -497,14 +510,14 @@ Page({
     }
     
   },
-  goodsSkip :function(e){
-    //跳到商品
-    var shopId = e.currentTarget.dataset.shopid,
-      goodsId = e.currentTarget.dataset.goodsid;
-    wx.navigateTo({
-      url: '../goodsDetial/goodsDetial?shopId=' + shopId + '&goodsId=' + goodsId
-    })
-  },
+  // goodsSkip :function(e){
+  //   //跳到商品
+  //   var shopId = e.currentTarget.dataset.shopid,
+  //     goodsId = e.currentTarget.dataset.goodsid;
+  //   wx.navigateTo({
+  //     url: '../goodsDetial/goodsDetial?shopId=' + shopId + '&goodsId=' + goodsId
+  //   })
+  // },
   shopSkip : function(e){
     var shopId = e.currentTarget.dataset.shopid;
     var currUserId = this.data.customerId;//用户id

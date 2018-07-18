@@ -34,12 +34,14 @@
         <span>{{item.creatTime}}</span>
       </view>
     </view>
+    <view class='zw-pic {{hideView?"hide":"show"}}'>
+      <image src='../../images/aparise.png'></image>
+      <text>暂无评价哦</text>
+    </view> 
   </scroll-view>  
 </view>
 
-<view class='zw-pic {{hideView?"hide":"show"}}'>
-  <view><image src='../../images/empty.png'></image></view>
-</view> 
+
   
 <!-- 底部悬浮栏 -->
 <!-- <view class='detail-nav'>

@@ -46,7 +46,7 @@ page{
   cursor: pointer;
 }
 .manageTitle text.active{
-  border-bottom: 2rpx solid #fb452c;
+  border-bottom: 4rpx solid #fb452c;
   color: #fb452c;
   padding:15rpx 0;
 }

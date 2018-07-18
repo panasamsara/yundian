@@ -6,7 +6,7 @@
     <text id='poster'>随时随地 快乐购物 智享生活</text>
   </view>
   <button open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber" id='login'>微信登录</button>
-  <text id='warn'>未注册的手机号将自动注册，且表示已同意 注册协议 和 隐私政策</text>
+  <text id='warn'>拒绝授权将无法体验完整功能，建议打开授权</text>
   <view class='mask' wx:if="{{modal}}" bindtap='cancel'>
     <view class='modal'>
       <text class='title'>打开设置页面重新授权</text>

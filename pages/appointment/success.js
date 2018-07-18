@@ -14,15 +14,28 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    let pages = getCurrentPages(),
-        prevPageData = pages[pages.length - 2].data,
-        day=new Date(),
+    // let pages = getCurrentPages(),
+    //     prevPageData = pages[pages.length - 2].data,
+    let prevPageData=wx.getStorageSync('pageData');
+    let day=new Date(),
         year=day.getFullYear(),
-        start= prevPageData.startTime.split(' '),
-        end = prevPageData.endTime.split(' ');
-        prevPageData.appointStart = year + '-' + start[0].split('月')[0] + '-' + start[0].split('月')[1].split('日')[0] + ' ' + start[1] + ':' + '00';
-        prevPageData.appointEnd = year + '-' + end[0].split('月')[0] + '-' + end[0].split('月')[1].split('日')[0] + ' ' + end[1] + ':' + '00';   
-        prevPageData.num = prevPageData.num.split('人')[0];
+        start = prevPageData.bespokeBeginTime.split(' '),
+        end = prevPageData.bespokeEndTime.split(' ');
+        prevPageData.bespokeBeginTime = year + '-' + start[0].split('月')[0] + '-' + start[0].split('月')[1].split('日')[0] + ' ' + start[1] + ':' + '00';
+        prevPageData.bespokeEndTime = year + '-' + end[0].split('月')[0] + '-' + end[0].split('月')[1].split('日')[0] + ' ' + end[1] + ':' + '00';  
+        console.log(prevPageData)
+        if (prevPageData.receptionNum) {
+          prevPageData.receptionNum = parseInt(prevPageData.receptionNum.split('人')[0]);
+        }
+        if (prevPageData.facilityName =="请选择设备/设施")  {
+          prevPageData.facilityName=''
+        } 
+        if (prevPageData.serviceName == "请选择您需要的项目") {
+          prevPageData.serviceName = ''
+        } 
+        if (prevPageData.waiter == "请选择您需要服务的人员") {
+          prevPageData.waiter = ''
+        } 
     this.setData({
       data: prevPageData,
       shopName: wx.getStorageSync('shop').shopName
@@ -33,11 +46,11 @@ Page({
       data={
         summary: datas.summary||'',
         facilityName: datas.deviceText,
-        customer: datas.name,
-        bespokeBeginTime: datas.appointStart,
-        bespokeEndTime: datas.appointEnd,
+        customer: datas.customer,
+        bespokeBeginTime: datas.bespokeBeginTime,
+        bespokeEndTime: datas.bespokeEndTime,
         facilityId: datas.facilityId,
-        receptionNum: datas.num,
+        receptionNum: datas.receptionNum,
         serviceName: datas.serviceNameText,
         customerId: wx.getStorageSync('scSysUser').id,
         serviceId: datas.serviceId,
@@ -45,7 +58,7 @@ Page({
         shopId: wx.getStorageSync('shop').id,
         merchantId: wx.getStorageSync('shop').merchantId,
         waiter: datas.serviceText,
-        mobile: datas.phone,
+        mobile: datas.mobile,
         waiterId: datas.waiterId
       }
     app.util.reqAsync('shop/addBespokeV2', data).then((res) => {

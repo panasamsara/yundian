@@ -70,6 +70,28 @@
   background-color:#f8f8f8;
   padding:20rpx 30rpx 0 30rpx;
 }
+.zw-pic{
+  width: 340rpx;
+  height: 218rpx;
+  position: absolute;
+  top:0;
+  right:0;
+  bottom: 0;
+  left:0;
+  margin: auto;
+  text-align: center;
+}
+.zw-pic image{
+
+  width: 340rpx;
+  height: 218rpx;
+}
+.zw-pic>text{
+  line-height: 60rpx;
+  display: block;
+  font-size: 30rpx;
+  color: #aaa;
+}
 .main .item{
   padding:20rpx 20rpx 0 20rpx;
   border:1rpx solid #ececec;

@@ -11,10 +11,10 @@
           </view>
         </view>
         <view class='goods' wx:for='{{item.goodsList}}' wx:for-item='items' wx:key="goods">
-          <view class='good-content inner txt' bindtouchstart="touchS" bindtouchmove="touchM" bindtouchend="touchE" data-pindex="{{inx}}" data-index="{{index}}" data-goodsId="{{items.goodsId}}" data-id="{{items.id}}" data-shopId="{{item.shopId}}" data-stockId="{{items.stockId}}"  style="{{items.txtStyle}}">
+          <view class='good-content inner txt' bindtouchstart="touchS" bindtouchmove="touchM" bindtouchend="touchE" data-pindex="{{inx}}" data-index="{{index}}"  data-goodsId="{{items.goodsId}}" data-id="{{items.id}}" data-shopId="{{item.shopId}}" data-stockId="{{items.stockId}}"  style="{{items.txtStyle}}">
             <view class='good-left' data-pindex="{{inx}}" data-index="{{index}}" data-id="{{items.id}}">
-              <image class="item-select" bindtap="switchSelect" data-pindex="{{inx}}" data-index="{{index}}" data-id="{{items.id}}" src="{{items.checked?'img/comment_select.png':'img/comment_normal.png'}}" />
-                <image data-goodsId="{{items.goodsId}}" data-shopid="{{item.shopId}}" bindtap="goodsSkip" class='good-img' src='{{items.goodsImageUrl}}'></image>
+              <image class="item-select"  data-pindex="{{inx}}" data-index="{{index}}" data-id="{{items.id}}" src="{{items.checked?'img/comment_select.png':'img/comment_normal.png'}}" bindtap="switchSelect" />
+                <image data-goodsId="{{items.goodsId}}" data-shopid="{{item.shopId}}" bindtap="goodsSkip" class='good-img' src='{{items.goodsImageUrl}}' bindtap="switchSelect" data-pindex="{{inx}}" data-index="{{index}}" ></image>
             </view>
             <view class='right-info'>
               <text>{{items.goodsName}}</text>

@@ -181,9 +181,7 @@ page, .main{
   border-radius: 10rpx;
   overflow: hidden;
 }
-.item:nth-child(odd){
-  margin-left:20rpx;
-}
+
 .item-img{
   width:100%;
   height:335rpx;
@@ -243,6 +241,9 @@ putInCart-img{
   margin-bottom:30rpx;
   box-shadow : 0rpx 0rpx 20rpx 8rpx #e2e2e2;
 }
+.activity-swiper-box{
+  height: 300rpx;
+}
 .swiper-item{
   display: block;
   height: 300rpx;
@@ -265,9 +266,12 @@ putInCart-img{
   justify-content: space-between;
   flex: 1;
   width: 670rpx;
-  height: 70rpx;
+  /* height: 100rpx; */
   padding:0 10rpx;
 
+}
+.activity-desc-container{
+  height: 80rpx;
 }
 .activity-name{
   color: orange;
@@ -436,6 +440,13 @@ putInCart-img{
   font-size: 24rpx;
   padding-left: 20rpx;
 }
+.pintuan-yangjiao{
+  color: #ff5c46;
+  font-weight: bold;
+}
+.miaosha-yangjiao{
+  font-weight: bold;
+}
 .now-price-num-sec{
   font-size: 36rpx;
   font-weight: 700;
@@ -580,4 +591,12 @@ putInCart-img{
 .activityBlank image{
   width: 345rpx;
   height: 293rpx;
+}
+.item-box{
+  width: 100%;
+  height: auto;
+  margin-bottom: 30rpx;
+  display:flex;
+  flex-wrap: wrap;
+  justify-content:space-between;
 }

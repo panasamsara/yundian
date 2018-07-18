@@ -130,3 +130,8 @@ picker-view .close image{
   width: 30rpx;
   height: 30rpx;
 }
+
+.req{
+  font-size: 24rpx;
+  color: #999999;
+}

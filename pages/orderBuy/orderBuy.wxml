@@ -88,6 +88,8 @@
       </view>
     </view>
   </view>
+  <view class="hrline">
+  </view>
   <!--合计-->
   <view class="ctronl-btn">
     <view class="sun-price">

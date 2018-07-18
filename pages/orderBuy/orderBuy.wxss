@@ -15,6 +15,10 @@ page,.content{
   color:#333;
   margin-bottom: 20rpx;
 }
+.hrline{
+  width: 100%;
+  height: 80rpx;
+}
 .stock-info{
   display:-webkit-box;
   margin-bottom:10rpx;

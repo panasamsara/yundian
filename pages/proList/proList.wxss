@@ -199,7 +199,8 @@ page{
     color: rgba(255, 255, 255, 0.4);
 }
 .shopcart .content .content-left{
-  flex: 1
+  flex: 1;
+  border-top:1rpx solid #eee;
 }
 .shopcart .logo-wrapper{
   display: inline-block;
@@ -287,7 +288,7 @@ page{
 .shopcart-list{
   position:absolute;
   left:0;
-  bottom:48px;
+  bottom:47px;
   z-index:-1;
   width:100%;
   background: #fff;
@@ -424,6 +425,9 @@ page{
   height: 80rpx;
   line-height: 80rpx;
   padding-left:10rpx;
+}
+.stock-scroll-box{
+  height: 270rpx;
 }
 .stock-box-content-content{
   width: 100%;

@@ -114,10 +114,13 @@
     <view class='stock-box-title'>选购规格</view>
     <view class='stock-box-content'>
       <view class='stock-box-content-title'>规格:</view>
-      <view class='stock-box-content-content'>
-        <view class='stock-list' wx:for="{{stocks}}" wx:for-item="stock" wx:key='index' id="stock_{{index}}_{{stock.id}}" class="{{(stockHighLightIndex == index) ? 'stock-list-active':'stock-list'}}" data-price="{{stock.stockPrice}}" bindtap="choseStock">{{stock.stockName}}</view>
+      <scroll-view scroll-y class='stock-scroll-box'>
+        <view class='stock-box-content-content'>
+          <view class='stock-list' wx:for="{{stocks}}" wx:for-item="stock" wx:key='index' id="stock_{{index}}_{{stock.id}}" class="{{(stockHighLightIndex == index) ? 'stock-list-active':'stock-list'}}" data-price="{{stock.stockPrice}}" bindtap="choseStock">{{stock.stockName}}</view>
 
-      </view>
+        </view>
+      </scroll-view>
+      
     </view>
     <view class='stock-box-bottom'>
       <view class='stock-money' wx:if='{{chosenStockPrice}}'> <text class='stock-yangjiao'>￥</text>{{chosenStockPrice}}</view>

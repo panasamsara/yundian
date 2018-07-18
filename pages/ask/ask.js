@@ -21,21 +21,30 @@ Page({
     app.util.reqAsync('shop/getGoodsQuestions',parm).then((res)=>{
       var data = res.data.data
       console.log(data)
-      for (var i = 0; i < data.length; i++) {
-        var key = 'time';
-        var value = data[i].createTime.slice(0, 11)
-        data[i][key] = value;
-      };
-      if (data.answers == null) {
+      if(data.length==0){
         this.setData({
-          isShow1: true,
-          isShow2: true
+          isShow3:true,
+          askAcount:0
         })
+      }else{
+        isShow3:false;
+        for (var i = 0; i < data.length; i++) {
+          var key = 'time';
+          var value = data[i].createTime.slice(0, 11)
+          data[i][key] = value;
+        }; 
+        this.setData({
+          askAcount: res.data.total,
+          askData: data,
+          isShow3: false
+        }) ;
+        if (data.answers == null) {
+          this.setData({
+            isShow1: true,
+            isShow2: true
+          })
+        }              
       }
-      this.setData({
-        askAcount: res.data.total,
-        askData: data
-      })
     })
   },
   /**
@@ -54,7 +63,6 @@ Page({
     })
     var shop = wx.getStorageSync('shop');
     this.getData();  
-    console.log(goodInfo)  
   },
   //下拉刷新
   onPullDownRefresh: function () {

@@ -23,7 +23,7 @@ Page({
       customerId: user.id,//用户id
       balance: goodsInfo.stockBalance,//默认库存
       goodsName: goodsInfo. goodsName,//商品名称
-      stockPrice: goodsInfo.batchPrice,//默认价格
+      stockPrice: goodsInfo.price,//默认价格
       pictureUrl: goodsInfo.pictureUrl,//商品图片
       stockData: goodsInfo.stockList,//商品规格
       goodsType: goodsInfo.goodsType,//商品类型

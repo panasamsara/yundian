@@ -23,10 +23,12 @@ page,.content{
 }
 .order-tit{
   width: 400rpx;
-   -webkit-line-clamp:2;  
-  -webkit-box-orient:vertical;  
-  text-overflow:ellipsis;
-  overflow:hidden; 
+  display:-webkit-box;
+  word-break:break-all;
+  display:-webkit-box;
+  -webkit-line-clamp:1;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
 }
 .detail-type image{
   width: 100%;

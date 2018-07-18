@@ -52,6 +52,12 @@ Page({
           
             this.countTime();
         
+        } 
+        if (data.data.data[0].orderInfo.orderStatusVo == 2 && data.data.data[0].orderInfo.deliveryType==2){ //自提
+          // 页面初始化 options为页面跳转所带来的参数
+          var size = this.setCanvasSize();//动态设置画布大小
+          var initUrl = this.data.storeUrl;
+          this.createQrCode(initUrl, "mycanvas", size.w, size.h);
         }
         // this.setData({
         //   no: this.data.orderNo
@@ -62,10 +68,7 @@ Page({
           icon: 'none'
         })
       }
-      // 页面初始化 options为页面跳转所带来的参数
-      var size = this.setCanvasSize();//动态设置画布大小
-      var initUrl = this.data.storeUrl;
-      this.createQrCode(initUrl, "mycanvas", size.w, size.h);
+     
     }).catch((err) => {
       wx.showToast({
         title: '失败……',
@@ -354,10 +357,9 @@ Page({
       orderNo: orderNo,
       customerId: customerId
     }).then((res) => {
+      console.log(res)
       if(res.data.code==1){
-        wx.navigateTo({
-          url: 'myHome/order/order?customerId=' + customerId
-        })
+        this.onShow();
       }else{
         wx.showToast({
           title: res.data.msg,

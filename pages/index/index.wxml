@@ -7,7 +7,7 @@
     <image class='lingqu-btn' bindtap="getCoupon" src="./img/yundian_libaolingquanniu@2x.png" />
     <image class='close-btn' bindtap="closeModal" src='./img/yundian_lipinguanbi@2x.png'></image>
   </view>
-  <image class='newCouponBag' wx:if='{{showCoupnBox}}' bindtap='openCouponBag' src='../../images/yundian_libaoxiao@2x.png'></image>
+  <image class='newCouponBag' wx:if='{{showCoupnBox}}' bindtap='openCouponBag' src='../../images/libao.gif'></image>
 
   <view id="top" class="cate-box">
     <view class="bg-mask"></view>

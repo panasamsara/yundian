@@ -970,7 +970,7 @@ Page({
       var data = {
       subject: this.data.goods[0].goodsName,
       requestBody: {
-        body: '测试支付功能',
+        body: '云店小程序普通订单',
         out_trade_no: code,
         notify_url: 'https://wxapp.izxcs.com/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
         trade_type: 'JSAPI',

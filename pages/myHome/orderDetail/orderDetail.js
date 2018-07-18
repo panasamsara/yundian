@@ -179,9 +179,37 @@ Page({
     //跳到商品详情
     var shopId = e.currentTarget.dataset.shopid,
       goodsId = e.currentTarget.dataset.goodsid;
-    wx.navigateTo({
-      url: '../../goodsDetial/goodsDetial?shopId=' + shopId + '&goodsId=' + goodsId
-    })
+      //调接口判断是否下架
+    app.util.reqAsync('shop/goodsDetail', {
+      shopId: shopId,
+      goodsId: goodsId,
+      customerId: this.data.userid
+      }).then((data) => {
+        if (data.data.code == 1) {
+          if (data.data.data.status == 1 && data.data.data.goodsStatus==1){
+            wx.navigateTo({
+              url: '../../goodsDetial/goodsDetial?shopId=' + shopId + '&goodsId=' + goodsId
+            })
+         }else{
+            wx.showToast({
+              title: '此商品已下架',
+              icon: 'none'
+            })
+         }
+        } else {
+          wx.showToast({
+            title: data.data.msg,
+            icon: 'none'
+          })
+        }
+
+      }).catch((err) => {
+        wx.showToast({
+          title: '失败……',
+          icon: 'none'
+        })
+      })
+   
   },
   delete: function (e) {
     var customerId = e.currentTarget.dataset.customerid,

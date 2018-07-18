@@ -57,7 +57,7 @@
     </view>
     <view class='sum-info'>
       <view class='sum-box'>
-        合计：<view class='sum-price'><text class="small-size">￥</text>{{totalMoney}}</view>
+        合计：<view class='sum-price'><text class="small-size">￥</text><span class="nummoney">{{totalMoney}}</span></view>
       </view>
       <button class='account-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}"
          bindtap="default" hover-class="other-button-hover"> 结算 </button>

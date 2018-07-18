@@ -70,7 +70,7 @@
         </view>
       </view>  
       <!--订单编号-下单时间-->
-      <view class="order-box a" wx:if="{{ item.orderInfo.orderStatusVo==3}}" style="margin-top:150rpx">
+      <view class="order-box a" wx:if="{{ item.orderInfo.orderStatusVo==3}}" style="margin-top:240rpx">
         <view class="order-type siz-three">{{item.orderInfo.orderStatusStr}}</view>
         <view class="order-num siz-four">订单编号：{{item.orderInfo.orderNo}}</view>
         <view class="order-time siz-four">下单时间：{{item.orderInfo.createTime}}</view>
@@ -159,16 +159,16 @@
       </view>
     </scroll-view>  
     <view class="ctronl-btn">
-    <button wx:if="{{item.orderInfo.orderStatusVo==1}}" class='cancel-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="cancel" hover-class="other-button-hover" data-no="{{item.orderInfo.orderNo}}"> 取消订单 </button>
-      <button wx:if="{{item.orderInfo.orderStatusVo==1}}" class='pay-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="pay" hover-class="other-button-hover" data-no="{{item.orderInfo.orderNo}}"> 付款 </button>
-      <button wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType!=2}}" class='reimburse-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="reimburse" hover-class="other-button-hover" data-no="{{item.orderInfo.orderNo}}" data-statu="{{item.orderStatus}}" data-money="{{item.orderInfo.amount}}"> 申请退款 </button>
-      <button wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType!=2}}" class='shipments-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="shipments" hover-class="other-button-hover" data-no="{{item.orderInfo.orderNo}}"> 提醒发货 </button>
-      <button wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType==2}}" class='take-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="take" hover-class="other-button-hover" data-no="{{item.orderInfo.orderNo}}" data-customerid="{{item.orderInfo.customerId}}"> 确认收货 </button>
-      <button wx:if="{{item.orderInfo.orderStatusVo==4}}" class='return-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="returnGood" hover-class="other-button-hover" data-no="{{item.orderInfo.orderNo}}" data-statu="{{item.orderInfo.orderStatus}}" data-money="{{item.orderInfo.amount}}"> 申请退货 </button>
-      <button wx:if="{{item.orderInfo.orderStatusVo==5 || item.orderInfo.orderStatusVo==8 || item.orderInfo.orderStatusVo==9 || item.orderInfo.orderStatusVo==10}}" class='delete-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="delete" hover-class="other-button-hover" data-no="{{item.orderInfo.orderNo}}" data-shopid="{{item.orderInfo.bussinessId}}" data-customerid="{{item.orderInfo.customerId}}" > 删除订单
-      </button>
-      <button wx:if="{{item.orderInfo.orderStatusVo==6}}" class='audit-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="audit" hover-class="other-button-hover" data-customerid="{{item.orderInfo.customerId}}"> 退款中 </button>
-      <button wx:if="{{item.orderInfo.orderStatusVo==7}}" class='audit-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="audit" hover-class="other-button-hover" data-customerid="{{item.orderInfo.customerId}}"> 退货中 </button>
-    </view>
+               <button wx:if="{{item.orderInfo.orderStatusVo==1}}" class='cancel-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="cancel" hover-class="other-button-hover" data-no="{{item.orderInfo.orderNo}}"> 取消订单 </button>
+               <button wx:if="{{item.orderInfo.orderStatusVo==1}}" class='pay-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="pay" hover-class="other-button-hover" data-no="{{item.orderInfo.orderNo}}"> 付款 </button>
+               <button wx:if="{{item.orderInfo.orderStatusVo==2}}" class='reimburse-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="reimburse" hover-class="other-button-hover" data-no="{{item.orderInfo.orderNo}}" data-statu="{{item.orderStatus}}" data-money="{{item.orderInfo.amount}}"> 申请退款 </button>
+               <button wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType!=2}}" class='shipments-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="shipments" hover-class="other-button-hover" data-no="{{item.orderInfo.orderNo}}"> 提醒发货 </button>
+               <button wx:if="{{item.orderInfo.orderStatusVo==3}}" class='take-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="take" hover-class="other-button-hover" data-no="{{item.orderInfo.orderNo}}" data-customerid="{{item.orderInfo.customerId}}"> 确认收货 </button>
+              <button wx:if="{{item.orderInfo.orderStatusVo==4}}" class='return-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="returnGood" hover-class="other-button-hover"data-no="{{item.orderInfo.orderNo}}" data-statu="{{item.orderInfo.orderStatus}}" data-money="{{item.orderInfo.amount}}"> 申请退货 </button>
+              <button wx:if="{{item.orderInfo.orderStatusVo==5 || item.orderInfo.orderStatusVo==8 || item.orderInfo.orderStatusVo==9 || item.orderInfo.orderStatusVo==10}}" class='delete-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="delete" hover-class="other-button-hover" data-no="{{item.orderInfo.orderNo}}" data-shopid="{{item.orderInfo.bussinessId}}" data-customerid="{{item.orderInfo.customerId}}" > 删除订单
+               </button>
+               <button wx:if="{{item.orderInfo.orderStatusVo==6}}" class='audit-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="audit" hover-class="other-button-hover" data-no="{{item.orderInfo.orderNo}}"> 退款中 </button>
+               <button wx:if="{{item.orderInfo.orderStatusVo==7}}" class='audit-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="audit" hover-class="other-button-hover" data-no="{{item.orderInfo.orderNo}}"> 退货中 </button>
+            </view>
   </view>
 </view>

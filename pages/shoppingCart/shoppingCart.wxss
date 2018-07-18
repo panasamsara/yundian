@@ -180,12 +180,17 @@
 .account-box .all{
   padding: 10rpx 40rpx;
   display: inline-block;
-  height: 70rpx;
-  line-height:70rpx;
+  height: 80rpx;
+  line-height:80rpx;
 }
 .account-box .sum-info{
-  float: right;
-  padding: 10rpx 40rpx 5rpx;
+  float:right;
+  padding:0 40rpx 0;
+  height:80rpx;
+  line-height:80rpx;
+  margin-top:16rpx;
+  vertical-align:middle;
+  letter-spacing:-1rpx;
 }
 .account-box .sum-info .sum-box{
   height: 70rpx;
@@ -199,6 +204,7 @@
 .sum-box .sum-price{
   color:#fb452c;
   font-size:38rpx;
+  line-height:70rpx;
 }
 .account-btn{
   display: inline-block;
@@ -242,6 +248,7 @@
 }
 .all text{
   margin-left: 50rpx;
+  color:#999;
 }
 .delete-box{
   background-color: #e64340;
@@ -319,10 +326,11 @@
   display: inline-block;
   height: 40rpx;
   padding-bottom:15rpx;
+  vertical-align:middle;
 }
 .all-del image{
-  width:35rpx;
-  height:35rpx;
+  width:29rpx;
+  height:29rpx;
   vertical-align:middle;
 }
 .empt{

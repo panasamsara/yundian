@@ -6,7 +6,7 @@
         <view class="detail-type">
           <image src="../images/bgmall.png"></image>
           <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==1}}">
-            订单关闭倒计时：{{time}}
+            <!-- 订单关闭倒计时：{{time}} -->待付款
           </view>
           <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType != 2}}">
             等待发货

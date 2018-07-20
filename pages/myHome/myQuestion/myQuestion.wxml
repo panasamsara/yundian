@@ -12,7 +12,7 @@
       <view class="addessNull">
         <image wx:if="{{activeIndex==1}}" src="../images/zwtw.png"></image>
         <image wx:if="{{activeIndex==2}}" src="../images/zwhd.png"></image>
-        <image wx:if="{{activeIndex==3}}" src="../images/zwpj.png"></image>
+        <image wx:if="{{activeIndex==3}}" style='height:240rpx;' src="../images/zwpj.png"></image>
         <view wx:if="{{activeIndex==1}}">还没有提问,快去提问吧~</view>
         <view wx:if="{{activeIndex==2}}">还没有回答,快去回答吧~</view>
         <view wx:if="{{activeIndex==3}}">还没有邀请你的回答哦~</view>

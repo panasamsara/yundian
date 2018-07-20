@@ -13,7 +13,7 @@
   height: 100%;
   border-radius: 5px;
   box-shadow: 1px 1px 10px #ccc;
-  padding:0 0 0 0;
+  padding:0 0 8rpx 0;
 }
 .stock-info{
   display:-webkit-box;
@@ -186,15 +186,14 @@
 .account-box .sum-info{
   float:right;
   padding:0 40rpx 0;
-  height:80rpx;
-  line-height:80rpx;
-  margin-top:16rpx;
+  height:100rpx;
+  line-height:100rpx;
   vertical-align:middle;
   letter-spacing:-1rpx;
 }
 .account-box .sum-info .sum-box{
-  height: 70rpx;
-  line-height:70rpx;
+  height: 100rpx;
+  line-height:100rpx;
   float:left;
   margin-right: 15px;
 }
@@ -219,6 +218,7 @@
   background: -o-linear-gradient(right,  #fd712c , #fa492c); /* Opera 11.1 - 12.0 */
   background: -moz-linear-gradient(right,  #fd712c , #fa492c); /* Firefox 3.6 - 15 */
   background: linear-gradient(to right,#fd712c , #fa492c); 
+  margin-top:15rpx;
 }
 .detail-title{
   display: inline-block;

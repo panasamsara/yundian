@@ -228,8 +228,8 @@ Page({
             cityId: data.data.data.recvAddress.cityId,//城市主键
             provinceId: data.data.data.recvAddress.provinceId,//省id
             address: data.data.data.recvAddress.address,//地址
-            contactMobile: data.data.data.recvAddress.name, //收货人
-            contactName: data.data.data.recvAddress.phone, //电话
+            contactMobile: data.data.data.recvAddress.phone, //收货人
+            contactName: data.data.data.recvAddress.name, //电话
             areaName: areaName,
             cityName: cityName,
             ProvinceName: ProvinceName
@@ -297,8 +297,8 @@ Page({
           cityId: data.data.data.recvAddress.cityId,//城市主键
           provinceId: data.data.data.recvAddress.provinceId,//省id
           address: data.data.data.recvAddress.address,//地址
-          contactMobile: data.data.data.recvAddress.name, //收货人
-          contactName: data.data.data.recvAddress.phone, //电话
+          contactMobile: data.data.data.recvAddress.phone, //收货人
+          contactName: data.data.data.recvAddress.name, //电话
           areaName: areaName,
           cityName: cityName,
           ProvinceName: ProvinceName
@@ -972,7 +972,7 @@ Page({
       requestBody: {
         body: '云店小程序普通订单',
         out_trade_no: code,
-        notify_url: 'https://wxapp.izxcs.com/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
+        notify_url: 'http://apptest.izxcs.com:81/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
         trade_type: 'JSAPI',
         openid: wx.getStorageSync('scSysUser').wxOpenId
       }
@@ -1013,20 +1013,21 @@ Page({
             'signType': 'MD5',
             'paySign': paySign,
             'success': function (res) {
+              console.log('支付成功')
               self.setData({
-                flagOrder: true,
+                flagOrder: false,
                 isPay: 1
               })
              },
             'fail': function (res) {
-              wx.setStorageSync('isPay', 2);
+              wx.setStorageSync('isPay', 0);
               //支付失败或者未支付跳到购物车
                 wx.showToast({
                   title: '支付失败',
                   icon: 'none'
                 })
                 self.setData({
-                  isPay: 2
+                  isPay: 0
                 })
                 setTimeout(function(){
                   wx.switchTab({

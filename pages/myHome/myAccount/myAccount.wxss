@@ -222,7 +222,7 @@ page{
 }
 .addessNull image{
     width: 340rpx;
-    height: 310rpx;
+    height: 290rpx;
     display: block;
     margin: 190rpx auto 20rpx;
 }

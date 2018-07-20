@@ -76,7 +76,7 @@
               <image wx:for="{{data.resMap.urls}}" wx:for-item="items" wx:key="index" src="{{items}}" data-src='{{items}}' bindtap='previewImage' data-index="{{data.resMap.index}}" class='type3' wx:if="{{data.resMap.mylength>=3}}"></image>
             </view>
             <view class='videoBox' wx:if="{{data.resMap.videoAlbumType==2}}">
-              <video src='{{item.urls[0]}}' id='myVideo' binderror="videoErrorCallback" poster='{{item.videoAlbumCoverUrl}}'></video>
+              <video src='{{data.resMap.urls[0]}}' id='myVideo' binderror="videoErrorCallback" poster='{{data.resMap.videoAlbumCoverUrl}}'></video>
             </view>
             <view class='readInfo'>
               <view>

@@ -2,11 +2,13 @@ var app=getApp();
 Page({
   data: {
     discounts:[],
-    userId:""
+    userId:"",
+    shopId:""
   },
   onLoad: function (options) {
     var userId = wx.getStorageSync('scSysUser').id;
-    this.setData({ userId: userId });
+    var shopId = wx.getStorageSync('shop').id;
+    this.setData({ userId: userId, shopId: shopId});
     this.getList();
   },
   onPullDownRefresh: function () {
@@ -19,11 +21,20 @@ Page({
     wx.showLoading({
       title: '加载中',
     })
+    var arr=[];
     app.util.reqAsync('shop/getMyCouponList', {
       customerId: this.data.userId,
     }).then((res) => { 
+      var data = res.data.data;
+      // 筛选出本店的优惠券
+      for (var i = 0; i < data.length;i++){
+        if (data[i].shopId == this.data.shopId){
+          arr.push(data[i]);
+        }
+      }
+      console.log(arr);
       wx.hideLoading();
-      this.setData({ discounts: res.data.data});
+      this.setData({ discounts: arr});
     }).catch((err) => {
       wx.hideLoading();
       wx.showToast({
@@ -37,6 +48,7 @@ Page({
     var couponLogId = e.currentTarget.dataset.couponlogid;
     var couponType = e.currentTarget.dataset.coupontype;
     var canLimitGoods = e.currentTarget.dataset.canlimitgoods;
-    wx.navigateTo({ url: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + id + "&couponLogId=" + couponLogId + "&couponType=" + couponType + "&canLimitGoods=" +canLimitGoods});
+    var couponCode = e.currentTarget.dataset.couponCode;
+    wx.navigateTo({ url: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + id + "&couponLogId=" + couponLogId + "&couponType=" + couponType + "&canLimitGoods=" + canLimitGoods + "&couponCode=" +couponCode});
   }
 })

@@ -14,10 +14,11 @@
   top:0;
   left: 0;
   width:100%;
-  background-color: #fff;
+  background-color:#fff;
   padding:25rpx 0 23rpx 0;
   border-top:1px solid #e5e5e5;
   box-shadow:0px 5px 5px #ececec ;
+  z-index: 1;
 }
 .btn-area view {
   float:left;

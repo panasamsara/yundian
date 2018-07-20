@@ -107,13 +107,17 @@ Page({
       })
       if(res.data.data){
         //截取粉账户的时间
-        res.data.data.fans.periodTime = res.data.data.fans.periodTime.substring(0, 10);
-        res.data.data.fans.balance = app.util.formatMoney(res.data.data.fans.balance, 2); 
-        res.data.data.fans.finance = app.util.formatMoney(res.data.data.fans.finance, 2); 
+        if (res.data.data.fans){
+          res.data.data.fans.periodTime = res.data.data.fans.periodTime.substring(0, 10);
+          res.data.data.fans.balance = app.util.formatMoney(res.data.data.fans.balance, 2);
+          res.data.data.fans.finance = app.util.formatMoney(res.data.data.fans.finance, 2); 
+        }
         newdata.push(res.data.data);
         this.setData({
           accountList: newdata
         })
+        console.log(res.data.data);
+        console.log(this.data.accountList);
       }
       wx.hideLoading();
     }).catch((err) => {

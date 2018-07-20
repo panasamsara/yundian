@@ -74,17 +74,22 @@ Page({
     this.setData({
       user: wx.getStorageSync('scSysUser')
     });
+    this.getlist();
+  },
+  onShow:function(){
+    this.getlist();
+  },
+  getlist:function(){
     wx.showLoading({
       title: '加载中',
     })
-    app.util.reqAsync('shop/getMyOnlineOrderComponentV2', { "customerId": this.data.user.id}).then((res) => {
-      this.setData({ 
-        "shopList[0].num": res.data.data.waitingOfPayNum, 
+    app.util.reqAsync('shop/getMyOnlineOrderComponentV2', { "customerId": this.data.user.id }).then((res) => {
+      this.setData({
+        "shopList[0].num": res.data.data.waitingOfPayNum,
         "shopList[1].num": res.data.data.waitingOfSendNum,
         "shopList[2].num": res.data.data.waitingOfReciveNum,
         "shopList[3].num": res.data.data.waitingOfCommentNum
-        })
-      console.log(this.data.shopList);
+      })
       wx.hideLoading();
     }).catch((err) => {
       wx.hideLoading()

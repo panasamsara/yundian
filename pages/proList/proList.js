@@ -73,10 +73,20 @@ Page({
 
   },
   onShow: function(){
-    //获取店铺类别列表
-    this.getCategoryList()
+    // 获取购物车信息
+    util.reqAsync('shop/shopCartList', {
+      customerId: wx.getStorageSync('scSysUser').id,
+      shopId: wx.getStorageSync('shop').id
+    }).then((res) => {
+      wx.setStorageSync('shopCartList', res.data.data);
+
+      //获取店铺类别列表
+      this.getCategoryList()
+    })
   },
   onHide: function () {
+     // 清空购物车缓存
+    wx.removeStorageSync('shopCartList')
     this.setData({
       goodStockMapArr: [],
       totalNum: 0,
@@ -84,6 +94,7 @@ Page({
       chooseGoodArr: [],
       shoppingCart: {}
     });
+    
   },
 
   //左侧列表点击事件
@@ -303,19 +314,34 @@ Page({
   },
 
   goToCart: function(){
-    var user = wx.getStorageSync('scSysUser');
-    var shop = wx.getStorageSync('shop');
-    console.log(this.data.chooseGoodArr)
-    let chooseGoodArr = this.data.chooseGoodArr
-    for (let i = 0; i < chooseGoodArr.length; i++){
-      this.updateNewShopCartV2(user.id, chooseGoodArr[i].goodsId, shop.id, chooseGoodArr[i].stockId, chooseGoodArr[i].goodsName, chooseGoodArr[i].number)
-      
-    }
-
     wx.switchTab({
       url: '../shoppingCart/shoppingCart',
     })
+    // var user = wx.getStorageSync('scSysUser');
+    // var shop = wx.getStorageSync('shop');
+    // console.log(this.data.chooseGoodArr)
+    // let chooseGoodArr = this.data.chooseGoodArr
+    // for (let i = 0; i < chooseGoodArr.length; i++){
+    //   this.updateNewShopCartV2(user.id, chooseGoodArr[i].goodsId, shop.id, chooseGoodArr[i].stockId, chooseGoodArr[i].goodsName, chooseGoodArr[i].number)
+
+    //   if (i == (chooseGoodArr.length-1)){
+    //     wx.showToast({
+    //       title: '提交中……',
+    //       icon: 'none'
+    //     })
+    //     setTimeout(this.realGoToCart, 3000)
+        
+    //   }
+    // }
+    
   },
+  // 延迟跳转到购物车页面
+  // realGoToCart: function(){
+  //   wx.hideToast()
+  //   wx.switchTab({
+  //     url: '../shoppingCart/shoppingCart',
+  //   })
+  // },
   //获取店铺下类别
   getCategoryList: function (){
     var shop = wx.getStorageSync('shop')
@@ -484,12 +510,21 @@ Page({
 
       let chooseGoodArr = this.data.chooseGoodArr
       if(res.data.code ==1){
-        console.log("9999999999添加成功")
+
         for (let i = 0; i < chooseGoodArr.length; i++) {
           if (chooseGoodArr[i].goodsId == goodsid && chooseGoodArr[i].stockId == stockid) {
             chooseGoodArr.splice(i, 1)
           }
         }
+        // 清空购物车缓存
+    /*    wx.removeStorageSync('shopCartList')
+        // 重新获取购物车并缓存
+        util.reqAsync('shop/shopCartList', {
+          customerId: wx.getStorageSync('scSysUser').id,
+          shopId: wx.getStorageSync('shop').id
+        }).then((res) => {
+          wx.setStorageSync('shopCartList', res.data.data);
+        })*/
         // this.setData({
         //   chooseGoodArr: chooseGoodArr,
         //   // goodStockMapArr: []
@@ -525,27 +560,31 @@ Page({
     })
   },
   //云店接口，移除购物车商品
-/*  delNewShopCartGoods: function (customerid, goodsid, shopid, stockid) {
-    util.reqAsync('shop/delNewShopCartGoods', {
-      shopCarts: [{
-        customerId: customerid,
-        goodsId: goodsid,
-        number: 1,
-        shopId: shopid,
-        stockId: stockid
-      }]
-      
+  deleteGoods: function (customerId, shopId, goodsId, stockId ) {
+    util.reqAsync('shop/delShopCartGoodsByUidAndGid', {
+      customerId: customerId,
+      shopId: shopId,
+      goodsId: goodsId,
+      stockId: stockId,
     }).then((res) => {
-
-      var user = wx.getStorageSync('scSysUser');
-      this.shopCartList(user.id)
+      console.log("进入删除方法")
+      console.log(res)
+      // 清空购物车缓存
+  /*    wx.removeStorageSync('shopCartList')
+      // 重新获取购物车并缓存
+      util.reqAsync('shop/shopCartList', {
+        customerId: wx.getStorageSync('scSysUser').id,
+        shopId: wx.getStorageSync('shop').id
+      }).then((res) => {
+        wx.setStorageSync('shopCartList', res.data.data);
+      })*/
     }).catch((err) => {
       wx.showToast({
         title: '失败……',
         icon: 'none'
       })
     })
-  },  */
+  },  
   //云店接口，获取购物车列表
   shopCartList: function (customerid) {
     this.setData({
@@ -559,6 +598,7 @@ Page({
     }).then((res) => {
       console.log("购物车")
       console.log(res.data.data)
+      
       console.log("获取购物车之后打印 goodStockMapArr")
       console.log(this.data.goodStockMapArr)
 
@@ -566,8 +606,6 @@ Page({
       let goodStockMapArr = this.data.goodStockMapArr
       if(res.data.data.length != 0){
         let cartData = res.data.data[0] //购物车商品（此商户下）
-        
-        let goodStockMapArr = this.data.goodStockMapArr
         
         if (cartData){
           let lists = cartData.goodsList
@@ -638,7 +676,7 @@ Page({
         totalPay += goodStockMapArr[x].number * goodStockMapArr[x].goodsPrice;
       }
     }
-    
+
     let goodsIdArr = []
     var uniqGoodsIdArrnew = [] // 商品ID 去重后的数组
     for (let i = 0; i < chooseGoodArr.length; i++){
@@ -672,14 +710,99 @@ Page({
     this.setData({
       goodStockMapArr: goodStockMapArr,
       totalNum: totalNum,
-      totalPay: util.formatMoney(totalPay, 2),
+      totalPay: totalPay.toFixed(2),
       chooseGoodArr: chooseGoodArr,
       shoppingCart: shoppingCart
     })
+
     console.log("99999999999 计算数量")
     console.log(goodStockMapArr)
     console.log("99999999999 已选商品")
     console.log(chooseGoodArr)
+    var user = wx.getStorageSync('scSysUser');
+    var shop = wx.getStorageSync('shop');
+
+    let myShopCartLists = wx.getStorageSync('shopCartList'); // 购物车列表（所有店铺的）
+    console.log("99999999999 存储的购物车")
+    console.log(myShopCartLists)
+
+    if (myShopCartLists.length !=0){
+      for (let i = 0; i < myShopCartLists.length; i++){
+        if (myShopCartLists[i].shopId == shop.id){
+          let myShopCartList = myShopCartLists[i] // 此店铺下的购物车
+          var myShopCartGoodsList = myShopCartList.goodsList // 购物车里的商品列表
+        }
+      }
+    }else{
+      var myShopCartGoodsList = []
+    }
+    console.log(myShopCartGoodsList)
+
+    // 商品数量变化后 自动提交购物车
+    if (myShopCartGoodsList.length != 0){
+      for (let i = 0; i < myShopCartGoodsList.length; i++){
+        this.deleteGoods(user.id, shop.id, myShopCartGoodsList[i].goodsId, myShopCartGoodsList[i].stockId)
+      }
+    }
+    if (chooseGoodArr.length != 0){
+      for (let i = 0; i < chooseGoodArr.length; i++){
+        this.updateNewShopCartV2(user.id, chooseGoodArr[i].goodsId, shop.id, chooseGoodArr[i].stockId, chooseGoodArr[i].goodsName, chooseGoodArr[i].number)
+      }
+    }
+    
+
+/*    if (chooseGoodArr.length == 0 && myShopCartGoodsList.length !=0){ // 已选商品 为空数组，直接清除购物车
+      console.log("已选商品 为空数组，直接清除购物车")
+      for (let i = 0; i < myShopCartGoodsList.length; i++){
+        this.deleteGoods(user.id, shop.id, myShopCartGoodsList[i].goodsId, myShopCartGoodsList[i].stockId)
+      }
+    } else if (chooseGoodArr.length != 0 && myShopCartGoodsList.length == 0){ // 购物车为空，所有商品都添加购物车
+      console.log("购物车为空，所有商品都添加购物车")
+      for (let i = 0; i < chooseGoodArr.length; i++) {
+        this.updateNewShopCartV2(user.id, chooseGoodArr[i].goodsId, shop.id, chooseGoodArr[i].stockId, chooseGoodArr[i].goodsName, chooseGoodArr[i].number)
+      }
+    } else { // 购物车非空，所有商品都添加购物车，删除减掉的商品
+      console.log("购物车非空，所有商品都添加购物车，删除减掉的商品")
+      var sameGoodsArr = [] // 购物车商品、已选商品 求同
+      for (let i = 0; i < chooseGoodArr.length; i++){
+        this.updateNewShopCartV2(user.id, chooseGoodArr[i].goodsId, shop.id, chooseGoodArr[i].stockId, chooseGoodArr[i].goodsName, chooseGoodArr[i].number)
+        for (let j = 0; j < myShopCartGoodsList.length; j++){
+          if (chooseGoodArr[i].goodsId == myShopCartGoodsList[j].goodsId && chooseGoodArr[i].stockId == myShopCartGoodsList[j].stockId){
+            sameGoodsArr.push(chooseGoodArr[i])
+          }
+
+        }
+      }
+      if (sameGoodsArr.length != 0){ 
+        for (let i = 0; i < myShopCartGoodsList.length; i++) {
+
+          for (let j = 0; j < sameGoodsArr.length; j++) {
+            if (myShopCartGoodsList[i].stockId) { // 有stockId 就比对stockId
+              console.log(" 删除有规格的商品")
+              console.log(myShopCartGoodsList[i].stockId)
+              if (myShopCartGoodsList[i].stockId == sameGoodsArr[j].stockId) {
+                console.log("99999999999 删除9999操作")
+                this.deleteGoods(user.id, shop.id, myShopCartGoodsList[i].goodsId, myShopCartGoodsList[i].stockId)
+              }
+            } else {
+              console.log(" 删除无规格的商品")
+              if (myShopCartGoodsList[i].goodsId == sameGoodsArr[j].goodsId) {
+                console.log("99999999999 删除8888操作")
+                this.deleteGoods(user.id, shop.id, myShopCartGoodsList[i].goodsId, myShopCartGoodsList[i].stockId)
+              }
+            }
+          }
+        }
+      } else {// 无相同商品（之前购物车的商品都被删了）
+        for (let i = 0; i < chooseGoodArr.length; i++) {
+          this.updateNewShopCartV2(user.id, chooseGoodArr[i].goodsId, shop.id, chooseGoodArr[i].stockId, chooseGoodArr[i].goodsName, chooseGoodArr[i].number)
+        }
+        for (let i = 0; i < myShopCartGoodsList.length; i++) {
+          this.deleteGoods(user.id, shop.id, myShopCartGoodsList[i].goodsId, myShopCartGoodsList[i].stockId)
+        }
+
+      }
+    }*/
     
   },
 

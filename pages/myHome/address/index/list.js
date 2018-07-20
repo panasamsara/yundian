@@ -2,20 +2,24 @@ var app = getApp();
 Page({
   data: {
     address:[],
-    userId:""
+    userId:"",
+    orderFlag:""
   },
   onLoad: function (options) {
     var userId = wx.getStorageSync('scSysUser').id;
-    this.setData({ userId: userId });
+    this.setData({ userId: userId});
+    if (options.select){
+      this.setData({ orderFlag: options.select });
+    }
     this.getAddress();
   },
   onShow: function () {
-
     this.getAddress();
   },
   radioChange: function(e) {
     // 点击单选框设置默认地址
     var nowId = e.detail.value; 
+    console.log(nowId);
     app.util.reqAsync('shop/recvAddrAddOrUpdate', {
       id: nowId,
       isDefault: 0,
@@ -32,7 +36,6 @@ Page({
         icon: 'none'
       })
     })
-
   },
   deleteAddress: function(e){
     // 点击删除地址接口
@@ -72,7 +75,6 @@ Page({
     wx.navigateTo({ url: path })
   },
   aditAddress: function(e){
-    console.log(e);
     var id = e.currentTarget.dataset.id;
     var name = e.currentTarget.dataset.name;
     var phone = e.currentTarget.dataset.phone;
@@ -105,5 +107,25 @@ Page({
         icon: 'none'
       })
     })
+  },
+  revamp:function(e){
+    // 判断从订单页面过来的修改地址，只要点击都先设置为默认地址
+    if (this.data.orderFlag==1){
+      var nowId = e.currentTarget.dataset.value;
+      app.util.reqAsync('shop/recvAddrAddOrUpdate', {
+        id: nowId,
+        isDefault: 0,
+        customerId: this.data.userId,
+      }).then((res) => {
+        wx.navigateBack({
+          url: "pages/orderBuy/orderBuy",
+        })
+      }).catch((err) => {
+        wx.showToast({
+          title: '失败……',
+          icon: 'none'
+        })
+      })
+    }
   }
 })

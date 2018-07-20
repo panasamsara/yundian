@@ -20,7 +20,6 @@ Page({
     };
     app.util.reqAsync('shop/getGoodsQuestions',parm).then((res)=>{
       var data = res.data.data
-      console.log(data)
       if(data.length==0){
         this.setData({
           isShow3:true,
@@ -76,7 +75,6 @@ Page({
   },  
   //跳转到问题详情页
   tosakDetail(e){
-    // console.log(e)
     var questionId = e.currentTarget.dataset.questionid;
     wx.navigateTo({
       url: '/pages/askDetail/askDetail?questionId=' + questionId + '&userId=' + this.data.userId,

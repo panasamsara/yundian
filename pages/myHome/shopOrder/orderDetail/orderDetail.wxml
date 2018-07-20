@@ -6,9 +6,9 @@
   <view class='content' wx:for="{{orderList}}" wx:key="index">
     <view class="info">
       <view class='person'>
-        <view wx:if="{{item.facilityTypeName}}">
+        <view wx:if="{{item.facilityName}}">
           <text>房间：</text>
-          <text>{{item.facilityTypeName}}</text>
+          <text>{{item.facilityName}}</text>
         </view>
         <view>
           <text>商家店名：</text>

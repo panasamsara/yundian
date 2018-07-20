@@ -464,7 +464,7 @@ Page({
               'deliveryCalcContent': this.data.goodlist[0].goodsList[n].deliveryCalcContent,
               'actualPayment': actupay, //实付单价
               'goodsPic': this.data.goodlist[0].goodsList[n].goodsImageUrl,
-              'unitPrice': this.data.goodlist[0].goodsList[n].goodsPrice,//单价
+              'unitPrice': this.data.goodlist[0].goodsList[n].goodsPrice//单价
             });
   
           }

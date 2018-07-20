@@ -48,11 +48,11 @@ Page({
           ProvinceName: ProvinceName,
           storeUrl: data.data.data[0].orderInfo.serialNumber
         })
-        if (data.data.data[0].orderInfo.orderStatusVo == 1) { //待付款
+        // if (data.data.data[0].orderInfo.orderStatusVo == 1) { //待付款
           
-            this.countTime();
+        //     this.countTime();
         
-        } 
+        // } 
         if (data.data.data[0].orderInfo.orderStatusVo == 2 && data.data.data[0].orderInfo.deliveryType==2){ //自提
           // 页面初始化 options为页面跳转所带来的参数
           var size = this.setCanvasSize();//动态设置画布大小
@@ -218,29 +218,33 @@ Page({
     var customerId = e.currentTarget.dataset.customerid,
       orderNo = this.data.orderNo;
     //删除订单
-    app.util.reqAsync('shop/delOrder', {
-      orderNo: orderNo
-    }).then((data) => {
-      if(data.data.code==1){
-        wx.showToast({
-          title: '删除成功',
-          icon: 'none'
-        })
-        wx.navigateTo({
-          url: '../order/order?customerId=' + customerId + '&=index' + 0
-        })
-      }else{
-        wx.showToast({
-          title: data.data.msg,
-          icon: 'none'
-        })
+          wx.showModal({
+            title: '提示',
+            content: '确定删除订单？',
+            success: function (res) {
+          if (res.confirm) {
+            app.util.reqAsync('shop/delOrder', {
+            orderNo: orderNo
+          }).then((data) => {
+            if(data.data.code==1){
+              wx.showToast({
+                title: '删除订单成功',
+                icon: 'none'
+              })
+              setTimeout(function () {
+                wx.navigateTo({
+                  url: '../order/order?customerId=' + customerId + '&=index' + 0
+                })
+              }, 2000);
+            }else{
+              wx.showToast({
+                title: data.data.msg,
+                icon: 'none'
+              })
+            }
+          })
+        }
       }
-      
-    }).catch((err) => {
-      wx.showToast({
-        title: '失败……',
-        icon: 'none'
-      })
     })
   },
   audit: function () {
@@ -262,7 +266,7 @@ Page({
     var orderNo = this.data.orderNo;
     var userid = this.data.userid;
     //取消订单
-    app.util.reqAsync('shop/cancelOrder', {
+    app.util.reqAsync('shop/cancelOnlineOrder', {
       orderNo: orderNo
     }).then((res) => {
       if(res.data.code==1){
@@ -409,7 +413,7 @@ Page({
     var now = date.getTime();
     //设置截止时间
     var create = this.data.createTime;//下单时间
-    var hour = parseInt(new Date(create).getHours())+1;//时
+    var hour = parseInt(new Date(create).getHours())+2;//时
     var minute = new Date(create).getMinutes();//分
     var seconds = new Date(create).getSeconds();//秒
     var day = new Date(create).getDate(); //日
@@ -434,8 +438,18 @@ Page({
       this.setData({
         time: 0
       })
-      this.cancel();
+      var self = this;
       clearTimeout(this.countTime);//解除
+      wx.showModal({
+        title: '提示',
+        content: '订单已取消',
+        showCancel:false,
+        success: function (res) {
+          if (res.confirm) {
+            self.cancel();
+          }
+        }
+      })
       
     }  
   },
@@ -462,7 +476,7 @@ Page({
       requestBody: {
         body: '测试支付功能',
         out_trade_no: code,
-        notify_url: 'https://wxapp.izxcs.com/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
+        notify_url: 'http://apptest.izxcs.com:81/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
         trade_type: 'JSAPI',
         openid: wx.getStorageSync('scSysUser').wxOpenId
       }
@@ -534,56 +548,4 @@ Page({
       })
     });
   }
-  // bindTestCreateOrder: function (code) {
-  //   //微信支付
-  //   var data = {
-  //     requestBody: {
-  //       body: '测试支付功能',
-  //       out_trade_no: code,
-  //       notify_url: 'https://wxapp.izxcs.com/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
-  //       trade_type: 'JSAPI',
-  //       openid: wx.getStorageSync('scSysUser').wxOpenId
-  //     }
-  //   };
-  //   //发起网络请求 微信统一下单   
-  //   app.util.reqAsync('payBoot/wx/pay/unifiedOrder', data).then((res) => {
-  //     //发起支付
-  //     var wxResult = res.data.data.wxResult;
-  //     var paySign = res.data.data.paySign;
-  //     var timeStamp = res.data.data.timeStamp;
-  //     var self = this;
-  //     wx.requestPayment({
-  //       'timeStamp': timeStamp,
-  //       'nonceStr': wxResult.nonceStr,
-  //       'package': 'prepay_id=' + wxResult.prepayId,
-  //       'signType': 'MD5',
-  //       'paySign': paySign,
-  //       'success': function (res) { },
-  //       'fail': function (res) {
-  //         //支付失败或者未支付跳到购物车
-  //         wx.showToast({
-  //           title: '支付失败',
-  //           icon: 'none'
-  //         })
-
-  //         self.onLoad();
-
-  //       },
-  //       'complete': function (res) {
-  //         wx.showToast({
-  //           title: '支付成功',
-  //           icon: 'none'
-  //         })
-
-  //         self.onLoad();
-  //       }
-  //     })
-
-  //   }).catch((err) => {
-  //     wx.showToast({
-  //       title: '失败……',
-  //       icon: 'none'
-  //     })
-  //   });
-  // }
 })

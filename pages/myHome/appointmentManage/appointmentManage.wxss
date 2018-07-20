@@ -38,7 +38,7 @@
 }
 .addessNull image{
     width: 340rpx;
-    height: 310rpx;
+    height: 260rpx;
     display: block;
     margin: 300rpx auto 20rpx;
 }

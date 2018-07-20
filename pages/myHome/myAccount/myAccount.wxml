@@ -53,8 +53,8 @@
         </view>
       </view>
       <view id="demo2" class="scroll-view-item_H demo-text-2" wx:if="{{accountList[0].mems}}">
-        <view class='nav' style="margin-right:57rpx">
-          <view class='shopNav'>
+        <view class="nav {{!accountList[0].fans&&accountList[0].mems?'margin87':'margin57'}}" style="margin-right:57rpx">
+          <view class="shopNav" >
             <view class='navTitle'>
               <text class="mr30 colorfff">{{accountList[0].mems.businessName}}</text>
               <!-- <image class="mr60" src='../images/hg.png'></image> -->

@@ -23,6 +23,7 @@
 }
 
 .modal scroll-view{
+  width:695rpx;
   height: 320rpx;
   overflow-y: hidden;
 }

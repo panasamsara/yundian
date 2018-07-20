@@ -24,13 +24,11 @@ Page({
     // 店铺信息/云店简介
     app.util.reqAsync('shop/getShopInfoAbstract', data).then((res) => {
       if(res.data.data.resMap){
-        var map = res.data.data.resMap,
-            articleContent=res.data.data.newCmsArticle[0]
-        if(map){
-          map.videoAlbumTime = app.util.formatStoreDate(map.videoAlbumTime);
-          map.mylength = map.urls.length;
-        }
-        if(articleContent){
+        let map = res.data.data.resMap;
+        map.videoAlbumTime = app.util.formatStoreDate(map.videoAlbumTime);
+        map.mylength = map.urls.length;
+        if (res.data.data.newCmsArticle[0]){
+          let articleContent = res.data.data.newCmsArticle[0]
           articleContent.articleContent = articleContent.articleContent.replace(/<(style|script|iframe)[^>]*?>[\s\S]+?<\/\1\s*>/gi, '').replace(/<[^>]+?>/g, '').replace(/\s+/g, ' ').replace(/ /g, ' ').replace(/>/g, ' ').substring(0, 52) + '...';
         }
       }

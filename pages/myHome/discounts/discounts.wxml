@@ -6,7 +6,7 @@
     </view>
   </block>
    <block wx-if="{{discounts.length>0}}">
-    <view class='list' bindtap='skip' wx:for="{{discounts}}" data-id="{{item.id}}" wx:key="index" data-couponLogId="{{item.couponLogId}}" data-couponType="{{item.couponType}}" data-canLimitGoods="{{item.canLimitGoods}}">
+    <view class='list' bindtap='skip' wx:for="{{discounts}}" data-id="{{item.id}}" wx:key="index" data-couponLogId="{{item.couponLogId}}" data-couponType="{{item.couponType}}" data-canLimitGoods="{{item.canLimitGoods}}" data-couponCode="{{item.couponCode}}">
     <image class="bg" src='../images/yundian_youhuiquan.png'></image>
     <view class='con'>
         <view class='listTop'>

@@ -1,39 +1,61 @@
-<view class='discountDetail'>
-  <view class='list' wx:if="{{couponType=='06'}}">
-    <view class='con'>
+<view class='discountDetail {{couponType==06?"yellow":"red"}}'>
+  <view class='list discount' wx:if="{{couponType=='06'}}">
+     <view class='con'>
       <image class="shopIcon" src='{{discountsNew.shopLogoUrl}}'></image>
-      <view class='shopname color333 font30'>{{discountsNew.shopName}}</view>
-      <view class='font32'>{{discountsNew.couponInstruction}}</view>
-      <view class='color999 font28'>有效期至：{{discountsNew.couponEndTime}}至{{discountsNew.userCouponExpireTime}}</view>
+      <view class='shopname color666 font28 namecheck'>{{discountsNew.shopName}}</view>
+      <view class='font40 {{discountsNew.expireState!=0||res.data.data.couponUseDate != null?"color999":"colorred"}}'>{{discountsNew.couponInstruction}}</view>
+      <view class='font36 text-overflow fontWeight color333'>{{discountsNew.couponGoodsName}}</view>
+      <view class='color999 font26'>{{discountsNew.couponEndTime}}</view>
+      <image wx:if="{{discountsNew.expireState!=0}}" class="img" src="../../images/yd_yiguoqi@2x.png"></image>
+      <image wx:if="{{res.data.data.couponLogStatus ==3}}" class="img" src="../../images/yd_yishiyong@2x.png"></image>
+    </view> 
+     <view class='info' wx:if="{{discountsNew.couponShare==1&&discountsNew.couponShared==0}}">
+      <view>分享再获好礼</view>
+       <button open-type='share' data-shoplogourl="{{discountsNew.shopLogoUrl}}">分享</button> 
     </view>
-    <view class='info'>
-      <view class='color30'>使用说明</view>
-      <view>1.本优惠券不可叠加使用</view>
-      <view>2.本店只适用于云店消费</view>
-      <view>3.退款仅退实际支付金额</view>
-      <view>4.最终解释权归商家所有</view>
-      <view wx:if="{{canLimitGoods==1}}">5.限指定商品使用</view>
+     <view class='info noshare' wx:if="{{discountsNew.couponShare==1&&discountsNew.couponShared==1}}">
+      <view>分享再获好礼</view>
+      <view>分享</view>
+    </view>  
+    <view class='serial'>
+      <view><text>序列号:{{discountsNew.couponCode}}</text></view>
+      <image bindtap="previewImg" mode="scaleToFill" src="{{imagePath}}"></image>
     </view>
-    <view class="cicrl cicleLeft"></view>
-    <view class="cicrl cicleRight"></view>
+    <view class='call'>
+      <image src="../../images/wode_quandetail_add@2x.png"></image> 
+       <text>{{discountsNew.shopAddress}}</text> 
+      <image src="../../images/wode_quandetail_phone@2x.png" bindtap='call' data-phone="{{discountsNew.shopPhone}}"></image>  
+    </view>
+    <view class="cicrl cicleLeft {{couponType==06?'yellow':'red'}}"></view>
+    <view class="cicrl cicleRight {{couponType==06?'yellow':'red'}}"></view>
   </view>
   <view class='list' wx:else>
     <view class='con'>
       <image class="shopIcon" src='{{discounts.shopLogoUrl}}'></image>
-      <view class='shopname color333 font30'>{{discounts.shopName}}</view>
-      <view class='font32'>{{discounts.instruction}}</view>
-      <view class='color999 font28'>有效期至：{{discounts.beginTime}}至{{discounts.endTime}}</view>
+      <view class='shopname color666 font28'>{{discounts.shopName}}</view>
+      <view class='font36 fontWeight color333'>{{discounts.instruction}}</view>
+      <view class='color999 font26'>有效期至：{{discounts.beginTime}}至{{discounts.endTime}}</view>
     </view>
     <view class='info'>
-      <view class='color30'>使用说明</view>
+      <view class='font30'>使用说明</view>
       <view>1.本优惠券不可叠加使用</view>
       <view>2.本店只适用于云店消费</view>
       <view>3.退款仅退实际支付金额</view>
       <view>4.最终解释权归商家所有</view>
       <view wx:if="{{canLimitGoods==1}}">5.限指定商品使用</view>
     </view>
-    <view class="cicrl cicleLeft"></view>
-    <view class="cicrl cicleRight"></view>
+    <view class='goods' wx:if="{{canLimitGoods==1}}">指定商品</view>
+    <view class='wrapList' wx:if="{{canLimitGoods==1}}" >
+      <view class='mylist' wx:for="{{limitGoods}}" wx:key="key" bindtap='goodsInfo' data-shopId="{{item.shopId}}" data-goodsId="{{item.goodsId}}">
+        <image src='{{item.goodsPictureUrl}}'></image>
+        <view class='text-overflow'>{{item.goodsName}}</view>
+        <view class='colorred text-overflow'>￥:{{item.goodsPrice}}</view>
+      </view>
+    </view>
+    <view class="cicrl cicleLeft {{couponType==06?'yellow':'red'}}"></view>
+    <view class="cicrl cicleRight {{couponType==06?'yellow':'red'}}"></view>
   </view>
-
+</view>
+<view class="canvas-box">
+<canvas hidden="{{canvasHidden}}" style="width: 686rpx;height: 686rpx;background:#f1f1f1;" canvas-id="mycanvas"/>
 </view>

@@ -26,14 +26,6 @@ Page({
     flagSpellList:''
 
   },
-  // previewImage:function(e){
-  //   console.log(e)
-  //   var current=e.target.dataset.src;
-  //   wx.previewImage({
-  //     current:current,//当前显示图片的http链接
-  //     urls: this.data.imgUrls.bigFilePath //需要预览的图片http链接列表
-  //   })
-  // },
   onLoad: function(options){
      if (options.groupBuyingId && options.cUser && options.status){
        this.setData({
@@ -105,7 +97,6 @@ Page({
           picUrl: resData.pictureUrl,//商品图片地址
           imgUrls: resData.imageList
         })
-        console.log(this.data.imgUrls)
         //存储商品信息
         wx.setStorageSync('goodsInfo', resData)        
       } 
@@ -254,6 +245,13 @@ Page({
   //   var stockBalance = this.data.stockBalance;//库存
   //   wx.navigateTo({
   //     url: '../buyNow/buyNow?pictureUrl=' + pictureUrl + '&groupBuyingPrice=' + groupBuyingPrice + '&stockBalance=' + stockBalance
+  //   })
+
+  // },
+  //跳转到赠品
+  // toGive(){
+  //   wx.navigateTo({
+  //     url: '/pages/give/give',
   //   })
 
   // },

@@ -53,7 +53,6 @@
                     <text >{{items.goodsPrice}}</text>
                     <text>x{{items.goodsNum}}</text>
                   </view>
-                    <button wx:if="{{item.orderStatusVo==4}}" class='appraise-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="appraise" hover-class="other-button-hover" data-no="{{item.orderNo}}" data-shopid="{{item.bussinessId}}" data-goodid="{{items.goodsId}}"> 评价 </button> 
                 </view>
               </view>
             </view>  
@@ -78,6 +77,7 @@
         <block wx:if="{{length==0}}">
           <view class="empty-box">
             <image class="empty" src="../images/yundian_kby_meiyoudingdan@2x.png"></image>
+            <text>暂无订单哟~~</text>
           </view>  
         </block>
       </view>

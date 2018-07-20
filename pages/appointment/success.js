@@ -16,14 +16,13 @@ Page({
   onLoad: function (options) {
     // let pages = getCurrentPages(),
     //     prevPageData = pages[pages.length - 2].data,
-    let prevPageData=wx.getStorageSync('pageData');
-    let day=new Date(),
+    let prevPageData=wx.getStorageSync('pageData'),
+        day=new Date(),
         year=day.getFullYear(),
         start = prevPageData.bespokeBeginTime.split(' '),
         end = prevPageData.bespokeEndTime.split(' ');
         prevPageData.bespokeBeginTime = year + '-' + start[0].split('月')[0] + '-' + start[0].split('月')[1].split('日')[0] + ' ' + start[1] + ':' + '00';
         prevPageData.bespokeEndTime = year + '-' + end[0].split('月')[0] + '-' + end[0].split('月')[1].split('日')[0] + ' ' + end[1] + ':' + '00';  
-        console.log(prevPageData)
         if (prevPageData.receptionNum) {
           prevPageData.receptionNum = parseInt(prevPageData.receptionNum.split('人')[0]);
         }

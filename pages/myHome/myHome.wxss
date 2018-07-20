@@ -55,10 +55,9 @@
   margin-top:20rpx;
 }
 .onlineOrder .title{
-  line-height: 60rpx;
   overflow:hidden;
   font-size: 30rpx;
-  padding:28rpx 30rpx 22rpx 30rpx;
+  padding:28rpx 24rpx 22rpx;
 }
 .orderList{
   display: flex;
@@ -98,7 +97,7 @@
   margin-top: 20rpx;
   margin-bottom: 30rpx;
   left:20rpx;
-  top:-31rpx;
+  top:-34rpx;
 }
 .shop{
   font-size: 50rpx;

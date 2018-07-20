@@ -54,7 +54,8 @@
     "pages/video/video",
     "pages/secKill/secKill",
     "pages/groupBuy/groupBuy",
-    "pages/buyNow/buyNow"
+    "pages/buyNow/buyNow",
+    "pages/give/give"
   ],
   "window": {
     "backgroundTextStyle": "light",

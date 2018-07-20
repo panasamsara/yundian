@@ -66,6 +66,7 @@ page{
 .appointment #startTime,.appointment #endTime{
   height: 120rpx;
   display: inline-block;
+  color: #666666;
 }
 
 .appointment .choose{
@@ -132,6 +133,13 @@ picker-view .close image{
 }
 
 .req{
-  font-size: 24rpx;
-  color: #999999;
+  font-size: 44rpx;
+  color: #ff0000;
+  height: 44rpx;
+  margin-left: 8rpx;
+}
+
+#time{
+  display: flex;
+  align-items: center;
 }

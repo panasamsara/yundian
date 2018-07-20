@@ -25,6 +25,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function(options) {
+    //创建人数选择器数组
     let numArray=[];
     for(let i=1;i<=20;i++){
       numArray.push(i+'人');
@@ -32,6 +33,7 @@ Page({
     this.setData({
       numArray:numArray
     })
+    //获取店铺名和用户电话号码
     if(options&&options.name){
       this.setData({
         name: options.name,
@@ -43,14 +45,14 @@ Page({
     };
     this.getData(data)
   },
-  start:function(){
+  start:function(){//开始时间
     this.change('start');
     this.setData({
       endTime:'结束时间',
       change:'text'
     })
   },
-  end:function(){
+  end:function(){//结束时间
     if(this.data.startTime=='开始时间'){
       wx.showToast({
         title: '请先选择开始时间',
@@ -70,7 +72,7 @@ Page({
       num: this.data.numArray[e.detail.value]
     })
   },
-  //时间日期
+  //时间日期picker
   change:function(arr){
     this.setData({
       showModal:true,
@@ -79,20 +81,20 @@ Page({
     var date1 = new Date(),
         date2 = new Date(date1),
         date3 = new Date(date1.getTime() + 24 * 60 * 60 * 1000);
-    var multiArray = [],
-        timeArray = [];
-    date2.setDate(date1.getDate() + 30);
+    var multiArray = [],//日期星期数组
+        timeArray = [];//时间数组
+    date2.setDate(date1.getDate() + 30);//当前日为始的30天
     //左边日期星期数组
     for (let i = Date.parse(app.util.formatPickerTime(date1)); i <= Date.parse(app.util.formatPickerTime(date2)); i += 86400000) {
         multiArray.push(app.util.formatPicker(new Date(i)));
     }
-    var businessStartTime = this.data.data.businessStartTime.split(':'),
-        businessEndTime = this.data.data.businessEndTime.split(':'),
-        sm = businessStartTime[0],
-        ss = businessStartTime[1],
-        em = businessEndTime[0],
-        es = businessEndTime[1],
-        intervalTime = this.data.data.intervalTime*60*1000;
+    var businessStartTime = this.data.data.businessStartTime.split(':'),//店铺营业开始时间
+        businessEndTime = this.data.data.businessEndTime.split(':'),//店铺营业结束时间
+        sm = businessStartTime[0],//开始时
+        ss = businessStartTime[1],//开始分
+        em = businessEndTime[0],//结束时
+        es = businessEndTime[1],//结束分
+        intervalTime = this.data.data.intervalTime*60*1000;//店铺设置的最小间隔时间
         this.setData({
           sm:sm,
           ss:ss,
@@ -139,7 +141,7 @@ Page({
       }   
     }
   },
-  showModal: function (e) {
+  showModal: function (e) {//模板弹框
     this.setData({
       modal: e.currentTarget.id+'-modal',
       showModal:true,
@@ -147,18 +149,20 @@ Page({
     })
     this.selectComponent('#' + e.currentTarget.id +'-modal').onLoad();
   },
-  close:function(){
+  close:function(){//关闭时间日期选择器
     if(this.data.startTime!='开始时间'||this.data.endTime!='结束时间'){//开始时间选择数据
       let startTime = this.data.startTime,
           date = startTime.split(' ')[0],
           time = startTime.split(' ')[1],
           date1 = new Date(),
+          //选择的的开始时间完整格式
           chose = date1.getFullYear() + '/' + date.split('月')[0] + '/' + date.split('月')[1].split('日')[0] + ' ' + time, 
           intervalTime = this.data.data.intervalTime;
       if(this.data.endTime!='结束时间'){//结束时间选择数据
         let endTime=this.data.endTime,
             dates = endTime.split(' ')[0],
             time1 = endTime.split(' ')[1],
+            //选择的结束时间完整格式
             chose1 = date1.getFullYear() + '/' + dates.split('月')[0] + '/' + dates.split('月')[1].split('日')[0] + ' ' + time1;
         if (intervalTime == 60) {//根据店铺设置最小间隔时间为半小时还是一小时
             if(Date.parse(chose1)-Date.parse(chose)<3600000){
@@ -218,7 +222,7 @@ Page({
       change:'area'
     })
   },
-  closeModal:function(e){
+  closeModal:function(e){//关闭模板弹窗
       var flag1=e.detail.flag1,
           flag2=e.detail.flag2;
       if(flag1!=undefined){
@@ -233,7 +237,7 @@ Page({
         change:'area'
       })
   },
-  getData:function(data){
+  getData:function(data){//获取页面数据
     app.util.reqAsync('shop/getBespokeSettingInfoV2', data).then((res) => {
       this.setData({
         data: res.data.data
@@ -247,7 +251,7 @@ Page({
       summary:e.detail.value
     })
   },
-  submit:function(){
+  submit:function(){//立即预约
     let endTime=this.data.endTime,
         num=this.data.num||'',
         facilityId = this.data.facilityId||'',
@@ -283,7 +287,7 @@ Page({
           url: 'success'
         })
   },
-  bindChange: function (e) {
+  bindChange: function (e) {//时间日期选择器监听滚动事件
     var sm = this.data.sm,
         ss = this.data.ss,
         em = this.data.em,
@@ -302,7 +306,7 @@ Page({
         start: multiArray[0][e.detail.value[0]],
         index: e.detail.value[1]
       })
-      if (date1.setHours(em, es) - date1.setHours(sm, ss) < 0){
+      if (date1.setHours(em, es) - date1.setHours(sm, ss) < 0){//如果跨天获取选择的开始时间的往后一天的日期
         this.setData({
           start1: multiArray[0][e.detail.value[0]+1]
         })

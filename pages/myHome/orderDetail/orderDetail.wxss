@@ -193,10 +193,9 @@ page,.content{
   margin: 30rpx 30rpx 30rpx 0;
 }
 .right-info text:nth-child(2){
-  background: #f3f3f3;
   color:#989898;
-  padding:5rpx 10rpx;
-  margin-bottom:30rpx;
+  padding:5rpx 0rpx;
+  margin-bottom:25rpx;
 }
 .right-info .detail-down{
   margin-top:30rpx;

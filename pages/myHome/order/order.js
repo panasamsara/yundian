@@ -152,29 +152,45 @@ Page({
   },
   delete: function(e){
     var orderNo = e.currentTarget.dataset.no;
+    var that = this;
     //删除订单
-    app.util.reqAsync('shop/delOrder', {
-      orderNo: orderNo
-    }).then((res) => {
-      if (res.data.code == 1) {
-        this.getData();
-      } else {
-        wx.showToast({
-          title: res.data.msg,
-          icon: 'none'
-        })
+    wx.showModal({
+      title: '提示',
+      content: '确定删除订单？',
+      success: function (res) {
+        if (res.confirm) {
+          app.util.reqAsync('shop/delOrder', {
+            orderNo: orderNo
+          }).then((res) => {
+            if (res.data.code == 1) {
+              wx.showToast({
+                title: '成功删除订单',
+                icon: 'none'
+              })
+              setTimeout(function () {
+                that.getData();
+              }, 2000);
+            } else {
+              wx.showToast({
+                title: res.data.msg,
+                icon: 'none'
+              })
+            }
+          }).catch((err) => {
+            wx.showToast({
+              title: '失败……',
+              icon: 'none'
+            })
+          })
+         
+        }
       }
-    }).catch((err) => {
-      wx.showToast({
-        title: '失败……',
-        icon: 'none'
-      })
     })
   },
   cancel: function(e){
     var orderNo = e.currentTarget.dataset.no;
     //取消订单
-    app.util.reqAsync('shop/cancelOrder', {
+    app.util.reqAsync('shop/cancelOnlineOrder', {
       orderNo: orderNo
     }).then((res) => {
       if(res.data.code==1){
@@ -384,7 +400,7 @@ Page({
       requestBody: {
         body: '测试支付功能',
         out_trade_no: code,
-        notify_url: 'https://wxapp.izxcs.com/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
+        notify_url: 'http://apptest.izxcs.com:81/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
         trade_type: 'JSAPI',
         openid: wx.getStorageSync('scSysUser').wxOpenId
       }

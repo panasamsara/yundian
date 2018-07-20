@@ -16,6 +16,10 @@ Page({
       showImg: true,
       showVideo: false,
       has720: false,
+      photoNum: 0,
+      videoNum: 0,
+      showIndex: true,
+      showIndexTopBar: false,
 
       indicatorDots: true,
       vertical: false,
@@ -64,6 +68,7 @@ Page({
      this.getGroupBuyData()
     // 查看新人礼包
      this.checkCoupon()
+     this.getCouponList()
    },
    // 每次显示做个判断，本地没有店铺就扫码，当前没有店铺就请求数据
    onShow: function () {
@@ -73,6 +78,16 @@ Page({
      }
      if (!this.data.shopInformation.shopInfo) this.getShopInfo()
      util.checkWxLogin();
+
+     var shop = wx.getStorageSync('shop');
+     if (shop ){
+       if (shop.shopHomeConfig){
+         if (shop.shopHomeConfig.videoPathList.length != 0) {
+           wx.setStorageSync('videoUrl', shop.shopHomeConfig.videoPathList[0].filePath)
+         }
+       }
+     }
+
    },
    // 获取店铺信息
    getShopInfo: function () {
@@ -80,10 +95,10 @@ Page({
        customerId: wx.getStorageSync('scSysUser').id,
        shopId: wx.getStorageSync('shop').id,
      }).then((res) => {
+
        var shop = res.data.data.shopInfo;
        shop.fansCounter = res.data.data.fansCounter
-       if (res.data.data.shopInfo.shopHomeConfig.imagePathList[0]){
-
+       if (res.data.data.shopInfo.shopHomeConfig.imagePathList.length != 0){
          let imagePath = res.data.data.shopInfo.shopHomeConfig.imagePathList[0]
          let index_of_query = imagePath.indexOf('?')
          if (index_of_query >=0){
@@ -91,10 +106,22 @@ Page({
          }else{
            res.data.data.bgImageLong = imagePath
          }
-         
-       }else{
-         res.data.data.bgImageLong = '../images/bg1.jpg'
+       } else {
+         res.data.data.bgImageLong = '../../images/bg1.jpg'
        }
+       if (res.data.data.shopInfo.shopHomeConfig.videoPathList.length !=0){
+         wx.setStorageSync('videoUrl', res.data.data.shopInfo.shopHomeConfig.videoPathList[0].filePath)
+         let videoPath = res.data.data.shopInfo.shopHomeConfig.videoPathList[0].coverImagePath
+          let index_of_video = videoPath.indexOf('?')
+          if (index_of_video >= 0) {
+            res.data.data.videoImagecover = videoPath.substr(0, index_of_video)
+          } else {
+            res.data.data.videoImagecover = videoPath
+          }
+       } else {
+         res.data.data.videoImagecover = '../../images/bg1.jpg'
+       }
+       
        wx.setStorageSync('shop', shop);
        app.util.setHistories(shop)
        this.setData({ shopInformation: res.data.data });
@@ -109,6 +136,8 @@ Page({
          title: shop.shopName,
        })
        this.getHotList()
+       this.getPhotoNum(shop.id, 0) //图片数
+       this.getPhotoNum(shop.id, 1) //视频数
      })
    },
    //精选商品推荐列表,获取店铺信息后调用此方法
@@ -137,18 +166,57 @@ Page({
      wx.navigateTo({
        url: '../photos/photos',
      })
-    //  this.setData({
-    //    showImg: true,
-    //    showVideo: false
-    //  })
+   },
+   showPotos: function(){
+      this.setData({
+        showImg: true,
+        showVideo: false
+      })
    },
    goVideoLists: function () {
-    //  var shop = wx.getStorageSync('shop');
-    //  wx.setStorageSync('videoUrl', shop.shopHomeConfig.videoPathList[0].filePath)
      wx.navigateTo({
        url: '../videoLists/videoLists',
      })
 
+   },
+   showVideo: function(){
+     this.setData({
+       showImg: false,
+       showVideo: true
+     })
+   },
+   goIndexVideo: function(){
+     wx.navigateTo({
+       url: '../video/video',
+     })
+   },
+   clickScrollTop: function(){
+     this.setData({
+       showIndex: false,
+       showIndexTopBar: true
+     })
+   },
+   clickShowIndex: function () {
+     this.setData({
+       showIndex: true,
+       showIndexTopBar: false
+     })
+   },
+   getPhotoNum: function (id, contentType){
+     util.reqAsync('cloudshop/getShopPhotoNum', {
+       shopId: id,
+       contentType: contentType
+     }).then((res) => {
+       if (contentType == 0){
+         this.setData({
+           photoNum: res.data.data.photoNum
+         })
+       }else{
+         this.setData({
+           videoNum: res.data.data.photoNum
+         })
+       }
+     })
    },
    goLive: function(){
      var shop = wx.getStorageSync('shop');
@@ -196,7 +264,6 @@ Page({
        customerId: wx.getStorageSync('scSysUser').id,
        shopId: wx.getStorageSync('shop').id
      }).then((res) => {
-       console.log(res)
        this.setData({
          couponInfo: res.data.data
        })
@@ -313,7 +380,7 @@ Page({
        shopId: wx.getStorageSync('shop').id,
        status: 1  
      }).then((res) => {
-       if (res.data.data) {
+       if (res.data.data.list.length>0) {
          let list = res.data.data.list,
            newData = oldData.concat(list);
          for (let i = 0; i < list.length; i++) {
@@ -384,14 +451,13 @@ Page({
        console.log(err)
      })
    },
-   showQuanBox: function(){
+   getCouponList: function(){
      let datas={
       shopId: wx.getStorageSync('shop').id
      }
      app.util.reqAsync('shop/getCouponList',datas).then((res) => {
        if (res.data.data) {
          let list=res.data.data;
-         console.log(list)
          for(let i=0;i<list.length;i++){
            list[i].beginTime = app.util.formatActivityDate(list[i].beginTime);
            list[i].endTime = app.util.formatActivityDate(list[i].endTime)
@@ -409,12 +475,14 @@ Page({
              })
            }
          }
-         this.setData({
-           showQuanBox: true
-         })
        }
      }).catch((err) => {
        console.log(err)
+     })
+   },
+   showQuanBox:function(){
+     this.setData({
+       showQuanBox: true
      })
    },
    get:function(e){

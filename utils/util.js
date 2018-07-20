@@ -13,9 +13,10 @@ const formatTime = date => {
 }
 // 测试链接
 const URL_QRCODE = 'https://wxapp.izxcs.com/qrcode/shop/';
-const URL = 'https://wxapp.izxcs.com/zxcity_restful/ws/rest';  
-// const URL = 'http://192.168.11.152:8080/zxcity_restful/ws/rest';
-
+//测试环境
+const URL = 'http://apptest.izxcs.com:81/zxcity_restful/ws/rest'
+//正式环境
+//const URL = 'https://wxapp.izxcs.com/zxcity_restful/ws/rest';  
 
 const formatNumber = n => {
   n = n.toString()

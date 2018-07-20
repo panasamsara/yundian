@@ -4,7 +4,7 @@
 <swiper indicator-dots='{{indicatorDots}}'>
   <block wx:for="{{imgUrls}}" wx:key='key'>
     <swiper-item>
-      <image src='{{item.smallFilePath}}' mode='aspectFit' data-src='{{item.smallFilePath}}'></image>    
+      <image src='{{item.smallFilePath}}' data-src='{{item.smallFilePath}}'></image>    
     </swiper-item>
   </block>
 </swiper>
@@ -18,7 +18,21 @@
     <text class='price'>¥{{batchPrice}}</text>
     <view><span>库存 {{stockBalance}}</span><span>月销量 {{payCount}}</span></view>
   </view>
+  <!-- <view class='separate'></view> -->
+  <!-- 赠品部分 -->
+  <!-- <view class='give clearfix'>
+    <image class='left' src='../../images/give.png'></image>
+    <view class='middle clearfix'>
+      <image src='../../images/yundian_bangdingdianji_logo.png'></image>
+      <view class='rt'>
+        <text>超级无敌噼里啪啦小礼物</text>
+        <view class='bot'>1份</view>     
+      </view>
+    </view>
+    <image class='right' src='../../images/yundian_spxq_gengduo.png' bindtap='toGive'></image>
+  </view> -->
   <view class='separate'></view>
+  <!-- 因后台返给的数据很多小程序无法解析,所以先暂时屏蔽掉,后期需要再改 -->
   <!-- <view class='descrip'>
     <text class='{{descContent==""?"hide":"show"}}' >{{descContent}}</text>
   </view> -->

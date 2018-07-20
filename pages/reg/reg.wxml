@@ -1,6 +1,6 @@
 <!--pages/reg/reg.wxml-->
 <view class='reg'>
-  <image src='../../images/yundian_bangdingdianji_bg.png' id='bg'></image>
+  <image src='../../images/yundian_bangdingdianji_bg.jpg' id='bg'></image>
   <view id='logo'>
     <view><image src='../../images/yundian_bangdingdianji_logo.png'></image></view>
     <text id='poster'>随时随地 快乐购物 智享生活</text>

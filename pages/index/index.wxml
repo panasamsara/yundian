@@ -9,23 +9,31 @@
   </view>
   <image class='newCouponBag' wx:if='{{showCoupnBox}}' bindtap='openCouponBag' src='../../images/libao.gif'></image>
 
-  <view id="top" class="cate-box">
+  <view id="top" class="cate-box" wx:if='{{showIndex}}'>
     <view class="bg-mask"></view>
     <image src='{{shopInformation.bgImageLong}}' mode='scaleToFill' class='top-bg' wx:if='{{showImg}}'></image>
+    <image src='{{shopInformation.videoImagecover}}' mode='scaleToFill' class='top-bg' wx:if='{{showVideo}}'></image> 
+    <image src='../../images/yundian_shipinbofang@2x.png' bindtap='goIndexVideo' class='index-video-cover' wx:if='{{showVideo}}'></image>
     <!-- <image class='up-icon' src='../../images/yundian_dpzy_shangla@2x.png'></image> -->
-    <image class='up-icon' src='../../images/new_shop_home_image.gif'></image>
-    <!-- <view class='video-bg' wx:if='{{showVideo}}'>
-      <video class='video-ctx' id="myVideo" src="{{shopInformation.shopInfo.shopHomeConfig.videoPathList[0].filePath}}" binderror="videoErrorCallback"></video>
-    </view> -->
+    <image class='up-icon' bindtap='clickScrollTop' src='../../images/new_shop_home_image.gif'></image>
+
+    <view class='total-photo-box' wx:if='{{showImg}}' bindtap='goPhotos'>
+      <image class="total-photo-icon" src='./img/yundian_zhaopian@2x.png'></image>
+      <view class='total-photo-num'>{{photoNum}}</view>
+    </view>
+    <view class='total-photo-box' wx:if='{{showVideo}}' bindtap='goVideoLists'>
+      <image class="total-photo-icon" src='./img/yundian_shipin@2x.png'></image>
+      <view class='total-photo-num'>{{videoNum}}</view>
+    </view>
 
     <view class='btn-list'>
-      <view bindtap='goPhotos' wx:if='{{showBtnList}}'>
+      <view bindtap='showPotos' wx:if='{{showBtnList}}'>
         <!-- <view class='btn-img '></view> -->
-        <image class="btn-img" src='./img/yundian_zhaopian@2x.png'></image>
+        <image class="btn-img {{showImg ? 'btn-img-active':''}}" src='./img/yundian_zhaopian@2x.png'></image>
         <text class='text-below'>照片</text>
       </view>
-      <view bindtap='goVideoLists' wx:if='{{showBtnList}}'>
-        <image class="btn-img" src='./img/yundian_shipin@2x.png'></image>
+      <view bindtap='showVideo' wx:if='{{showBtnList}}'>
+        <image class="btn-img {{showVideo ? 'btn-img-active':''}}" src='./img/yundian_shipin@2x.png'></image>
         <text class='text-below'>视频</text>
       </view>
       <view bindtap='goTo720' wx:if='{{has720 && showBtnList}}'>
@@ -57,7 +65,20 @@
   <!-- </block>
     <block> -->
   <view id="detail" class="cate-box">
-    <view class='coupon' bindtap='showQuanBox' wx:if="{{couponType1.length>0&&couponType2.length>0&&couponType3.length>0}}">
+
+    <view class='index-bar' wx:if='{{showIndexTopBar}}'>
+      <navigator url='../store/store'><image class='logo' src='{{shopInformation.shopInfo.logoUrl}}'></image></navigator>
+      <view class='desc-box'>
+        <view class='desc-name'>{{shopInformation.shopInfo.shopName}}</view>
+        <view class='fans-num'>粉丝数
+          <text>{{shopInformation.fansCounter}}</text>
+        </view>
+      </view>
+      <image class='down-icon' bindtap='clickShowIndex' src='../../images/jiantou_down@2x.gif'></image>
+      <!-- <navigator url='../store/code/code'><image class='qrcode' src='../../images/yundian_erweima@2x.png'></image></navigator> -->
+    </view>
+
+    <view class='coupon' bindtap='showQuanBox' wx:if="{{couponType1||couponType2||couponType3}}">
       <image class='coupon-img' src='./img/coupon.png'></image>
       <text class='coupon-txt'>新用户进店可领取专属兑换券</text>
       <image class='coupon-icon' src='../../images/yundian_zhankai@2x.png'></image>
@@ -79,7 +100,7 @@
         <view class='left-line'></view>
       </view>
       <view class="activity-swiper">
-        <swiper class='activity-swiper-box' indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
+        <swiper class='activity-swiper-box' indicator-dots="{{shopInformation.goodsInfos.length>1}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
           <block wx:for="{{shopInformation.goodsInfos}}" wx:key="index">
             <swiper-item>
               <view class="swiper-item">
@@ -104,7 +125,7 @@
       </view>
     </view>   
     <!-- 智享秒杀 -->
-    <view class='sec-kill-box' wx-if="{{list.length>=1}}">
+     <view class='sec-kill-box' wx-if="{{list.length>=1}}">
       <view class='sec-kill-top'>
         <view class='sec-kill-title-img'>
           <image src='../../images/yundian_zhixiangmiaosha@2x.png'></image>
@@ -128,10 +149,10 @@
         </view>
 
       </view>
-    </view>
+    </view> 
 
     <!-- 趣拼团 -->
-    <view class='sec-kill-box' wx-if="{{groupBuyList.length>=1}}">
+     <view class='sec-kill-box' wx-if="{{groupBuyList.length>=1}}">
       <view class='sec-kill-top'>
         <view class='group-buy-title-img'>
           <image src='../../images/yundian_qupintuan@2x.png'></image>
@@ -153,7 +174,7 @@
         </view>
 
       </view>
-    </view>
+    </view> 
 
     <view class='tuijian' wx:if="{{hotCommoditiesList.hotCommoditiesList.length}}">
       <view class='main-top'>

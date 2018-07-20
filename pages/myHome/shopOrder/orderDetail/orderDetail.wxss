@@ -49,7 +49,6 @@
 .info{
   background: #fff;
   border-radius: 10rpx 10rpx 0 0;
-  padding-left:30rpx;
   box-sizing: border-box;
   width: 690rpx;
   font-size: 32rpx;
@@ -60,6 +59,7 @@
   	box-shadow: 0px 4px 7px 0px 
 		rgba(0, 0, 0, 0.06);
   overflow: hidden;
+  padding-left: 30rpx;
 }
 .person>view{
   padding-top: 20rpx;
@@ -78,7 +78,7 @@
 .content .list{
   font-size: 28rpx;
   color: #333;
-  padding: 0 30rpx;
+  padding-right: 30rpx;
 }
 .list>view{
   overflow: hidden;
@@ -114,6 +114,7 @@
   width: 180rpx;
   height: 180rpx;
   border-radius: 10rpx;
+  margin-right: 10rpx;
 }
 .orderInfo>.right{
   width: 480rpx;

@@ -48,7 +48,6 @@ Page({
     var couponLogId = e.currentTarget.dataset.couponlogid;
     var couponType = e.currentTarget.dataset.coupontype;
     var canLimitGoods = e.currentTarget.dataset.canlimitgoods;
-    var couponCode = e.currentTarget.dataset.couponCode;
-    wx.navigateTo({ url: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + id + "&couponLogId=" + couponLogId + "&couponType=" + couponType + "&canLimitGoods=" + canLimitGoods + "&couponCode=" +couponCode});
+    wx.navigateTo({ url: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + id + "&couponLogId=" + couponLogId + "&couponType=" + couponType + "&canLimitGoods=" + canLimitGoods});
   }
 })

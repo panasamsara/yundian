@@ -15,7 +15,7 @@
     <image src='{{shopInformation.videoImagecover}}' mode='scaleToFill' class='top-bg' wx:if='{{showVideo}}'></image> 
     <image src='../../images/yundian_shipinbofang@2x.png' bindtap='goIndexVideo' class='index-video-cover' wx:if='{{showVideo}}'></image>
     <!-- <image class='up-icon' src='../../images/yundian_dpzy_shangla@2x.png'></image> -->
-    <image class='up-icon' bindtap='clickScrollTop' src='../../images/new_shop_home_image.gif'></image>
+    <image class='up-icon' bindtap='clickScrollTop' src='../../images/up.gif'></image>
 
     <view class='total-photo-box' wx:if='{{showImg}}' bindtap='goPhotos'>
       <image class="total-photo-icon" src='./img/yundian_zhaopian@2x.png'></image>
@@ -74,7 +74,7 @@
           <text>{{shopInformation.fansCounter}}</text>
         </view>
       </view>
-      <image class='down-icon' bindtap='clickShowIndex' src='../../images/jiantou_down@2x.gif'></image>
+      <image class='down-icon' bindtap='clickShowIndex' src='../../images/down.gif'></image>
       <!-- <navigator url='../store/code/code'><image class='qrcode' src='../../images/yundian_erweima@2x.png'></image></navigator> -->
     </view>
 
@@ -115,7 +115,7 @@
                   </view>
                   <view class='activity-desc-container'>
                     <view class='font-size-24 text-align-right'>活动时间</view>
-                    <view class='font-size-24'>{{item.startTime}}</view>
+                    <view class='font-size-24 text-align-right'>{{item.startTime}}-{{item.endTime}}</view>
                   </view>
                 </view>
               </view>
@@ -125,7 +125,8 @@
       </view>
     </view>   
     <!-- 智享秒杀 -->
-     <view class='sec-kill-box' wx-if="{{list.length>=1}}">
+     <!-- <view class='sec-kill-box' wx-if="{{list.length>=1}}"> -->
+     <view class='sec-kill-box' wx-if="">
       <view class='sec-kill-top'>
         <view class='sec-kill-title-img'>
           <image src='../../images/yundian_zhixiangmiaosha@2x.png'></image>
@@ -152,7 +153,8 @@
     </view> 
 
     <!-- 趣拼团 -->
-     <view class='sec-kill-box' wx-if="{{groupBuyList.length>=1}}">
+     <!-- <view class='sec-kill-box' wx-if="{{groupBuyList.length>=1}}"> -->
+      <view class='sec-kill-box' wx-if="">
       <view class='sec-kill-top'>
         <view class='group-buy-title-img'>
           <image src='../../images/yundian_qupintuan@2x.png'></image>

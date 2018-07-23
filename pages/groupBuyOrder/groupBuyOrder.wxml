@@ -28,15 +28,11 @@
     <image bindtap="addressSkip" class="right-icon" src="../../../images/yundian_spxq_gengduo.png"></image>
   </view>
   <!--房间-->
-  <view class="room" wx:if="{{isSend==1&&offline==1}}">
-    <text>房间</text>
-    <text wx:if="{{roomInx!='-1'}}" >{{roomVal}}</text>
-  </view>
-  <view class="room" wx:if="{{isSend==1&&offline!=1}}" bindtap="show">
+  <!-- <view class="room" wx:if="{{isSend==1}}" bindtap="show">
     <text>房间</text>
     <text wx:if="{{roomInx=='-1'}}" >请选择房间</text>
     <text wx:if="{{roomInx!='-1'}}" >{{roomVal}}</text>
-  </view>
+  </view> -->
   <!--商品-->
   <view class="detail">
     <view class='detail-top'>
@@ -77,13 +73,13 @@
     </view>
     <!--选择快递时才有店铺优惠he配送费-->
     <view class="discount-box">
-      <view class="shop-discount" wx:if="{{isSend==0}}" bindtap="selectCounp">
+      <!-- <view class="shop-discount" wx:if="{{isSend==0}}" bindtap="selectCounp">
         <text>店铺优惠</text>
         <view class="discount-room" >
           <text>{{instruction}}</text>
           <image src="../../../images/yundian_spxq_gengduo.png"></image>
         </view>
-      </view>
+      </view> -->
       <view class="send-price" wx:if="{{isSend==0 && isService==0}}">
         <text>配送费</text><text>￥{{deliveyMoney}}</text>
       </view>

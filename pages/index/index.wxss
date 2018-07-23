@@ -281,6 +281,7 @@ putInCart-img{
 }
 .activity-desc-container{
   height: 80rpx;
+  width:50%;
 }
 .activity-name{
   color: orange;
@@ -555,10 +556,10 @@ putInCart-img{
 }
 .up-icon{
   position: absolute;
-  bottom: 140rpx;
+  bottom: 160rpx;
   left: 355rpx;
-  width: 55rpx;
-  height: 45rpx;
+  width: 65rpx;
+  height: 55rpx;
   z-index: 3;
 }
 .bg-mask{
@@ -655,8 +656,8 @@ putInCart-img{
   z-index: 3;
 }
 .down-icon{
-  position:absolute;
-  left:355rpx;
+  position: relative;
+  /* left:355rpx; */
   width:55rpx;
   height:45rpx;
   z-index:3;

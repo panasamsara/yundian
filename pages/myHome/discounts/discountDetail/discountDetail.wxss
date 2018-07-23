@@ -182,7 +182,7 @@ page{
   width: 32rpx;
   height: 42rpx;
   vertical-align: middle;
-  float: left;
+  float: right;
 }
 .discount .img{
   width: 112rpx;

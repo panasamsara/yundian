@@ -134,12 +134,14 @@ Page({
     let goodStockMapArr = this.data.goodStockMapArr
 
     if (stockId != 'null' && stockId && stockId != undefined){
+      console.log("99999999999 添加有规格的商品")
       for (let i = 0; i < goodStockMapArr.length; i++) {
         if (goodStockMapArr[i].goodsId == _id && goodStockMapArr[i].stockId == stockId) {
           goodStockMapArr[i].number += 1
         }
       }
     }else{
+      console.log("99999999999 添加无规格的商品")
       if (this.data.goodMap[_id].stockList.length !=0 ){
         console.log(7777)
         for (let i = 0; i < goodStockMapArr.length; i++) {
@@ -150,6 +152,7 @@ Page({
         }
       }else{
         console.log(8888)
+        console.log(goodStockMapArr)
         for (let i = 0; i < goodStockMapArr.length; i++) {
           if (goodStockMapArr[i].goodsId == _id ) {
             goodStockMapArr[i].number += 1
@@ -222,6 +225,20 @@ Page({
     this.linePos = app.bezier([this.busPos, topPoint, this.finger], 30);
 
     let _id = e.target.id.split('_')[1];
+
+    if (this.data.goodMap[_id].stockBalance ==0){
+      wx.showModal({
+        title: '库存不足',
+        content: '请选购其他商品',
+        showCancel: false,
+        success: function (res) {
+          if (res.confirm) {
+            // console.log('用户点击确定')
+          }
+        }
+      })
+      return false
+    }
 
     if (this.data.goodMap[_id].stockList.length != 0){
       this.setData({
@@ -676,7 +693,7 @@ Page({
         totalPay += goodStockMapArr[x].number * goodStockMapArr[x].goodsPrice;
       }
     }
-
+    console.log(chooseGoodArr)
     let goodsIdArr = []
     var uniqGoodsIdArrnew = [] // 商品ID 去重后的数组
     for (let i = 0; i < chooseGoodArr.length; i++){
@@ -736,8 +753,9 @@ Page({
     }else{
       var myShopCartGoodsList = []
     }
+    console.log("999999999999999999999999商品变化")
     console.log(myShopCartGoodsList)
-
+    console.log(chooseGoodArr)
     // 商品数量变化后 自动提交购物车
     if (myShopCartGoodsList.length != 0){
       for (let i = 0; i < myShopCartGoodsList.length; i++){

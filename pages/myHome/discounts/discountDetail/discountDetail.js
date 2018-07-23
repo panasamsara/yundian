@@ -12,14 +12,20 @@ Page({
     canvasHidden: false,
     shopId:"",
     limitGoods:[],
-    couponCode:""
+    couponCode:"",
+    userId:""
   },
   onLoad: function(options) {
+    wx.showShareMenu({
+      withShareTicket: true,
+    })
+    var userId=wx.getStorageSync('scSysUser').id;
     this.setData({
       id: options.id,
       couponLogId: options.couponLogId,
       couponType: options.couponType,
-      canLimitGoods: options.canLimitGoods
+      canLimitGoods: options.canLimitGoods,
+      userId: userId
     })
     this.getList();
   },
@@ -138,7 +144,7 @@ Page({
     })
   },
   onShareAppMessage: function (res) {
-    console.log(res);
+    var _this = this;
     if (res.from === 'button') {
       // 来自页面内转发按钮
       console.log()
@@ -146,7 +152,22 @@ Page({
     return {
       title: "分享云店",
       path: "pages/index/index?shopId=" + this.data.shopId,
-      imageUrl: res.target.dataset.shoplogourl
+      imageUrl: res.target.dataset.shoplogourl,
+      success: function(res){
+        app.util.reqAsync("coupon/shareCoupon", {
+          couponId: _this.data.id,
+          couponLogId: _this.data.couponLogId, 
+          userId: _this.data.userId, 
+        }).then((res) => {
+        }).catch((err) => {
+          wx.hideLoading();
+          wx.showToast({
+            title: '失败……',
+            icon: 'none'
+          })
+        })
+  
+      }
     }
   },
   goodsInfo:function(e){
@@ -156,5 +177,25 @@ Page({
     wx.navigateTo({
       url: "/pages/goodsDetial/goodsDetial?shopId=" +shopId+"&goodsId="+goodsId,
     })
-  }
+  },
+  // fun:function(){
+  //   app.util.reqAsync("coupon/shareCoupon", {
+  //     couponId: this.data.id,
+  //     couponLogId: this.data.couponLogId,
+  //     userId: this.data.userId,
+  //   }).then((res) => {
+  //     wx.showToast({
+  //       title: '分享成功',
+  //       icon: 'none'
+  //     })
+
+  //   }).catch((err) => {
+  //     wx.hideLoading();
+  //     wx.showToast({
+  //       title: '失败……',
+  //       icon: 'none'
+  //     })
+  //   })
+  // }
 })
+

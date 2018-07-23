@@ -16,7 +16,9 @@ const URL_QRCODE = 'https://wxapp.izxcs.com/qrcode/shop/';
 //测试环境
 const URL = 'http://apptest.izxcs.com:81/zxcity_restful/ws/rest'
 //正式环境
-//const URL = 'https://wxapp.izxcs.com/zxcity_restful/ws/rest';  
+// const URL = 'https://wxapp.izxcs.com/zxcity_restful/ws/rest';  
+// const URL = 'http://192.168.11.201:8118/zxcity_restful/ws/rest';
+// const URL = 'http://pb8fbr.natappfree.cc/zxcity_restful/ws/rest';
 
 const formatNumber = n => {
   n = n.toString()
@@ -133,8 +135,9 @@ function getLocalTime(now) {
 }
 function getParams(url) {
   var params = new Object();
-  if (url.indexOf("?") != -1) {
-    var str = url.substr(1);
+  var idx = url.indexOf("?");
+  if (idx != -1) {
+    var str = url.substr(idx + 1);
     var strs = str.split("&");
     for (var i = 0; i < strs.length; i++) {
       params[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
@@ -185,7 +188,8 @@ const appLogin = () => {
       reqAsync('payBoot/wx/miniapp/login', {
         code: res.code
       }).then((res) => {
-        console.log(res)
+        console.log("小程序登录：", res)
+        wx.setStorageSync('loginToken', res.data.data.loginToken);
         // 失败则跳到注册页
         if (res.data.code != 1) {
           loginFailed()
@@ -197,7 +201,7 @@ const appLogin = () => {
           wx.navigateTo({ url: '/pages/reg/reg' });
         }
         // 成功则设置本地数据
-        wx.setStorageSync('loginToken', res.data.data.loginToken);
+        
         wx.setStorageSync('scSysUser', res.data.data.scSysUser);
         // if (!isAppUser()) wx.navigateTo({ url: '/pages/reg/reg' });
       })

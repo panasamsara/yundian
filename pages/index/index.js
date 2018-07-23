@@ -45,16 +45,40 @@ Page({
      var self = this;
    },
    onLoad: function (e) {
-     console.log(e);
+     console.log('加载页面index/index', e);
      // 【扫码进入】，获取店铺ID，存入本地，请求店铺数据
-     var isScanCode = e.scancode_time;
-     if (isScanCode) {
-       console.log(1111);
-        var path = encodeURI(e.q);
-        console.log(path);
-        var shopId = path.match(/\d+$/g)[0];
-        wx.setStorageSync('shop', { id: shopId});
+     // 扫描二维码加载页面
+     if (e && e.scancode_time) {
+       var uri = decodeURIComponent(e.q);
+       console.log("通过二维码加载", uri);
+       var params = util.getParams(uri)
+      //  console.log("shopid", params.shopId);
+      //  console.log("offline", params.offline);
+      //  console.log("facilityId", params.facilityId)
+        util.checkWxLogin();
+      //线下进分类
+        util.reqAsync('shop/getShopHomePageInfo', {
+          customerId: wx.getStorageSync('scSysUser').id,
+          shopId: params.shopId,
+        }).then((res) => {
+          if (params.offline == 1) {
+            wx.navigateTo({
+              url: '/pages/proList/proList',
+            })
+            shop.offline = params.offline;
+            if (params.facilityId) {
+              shop.facilityId = params.facilityId;
+            }
+          }else{
+            wx.navigateTo({
+              url: '/pages/index/index',
+            })
+          }
+          var shop = res.data.data.shopInfo;
+          wx.setStorageSync('shop', shop);
+        })
      }
+     // 另外的方式加载页面（可能已取到shopId）
      if (e.shopId){
        wx.setStorageSync('shop', { id: e.shopId });
      }
@@ -124,6 +148,16 @@ Page({
        
        wx.setStorageSync('shop', shop);
        app.util.setHistories(shop)
+       
+       if (res.data.data.goodsInfos.length != 0){
+         for (let i = 0; i < res.data.data.goodsInfos.length; i++){
+           res.data.data.goodsInfos[i].startTime = res.data.data.goodsInfos[i].startTime.substring(0, 10)
+           res.data.data.goodsInfos[i].endTime = res.data.data.goodsInfos[i].endTime.substring(0, 10)
+           res.data.data.goodsInfos[i].startTime = res.data.data.goodsInfos[i].startTime.replace(/\-/g,'.')
+           res.data.data.goodsInfos[i].endTime = res.data.data.goodsInfos[i].endTime.replace(/\-/g, '.')
+         }
+       }
+       console.log(res.data.data)
        this.setData({ shopInformation: res.data.data });
        // 判断是否有720全景地址
        if (shop.shopHomeConfig.fullView720Path.length == 0){

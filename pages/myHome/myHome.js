@@ -71,9 +71,11 @@ Page({
     ],
   },
   onLoad: function (options) {
+    var user = wx.getStorageSync('scSysUser')
     this.setData({
-      user: wx.getStorageSync('scSysUser')
+      user: user
     });
+
     this.getlist();
   },
   onShow:function(){
@@ -93,10 +95,6 @@ Page({
       wx.hideLoading();
     }).catch((err) => {
       wx.hideLoading()
-      wx.showToast({
-        title: '失败……',
-        icon: 'none'
-      })
     })
   },
   navigateTo(e) {

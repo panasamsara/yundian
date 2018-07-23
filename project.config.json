@@ -37,7 +37,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": -1,
+			"current": 19,
 			"list": [
 				{
 					"id": -1,
@@ -229,6 +229,12 @@
 					"id": -1,
 					"name": "地址列表",
 					"pathName": "pages/myHome/address/index/list",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "拼团 下单",
+					"pathName": "pages/groupBuyOrder/groupBuyOrder",
 					"query": ""
 				}
 			]

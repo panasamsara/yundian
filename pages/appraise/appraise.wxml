@@ -9,7 +9,7 @@
 </view>
 <!-- 评价部分 -->
 <view class='main'>
-  <scroll-view scroll-y style='height:860rpx'>
+  <scroll-view scroll-y class="appraise-main">
     <view class='user' wx:for="{{userData}}" wx:key="key">
       <view class='user-top'>
         <image src='{{item.memberImgName}}'></image>
@@ -34,11 +34,13 @@
         <span>{{item.creatTime}}</span>
       </view>
     </view>
+  </scroll-view> 
+  <view class='oppic'>
     <view class='zw-pic {{hideView?"hide":"show"}}'>
       <image src='../../images/aparise.png'></image>
       <text>暂无评价哦</text>
-    </view> 
-  </scroll-view>  
+    </view>  
+  </view>
 </view>
 
 

@@ -6,7 +6,7 @@
     <picker bindchange="bindPickerChange" data-val="{{array}}" value="{{array}}" range="{{array}}">
     <view class="picker">
       <text class="send-select">{{array[index]}}</text>
-      <image src="../../../images/yundian_spxq_gengduo.png"></image>
+      <image src="../../images/yundian_spxq_gengduo.png"></image>
     </view>
   </picker>
   </view>
@@ -25,12 +25,12 @@
     <view class='add-adree' wx:if="{{address==''}}" bindtap="addressSkip">
       <navigator url="" hover-class="navigator-hover">请添加收货地址</navigator>
     </view>
-    <image bindtap="addressSkip" class="right-icon" src="../../../images/yundian_spxq_gengduo.png"></image>
+    <image bindtap="addressSkip" class="right-icon" src="../../images/yundian_spxq_gengduo.png"></image>
   </view>
   <!--房间-->
   <view class="room" wx:if="{{isSend==1&&offline==1}}">
     <text>房间</text>
-    <text wx:if="{{roomInx!='-1'}}" >{{roomVal}}</text>
+    <text >{{scanRoom}}</text>
   </view>
   <view class="room" wx:if="{{isSend==1&&offline!=1}}" bindtap="show">
     <text>房间</text>
@@ -77,11 +77,12 @@
     </view>
     <!--选择快递时才有店铺优惠he配送费-->
     <view class="discount-box">
-      <view class="shop-discount" wx:if="{{isSend==0}}" bindtap="selectCounp">
+      <view class="shop-discount" wx:if="{{isSend==0 || isSend==2}}" bindtap="selectCounp">
         <text>店铺优惠</text>
         <view class="discount-room" >
-          <text>{{instruction}}</text>
-          <image src="../../../images/yundian_spxq_gengduo.png"></image>
+          <text wx:if="{{discount.length==0}}">此店铺暂无优惠</text>
+          <text wx:if="{{discount.length>0}}">{{instruction}}</text>
+          <image src="../../images/yundian_spxq_gengduo.png"></image>
         </view>
       </view>
       <view class="send-price" wx:if="{{isSend==0 && isService==0}}">

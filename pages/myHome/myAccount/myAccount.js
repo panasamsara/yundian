@@ -30,22 +30,56 @@ Page({
     app.util.reqAsync('member/getShopInfosByUserId', {
       "userId": user.id
     }).then((res) => {
-      console.log(res);
-      res.data.data.forEach(function (item, index) {
-        shopName.push(item.shopName);
-        shopmemberId.push(item.memberId);
-        shopImg.push(item.backImage);
-        shopId.push(item.shopId);
-      })
-      this.setData({
-        shopId: shopId
-      });
-      // 判断当前id是否存在列表中,存在就显示它的卡，不存在就直接为空
-      //不存在
-      if (shopId.indexOf(this.data.shop.id) == -1) {
-        //将缓存存入选择店铺的数组中
+      // 判断是否返回店铺列表
+      if (res.data.data != null){
+        res.data.data.forEach(function (item, index) {
+          shopName.push(item.shopName);
+          shopmemberId.push(item.memberId);
+          shopImg.push(item.backImage);
+          shopId.push(item.shopId);
+        })
+        this.setData({
+          shopId: shopId
+        });
+        // 判断当前id是否存在列表中,存在就显示它的卡，不存在就直接为空
+        //不存在
+        if (shopId.indexOf(this.data.shop.id) == -1) {
+          //将缓存存入选择店铺的数组中
+          shopName.unshift(this.data.shop.shopName);
+          // 不存在列表中时必定没有卡信息,就把0加入到数组最前面
+          shopmemberId.unshift(0);
+          shopImg.unshift(this.data.shop.bgImage);
+          this.setData({
+            arrayName: shopName,
+            shopmemberId: shopmemberId,
+            arrayImg: shopImg,
+            accountList: []
+          });
+        } else {
+          var newIndex = shopId.indexOf(this.data.shop.id);
+          //删除当前数组存在的shopName,shopmemberId,shopImg,并移到数组的第一位
+          var name = shopName[newIndex];
+          var memberId = shopmemberId[newIndex];
+          var img = shopImg[newIndex];
+          // 首先获取存在卡的数据
+          this.getCard(memberId);
+          // //删除数组里面的
+          shopName.splice(newIndex, 1);
+          shopName.unshift(name);
+          shopmemberId.splice(newIndex, 1);
+          shopmemberId.unshift(memberId);
+          shopImg.splice(newIndex, 1);
+          shopImg.unshift(img);
+          this.setData({
+            arrayName: shopName,
+            shopmemberId: shopmemberId,
+            arrayImg: shopImg,
+          });
+        }
+      }else{
         shopName.unshift(this.data.shop.shopName);
-        shopmemberId.unshift(this.data.shop.id);
+        // 不存在列表中时必定没有卡信息,就把0加入到数组最前面
+        shopmemberId.unshift(0);
         shopImg.unshift(this.data.shop.bgImage);
         this.setData({
           arrayName: shopName,
@@ -53,27 +87,8 @@ Page({
           arrayImg: shopImg,
           accountList: []
         });
-      }else{
-        var newIndex = shopId.indexOf(this.data.shop.id);
-        //删除当前数组存在的shopName,shopmemberId,shopImg,并移到数组的第一位
-        var name = shopName[newIndex];
-        var memberId = shopmemberId[newIndex];
-        var img = shopImg[newIndex];
-        // 首先获取存在卡的数据
-        this.getCard(memberId);
-        // //删除数组里面的
-        shopName.splice(newIndex, 1);
-        shopName.unshift(name);
-        shopmemberId.splice(newIndex, 1);
-        shopmemberId.unshift(memberId);
-        shopImg.splice(newIndex, 1);
-        shopImg.unshift(img);
-        this.setData({
-          arrayName: shopName,
-          shopmemberId: shopmemberId,
-          arrayImg: shopImg,
-        });
       }
+     
       wx.hideLoading()
     }).catch((err) => {
       wx.hideLoading()

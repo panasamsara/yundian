@@ -65,12 +65,12 @@
             <view class='shopInfo'>
               <view class='left'>
                 <view>余额：</view>
-                <view class='font54'>0.00</view>
-                <view>到期时间：------</view>
+                <view class='font54'>{{accountList[0].mems.balance || "0.00"}}</view>
+                <view>到期时间：{{accountList[0].mems.periodTime || "------"}}</view>
               </view>
               <view class='right'>
                 <view>活动经费</view>
-                <view>0.00</view>
+                <view>{{accountList[0].mems.finance || "0.00"}}</view>
               </view>
             </view>
           </view>

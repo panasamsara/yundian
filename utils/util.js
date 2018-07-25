@@ -16,7 +16,7 @@ const URL_QRCODE = 'https://wxapp.izxcs.com/qrcode/shop/';
 //测试环境
 const URL = 'http://apptest.izxcs.com:81/zxcity_restful/ws/rest'
 //正式环境
-// const URL = 'https://wxapp.izxcs.com/zxcity_restful/ws/rest';  
+// const URL = 'https://wxapp.izxcs.com/zxcity_restful/ws/rest';
 // const URL = 'http://192.168.11.201:8118/zxcity_restful/ws/rest';
 // const URL = 'http://pb8fbr.natappfree.cc/zxcity_restful/ws/rest';
 
@@ -164,6 +164,7 @@ const setHistories = (shop) => {
 // 微信登陆后判断是否登陆app，否，则跳转到app注册页
 // app登陆后判断是否有店铺信息，否，则跳转到扫码页
 const checkWxLogin = () => {
+  console.log('checkWxLogin')
   wx.checkSession({
     success: () => {
       // 未登陆app则跳转到登陆/注册页
@@ -182,6 +183,7 @@ const checkWxLogin = () => {
 }
 // app重新登陆
 const appLogin = () => {
+  console.log('app重新登陆')
   wx.login({
     success: (res) => {
       // 后台登陆app账户

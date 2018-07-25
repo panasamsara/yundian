@@ -256,9 +256,9 @@
     </view>
     <view class='list address'>
       <text>{{data.shopInfo.address}}</text>
-      <navigator url="location/location?longitude={{data.shopInfo.longitude}}&latitude={{data.shopInfo.latitude}}&shopName={{data.shopInfo.shopName}}&address={{data.shopInfo.address}}" hover-class='none'>
-        <image src='images/yundian_dpzy_ditudaohang.png' class='enter'></image>
-      </navigator>
+      <!-- <navigator url="location/location?longitude={{data.shopInfo.longitude}}&latitude={{data.shopInfo.latitude}}&shopName={{data.shopInfo.shopName}}&address={{data.shopInfo.address}}" hover-class='none'> -->
+        <image src='images/yundian_dpzy_ditudaohang.png' class='enter' bindtap='apen_add'></image>
+      <!-- </navigator> -->
     </view>   
   </view>
 </view>

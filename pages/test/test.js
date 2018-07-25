@@ -105,7 +105,7 @@ Page({
       }
     };
     //发起网络请求 微信统一下单   
-    util.reqAsync('payBoot/wx/pay/unifiedOrder', data).then((res) => {
+    util.reqAsync('/payBoot/wx/pay/unifiedOrder', data).then((res) => {
       trade_type:
       console.log(res.data.data);
 

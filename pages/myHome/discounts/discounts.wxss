@@ -41,6 +41,7 @@
   width: 54rpx;
   height: 54rpx;
   margin-right: 20rpx;
+  border-radius: 50%;
 }
 .time{
   color: #999;

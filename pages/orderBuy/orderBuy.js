@@ -49,8 +49,9 @@ Page({
     discount: [], //店铺优惠
     amountMin: 0, //优惠满
     amounts: 0, //优惠多少
-    instruction: '',
-    name: '',
+    instruction: '',//优惠描述
+    name: '',//优惠类型名称
+    limtgood:'',//选择的优惠券若是指定商品传入指定商品id
     contactMobile:'',
     contactName:'',
     username:'',
@@ -128,95 +129,124 @@ Page({
           isSer = 1;
         }
       }
-      if (data.data.code == 9) {   //未开通店内下单
-        console.log('未开通店内下单')
-        if (isSer == 0) { //普通商品
-          this.setData({
-            array: ['快递配送', '自提'],
-            isShop: 1,//0开通店内下单 1未开通
-            isService: 0, //0只有商品没有服务 1有服务
-            objectArray: [
-              { 
-                id: 0,
-                name: '快递配送'
-              },
-              {
-                id: 2,
-                name: '自提'
-              }
-            ]
-          })
-        } else {
-          this.setData({
-            isSend: 2,//0-快递  1-店内下单 2-自提
-            array: ['自提'],
-            isShop: 1,//0开通店内下单 1未开通
-            isService: 1, //0只有商品没有服务 1有服务
-            index: 0,
-            objectArray: [
-              {
-                id: 2,
-                name: '自提'
-              }
-            ]
-          })
-        }
-      } else { //开通店内下单
-        console.log('开通店内下单')
+      console.log("是否扫码进入：" + this.data.offline)
+      if (this.data.offline == 1) { //如果扫码进来遍历房间id取出房间号
+      console.log(1111111)
         this.setData({
-          room:data.data.data,
-          merchantId: data.data.data[0].merchantId
+          isSend: 1,//0-快递  1-店内下单 2-自提
+          array: ['店内下单'],
+          isShop: 0,//0开通店内下单 1未开通
+          isService: 1, //0只有商品没有服务 1有服务
+          objectArray: [
+            {
+              id: 1,
+              name: '店内下单'
+            }
+          ],
+          index: 0
         })
-        if (isSer == 0) { //普通商品
-          this.setData({
-            array: ['快递配送', '店内下单', '自提'],
-            isShop: 0,//0开通店内下单 1未开通
-            isService: 0, //0只有商品没有服务 1有服务
-            objectArray: [
-              {
-                id: 0,
-                name: '快递配送'
-              },
-              {
-                id: 1,
-                name: '店内下单'
-              },
-              {
-                id: 2,
-                name: '自提'
-              }
-            ]
-          })
-        } else {
-          this.setData({
-            isSend: 1,//0-快递  1-店内下单 2-自提
-            array: ['店内下单', '自提'],
-            isShop: 0,//0开通店内下单 1未开通
-            isService: 1, //0只有商品没有服务 1有服务
-            index: 0,
-            objectArray: [
-              {
-                id: 1,
-                name: '店内下单'
-              },
-              {
-                id: 2,
-                name: '自提'
-              }
-            ]
-          })
+        for (var k in data.data.data) {
+          if (this.data.facilityId == data.data.data[k].id) {
+            this.setData({
+              scanRoom: data.data.data[k].title
+            })
+            
+          }
         }
+    
+      }else{
+        if (data.data.code == 9) {   //未开通店内下单
+          console.log('未开通店内下单')
+          if (isSer == 0) { //普通商品
+            this.setData({
+              array: ['快递配送', '自提'],
+              isShop: 1,//0开通店内下单 1未开通
+              isService: 0, //0只有商品没有服务 1有服务
+              objectArray: [
+                {
+                  id: 0,
+                  name: '快递配送'
+                },
+                {
+                  id: 2,
+                  name: '自提'
+                }
+              ]
+            })
+          } else {
+            this.setData({
+              isSend: 2,//0-快递  1-店内下单 2-自提
+              array: ['自提'],
+              isShop: 1,//0开通店内下单 1未开通
+              isService: 1, //0只有商品没有服务 1有服务
+              index: 0,
+              objectArray: [
+                {
+                  id: 2,
+                  name: '自提'
+                }
+              ]
+            })
+          }
+        } else { //开通店内下单
+          console.log('开通店内下单')
+          this.setData({
+            room: data.data.data,
+            merchantId: data.data.data[0].merchantId
+          })
+          if (isSer == 0) { //普通商品
+            this.setData({
+              array: ['快递配送', '店内下单', '自提'],
+              isShop: 0,//0开通店内下单 1未开通
+              isService: 0, //0只有商品没有服务 1有服务
+              objectArray: [
+                {
+                  id: 0,
+                  name: '快递配送'
+                },
+                {
+                  id: 1,
+                  name: '店内下单'
+                },
+                {
+                  id: 2,
+                  name: '自提'
+                }
+              ]
+            })
+          } else {
+            this.setData({
+              isSend: 1,//0-快递  1-店内下单 2-自提
+              array: ['店内下单', '自提'],
+              isShop: 0,//0开通店内下单 1未开通
+              isService: 1, //0只有商品没有服务 1有服务
+              index: 0,
+              objectArray: [
+                {
+                  id: 1,
+                  name: '店内下单'
+                },
+                {
+                  id: 2,
+                  name: '自提'
+                }
+              ]
+            })
+          }
+        }
+
+
+        
       }
-      
-   
-        this.setData({
-          goods: goods,
-          total: goods.length,
-          isService: isSer,
-          isPay: ispay
-        })
+
      
-      
+     
+      this.setData({
+        goods: goods,
+        total: goods.length,
+        isService: isSer,
+        isPay: ispay
+      })
     }).catch((err) => {
       wx.showToast({
         title: '失败……',
@@ -224,73 +254,65 @@ Page({
       })
     })
 
-    if (this.data.offline == 1) { //如果扫码进来遍历房间id取出房间号
-      for (var k in this.data.room) {
-        if (this.data.facilityId == this.data.room[k].facilityId) {
-          this.setData({
-            scanRoom: this.data.room[k].roomVal
-          })
-        }
-      }
-    }
+   
     
 
     //获取地址
-    app.util.reqAsync('shop/getMyAddressAndCoupon', {
-      customerId: this.data.customerId,
-      shopId: this.data.shopId
-      }).then((data) => {
-        this.setData({
-          userInfo: data.data.data,
-          shopName: options.shopName,
-        })
-        if (data.data.data.recvAddress){
-          var areaName = app.util.area.getAreaNameByCode(data.data.data.recvAddress.areaId);
-          var cityName = app.util.area.getAreaNameByCode(data.data.data.recvAddress.cityId);
-          var ProvinceName = app.util.area.getAreaNameByCode(data.data.data.recvAddress.provinceId);
-          this.setData({
-            areaId: data.data.data.recvAddress.areaId,//地区主键
-            cityId: data.data.data.recvAddress.cityId,//城市主键
-            provinceId: data.data.data.recvAddress.provinceId,//省id
-            address: data.data.data.recvAddress.address,//地址
-            contactMobile: data.data.data.recvAddress.phone, //收货人
-            contactName: data.data.data.recvAddress.name, //电话
-            areaName: areaName,
-            cityName: cityName,
-            ProvinceName: ProvinceName
-          })        
-        }else{
-          this.setData({
-            areaId: "",//地区主键
-            cityId: "",//城市主键
-            provinceId: "",//省id
-            address: "",//地址
-            contactMobile: '',
-            contactName: '',
-            areaName: '',
-            cityName: '',
-            ProvinceName: ''
-          })     
-        }
-        if (data.data.data.couponList){
-          var counlits = [];//过滤掉新手礼包
-          for (var i in data.data.data.couponList){
-            if (data.data.data.couponList[i].couponType!='06'){
-              counlits.push(data.data.data.couponList[i]);
-            }
-          }
-          this.setData({
-            discount: counlits //优惠券
-          }) 
-        }
+    // app.util.reqAsync('shop/getMyAddressAndCoupon', {
+    //   customerId: this.data.customerId,
+    //   shopId: this.data.shopId
+    //   }).then((data) => {
+    //     this.setData({
+    //       userInfo: data.data.data,
+    //       shopName: options.shopName,
+    //     })
+    //     if (data.data.data.recvAddress){
+    //       var areaName = app.util.area.getAreaNameByCode(data.data.data.recvAddress.areaId);
+    //       var cityName = app.util.area.getAreaNameByCode(data.data.data.recvAddress.cityId);
+    //       var ProvinceName = app.util.area.getAreaNameByCode(data.data.data.recvAddress.provinceId);
+    //       this.setData({
+    //         areaId: data.data.data.recvAddress.areaId,//地区主键
+    //         cityId: data.data.data.recvAddress.cityId,//城市主键
+    //         provinceId: data.data.data.recvAddress.provinceId,//省id
+    //         address: data.data.data.recvAddress.address,//地址
+    //         contactMobile: data.data.data.recvAddress.phone, //收货人
+    //         contactName: data.data.data.recvAddress.name, //电话
+    //         areaName: areaName,
+    //         cityName: cityName,
+    //         ProvinceName: ProvinceName
+    //       })        
+    //     }else{
+    //       this.setData({
+    //         areaId: "",//地区主键
+    //         cityId: "",//城市主键
+    //         provinceId: "",//省id
+    //         address: "",//地址
+    //         contactMobile: '',
+    //         contactName: '',
+    //         areaName: '',
+    //         cityName: '',
+    //         ProvinceName: ''
+    //       })     
+    //     }
+    //     if (data.data.data.couponList){
+    //       var counlits = [];//过滤掉新手礼包
+    //       for (var i in data.data.data.couponList){
+    //         if (data.data.data.couponList[i].couponType!='06'){
+    //           counlits.push(data.data.data.couponList[i]);
+    //         }
+    //       }
+    //       this.setData({
+    //         discount: counlits //优惠券
+    //       }) 
+    //     }
         
-      }).catch((err) => {
+    //   }).catch((err) => {
 
-        wx.showToast({
-          title: '失败……',
-          icon: 'none'
-      })
-    })
+    //     wx.showToast({
+    //       title: '失败……',
+    //       icon: 'none'
+    //   })
+    // })
     this.setData({
       shopName: options.shopName,
       totalMoney: options.totalMoney,
@@ -301,8 +323,42 @@ Page({
       name: options.name || "",
       couponId: options.counid || ""
     });
+    console.log(options.limtgood)
+    if (options.limtgood){
+      this.setData({
+        limtgood: options.limtgood.split(',')
+      });
+    }else{
+      this.setData({
+        limtgood: ""
+      });
+    }
   },
   onShow:function(e){
+    if (this.data.offline == 1) { //如果扫码进来遍历房间id取出房间号
+      this.setData({
+        isSend: 1,//0-快递  1-店内下单 2-自提
+        array: ['店内下单'],
+        isShop: 0,//0开通店内下单 1未开通
+        isService: 1, //0只有商品没有服务 1有服务
+        objectArray: [
+          {
+            id: 1,
+            name: '店内下单'
+          }
+        ],
+        index: 0
+      })
+      for (var k in this.data.room) {
+        if (this.data.facilityId == this.data.room[k].facilityId) {
+          this.setData({
+            scanRoom: this.data.room[k].roomVal
+          })
+          break;
+        }
+      }
+    }
+    console.log(this.data.scanRoom)
     //获取地址
     app.util.reqAsync('shop/getMyAddressAndCoupon', {
       customerId: this.data.customerId,
@@ -385,6 +441,7 @@ Page({
         amountMin: this.data.amountMin,
         amounts: this.data.amounts,
         instruction: this.data.instruction,
+        limtgood: this.data.limtgood,
         name: this.data.name,
         contactMobile: this.data.contactMobile,
         contactName: this.data.contactName
@@ -444,8 +501,8 @@ Page({
     }
     
   },
-  discounts: function (e) {
-    if (this.data.isSend==0){
+  discounts: function (e) { //优惠券
+    if (this.data.isSend == 0){
 
       var newmoney = Number(this.data.totalMoney) + Number(this.data.deliveyMoney);
     }else{
@@ -455,13 +512,162 @@ Page({
       oldTotal: newmoney.toFixed(2)
     })
     //优惠后合计
+    
     if (this.data.name != "") {
       if (this.data.name == "优惠券") {
-        if (Number(this.data.totalMoney) >= Number(this.data.amountMin)) {
-         
-          var countMoney = Number(newmoney) - Number(this.data.amounts);
-         
-          
+
+        if (this.data.limtgood != "") { //指定商品   //先筛选符合满减的指定商品
+        var limtarr = [];//有指定商品
+          for (var a in this.data.goods){
+            for (var b in this.data.limtgood){
+              if (this.data.goods[a].goodsId == this.data.limtgood[b]){ //是指定商品
+                limtarr.push({
+                  goodsId: this.data.goods[a].goodsId,
+                  actualPayment: this.data.goods[a].actualPayment,
+                  numbers: this.data.goods[a].number,
+                  total: Number(this.data.goods[a].actualPayment) * Number(this.data.goods[a].number)
+                })
+              }
+            }
+          }
+          console.log(limtarr.length)
+          if (limtarr.length>0){ //有满减的制定商品
+          var sumlit = 0;
+            for (var b in limtarr){
+              sumlit += limtarr[b].total
+            }
+            if (sumlit >= this.data.amountMin){ //指定商品的总金额大于满减
+              var countMoney = Number(newmoney) - Number(this.data.amounts); //满减之后的总价
+              if (countMoney > 0) {
+                this.setData({
+                  oldTotal: countMoney
+                })
+              } else {
+                this.setData({
+                  oldTotal: 0
+                })
+              }
+            }else{
+              this.setData({
+                instruction: "",
+                amountMin: 0, //优惠满
+                amounts: 0, //优惠多少
+                instruction: '',
+                couponId: '',
+                name: ''
+              })
+              wx.showToast({
+                title: '未达到满减金额，不能使用',
+                icon: 'none'
+              })
+              return false;
+            }
+          }else{
+            this.setData({
+              instruction: "",
+              amountMin: 0, //优惠满
+              amounts: 0, //优惠多少
+              instruction: '',
+              couponId: '',
+              name: '',
+              limtgood: ''
+            })
+            wx.showToast({
+              title: '此优惠券只有指定商品可用',
+              icon: 'none'
+            })
+          }
+        }else{ //没有指定商品
+          if (Number(this.data.totalMoney) >= Number(this.data.amountMin)) {
+
+            var countMoney = Number(newmoney) - Number(this.data.amounts);
+
+
+            if (countMoney > 0) {
+              this.setData({
+                oldTotal: countMoney
+              })
+            } else {
+              this.setData({
+                oldTotal: 0
+              })
+            }
+          } else {
+            this.setData({
+              instruction: "",
+              amountMin: 0, //优惠满
+              amounts: 0, //优惠多少
+              instruction: '',
+              couponId: '',
+              name: ''
+            })
+            wx.showToast({
+              title: '未达到满减金额，不能使用',
+              icon: 'none'
+            })
+            return false;
+          }
+        }
+        
+      } else if (this.data.name == "代金券") {
+        if (this.data.limtgood != ""){ //指定商品代金券
+          var limtarr = [];//有指定商品
+          for (var a in this.data.goods) {
+            for (var b in this.data.limtgood) {
+              if (this.data.goods[a].goodsId == this.data.limtgood[b]) { //是指定商品
+                limtarr.push({
+                  goodsId: this.data.goods[a].goodsId,
+                  actualPayment: this.data.goods[a].actualPayment,
+                  numbers: this.data.goods[a].number,
+                  total: Number(this.data.goods[a].actualPayment) * Number(this.data.goods[a].number)
+                })
+              }
+            }
+          }
+          console.log(limtarr.length)
+          if (limtarr.length > 0) { //有代金券的制定商品
+            var sumlit = 0;
+            for (var b in limtarr) {
+              sumlit += limtarr[b].total
+            }
+            if (Number(sumlit) - Number(this.data.amounts) > -1) { //指定商品的总金额大于代金券
+              var countMoney = Number(newmoney) - Number(this.data.amounts);
+            } else {
+              var countMoney = Number(newmoney) - Number(sumlit);
+            }
+            if (countMoney > 0) {
+              this.setData({
+                oldTotal: countMoney
+              })
+            } else {
+              this.setData({
+                oldTotal: 0
+              })
+            }
+          }else{ //此订单无指定商品
+            this.setData({
+              instruction: "",
+              amountMin: 0, //优惠满
+              amounts: 0, //优惠多少
+              instruction: '',
+              couponId: '',
+              name: '',
+              limtgood:''
+            })
+            wx.showToast({
+              title: '此代金券只有指定商品可用',
+              icon: 'none'
+            })
+            return false;
+          }
+        }else{
+
+          if (Number(this.data.totalMoney) - Number(this.data.amounts) > -1) {
+            var countMoney = Number(newmoney) - Number(this.data.amounts);
+          } else {
+            var countMoney = Number(newmoney) - Number(this.data.totalMoney);
+          }
+
           if (countMoney > 0) {
             this.setData({
               oldTotal: countMoney
@@ -471,37 +677,13 @@ Page({
               oldTotal: 0
             })
           }
-        } else {
-          this.setData({
-            instruction: "",
-            amountMin: 0, //优惠满
-            amounts: 0, //优惠多少
-            instruction: '',
-            couponId:'',
-            name: ''
-          })
-          wx.showToast({
-            title: '未达到满减金额，不能使用',
-            icon: 'none'
-          })
-          return false;
+
+
+
         }
-      } else if (this.data.name == "代金券") {
-        if (Number(this.data.totalMoney) - Number(this.data.amounts)>-1){
-          var countMoney = Number(newmoney) - Number(this.data.amounts);
-        }else{
-          var countMoney = Number(newmoney) - Number(this.data.totalMoney);
-        }
+
+
         
-        if (countMoney > 0) {
-          this.setData({
-            oldTotal: countMoney
-          })
-        } else {
-          this.setData({
-            oldTotal: 0
-          })
-        }
       } else {
         if (Number(newmoney) < Number(this.data.amountMin)) {
           this.setData({
@@ -554,18 +736,13 @@ Page({
         amounts: 0, //优惠多少
         instruction: '',
         couponId: '',
-        name: ''
+        name: '',
+        limtgood: ''
       })
     }else{
       this.setData({
         index: e.detail.value,
-        isSend: 2,
-        instruction: "",
-        amountMin: 0, //优惠满
-        amounts: 0, //优惠多少
-        instruction: '',
-        couponId: '',
-        name: ''
+        isSend: 2
       })
     }
     this.deliveryMone();
@@ -727,6 +904,7 @@ Page({
   },
   selectCounp: function (e) {
     var discount = this.data.discount;
+    console.log(discount.length)
     if (discount.length > 0) {
       wx.setStorageSync('discount', discount);
       wx.navigateTo({
@@ -933,21 +1111,22 @@ Page({
         provinceId: this.data.provinceId,
         cityId: this.data.cityId,
         couponId: this.data.couponId  //优惠券id
-     }).then((res) => {
+     }).then((data) => {
+       console.log(data)
        this.setData({
          showLoading: true
        })
-      if(res.data.code == 1) {
+       if (data.data.code == 1) {
         if (this.data.totalMoney=="0.00"){  //金额为0直接成功下单绕过支付
-          self.setData({
-            flagOrder: true,
+          this.setData({
+            flagOrder: false,
             isPay: 1
           })
         }else{
           if (type == 1) { //点击确认下单
             //微信支付弹窗
             var self = this;
-            var dt = res.data.data;
+            var dt = data.data.data;
             wx.showModal({
               title: '支付方式',
               content: '是否微信支付？',
@@ -978,13 +1157,15 @@ Page({
         
       }else{
         wx.showToast({
-          title: res.data.msg,
+          title: data.data.msg,
           icon: 'none'
         })
       }
       wx.setStorageSync('discount', '');
 
     }).catch((err) => {
+      console.log("1033")
+      console.log(err)
       wx.showToast({
         title: '失败……',
         icon: 'none'

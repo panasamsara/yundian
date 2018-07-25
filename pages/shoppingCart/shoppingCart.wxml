@@ -26,11 +26,11 @@
                 </view>
                 <view class="stepper">
                 <!-- 减号 -->
-                  <text class="minus"  data-pindex="{{inx}}" data-index="{{index}}" bindtap="bindMinus">-</text>
+                  <text class="minus"  data-pindex="{{inx}}" data-index="{{index}}" data-goodid="{{items.goodsId}}" data-stockId="{{items.stockId}}" bindtap="bindMinus" data-stockban = "{{items.stockBalance}}">-</text>
                 <!-- 数值 -->
-                  <input type="number" data-pindex="{{inx}}" data-index="{{index}}" bindinput="bindblur" value="{{items.number}}" maxlength="3" />
+                  <input type="number" data-pindex="{{inx}}" data-index="{{index}}" data-goodid="{{items.goodsId}}"  data-stockId="{{items.stockId}}" value="{{items.number}}" data-stockban = "{{items.stockBalance}}" disabled='disabled'  maxlength="3" />
                 <!-- 加号 -->
-                  <text class="add normal" data-index="{{index}}" data-pindex="{{inx}}" bindtap="bindPlus">+</text>
+                  <text class="add normal" data-goodid="{{items.goodsId}}"  data-index="{{index}}" data-pindex="{{inx}}" data-stockId="{{items.stockId}}" data-stockban = "{{items.stockBalance}}" bindtap="bindPlus">+</text>
                 </view>
               </view>
             </view>
@@ -48,19 +48,29 @@
   </scroll-view>
   
   <view class='account-box'>
-    <view class='all'>
-     <image class="item-select" data-is='{{isAllSelect}}' bindtap="allSelect" src="{{isAllSelect?'img/comment_select.png':'img/comment_normal.png'}}" />
-      <text>全选</text>
-    </view>
-    <view class="all-del" bindtap="allDel" >
-      <image src="img/delete.png"></image>
-    </view>
-    <view class='sum-info'>
+    <view class="acount-lft">
+      <view class='all'>
+      <image class="item-select" data-is='{{isAllSelect}}' bindtap="allSelect" src="{{isAllSelect?'img/comment_select.png':'img/comment_normal.png'}}" />
+        <text>全选</text>
+      </view>
       <view class='sum-box'>
         合计：<view class='sum-price'><text class="small-size">￥</text><span class="nummoney">{{totalMoney}}</span></view>
       </view>
-      <button class='account-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}"
+    </view>
+    <!-- <view class="all-del"  >
+      <image src="img/delete.png"></image>
+    </view> -->
+    <view class='sum-info' wx:if="{{isEdit==0}}"> <!--未编辑-->
+      <button class='account-btn'  size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}"
+         bindtap="edits" hover-class="other-button-hover"> 编辑 </button>
+      <button class='account-btn'  size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}"
          bindtap="default" hover-class="other-button-hover"> 结算 </button>
+    </view>
+     <view class='sum-info' wx:if="{{isEdit==1}}"> <!--正在编辑-->
+      <button class='account-btn'  size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}"
+         bindtap="over" hover-class="other-button-hover"> 完成 </button>
+      <button class='account-btn'  size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}"
+         bindtap="allDel" hover-class="other-button-hover"> 删除 </button>
     </view>
   </view>
 </view>

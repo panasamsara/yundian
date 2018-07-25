@@ -2,7 +2,7 @@
 <view class='page_main'>
 <!-- banner区 -->
 <swiper indicator-dots='{{indicatorDots}}'>
-  <block wx:for="{{imgUrls}}" wx:key='key'>
+  <block wx:for="{{data.imageList}}" wx:key='key'>
     <swiper-item>
       <image src='{{item.smallFilePath}}' data-src='{{item.smallFilePath}}'></image>    
     </swiper-item>
@@ -10,13 +10,30 @@
 </swiper>
 <scroll-view scroll-y="true">
 <!-- 倒计时 -->
-  <view class='countDown clearfix {{flagCount?"show":"hide"}}'>
-    <view class='left'>¥{{groupBuyingPrice}}<span>¥{{batchPrice}}</span></view>
+  <view class='countDown' wx:if="{{status==2}}">
+    <view class='left'>¥<text id='newPrice'>{{listData[0].goodsPreferentialStockPrice}}</text><text id='oldPrice'>¥{{listData[0].goodsOriginalStockPrice}}</text></view>
+    <view class='right'>
+      <view id='text'>距结束还剩:</view>
+      <view id='countBox'>
+        <text>{{listData[0].rh?listData[0].rh:0}}</text>:<text>{{listData[0].m?listData[0].m:0}}</text>:<text>{{listData[0].s?listData[0].s:0}}</text>
+      </view>
+    </view>
   </view>
   <view class='detail'>
-    <text class='title'>{{goodsName}}</text>
-    <text class='price'>¥{{batchPrice}}</text>
-    <view><span>库存 {{stockBalance}}</span><span>月销量 {{payCount}}</span></view>
+    <view class='infoBox'  wx:if="{{status==1}}">
+      <view class='priceBox'>
+        <text class='price'>¥{{data.groupBuyingPrice}}</text>
+        <text class='oldPrice'>￥{{data.price}}</text>
+      </view>
+      <view class='numBox'>
+        <text class='groupNum'>{{data.population}}人拼</text>
+        <text class='groupAmount'>已拼{{data.groupBuyingAllNum}}件</text>
+      </view>
+    </view>
+    <text class='title'>{{data.goodsName}}</text>
+    <view class='price' wx:if="{{status==3}}">￥{{data.price}}</view>
+    <view class='info' wx:if="{{status==2}}"><span>库存 {{listData[0].salesCount}}</span><span>月销量 {{listData[0].goodsCount}}</span></view>
+    <view class='info' wx:if="{{status==3}}"><span>库存 {{data.stockBalance}}</span><span>月销量 {{data.payCount}}</span></view>
   </view>
   <!-- <view class='separate'></view> -->
   <!-- 赠品部分 -->
@@ -37,18 +54,22 @@
     <text class='{{descContent==""?"hide":"show"}}' >{{descContent}}</text>
   </view> -->
   <!-- 拼单 -->
-  <view class='spellList {{flagSpellList?"show":"hide"}}'>
+  <view class='spellList' wx:if="{{status==1&&data.groupBuyList.length>0}}">
     <view class='top'>
-      <text>{{groupBuyingAllNum}}人在拼单, 可直接参与</text>
+      <text>{{data.groupBuyingNum}}人正在拼单, 可直接参与</text>
       <image src='../../images/yundian_spxq_gengduo.png' bindtap='toLayer'></image>
     </view>
-    <view class='item clearfix' wx:for='{{plistData}}' wx:key='key'>
-      <image src='{{item.userPic}}'></image>
-      <text>{{item.userName}}</text>
-      <button bindtap='toLayer'>去拼单</button>      
-      <view class='cont'>还差<span>{{item.totalNum}}人</span>拼成<view><span>剩余{{item.rh}}天:{{item.m}}分:{{item.s}}秒</span></view></view>
+    <view class='item clearfix groupBox' wx:for='{{listData}}' wx:key='key'>
+      <view class='picBox'><image src='{{item.userPic}}'></image></view>
+      <text class='name'>{{item.userName}}</text>  
+      <view class='cont'>还差<span>{{data.population-item.totalNum}}人</span>拼成<view><span>剩余{{item.rh}}:{{item.m}}:{{item.s}}</span></view></view>
+      <view bindtap='toLayer' class='gogroup'>去拼单</view> 
     </view>
   </view>
+  <!-- <view wx:if="{{(status==2||status==3)&&(data.secondKillInfo.length>1||data.scShopGoodsStockList.length>1)}}" id='stockBox'>
+    <text>选择规格</text>
+    <image src='../../images/yundian_spxq_gengduo.png' class='chose' bindtap='tobuy' id='choseStock'></image>
+  </view> -->
   <!-- <view class='separate'></view> -->
   <!-- 商品评价 -->
   <view class='dingwei'>
@@ -111,57 +132,98 @@
   <view class='separate'></view>
 
   <view class='shop clearfix'>
-    <image src='{{picImg}}'></image>
+    <image src='{{data.shopLogoUrl}}'></image>
     <view class='content'>
-      <text>{{shopName}}</text>
-      <block wx:for='{{score}}' wx:key='key'>
+      <text>{{data.shopName}}</text>
+      <block wx:for='{{data.shopScore}}' wx:key='key'>
         <image src='../../images/fullstar.png'></image>
       </block>
-      <block wx:for='{{5-score}}' wx:key='key'>
+      <block wx:for='{{5-data.shopScore}}' wx:key='key'>
         <image src='../../images/emptystar.png'></image>
       </block>      
     </view>
     <view class='goShop' bindtap='goShop'><image src='../../images/gotoshop.png'></image></view>
   </view>
   <view class='tips'>
-    <text>{{shopDesc}}</text>
+    <text>{{data.shopDesc}}</text>
   </view> 
  <view class='separate mb'></view>
 </scroll-view>
 <!-- 底部悬浮栏 -->
   <view class='detail-nav'>
-   <button class='add' bindtap='tobuy'>立即购买</button>
-  <!-- <button class='buy' bindtap='addCar'>加入购物车</button>  -->
-</view>  
-<!-- 遮罩层 -->
-<view class='shade {{flag?"show":"hide"}}'></view>
-<!-- 弹出层 -->
-<view class='layer {{flag1?"show":"hide"}}'>
-  <view class='close' bindtap='closeLayer'>×</view>
-  <view class='top'>正在拼单</view>
-  <scroll-view scroll-y style='height:860rpx'>
-    <view class='item clearfix' wx:for='{{allListData}}' wx:key='key'>
-      <image src='{{item.userPic}}'></image>
-      <text>{{item.userName}}</text>
-      <button data-groupBuyingId='{{item.groupBuyingId}}' data-cUser='{{item.cUser}}' data-status='{{item.status}}' bindtap='toJoin'>去拼单</button>      
-      <view class='cont'>还差<span>{{item.totalNum}}人</span>拼成<view><span>剩余15:30:26</span></view></view>
+    <view wx:if="{{status==1}}" class='buyBox'>
+      <view class='add' bindtap='tobuy' id='buy'>
+        <text>￥{{data.price}}</text>
+        <text>单独购买</text>
+      </view>
+      <view class='add' bindtap='tobuy' id='groupBuy'>
+        <text>￥{{data.groupBuyingPrice}}</text>
+        <text>发起拼单</text>
+      </view>
     </view>
-    <!-- 底部提示信息             -->
-    <view class='bot'>仅显示10个正在拼单的人</view>
-  </scroll-view>        
-</view>
-<!-- 去拼单弹出层 -->
-<view class='layer {{flag2?"show":"hide"}} layer2'>
-  <view class='close' bindtap='closeLayer'>×</view>  
-  <view class='title'>参与喵喵喵的拼单</view> 
-  <view class='cont'>仅剩<span>3个</span>名额, 20:06:59后结束</view>
-  <view class='pic-list clearfix'>
-    <image src='{{item.userPic}}' wx:for='{{picData}}'wx:key='key'></image>
-    <!-- <image src='../../images/pic_03.gif'></image>
-    <image src='../../images/pic_03.gif'></image>
-    <image src='../../images/pic_03.gif'></image>
-    <image src='../../images/pic_03.gif'></image> -->
-  </view> 
-  <view class='joinBuy' bindtap='joinBuy'>参与并拼单</view>    
-</view>
+    <view wx:if="{{status==2||status==3}}" class='buyBox'>
+      <view class='add' bindtap='tobuy' id='addCart'>加入购物车</view>
+      <view class='add' bindtap='tobuy' id='buyNow'>立即购买</view>
+    </view>
+  </view>  
+  <!-- 遮罩层 -->
+  <view class='shade {{flag?"show":"hide"}}' bindtap='closeMask'></view>
+  <!-- 弹出层 -->
+  <view class='layer {{flag1?"show":"hide"}}'>
+    <view class='close' bindtap='closeLayer'>×</view>
+    <view class='top'>正在拼单</view>
+    <scroll-view scroll-y style='height:860rpx'>
+      <view class='item clearfix' wx:for='{{allListData}}' wx:key='key'>
+        <image src='{{item.userPic}}'></image>
+        <text>{{item.userName}}</text>
+        <button data-groupBuyingId='{{item.groupBuyingId}}' data-cUser='{{item.cUser}}' data-status='{{item.status}}' bindtap='toJoin'>去拼单</button>      
+        <view class='cont'>还差<span>{{item.totalNum}}人</span>拼成<view><span>剩余15:30:26</span></view></view>
+      </view>
+      <!-- 底部提示信息 -->
+      <view class='bot'>仅显示10个正在拼单的人</view>
+    </scroll-view>        
+  </view>
+  <!-- 去拼单弹出层 -->
+  <view class='layer {{flag2?"show":"hide"}} layer2'>
+    <view class='close' bindtap='closeLayer'>×</view>  
+    <view class='title'>参与喵喵喵的拼单</view> 
+    <view class='cont'>仅剩<span>3个</span>名额, 20:06:59后结束</view>
+    <view class='pic-list clearfix'>
+      <image src='{{item.userPic}}' wx:for='{{picData}}'wx:key='key'></image>
+      <!-- <image src='../../images/pic_03.gif'></image>
+      <image src='../../images/pic_03.gif'></image>
+      <image src='../../images/pic_03.gif'></image>
+      <image src='../../images/pic_03.gif'></image> -->
+    </view> 
+    <view class='joinBuy' bindtap='joinBuy'>参与并拼单</view>    
+  </view>
+  <!-- 购买弹出层 -->
+  <view class='main' wx:if="{{showBuy}}">
+    <view class='top'>
+      <image src='{{data.pictureUrl}}' ></image>
+      <text class='price'>¥{{total}}</text>
+      <text class='count'>库存 {{balance}}</text>
+      <view class='size clearfix'>
+        <block wx:for='{{data.scShopGoodsStockList}}' wx:key='index' wx:if="{{status==1}}">
+          <span bindtap='chose' class="{{cur==item.index?'active':''}}" data-index="{{index}}">{{item.stockName}}</span>    
+        </block>
+        <block wx:for='{{data.secondKillInfo}}' wx:key='index' wx:if="{{status==2}}">
+          <span bindtap='chose' class="{{cur==item.index?'active':''}}" data-index="{{index}}">{{item.stockName}}</span>    
+        </block>
+        <block wx:for='{{data.stockList}}' wx:key='index' wx:if="{{status==3}}">
+          <span bindtap='chose' class="{{cur==item.index?'active':''}}" data-index="{{index}}">{{item.stockName}}</span>    
+        </block>
+      </view>
+      <view class='buyCount clearfix'>
+        <view class='left'>购买数量</view>
+        <view class='right clearfix'>
+          <span bindtap="change" class='light bet' id="minus">-</span>
+          <span class='dark middle'>{{number}}</span>
+          <span bindtap="change" class='dark bet' id="add">+</span>
+        </view>
+      </view>    
+    </view>
+    <view class='tot' bindtap='buyNow' wx:if="{{buy=='buyNow'}}">立即购买</view>
+    <view class='tot cart' bindtap='addCart' wx:if="{{buy=='addCart'}}">加入购物车</view>
+  </view>
 </view>

@@ -5,17 +5,17 @@
       <view class='shopname color666 font28 namecheck'>{{discountsNew.shopName}}</view>
       <view class='font40 {{discountsNew.expireState!=0||res.data.data.couponUseDate != null?"color999":"colorred"}}'>{{discountsNew.couponInstruction}}</view>
       <view class='font36 text-overflow fontWeight color333'>{{discountsNew.couponGoodsName}}</view>
-      <view class='color999 font26'>{{discountsNew.couponEndTime}}</view>
+      <view class='color999 font26'>{{discountsNew.userCouponExpireTime}}</view>
       <image wx:if="{{discountsNew.expireState!=0}}" class="img" src="../../images/yd_yiguoqi@2x.png"></image>
       <image wx:if="{{res.data.data.couponLogStatus ==3}}" class="img" src="../../images/yd_yishiyong@2x.png"></image>
     </view> 
      <view class='info' wx:if="{{discountsNew.couponShare==1&&discountsNew.couponShared==0}}">
       <view>分享再获好礼</view>
-       <button open-type='share' data-shoplogourl="{{discountsNew.shopLogoUrl}}">分享</button> 
+      <button open-type='share' data-shoplogourl="{{discountsNew.shopLogoUrl}}" style='background:#fb8b33;'>分享</button> 
     </view>
      <view class='info noshare' wx:if="{{discountsNew.couponShare==1&&discountsNew.couponShared==1}}">
       <view>分享再获好礼</view>
-      <view>分享</view>
+      <button open-type='share' data-shoplogourl="{{discountsNew.shopLogoUrl}}" style='background:#999;' >分享</button> 
     </view>  
     <view class='serial'>
       <view><text>序列号:{{discountsNew.couponCode}}</text></view>

@@ -14,7 +14,7 @@
         </view>
         <view class='buyBox'>
            <view class='buy'>
-            <navigator url='../goodsDetial/goodsDetial?shopId={{item.shopId}}&goodsId={{item.itemId}}&cUser={{item.cUser}}&groupBuyingId={{item.id}}&status={{item.status}}'>去拼团</navigator>
+            <navigator url='../goodsDetial/goodsDetial?shopId={{item.shopId}}&goodsId={{item.itemId}}&cUser={{item.cUser}}&groupBuyingId={{item.id}}&status=1'>去拼团</navigator>
           </view> 
         </view>
       </view>

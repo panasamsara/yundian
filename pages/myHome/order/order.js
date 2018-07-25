@@ -351,7 +351,7 @@ Page({
     var orderNo = e.currentTarget.dataset.no;
     //跳转到订单详情
     wx.navigateTo({
-      url: '../orderDetail/orderDetail?orderNo=' + orderNo
+      url: '../orderDetail/orderDetail?orderNo=' + orderNo + '&isGroupBuying=' + 0
     })
   },
   onReachBottom: function () {

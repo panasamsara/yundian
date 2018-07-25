@@ -17,8 +17,10 @@ Page({
     let data={
       pageNo: 1,
       pageSize: 10,
-      shopId: wx.getStorageSync('shop').id,
-      status: 1  
+      statusList: '0,1', //0 未开启/ 1 进行中/2 已结束/3 已关闭  （String）
+      shopId: wx.getStorageSync('shop').id, //商铺id  
+      merchantId: wx.getStorageSync('shop').merchantId, //商户id
+      goodsId:""
     };
     this.setData({
       datas:data
@@ -26,12 +28,7 @@ Page({
     this.getData(data);
     let _this=this
     var timer=setInterval(function(){_this.count()},1000)
-  },
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-    
+    console.log(this.data.list)
   },
   /**
    * 页面上拉触底事件的处理函数

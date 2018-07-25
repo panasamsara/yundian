@@ -21,7 +21,7 @@ Page({
       shopName: shop.shopName,
       url: shop.logoUrl,
       fans: shop.fansCounter||0,
-      storeUrl: "http://share.zxtest.izxcs.com//yueba/yundian/shareGift/ewm.html?apptype=cityshop&subtype=shophome&fromscan=yes&visitFrom=1&cloud_store&sn=17&yw=shop&cp=1&shopId=" + shop.id
+      storeUrl: "https://wxapp.izxcs.com/qrcode/shop/index.html?apptype=cityshop&subtype=shophome&fromscan=yes&visitFrom=1&cloud_store&sn=17&yw=shop&cp=1&shopId=" + shop.id
     })
     // 页面初始化 options为页面跳转所带来的参数
     var size = this.setCanvasSize();//动态设置画布大小

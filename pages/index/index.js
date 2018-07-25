@@ -39,79 +39,55 @@ Page({
       couponType1:'',
       couponType2:'',
       couponType3:'',
-      couponType4:''
+      couponType4:'',
+      animationData: {},
+      outQrCodeParam:{}
+
    },
    onReady() {
      var self = this;
    },
    onLoad: function (e) {
-     console.log('加载页面index/index', e);
+     console.log('onLoad')
+     util.checkWxLogin();
+     var params, shopId;
      // 【扫码进入】，获取店铺ID，存入本地，请求店铺数据
-     // 扫描二维码加载页面
-     if (e && e.scancode_time) {
+     if (e && e.q) {
        var uri = decodeURIComponent(e.q);
        console.log("通过二维码加载", uri);
-       var params = util.getParams(uri)
-      //  console.log("shopid", params.shopId);
-      //  console.log("offline", params.offline);
-      //  console.log("facilityId", params.facilityId)
-        util.checkWxLogin();
-      //线下进分类
-        util.reqAsync('shop/getShopHomePageInfo', {
-          customerId: wx.getStorageSync('scSysUser').id,
-          shopId: params.shopId,
-        }).then((res) => {
-          if (params.offline == 1) {
-            wx.navigateTo({
-              url: '/pages/proList/proList',
-            })
-            shop.offline = params.offline;
-            if (params.facilityId) {
-              shop.facilityId = params.facilityId;
-            }
-          }else{
-            wx.navigateTo({
-              url: '/pages/index/index',
-            })
-          }
-          var shop = res.data.data.shopInfo;
-          wx.setStorageSync('shop', shop);
-        })
+       this.data.outQrCodeParam = util.getParams(uri)
+       shopId = this.data.outQrCodeParam.shopId;
      }
      // 另外的方式加载页面（可能已取到shopId）
-     if (e.shopId){
-       wx.setStorageSync('shop', { id: e.shopId });
+     if (e.shopId) {
+       shopId = e.shopId;
      }
-    // 若无店铺及店铺ID，则跳转到扫码界面
-     if (!util.hasShop()) return;
-    // 获取秒杀
-     this.getSecKillData()
-     let _this = this
-     var timer = setInterval(function () { _this.count() }, 1000)
-     // 获取拼团
-     this.getGroupBuyData()
-    // 查看新人礼包
-     this.checkCoupon()
-     this.getCouponList()
+     // 无shopId不设置，有shopId修改shop对象
+     shopId && wx.setStorageSync('shop', { id: shopId });
+     // 线下跳转到‘分类’ (跳转到 tabBar 页面，并关闭其他所有非 tabBar 页面)
+     if (this.data.outQrCodeParam && this.data.outQrCodeParam.offline === '1') {
+       wx.switchTab({
+         url: '/pages/proList/proList'
+       })
+     }
    },
    // 每次显示做个判断，本地没有店铺就扫码，当前没有店铺就请求数据
    onShow: function () {
+     if (!this.data.shopInformation.shopInfo) this.getShopInfo()
+     // 若无店铺及店铺ID，则跳转到扫码界面
      if (!util.hasShop()) {
        wx.navigateTo({ url: '/pages/scan/scan' });
        return
      }
-     if (!this.data.shopInformation.shopInfo) this.getShopInfo()
-     util.checkWxLogin();
-
+     // 缓存首页视频地址
      var shop = wx.getStorageSync('shop');
-     if (shop ){
-       if (shop.shopHomeConfig){
+     if (shop) {
+       if (shop.shopHomeConfig) {
          if (shop.shopHomeConfig.videoPathList.length != 0) {
            wx.setStorageSync('videoUrl', shop.shopHomeConfig.videoPathList[0].filePath)
          }
        }
      }
-
    },
    // 获取店铺信息
    getShopInfo: function () {
@@ -145,7 +121,9 @@ Page({
        } else {
          res.data.data.videoImagecover = '../../images/bg1.jpg'
        }
-       
+       // 设置二维码入参 offline：0-线上，1-线下; 
+       shop.offline = this.data.outQrCodeParam.offline;
+       shop.facilityId = this.data.outQrCodeParam.facilityId;
        wx.setStorageSync('shop', shop);
        app.util.setHistories(shop)
        
@@ -172,6 +150,20 @@ Page({
        this.getHotList()
        this.getPhotoNum(shop.id, 0) //图片数
        this.getPhotoNum(shop.id, 1) //视频数
+
+      if (shop && shop.shopHomeConfig) {
+       if (shop.shopHomeConfig.videoPathList.length != 0) {
+         wx.setStorageSync('videoUrl', shop.shopHomeConfig.videoPathList[0].filePath)
+       }
+     }
+     // 获取秒杀
+     this.getSecKillData()
+     
+     // 获取拼团
+     this.getGroupBuyData()
+     // 查看新人礼包
+     this.checkCoupon()
+     this.getCouponList()
      })
    },
    //精选商品推荐列表,获取店铺信息后调用此方法
@@ -225,12 +217,31 @@ Page({
      })
    },
    clickScrollTop: function(){
+    //  var animation = wx.createAnimation({
+    //    duration: 1000,
+    //    timingFunction: 'ease',
+    //  })
+    //  this.animation = animation
+    //  animation.height('1rpx').scaleY(0.01).step()
+    //  this.setData({
+    //    animationData: animation.export()
+    //  })
      this.setData({
        showIndex: false,
        showIndexTopBar: true
      })
    },
    clickShowIndex: function () {
+    //  var animation = wx.createAnimation({
+    //    duration: 1000,
+    //    timingFunction: 'ease',
+    //  })
+    //  this.animation = animation
+    //  animation.height('100%').scaleY(1).step()
+
+    //  this.setData({
+    //    animationData: animation.export()
+    //  })
      this.setData({
        showIndex: true,
        showIndexTopBar: false
@@ -353,7 +364,7 @@ Page({
      var goodsid = e.currentTarget.dataset['goodsid'];
      var shopId = this.data.shopInformation.shopInfo.id
      wx.navigateTo({
-       url: '../goodsDetial/goodsDetial?goodsId=' + goodsid + '&shopId=' + shopId,
+       url: '../goodsDetial/goodsDetial?goodsId=' + goodsid + '&shopId=' + shopId + '&status=3',
        success: function (res) {
          // success
        },
@@ -362,6 +373,30 @@ Page({
        },
        complete: function () {
          // complete
+       }
+     })
+   },
+   goToSec: function(e){
+     var goodsid = e.currentTarget.dataset['goodsid'];
+     var shopId = this.data.shopInformation.shopInfo.id
+     wx.navigateTo({
+       url: '../goodsDetial/goodsDetial?goodsId=' + goodsid + '&shopId=' + shopId + '&status=2',
+       success: function (res) {
+         // success
+       }
+     })
+   },
+   goToGroupBuy: function(e){
+     var goodsid = e.currentTarget.dataset['goodsid']
+     var groupId = e.currentTarget.dataset['groupid']
+     var shopId = this.data.shopInformation.shopInfo.id
+     console.log(goodsid)
+     console.log(groupId)
+     var user = wx.getStorageSync('scSysUser')
+     wx.navigateTo({
+       url: '../goodsDetial/goodsDetial?goodsId=' + goodsid + '&shopId=' + shopId + '&status=1' + '&cUser=' + user.id + '&groupBuyingId='+ groupId ,
+       success: function (res) {
+         // success
        }
      })
    },
@@ -405,6 +440,8 @@ Page({
            nowTime: res.data.data
          })
        }
+       let _this = this
+       var timer = setInterval(function () { _this.count() }, 1000)
      }).catch((err) => {
        console.log(err)
      })

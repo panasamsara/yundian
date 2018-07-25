@@ -123,7 +123,7 @@ page{
 }
 .list .info button{
   float:right;
-  background:#fb8b33;
+  /* background:#fb8b33; */
   color:#fff;
   border-radius:5rpx;
   font-size: 28rpx;

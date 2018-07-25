@@ -703,7 +703,6 @@ Page({
       this.setData({
         showLoading: true
       })
-      
 
       if (data.data.code == 9) {
         wx.showToast({

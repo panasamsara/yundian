@@ -9,7 +9,7 @@
   </view>
   <image class='newCouponBag' wx:if='{{showCoupnBox}}' bindtap='openCouponBag' src='../../images/libao.gif'></image>
 
-  <view id="top" class="cate-box" wx:if='{{showIndex}}'>
+  <view id="top" class="cate-box" wx:if='{{showIndex}}' animation="{{animationData}}">
     <view class="bg-mask"></view>
     <image src='{{shopInformation.bgImageLong}}' mode='scaleToFill' class='top-bg' wx:if='{{showImg}}'></image>
     <image src='{{shopInformation.videoImagecover}}' mode='scaleToFill' class='top-bg' wx:if='{{showVideo}}'></image> 
@@ -125,8 +125,7 @@
       </view>
     </view>   
     <!-- 智享秒杀 -->
-     <!-- <view class='sec-kill-box' wx-if="{{list.length>=1}}"> -->
-     <view class='sec-kill-box' wx-if="">
+    <view class='sec-kill-box' wx-if="{{list.length>=1}}"> 
       <view class='sec-kill-top'>
         <view class='sec-kill-title-img'>
           <image src='../../images/yundian_zhixiangmiaosha@2x.png'></image>
@@ -138,7 +137,7 @@
       <view class='sec-kill-content-box'>
 
         <view class='sec-kill-content' wx:for="{{list}}" wx:key="index">
-          <image class='sec-kill-img' src='{{item.goodsPic}}'></image>
+          <image class='sec-kill-img' src='{{item.goodsPic}}' data-goodsid='{{item.goodsId}}' bindtap='goToSec'></image>
           <view class='sec-kill-detail'>
             <view class='now-price'> <text class='miaosha-yangjiao'>￥</text><text class='now-price-num-sec'>{{item.minPrice}}</text> </view>
             <view class='old-price'>￥{{item.minOriginalPrice}}</view>
@@ -153,8 +152,7 @@
     </view> 
 
     <!-- 趣拼团 -->
-     <!-- <view class='sec-kill-box' wx-if="{{groupBuyList.length>=1}}"> -->
-      <view class='sec-kill-box' wx-if="">
+    <view class='sec-kill-box' wx-if="{{groupBuyList.length>=1}}"> 
       <view class='sec-kill-top'>
         <view class='group-buy-title-img'>
           <image src='../../images/yundian_qupintuan@2x.png'></image>
@@ -166,7 +164,7 @@
       <view class='sec-kill-content-box'>
 
         <view class='sec-kill-content' wx:for="{{groupBuyList}}" wx:key="index">
-          <image class='sec-kill-img' src='{{item.pictureUrl}}'></image>
+          <image class='sec-kill-img' src='{{item.pictureUrl}}' data-goodsid='{{item.itemId}}' data-groupid='{{item.id}}' bindtap='goToGroupBuy'></image>
           <view class='sec-kill-detail'>
             <view class='now-price'> <text class='pintuan-yangjiao'>￥</text><text class='now-price-num'>{{item.discountPrice}}</text> </view>
             <view class='old-price'>￥{{item.originalPrice}}</view>
@@ -204,7 +202,7 @@
   </view>
   <!-- </block>  -->
   <view class='mask' catchtouchmove='preventTouchMove' bindtap='closeQuanBox' wx:if='{{showQuanBox}}'></view> 
-  <scroll-view scroll-y class='quan-box'  wx:if='{{showQuanBox}}'>
+  <view  class='quan-box'  wx:if='{{showQuanBox}}' catchtouchmove='preventTouchMove'>
     <!-- 优惠券 -->
     <view id='couponType1' wx:if="{{couponType1.name}}">
       <text class='header'>{{couponType1.name}}</text>
@@ -225,7 +223,7 @@
         <view class='quan-box-content'>
             <view class='quan-price-box'>￥<text class='quan-price'>{{couponType2.amount}}</text></view>
             <view>{{couponType2.instruction}}</view>
-            <view>有效期{{couponType1.beginTime}}-{{couponType1.endTime}}</view>
+            <view>有效期{{couponType2.beginTime}}-{{couponType2.endTime}}</view>
         </view>
       </view>
     </view>
@@ -241,5 +239,5 @@
         </view>
       </view>
     </view>
-  </scroll-view>
+  </view>
 </view>

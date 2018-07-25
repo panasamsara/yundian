@@ -25,6 +25,7 @@ Page({
     };
     app.util.reqAsync('shop/commentList',parm).then((res)=>{
       var data = res.data.data;
+      console.log(data);
       for (var i = 0; i < data.length; i++) {
         var key = 'creatTime';
         var value = data[i].commentDate.slice(0, 11)

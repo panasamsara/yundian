@@ -1,0 +1,110 @@
+<!--pages/spelldetails/spelldetails.wxml-->
+<view class='wrap'>
+  <view class="main" style="flex-direction:row;">
+    <view class="productimg">
+      <image src='{{pictureUrl}}' data-src=''></image> 
+    </view>
+    <!-- 主商品信息 -->
+    <view class='info'>
+      <text class='title'>{{goodsTitle}}</text>
+      <view class='detail'>
+        <view>
+          <span class="code">￥</span>
+          <span class='price'>{{discountPrice}}</span>
+          <span class='number'>已拼{{groupOrderListLength}}单</span>
+        </view>
+      </view>
+    </view>
+    <!-- 主商品信息 end-->
+  </view>
+
+  <!-- 拼团成员 -->
+  <view class='grouplist'>
+    <scroll-view scroll-x   upper-threshold="750rpx" class='groupscroll'>
+      <!-- 参团用户 -->
+       <view wx:for="{{groupOrderList}}" wx:key="*this" class='scroll-view-item'>
+          <image class="headportrait" src='{{item.userpic}}' data-src=''></image> 
+          <view wx:if="{{index===0}}" class='scroll-view-icon'>
+            <image src='images/yundian_pinzhu@2x.png' data-src=''></image>
+          </view>
+       </view>
+      <!-- 参团用户 end-->      
+    </scroll-view>
+  </view>
+  <!-- 拼团成员 end-->
+  <!-- 0 进行中 -->
+  <view wx:if="{{timeStatus===0}}">
+    <!-- 1 拼主  -->
+    <view wx:if="{{isMaster===1}}">
+      <view class='status'>
+        仅剩<span class='redtext'>{{lackUser}}</span>个名额，{{endTime}}后结束
+      </view>
+      <button open-type='share' class='spellbtn' hover-class='spellbtn-hover'>邀请好友拼单</button>
+    </view>
+    <!-- 0 非拼主 -->
+    <view wx:elif="{{isMaster===0}}">
+      <view class='status'>
+        仅剩<span class='redtext'>{{lackUser}}</span>个名额，{{endTime}}后结束
+      </view>
+      <button class='spellbtn' hover-class='spellbtn-hover' bindtap="participate ">参与拼单</button>
+    </view>
+  </view>
+  <!-- 1 成团 -->
+  <view wx:if="{{timeStatus===1}}">
+    <view class='status success-status'>
+      <image class="faileicon" bindtap='closeMask' src='images/yundain_chengoing@2x.png'></image>
+      拼单成功
+    </view>
+    <button class='spellbtn' hover-class='spellbtn-hover' bindtap="primary">继续逛逛</button>
+  </view>
+  <!-- 2 过期失败 -->    
+  <view wx:if="{{timeStatus===2}}">
+    <view class='status failtext'>
+      <image class="faileicon" bindtap='closeMask' src='images/yundain_tixing@2x.png'></image>
+      拼单失败，款项将原路退还
+    </view>
+    <button class='spellbtn' hover-class='spellbtn-hover' bindtap="primary">再次发起拼单</button>
+  </view>
+
+
+  <!-- 拼团规则 -->
+  <view class='spllrule'>
+     <text class='ruletit'>拼单规则</text>
+     <text class='ruletext' bindtap="showRule">好友拼单·人满发货·人不满退款</text>
+  </view>
+  <!-- 拼团规则 end-->
+  <view class='listwrap'>
+    <view class='listcon'>
+    <!-- 单个推荐 -->
+      <view wx:for="{{moreGroupList}}" wx:key="*this"  wx:for-index="mdx" wx:for-item="groupList"  class='product-item'>
+        <view class='itemimg-con'>
+          <image class="itemimg" src='{{groupList.pictureUrl}}' data-src=''></image> 
+        </view>
+         <view class='itemtext'>
+            <text class='itemtitle'>{{pictureUrl.itemTitle}}</text>
+            <view class='intro'>
+              <view class='intro-price'><span class='intro-code'>￥</span>{{groupList.discountPrice}}</view>
+              <view class='intro-number'>已拼{{groupList.num}}单</view>
+            </view>
+         </view>
+      </view>
+    <!-- 单个推荐 end-->
+    </view>
+  </view>
+  
+  <!-- 拼单规则 弹窗 -->
+  <view class='stock-mask' catchtouchmove='preventTouchMove' catchtap='closeMask' wx:if='{{showStock}}'></view> 
+  <view class='stock-box' wx:if='{{showStock}}'>
+    <image class='mask-close-btn' bindtap='closeMask' src='images/yundian_dnxd_guanbi@2x.png'></image>
+    <view class='stock-box-title'>如何参加拼单</view>
+    <view class='stock-box-content'>
+      <view class='stock-box-content-text'>
+        <view class="testdetail"><span class="cricle">·</span>发起拼单或参加别人的拼单</view>
+        <view class="testdetail"><span class="cricle">·</span>在规定的时间内，邀请好友参加拼单</view>
+        <view class="testdetail"><span class="cricle">·</span>未达拼单人数，款项将自动原路返还</view>
+      </view>
+    </view>
+  </view>
+  <!-- 拼单规则 弹窗 end-->
+  
+</view>

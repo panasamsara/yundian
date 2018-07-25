@@ -13,14 +13,15 @@ Page({
     shopk: 0,//k表示有店铺多少被勾选了
     goodlist:[],
     customerId:'',
-    shopid:""
+    shopid:"",
+    isEdit:0 //0未编辑 1正在编辑
   },
   onLoad: function () {
     var shop = wx.getStorageSync('shop');
     var user = wx.getStorageSync('user');
     var userid = wx.getStorageSync('scSysUser').id;
     var shopid = wx.getStorageSync('shop').id;
-    this.getData();
+    //this.getData();
     this.setData({
       customerId: userid,
       shopid: shopid
@@ -31,6 +32,7 @@ Page({
     console.log(shopid)
   },
   onShow:function(e){
+    console.log("进入购物车onshow")
     this.getData();
     this.setData({
     //  goodlist: this.data.goodlist,
@@ -65,8 +67,12 @@ Page({
           goodlist: data,
           customerId: this.data.customerId
         })
+      }else{
+        this.setData({
+          goodlist: da,
+          customerId: this.data.customerId
+        })
       }
-
     })
   },
   shopSelect: function (e) {
@@ -173,11 +179,19 @@ Page({
       index = parseInt(e.target.dataset.index), //当前index
       pinx = parseInt(e.target.dataset.pindex), //父级index
       num = this.data.goodlist[pinx].goodsList[index].number, //数量
-      isCheck = this.data.goodlist[pinx].goodsList[index].checked; //是否勾选
+      isCheck = this.data.goodlist[pinx].goodsList[index].checked, //是否勾选
+      goodsId = e.currentTarget.dataset.goodid,
+      stockId = e.currentTarget.dataset.stockid;
+      if(num==1){
+        return false;
+      }
     if (num > 1) {
       num--;
     }
+
     this.data.goodlist[pinx].goodsList[index].number = num;
+    console.log(stockId)
+    this.updateCart(goodsId, num, stockId);//调保存到购物车接口
     if (isCheck) {      //若选中，合计计算
       this.sum();//合计
     };
@@ -191,16 +205,32 @@ Page({
   bindblur:function(e){
     //填写数量   
     var isInt = /^[1-9]+\d*$/;
+    var stockban = e.currentTarget.dataset.stockban;//库存
+   
     if (e.detail.value) {
       if (isInt.exec(e.detail.value)) {
         var val = e.detail.value;
         var index = parseInt(e.target.dataset.index), //当前index
           pinx = parseInt(e.target.dataset.pindex); //父级index
-        this.data.goodlist[pinx].goodsList[index].number = val;
-        this.setData({
-          goodlist: this.data.goodlist
-        });
+        if (e.detail.value > stockban) {//大于库存
+          wx.showToast({
+            title: '已达到库存上限，无法添加',
+            icon: 'none'
+          })
+          this.data.goodlist[pinx].goodsList[index].number = this.data.goodlist[pinx].goodsList[index].number;
+          this.setData({
+            goodlist: this.data.goodlist
+          });
+          return false;
+        }else{
+          this.data.goodlist[pinx].goodsList[index].number = val;
+          this.setData({
+            goodlist: this.data.goodlist
+          });
 
+        }
+
+       
         this.sum();//合计
       } else {
         var index = parseInt(e.target.dataset.index), //当前index
@@ -223,14 +253,30 @@ Page({
     }
   },
   bindPlus: function (e) {
+    console.log(e)
     //加数量
     var id = e.target.dataset.id,
       index = parseInt(e.target.dataset.index), //当前index
       pinx = parseInt(e.target.dataset.pindex), //父级index
       num = this.data.goodlist[pinx].goodsList[index].number, //数量
-      isCheck = this.data.goodlist[pinx].goodsList[index].checked; //是否勾选
+      isCheck = this.data.goodlist[pinx].goodsList[index].checked, //是否勾选
+      stockBalance = e.currentTarget.dataset.stockban,//库存
+      goodsId = e.currentTarget.dataset.goodid,
+      stockId = e.currentTarget.dataset.stockid;
+    console.log('stockBalance' + stockBalance)
+    console.log('num' +num)
+    console.log('stockId' + stockId)
+    console.log('goodsId' + goodsId)
+    if (num >= stockBalance){
+      wx.showToast({
+        title: '已达到库存上限，不能再添加',
+        icon: 'none'
+      })
+      return false;
+    }
     num++;
     this.data.goodlist[pinx].goodsList[index].number = num;
+    this.updateCart(goodsId, num, stockId);//调保存到购物车接口
     if (isCheck) {      //若选中，合计计算
       this.sum();//合计
     };
@@ -240,6 +286,24 @@ Page({
       goodlist: this.data.goodlist,
       totalMoney: this.data.totalMoney
     });
+  },
+  updateCart: function (goodsId, numbe, stockId){ //加减之后要更新购物车
+    console.log("shopId" + this.data.shopId)
+    app.util.reqAsync('shop/updateNewShopCartV2', {
+     
+      customerId: this.data.customerId,
+      goodsId: goodsId,
+      number: numbe,
+      stockId: stockId,
+      shopId: this.data.shopid
+    }).then((res) => { 
+      console.log('购物车更新成功')
+    }).catch((err) => {
+      wx.showToast({
+        title: '失败……',
+        icon: 'none'
+      })
+    }) 
   },
   sum: function () {
     this.data.totalMoney = 0;
@@ -524,6 +588,16 @@ Page({
     //跳到店铺
     wx.navigateTo({
       url: '../store/store?shopId=' + shopId + '&currUserId=' + currUserId
+    })
+  },
+  edits:function(e){ //编辑
+    this.setData({
+      isEdit:1
+    })
+  },
+  over:function(e){ //完成
+    this.setData({
+      isEdit: 0
     })
   }
 })

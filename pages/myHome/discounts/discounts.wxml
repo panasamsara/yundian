@@ -11,10 +11,10 @@
     <view class='con'>
         <view class='listTop'>
         <view class='left'>
-        <image src='../images/discount.png'></image>
+        <image src='{{item.shopLogoUrl}}'></image>
         </view>
         <view class='left'>
-          <view>礼品城市</view>
+          <view>{{item.shopName}}</view>
           <view>{{item.instruction}}</view>
           <view class='good' wx:if="{{item.canLimitGoods==1}}">指定商品可用</view>
           <view class='good' wx:if="{{item.canLimitGoods==0}}"></view>

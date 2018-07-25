@@ -9,6 +9,7 @@ Page({
     var userId = wx.getStorageSync('scSysUser').id;
     this.setData({ userId: userId});
     if (options.select){
+      console.log(options);
       this.setData({ orderFlag: options.select });
     }
     this.getAddress();
@@ -117,9 +118,7 @@ Page({
         isDefault: 0,
         customerId: this.data.userId,
       }).then((res) => {
-        wx.navigateBack({
-          url: "pages/orderBuy/orderBuy",
-        })
+        wx.navigateBack(1);
       }).catch((err) => {
         wx.showToast({
           title: '失败……',

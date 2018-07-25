@@ -19,6 +19,7 @@ Page({
     cartData: null,
     goodsInfo: {},
     goodStockMapArr: [],
+    cartGoodsList: [],
 
     logs: [],
     starbg: '../../static/img/drawable-xxdpi/title-bar_collection_normal.png',
@@ -33,10 +34,12 @@ Page({
     shoppingCart: {},//购物车物品id映射数量
     shoppingCartGoodsId: [],//购物车里面的物品的id
     goodMap: {},//所有物品的列表
+    stockMap: {},
     hasGoodMap: false,
     chooseGoodArr: [],//购物车的物品列表
     totalNum: 0,//总数量
     totalPay: 0,//总价
+    cart_length: 0,
     showShopCart: false,//购物列表是否展示
     fromClickScroll: false,//标记左侧的滚动来源，false是来自于本身的滚动，true是点击引导的滚动,
     timeStart: "",
@@ -55,13 +58,12 @@ Page({
     var user = wx.getStorageSync('scSysUser');
     console.log(user)
     
-
     let systemInfo = wx.getStorageSync('systemInfo');
     let mechine = options;//wx.getStorageSync('mechine');
     let _that = this;
 
     this.busPos = {};
-    this.busPos['x'] = 220;//购物车的位置
+    this.busPos['x'] = 40;//小球进购物车的位置
     this.busPos['y'] = app.globalData.hh - 56;
 
     this.setData({
@@ -71,10 +73,178 @@ Page({
     });
     // console.log(mechine)
 
+    //获取店铺类别列表
+    // this.getCategoryList()
+    util.reqAsync('shop/getShopGoodsCategoryList', {
+      merchantId: shop.merchantId,
+      shopId: shop.id
+    }).then((res) => {
+      let shopCategory = res.data.data
+      // 类别中加入 “全部”
+      let allCategory = { sequence: 0, type: 1, categoryName: "全部", categoryId: null }
+      shopCategory.unshift(allCategory)
+      console.log('所有分类')
+      console.log(shopCategory)
+      this.setData({
+        shopCategory: shopCategory
+      })
+      var goodMap = []
+      var stockMap = []
+      let goodsInCategory = []
+      for (let i = 0; i < shopCategory.length; i++){
+        // 根据每个类别 把所有商品查出来
+        if (i != shopCategory.length-1){
+          util.reqAsync('shop/getShopGoodsMore', {
+            merchantId: shop.merchantId,
+            shopId: shop.id,
+            customerId: user.id,
+            searchType: shopCategory[i].type,
+            categoryId: shopCategory[i].categoryId
+          }).then((res) => {
+            let goods = res.data.data
+
+            if (goods.length != 0) {
+              for (let j = 0; j < goods.length; j++) {
+                goodMap[goods[j].id] = goods[j];
+                goodMap[goods[j].id].number = 0
+                goodsInCategory.push(goods[j])
+
+                if (goods[j].stockList.length != 0) {
+                  for (let k = 0; k < goods[j].stockList.length; k++) {
+                    let goodStock = []
+                    goodStock.goodsName = goods[j].goodsName
+                    goodStock.goodsId = goods[j].id
+                    goodStock.stockId = goods[j].stockList[k].id
+                    goodStock.number = 0
+                    goodStock.goodsPrice = goods[j].price
+                    goodStock.stockPrice = goods[j].stockList[k].stockPrice
+                    goodStock.stockPrice = goods[j].stockList[k].stockPrice
+                    stockMap[goodStock.stockId] = goodStock
+                  }
+                } else {
+                  let goodStock = []
+                  goodStock.goodsName = goods[j].goodsName
+                  goodStock.goodsId = goods[j].id
+                  goodStock.stockId = null
+                  goodStock.number = 0
+                  goodStock.goodsPrice = goods[j].price
+                  goodStock.stockPrice = null
+                  goodStock.stockBalance = goods[j].stockBalance
+                  stockMap[goodStock.goodsId] = goodStock
+                }
+              }
+            }
+
+          }).catch((err) => {
+            console.log(err)
+          })
+        }else{
+          util.reqAsync('shop/getShopGoodsMore', {
+            merchantId: shop.merchantId,
+            shopId: shop.id,
+            customerId: user.id,
+            searchType: shopCategory[i].type,
+            categoryId: shopCategory[i].categoryId
+          }).then((res) => {
+            let goods = res.data.data
+
+            if (goods.length != 0) {
+              for (let j = 0; j < goods.length; j++) {
+                goodMap[goods[j].id] = goods[j];
+                goodMap[goods[j].id].number = 0
+                goodsInCategory.push(goods[j])
+
+                if (goods[j].stockList.length != 0) {
+                  for (let k = 0; k < goods[j].stockList.length; k++) {
+                    let goodStock = {}
+                    goodStock.goodsName = goods[j].goodsName
+                    goodStock.goodsId = goods[j].id
+                    goodStock.stockId = goods[j].stockList[k].id
+                    goodStock.number = 0
+                    goodStock.goodsPrice = goods[j].price
+                    goodStock.stockPrice = goods[j].stockList[k].stockPrice
+                    goodStock.stockPrice = goods[j].stockList[k].stockPrice
+                    stockMap[goodStock.stockId] = goodStock
+                  }
+                } else {
+                  let goodStock = {}
+                  goodStock.goodsName = goods[j].goodsName
+                  goodStock.goodsId = goods[j].id
+                  goodStock.stockId = null
+                  goodStock.number = 0
+                  goodStock.goodsPrice = goods[j].price
+                  goodStock.stockPrice = null
+                  goodStock.stockBalance = goods[j].stockBalance
+                  stockMap[goodStock.goodsId] = goodStock
+                }
+              }
+            }
+            this.setData({
+              goodMap: goodMap,
+              stockMap: stockMap,
+              goodsInCategory: goodsInCategory,
+              showLoading: false
+            })
+            // 获取购物车
+            this.shopCartList()
+
+          }).catch((err) => {
+            console.log(err)
+          })
+        }
+        
+      }
+      
+      console.log('goodMap')
+      console.log(goodMap)
+      console.log('stockMap')
+      console.log(stockMap)
+      console.log('goodsInCategory')
+      console.log(goodsInCategory)
+
+
+    /*  util.reqAsync('shop/shopCartList', {
+        customerId: user.id,
+        shopId: shop.id
+      }).then((res) => {
+        if (res.data.data.length != 0){
+          console.log('购物车')
+          console.log(res.data.data[0].goodsList)
+          let cartGoodsList = res.data.data[0].goodsList
+          for (let i = 0; i < cartGoodsList.length; i++){
+            console.log(goodMap[cartGoodsList[i].goodsId].number)
+
+            goodMap[cartGoodsList[i].goodsId].number = cartGoodsList[i].number
+            if (cartGoodsList[i].stockId){
+              console.log(99999)
+              stockMap[cartGoodsList[i].stockId].number = cartGoodsList[i].number
+            }else{
+              console.log(8888)
+              // stockMap[cartGoodsList[i].goodsId].number = cartGoodsList[i].number
+            }
+            
+          }
+          this.setData({
+            goodMap: goodMap,
+            stockMap: stockMap
+          })
+          console.log('新的stockMap')
+          console.log(this.data.stockMap)
+        }
+
+      }).catch((err) => {
+        console.log(err)
+      })*/
+
+    }).catch((err) => {
+      console.log(err)
+    })
   },
   onShow: function(){
+    // 获取购物车
+    this.shopCartList()
     // 获取购物车信息
-    util.reqAsync('shop/shopCartList', {
+  /*  util.reqAsync('shop/shopCartList', {
       customerId: wx.getStorageSync('scSysUser').id,
       shopId: wx.getStorageSync('shop').id
     }).then((res) => {
@@ -82,18 +252,18 @@ Page({
 
       //获取店铺类别列表
       this.getCategoryList()
-    })
+    })*/
   },
   onHide: function () {
      // 清空购物车缓存
-    wx.removeStorageSync('shopCartList')
-    this.setData({
-      goodStockMapArr: [],
-      totalNum: 0,
-      totalPay: 0,
-      chooseGoodArr: [],
-      shoppingCart: {}
-    });
+    // wx.removeStorageSync('shopCartList')
+    // this.setData({
+    //   goodStockMapArr: [],
+    //   totalNum: 0,
+    //   totalPay: 0,
+    //   chooseGoodArr: [],
+    //   shoppingCart: {}
+    // });
     
   },
 
@@ -120,9 +290,9 @@ Page({
     var user = wx.getStorageSync('scSysUser');
     var shop = wx.getStorageSync('shop')
     let shoppingCart = this.data.shoppingCart
-    let goods_number = 1
-    let chooseGoodArr = this.data.chooseGoodArr
-
+    // let goods_number = 1
+    // let chooseGoodArr = this.data.chooseGoodArr
+   
     if (this.data.goodMap[_id].stockBalance == 0){
       wx.showToast({
         title: '库存不足',
@@ -130,40 +300,30 @@ Page({
       })
       return false
     }
-
-    let goodStockMapArr = this.data.goodStockMapArr
-
+    
+    // let goodStockMapArr = this.data.goodStockMapArr
+    let stockMap = this.data.stockMap
+    console.log(stockMap)
+    console.log(_id)
     if (stockId != 'null' && stockId && stockId != undefined){
-      console.log("99999999999 添加有规格的商品")
-      for (let i = 0; i < goodStockMapArr.length; i++) {
-        if (goodStockMapArr[i].goodsId == _id && goodStockMapArr[i].stockId == stockId) {
-          goodStockMapArr[i].number += 1
-        }
-      }
-    }else{
-      console.log("99999999999 添加无规格的商品")
-      if (this.data.goodMap[_id].stockList.length !=0 ){
-        console.log(7777)
-        for (let i = 0; i < goodStockMapArr.length; i++) {
-          if (goodStockMapArr[i].stockId == this.data.chosenStockId) {
-            goodStockMapArr[i].number += 1
+      console.log(stockMap[stockId])
+      let new_number = stockMap[stockId].number + 1
+      this.updateNewShopCartV2(user.id, _id, shop.id, stockId, stockMap[stockId].goodsName, new_number )
 
-          }
-        }
+    }else{
+      if (this.data.chosenStockId){
+        let new_number_a = stockMap[this.data.chosenStockId].number + 1
+        this.updateNewShopCartV2(user.id, _id, shop.id, this.data.chosenStockId, stockMap[this.data.chosenStockId].goodsName, new_number_a)
       }else{
-        console.log(8888)
-        console.log(goodStockMapArr)
-        for (let i = 0; i < goodStockMapArr.length; i++) {
-          if (goodStockMapArr[i].goodsId == _id ) {
-            goodStockMapArr[i].number += 1
-          }
-        }
+        let new_number_b = stockMap[_id].number + 1
+        this.updateNewShopCartV2(user.id, _id, shop.id, this.data.chosenStockId, stockMap[_id].goodsName, new_number_b)
       }
       
+
     }
 
-    
-    this.mathTotal(goodStockMapArr)
+    // this.mathTotal(goodStockMapArr)
+
     // 添加成功后，清除之前选中的规格
     this.setData({
       chosenStockId: null
@@ -180,24 +340,44 @@ Page({
     let goods_number = 0
     let chooseGoodArr = this.data.chooseGoodArr
 
-    let goodStockMapArr = this.data.goodStockMapArr
+    // let goodStockMapArr = this.data.goodStockMapArr
+    let stockMap = this.data.stockMap
+    let goodMap = this.data.goodMap
+
+    console.log(stockId)
     if (stockId != 'null' && stockId && stockId != undefined) {
       console.log(7777)
-      for (let i = 0; i < goodStockMapArr.length; i++) {
-        if (goodStockMapArr[i].goodsId == _id && goodStockMapArr[i].stockId == stockId) {
-          goodStockMapArr[i].number -= 1
-        }
+      let new_number = stockMap[stockId].number - 1
+      if (new_number <=0){
+        this.deleteGoods(user.id, shop.id, stockId, stockMap[stockId].goodsId ) 
+        // goodMap[stockMap[stockId].goodsId].number = 0
+        // this.setData({
+        //   goodMap: goodMap
+        // })
+        console.log(goodMap)
+      }else{
+        this.updateNewShopCartV2(user.id, _id, shop.id, stockId, stockMap[stockId].goodsName, new_number)
       }
+      
+
     } else {
       console.log(888888)
-      for (let i = 0; i < goodStockMapArr.length; i++) {
-        if (goodStockMapArr[i].goodsId == _id) {
-          goodStockMapArr[i].number -= 1
-        }
+      let new_number = stockMap[_id].number - 1
+      if (new_number <= 0){
+        console.log(888889)
+        this.deleteGoods(user.id, shop.id, null, stockMap[_id].goodsId ) 
+        // goodMap[stockMap[_id].goodsId].number = 0
+        // this.setData({
+        //   goodMap: goodMap
+        // })
+      }else{
+        this.updateNewShopCartV2(user.id, _id, shop.id, null, stockMap[_id].goodsName, new_number)
       }
+      
     }
-
-    this.mathTotal(goodStockMapArr)
+    // 获取购物车
+    // this.shopCartList()
+    // this.mathTotal(goodStockMapArr)
 
   },
 
@@ -225,20 +405,6 @@ Page({
     this.linePos = app.bezier([this.busPos, topPoint, this.finger], 30);
 
     let _id = e.target.id.split('_')[1];
-
-    if (this.data.goodMap[_id].stockBalance ==0){
-      wx.showModal({
-        title: '库存不足',
-        content: '请选购其他商品',
-        showCancel: false,
-        success: function (res) {
-          if (res.confirm) {
-            // console.log('用户点击确定')
-          }
-        }
-      })
-      return false
-    }
 
     if (this.data.goodMap[_id].stockList.length != 0){
       this.setData({
@@ -313,7 +479,8 @@ Page({
 
   //购物列表切换隐藏或者现实
   showShopCartFn: function (e) {
-    if (this.data.totalPay > 0) {
+ 
+    if (this.data.cart_length > 0) {
       this.setData({
         showShopCart: !this.data.showShopCart
       });
@@ -334,31 +501,9 @@ Page({
     wx.switchTab({
       url: '../shoppingCart/shoppingCart',
     })
-    // var user = wx.getStorageSync('scSysUser');
-    // var shop = wx.getStorageSync('shop');
-    // console.log(this.data.chooseGoodArr)
-    // let chooseGoodArr = this.data.chooseGoodArr
-    // for (let i = 0; i < chooseGoodArr.length; i++){
-    //   this.updateNewShopCartV2(user.id, chooseGoodArr[i].goodsId, shop.id, chooseGoodArr[i].stockId, chooseGoodArr[i].goodsName, chooseGoodArr[i].number)
-
-    //   if (i == (chooseGoodArr.length-1)){
-    //     wx.showToast({
-    //       title: '提交中……',
-    //       icon: 'none'
-    //     })
-    //     setTimeout(this.realGoToCart, 3000)
-        
-    //   }
-    // }
     
   },
-  // 延迟跳转到购物车页面
-  // realGoToCart: function(){
-  //   wx.hideToast()
-  //   wx.switchTab({
-  //     url: '../shoppingCart/shoppingCart',
-  //   })
-  // },
+
   //获取店铺下类别
   getCategoryList: function (){
     var shop = wx.getStorageSync('shop')
@@ -384,7 +529,7 @@ Page({
       } else {}
     }).catch((err) => {
       wx.showToast({
-        title: '失败……',
+        title: '商品类别获取失败……',
         icon: 'none'
       })
     })
@@ -403,112 +548,19 @@ Page({
       customerId: wx.getStorageSync('scSysUser').id,
       categoryId: categoryid
     }).then((res) => {
-      console.log("所有商品")
-      console.log(res.data.data)
       
       if (res.data.data) {
         _that.setData({
           goodsInCategory: res.data.data,
           showLoading: false
         })
-        //首次进入 未传类别ID，将全部商品赋值给goodMap
-        if (!categoryid && typeof categoryid != "undefined" && categoryid != 0){
-          let goodMap= []
-          let goodStockMapArr = [] //不同规格商品的数组（结构同购物车商品类似）
-
-          for (let i = 0; i < res.data.data.length; i++){
-            let goods = res.data.data
-            goodMap[goods[i].id] = goods[i];
-            if (goods[i].stockList.length != 0){
-              for (let j = 0; j < goods[i].stockList.length; j++ ){
-                let goodStockMap = {}
-                goodStockMap.goodsName = goods[i].goodsName
-                goodStockMap.goodsId = goods[i].id
-                goodStockMap.stockId = goods[i].stockList[j].id
-                goodStockMap.number = 0
-                goodStockMap.goodsPrice = goods[i].price
-                goodStockMap.stockPrice = goods[i].stockList[j].stockPrice
-                goodStockMap.stockPrice = goods[i].stockList[j].stockPrice
-                
-                goodStockMapArr.push(goodStockMap)
-              }
-            }else{
-              let goodStockMap = {}
-              goodStockMap.goodsName = goods[i].goodsName
-              goodStockMap.goodsId = goods[i].id
-              goodStockMap.stockId = null
-              goodStockMap.number = 0
-              goodStockMap.goodsPrice = goods[i].price
-              goodStockMap.stockPrice = null
-              goodStockMap.stockBalance = goods[i].stockBalance
-
-              goodStockMapArr.push(goodStockMap)
-            }
-            
-          }
-          console.log("goodMap")
-          console.log(goodMap)
-          console.log("goodStockMapArr")
-          console.log(goodStockMapArr)
-
-          _that.setData({
-            goodMap: goodMap,
-            hasGoodMap: true,
-            goodStockMapArr: goodStockMapArr
-          })
-          var user = wx.getStorageSync('scSysUser');
-          this.shopCartList(user.id)
-        }
-
-        let goodMap = this.data.goodMap
-        let goodStockMapArr = this.data.goodStockMapArr
-
-        if (searchType == 3) {    //如果选中套盒，将商品加入goodMap、goodStockMapArr（所有商品获取不到套盒 后端杜海sql改不了）
-          for (let i = 0; i < res.data.data.length; i++) {
-            let goods = res.data.data
-            goodMap[goods[i].id] = goods[i];
-            if (goods[i].stockList.length != 0) {
-              for (let j = 0; j < goods[i].stockList.length; j++) {
-                let goodStockMap = {}
-                goodStockMap.goodsName = goods[i].goodsName
-                goodStockMap.goodsId = goods[i].id
-                goodStockMap.stockId = goods[i].stockList[j].id
-                goodStockMap.number = 0
-                goodStockMap.goodsPrice = goods[i].price
-                goodStockMap.stockPrice = goods[i].stockList[j].stockPrice
-                goodStockMap.stockPrice = goods[i].stockList[j].stockPrice
-
-                goodStockMapArr.push(goodStockMap)
-              }
-            } else {
-              let goodStockMap = {}
-              goodStockMap.goodsName = goods[i].goodsName
-              goodStockMap.goodsId = goods[i].id
-              goodStockMap.stockId = null
-              goodStockMap.number = 0
-              goodStockMap.goodsPrice = goods[i].price
-              goodStockMap.stockPrice = null
-              goodStockMap.stockBalance = goods[i].stockBalance
-
-              goodStockMapArr.push(goodStockMap)
-            }
-
-          }
-          _that.setData({
-            goodMap: goodMap,
-            hasGoodMap: true,
-            goodStockMapArr: goodStockMapArr
-          })
-
-        }
-
       } 
     }).catch((err) => {
       console.log(err)
-      wx.showToast({
-        title: '失败……',
-        icon: 'none'
-      })
+      // wx.showToast({
+      //   title: '获取商品失败……',
+      //   icon: 'none'
+      // })
     })
   },
   preventTouchMove: function(){
@@ -524,28 +576,10 @@ Page({
       stockId: stockid, 
       goodsName: goodsName
     }).then((res) => {
-
-      let chooseGoodArr = this.data.chooseGoodArr
+        
       if(res.data.code ==1){
-
-        for (let i = 0; i < chooseGoodArr.length; i++) {
-          if (chooseGoodArr[i].goodsId == goodsid && chooseGoodArr[i].stockId == stockid) {
-            chooseGoodArr.splice(i, 1)
-          }
-        }
-        // 清空购物车缓存
-    /*    wx.removeStorageSync('shopCartList')
-        // 重新获取购物车并缓存
-        util.reqAsync('shop/shopCartList', {
-          customerId: wx.getStorageSync('scSysUser').id,
-          shopId: wx.getStorageSync('shop').id
-        }).then((res) => {
-          wx.setStorageSync('shopCartList', res.data.data);
-        })*/
-        // this.setData({
-        //   chooseGoodArr: chooseGoodArr,
-        //   // goodStockMapArr: []
-        // })
+        // 获取购物车
+        this.shopCartList()
       }
       
       if (res.data.code == 9){
@@ -555,18 +589,18 @@ Page({
         })
       }
       // 库存不足弹出提示
-      if (res.data.data.isLowStock == 1){
-        wx.showModal({
-          title: '库存不足',
-          content: '请选购其他商品',
-          showCancel: false,
-          success: function (res) {
-            if (res.confirm) {
-              // console.log('用户点击确定')
-            } 
-          }
-        })
-      }
+      // if (res.data.data.isLowStock == 1){
+      //   wx.showModal({
+      //     title: '库存不足',
+      //     content: '请选购其他商品',
+      //     showCancel: false,
+      //     success: function (res) {
+      //       if (res.confirm) {
+      //         // console.log('用户点击确定')
+      //       } 
+      //     }
+      //   })
+      // }
 
     }).catch((err) => {
       console.log(err)
@@ -577,7 +611,7 @@ Page({
     })
   },
   //云店接口，移除购物车商品
-  deleteGoods: function (customerId, shopId, goodsId, stockId ) {
+  deleteGoods: function (customerId, shopId, stockId, goodsId ) {
     util.reqAsync('shop/delShopCartGoodsByUidAndGid', {
       customerId: customerId,
       shopId: shopId,
@@ -586,100 +620,105 @@ Page({
     }).then((res) => {
       console.log("进入删除方法")
       console.log(res)
-      // 清空购物车缓存
-  /*    wx.removeStorageSync('shopCartList')
-      // 重新获取购物车并缓存
-      util.reqAsync('shop/shopCartList', {
-        customerId: wx.getStorageSync('scSysUser').id,
-        shopId: wx.getStorageSync('shop').id
-      }).then((res) => {
-        wx.setStorageSync('shopCartList', res.data.data);
-      })*/
-    }).catch((err) => {
-      wx.showToast({
-        title: '失败……',
-        icon: 'none'
+      let goodMap = this.data.goodMap
+      let stockMap = this.data.stockMap
+      console.log(stockMap)
+      if (stockId){
+        goodMap[goodsId].number = 0
+        stockMap[stockId].number = 0
+      }else{
+        goodMap[goodsId].number = 0
+        stockMap[goodsId].number = 0
+      }
+
+      this.setData({
+        goodMap: goodMap
       })
+
+      // 获取购物车
+      this.shopCartList()
+
+    }).catch((err) => {
+      console.log(err)
+      // wx.showToast({
+      //   title: '失败……',
+      //   icon: 'none'
+      // })
     })
   },  
   //云店接口，获取购物车列表
   shopCartList: function (customerid) {
-    this.setData({
-      shoppingCart: {},
-      chooseGoodArr: []
-    })
+    // this.setData({
+    //   shoppingCart: {},
+    //   chooseGoodArr: []
+    // })
+    var user = wx.getStorageSync('scSysUser');
     var shop = wx.getStorageSync('shop');
+    var goodMap = this.data.goodMap
+    var stockMap = this.data.stockMap
     util.reqAsync('shop/shopCartList', {
-        customerId: customerid,
-        shopId: wx.getStorageSync('shop').id
+        customerId: user.id,
+        shopId: shop.id
     }).then((res) => {
       console.log("购物车")
       console.log(res.data.data)
-      
-      console.log("获取购物车之后打印 goodStockMapArr")
-      console.log(this.data.goodStockMapArr)
+      if (res.data.data.length != 0) {
 
-      
-      let goodStockMapArr = this.data.goodStockMapArr
-      if(res.data.data.length != 0){
-        let cartData = res.data.data[0] //购物车商品（此商户下）
-        
-        if (cartData){
-          let lists = cartData.goodsList
-          let chooseGoodArr = []
-          for (let i = 0; i < lists.length; i++) {
-            chooseGoodArr.push(lists[i]) // 已选商品
+        let cartGoodsList = res.data.data[0].goodsList
+        for (let i = 0; i < cartGoodsList.length; i++) {
+          // console.log(goodMap[cartGoodsList[i].goodsId])
+
+          goodMap[cartGoodsList[i].goodsId].number = cartGoodsList[i].number
+          if (cartGoodsList[i].stockId) {
+            // console.log(stockMap[cartGoodsList[i].stockId])
+            stockMap[cartGoodsList[i].stockId].number = cartGoodsList[i].number
+          } else {
+            stockMap[cartGoodsList[i].goodsId].number = cartGoodsList[i].number
           }
 
-          for (let x = 0; x < goodStockMapArr.length; x++) {
-            for (let y = 0; y < chooseGoodArr.length; y++) {
-              if (goodStockMapArr[x].goodsId == chooseGoodArr[y].goodsId && goodStockMapArr[x].stockId == chooseGoodArr[y].stockId) {
-                goodStockMapArr[x].number += chooseGoodArr[y].number
-              }
-            }
-          }
-          console.log("获取购物车之后打印 goodStockMapArr")
-          console.log(this.data.goodStockMapArr)
-          this.setData({
-            chooseGoodArr: chooseGoodArr,
-          });
-
-          this.mathTotal(goodStockMapArr)
-
-        }else{
-          //购物车无数据 初始化底部结算的数据
-          this.setData({
-            chooseGoodArr: [],
-            totalNum: 0,
-            totalPay: 0,
-            shoppingCart: {},
-            cartData: null
-          });
         }
-
-      }else{
-        //购物车无数据 初始化底部结算的数据
         this.setData({
-          chooseGoodArr: [],
-          totalNum: 0,
+          goodMap: goodMap,
+          stockMap: stockMap,
+          cartGoodsList: cartGoodsList
+        })
+        console.log('购物车')
+        console.log(cartGoodsList)
+        this.mathTotal(cartGoodsList)
+      }else{
+        this.setData({
+          cartGoodsList: 0,
+          totalNum: 0,//总数量
           totalPay: 0,
-          shoppingCart: {}
-        });
+          showShopCart: false
+        })
       }
-      
+    
     }).catch((err) => {
       console.log(err)
-      wx.showToast({
-        title: '失败……',
-        icon: 'none'
-      })
+
     })
   },
-  mathTotal: function (goodStockMapArr){
+  mathTotal: function (cartGoodsList){
     
     let totalNum = 0
     let totalPay = 0
-    let shoppingCart = {};
+    let cart_length = cartGoodsList.length
+    for (let i = 0; i < cartGoodsList.length; i++){
+      totalNum += cartGoodsList[i].number
+      if (cartGoodsList[i].stockId) {       // 总金额
+        totalPay += cartGoodsList[i].number * cartGoodsList[i].stockPrice;
+      } else {
+        totalPay += cartGoodsList[i].number * cartGoodsList[i].goodsPrice;
+      }
+    }
+    this.setData({
+      totalNum: totalNum,
+      totalPay: totalPay,
+      cart_length: cart_length
+    })
+    console.log(this.data.goodMap)
+  /*  let shoppingCart = {};
     let chooseGoodArr = []
     for (let x = 0; x < goodStockMapArr.length; x++){
       if (goodStockMapArr[x].number > 0){
@@ -693,7 +732,7 @@ Page({
         totalPay += goodStockMapArr[x].number * goodStockMapArr[x].goodsPrice;
       }
     }
-    console.log(chooseGoodArr)
+
     let goodsIdArr = []
     var uniqGoodsIdArrnew = [] // 商品ID 去重后的数组
     for (let i = 0; i < chooseGoodArr.length; i++){
@@ -753,9 +792,8 @@ Page({
     }else{
       var myShopCartGoodsList = []
     }
-    console.log("999999999999999999999999商品变化")
     console.log(myShopCartGoodsList)
-    console.log(chooseGoodArr)
+
     // 商品数量变化后 自动提交购物车
     if (myShopCartGoodsList.length != 0){
       for (let i = 0; i < myShopCartGoodsList.length; i++){
@@ -765,60 +803,6 @@ Page({
     if (chooseGoodArr.length != 0){
       for (let i = 0; i < chooseGoodArr.length; i++){
         this.updateNewShopCartV2(user.id, chooseGoodArr[i].goodsId, shop.id, chooseGoodArr[i].stockId, chooseGoodArr[i].goodsName, chooseGoodArr[i].number)
-      }
-    }
-    
-
-/*    if (chooseGoodArr.length == 0 && myShopCartGoodsList.length !=0){ // 已选商品 为空数组，直接清除购物车
-      console.log("已选商品 为空数组，直接清除购物车")
-      for (let i = 0; i < myShopCartGoodsList.length; i++){
-        this.deleteGoods(user.id, shop.id, myShopCartGoodsList[i].goodsId, myShopCartGoodsList[i].stockId)
-      }
-    } else if (chooseGoodArr.length != 0 && myShopCartGoodsList.length == 0){ // 购物车为空，所有商品都添加购物车
-      console.log("购物车为空，所有商品都添加购物车")
-      for (let i = 0; i < chooseGoodArr.length; i++) {
-        this.updateNewShopCartV2(user.id, chooseGoodArr[i].goodsId, shop.id, chooseGoodArr[i].stockId, chooseGoodArr[i].goodsName, chooseGoodArr[i].number)
-      }
-    } else { // 购物车非空，所有商品都添加购物车，删除减掉的商品
-      console.log("购物车非空，所有商品都添加购物车，删除减掉的商品")
-      var sameGoodsArr = [] // 购物车商品、已选商品 求同
-      for (let i = 0; i < chooseGoodArr.length; i++){
-        this.updateNewShopCartV2(user.id, chooseGoodArr[i].goodsId, shop.id, chooseGoodArr[i].stockId, chooseGoodArr[i].goodsName, chooseGoodArr[i].number)
-        for (let j = 0; j < myShopCartGoodsList.length; j++){
-          if (chooseGoodArr[i].goodsId == myShopCartGoodsList[j].goodsId && chooseGoodArr[i].stockId == myShopCartGoodsList[j].stockId){
-            sameGoodsArr.push(chooseGoodArr[i])
-          }
-
-        }
-      }
-      if (sameGoodsArr.length != 0){ 
-        for (let i = 0; i < myShopCartGoodsList.length; i++) {
-
-          for (let j = 0; j < sameGoodsArr.length; j++) {
-            if (myShopCartGoodsList[i].stockId) { // 有stockId 就比对stockId
-              console.log(" 删除有规格的商品")
-              console.log(myShopCartGoodsList[i].stockId)
-              if (myShopCartGoodsList[i].stockId == sameGoodsArr[j].stockId) {
-                console.log("99999999999 删除9999操作")
-                this.deleteGoods(user.id, shop.id, myShopCartGoodsList[i].goodsId, myShopCartGoodsList[i].stockId)
-              }
-            } else {
-              console.log(" 删除无规格的商品")
-              if (myShopCartGoodsList[i].goodsId == sameGoodsArr[j].goodsId) {
-                console.log("99999999999 删除8888操作")
-                this.deleteGoods(user.id, shop.id, myShopCartGoodsList[i].goodsId, myShopCartGoodsList[i].stockId)
-              }
-            }
-          }
-        }
-      } else {// 无相同商品（之前购物车的商品都被删了）
-        for (let i = 0; i < chooseGoodArr.length; i++) {
-          this.updateNewShopCartV2(user.id, chooseGoodArr[i].goodsId, shop.id, chooseGoodArr[i].stockId, chooseGoodArr[i].goodsName, chooseGoodArr[i].number)
-        }
-        for (let i = 0; i < myShopCartGoodsList.length; i++) {
-          this.deleteGoods(user.id, shop.id, myShopCartGoodsList[i].goodsId, myShopCartGoodsList[i].stockId)
-        }
-
       }
     }*/
     

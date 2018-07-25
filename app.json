@@ -53,9 +53,11 @@
     "pages/videoLists/videoLists",
     "pages/video/video",
     "pages/secKill/secKill",
+    "pages/secKillBuy/secKillBuy",
     "pages/groupBuy/groupBuy",
     "pages/buyNow/buyNow",
     "pages/give/give",
+    "pages/spelldetails/spelldetails",
     "pages/groupBuyOrder/groupBuyOrder"
   ],
   "window": {

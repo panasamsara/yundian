@@ -42,27 +42,32 @@
 .onlineOrder{
   position: absolute;
   top: -102rpx;
-  background: #fff;
   width: 690rpx;
-  border-radius: 20rpx 20rpx 0 0;
   margin-left: 30rpx;
 }
-
+page{
+  background: #f8f8f8;
+}
 .onlineOrder .title image{
   width: 16rpx;
   height: 24rpx;
   vertical-align: middle;
-  margin-top:20rpx;
+  margin-top:10rpx;
 }
 .onlineOrder .title{
   overflow:hidden;
   font-size: 30rpx;
   padding:28rpx 24rpx 22rpx;
+  border-radius: 10rpx 10rpx 0 0;
+  background: #fff;
+  border-bottom: 1rpx solid #e5e5e5;
 }
 .orderList{
   display: flex;
-  border-top: 1px solid #eee;
+  margin-bottom: 20rpx;
   padding-top: 40rpx;
+  border-radius: 0 0 10rpx 10rpx;
+  background: #fff;
 }
 .orderList view{
   flex: 5;
@@ -96,7 +101,7 @@
   color: #333;
   margin-top: 20rpx;
   margin-bottom: 30rpx;
-  left:20rpx;
+  left:21rpx;
   top:-34rpx;
 }
 .shop{
@@ -104,6 +109,9 @@
 }
 .shoporder{
   overflow: hidden;
+  background: #fff;
+  border-radius: 10rpx;
+  padding-bottom: 60rpx;
 }
 .shoporder view{
   width: 230rpx;
@@ -124,12 +132,6 @@
   display: block;
   margin-top: 20rpx;
 }
-.borderTop{
-  border-top: 1px solid #eee;
-}
-.borderBottom{
-  border-bottom: 1px solid #eee;
-}
 .paddingBottom{
   padding-bottom: 50rpx;
 }
@@ -139,7 +141,7 @@
 } */
 button[type=warn]{
   width: 690rpx;
-  margin-top: 60rpx;
+  margin-top: 20rpx;
   height: 80rpx;
   line-height: 80rpx;
   font-size: 30rpx;

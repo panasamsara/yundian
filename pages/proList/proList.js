@@ -18,7 +18,7 @@ Page({
     stockHighLightIndex: -1,
     cartData: null,
     goodsInfo: {},
-    goodStockMapArr: [],
+
     cartGoodsList: [],
 
     logs: [],
@@ -383,8 +383,8 @@ Page({
 
   touchOnGoods: function (e) {
     this.finger = {}; var topPoint = {};
-    this.finger['x'] = e.touches["0"].clientX;//点击的位置
-    this.finger['y'] = e.touches["0"].clientY;
+    this.finger['x'] = e.touches[0].clientX;//点击的位置
+    this.finger['y'] = e.touches[0].clientY;
 
     if (this.finger['y'] < this.busPos['y']) {
       topPoint['y'] = this.finger['y'] - 50;
@@ -487,14 +487,14 @@ Page({
     }
   },
   //清空购物车
-  clearShopCartFn: function (e) {
-    this.setData({
-      shoppingCartGoodsId: [],
-      totalNum: 0,
-      totalPay: 0,
-      chooseGoodArr: [],
-      shoppingCart: {}
-    });
+  clearShopCartFn: function () {
+    var user = wx.getStorageSync('scSysUser');
+    var shop = wx.getStorageSync('shop');
+    let cartGoodsList = this.data.cartGoodsList
+
+    for (let i = 0; i < cartGoodsList.length; i++){
+      this.deleteGoods(user.id, shop.id, cartGoodsList[i].stockId, cartGoodsList[i].goodsId)
+    }
   },
 
   goToCart: function(){
@@ -718,103 +718,17 @@ Page({
       totalPay: totalPay,
       cart_length: cart_length
     })
-    console.log(this.data.goodMap)
-  /*  let shoppingCart = {};
-    let chooseGoodArr = []
-    for (let x = 0; x < goodStockMapArr.length; x++){
-      if (goodStockMapArr[x].number > 0){
-        chooseGoodArr.push(goodStockMapArr[x])
-      }
-
-      totalNum += goodStockMapArr[x].number   // 总数量
-      if (goodStockMapArr[x].stockId) {       // 总金额
-        totalPay += goodStockMapArr[x].number * goodStockMapArr[x].stockPrice;
-      } else {
-        totalPay += goodStockMapArr[x].number * goodStockMapArr[x].goodsPrice;
-      }
-    }
-
-    let goodsIdArr = []
-    var uniqGoodsIdArrnew = [] // 商品ID 去重后的数组
-    for (let i = 0; i < chooseGoodArr.length; i++){
-      goodsIdArr.push(chooseGoodArr[i].goodsId)
-      for (let i = 0; i < goodsIdArr.length; i++) {
-        if (uniqGoodsIdArrnew.indexOf(goodsIdArr[i]) == -1) {
-          uniqGoodsIdArrnew.push(goodsIdArr[i])
-        }
-      }
-    }
-
-    // 计算一个 商品（包含不同规格）的总数量
-    var goodsObj = {} //初始化对象，键是商品id，值是不同规格商品的数组
-    for (let i = 0; i < uniqGoodsIdArrnew.length; i++) {
-      goodsObj[uniqGoodsIdArrnew[i]] = []
-      for (let j = 0; j < chooseGoodArr.length; j++) {
-        if (chooseGoodArr[j].goodsId == uniqGoodsIdArrnew[i]) {
-          goodsObj[uniqGoodsIdArrnew[i]].push(chooseGoodArr[j])
-        }
-      }
-    }
-
-    for (let i = 0; i < uniqGoodsIdArrnew.length; i++) {
-      let goodid = uniqGoodsIdArrnew[i]
-      shoppingCart[goodid] = 0
-      for (let k = 0; k < goodsObj[goodid].length; k++) {
-        shoppingCart[goodid] += goodsObj[goodid][k].number
-      }
-    }
-
-    this.setData({
-      goodStockMapArr: goodStockMapArr,
-      totalNum: totalNum,
-      totalPay: totalPay.toFixed(2),
-      chooseGoodArr: chooseGoodArr,
-      shoppingCart: shoppingCart
-    })
-
-    console.log("99999999999 计算数量")
-    console.log(goodStockMapArr)
-    console.log("99999999999 已选商品")
-    console.log(chooseGoodArr)
-    var user = wx.getStorageSync('scSysUser');
-    var shop = wx.getStorageSync('shop');
-
-    let myShopCartLists = wx.getStorageSync('shopCartList'); // 购物车列表（所有店铺的）
-    console.log("99999999999 存储的购物车")
-    console.log(myShopCartLists)
-
-    if (myShopCartLists.length !=0){
-      for (let i = 0; i < myShopCartLists.length; i++){
-        if (myShopCartLists[i].shopId == shop.id){
-          let myShopCartList = myShopCartLists[i] // 此店铺下的购物车
-          var myShopCartGoodsList = myShopCartList.goodsList // 购物车里的商品列表
-        }
-      }
-    }else{
-      var myShopCartGoodsList = []
-    }
-    console.log(myShopCartGoodsList)
-
-    // 商品数量变化后 自动提交购物车
-    if (myShopCartGoodsList.length != 0){
-      for (let i = 0; i < myShopCartGoodsList.length; i++){
-        this.deleteGoods(user.id, shop.id, myShopCartGoodsList[i].goodsId, myShopCartGoodsList[i].stockId)
-      }
-    }
-    if (chooseGoodArr.length != 0){
-      for (let i = 0; i < chooseGoodArr.length; i++){
-        this.updateNewShopCartV2(user.id, chooseGoodArr[i].goodsId, shop.id, chooseGoodArr[i].stockId, chooseGoodArr[i].goodsName, chooseGoodArr[i].number)
-      }
-    }*/
     
   },
 
   preventTouchMove1: function(){},
   goToDetail: function(e){
     let goods_id = e.target.id
+    let status = e.currentTarget.dataset['status']
+
     var shop = wx.getStorageSync('shop');
     wx.navigateTo({
-      url: '../goodsDetial/goodsDetial?goodsId=' + goods_id + '&shopId=' + shop.id,
+      url: '../goodsDetial/goodsDetial?goodsId=' + goods_id + '&shopId=' + shop.id + '&status=' + status,
     })
   }
 })

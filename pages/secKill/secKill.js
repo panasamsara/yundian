@@ -26,9 +26,6 @@ Page({
       datas:data
     });
     this.getData(data);
-    let _this=this
-    var timer=setInterval(function(){_this.count()},1000)
-    console.log(this.data.list)
   },
   /**
    * 页面上拉触底事件的处理函数
@@ -65,16 +62,28 @@ Page({
         let list=res.data.data.list,
             newData = oldData.concat(list);
         for(let i=0;i<list.length;i++){
-          list[i].activityStartTime = Date.parse(this.data.nowTime);
+          list[i].nowTime = Date.parse(this.data.nowTime);
+          list[i].activityStartTime = Date.parse(list[i].activityStartTime);
           list[i].activityEndTime = Date.parse(list[i].activityEndTime);
-          list[i].count = list[i].activityEndTime - list[i].activityStartTime;
+          if (list[i].nowTime - list[i].activityStartTime<0){//活动未开始
+            list[i].count = list[i].activityStartTime - list[i].nowTime;
+            list[i].status = 0
+          }else{//活动已开始
+            list[i].count = list[i].activityEndTime - list[i].nowTime;
+            list[i].status = 1
+          }   
         }
         this.setData({
           list: newData,
           total: res.data.data.total
         })
+        console.log(this.data.list)
       }
       wx.hideLoading();
+      let _this = this
+      setInterval(function () {
+        _this.count()
+      }, 1000)
     }).catch((err) => {
       console.log(err);
       wx.hideLoading();
@@ -92,13 +101,13 @@ Page({
           h = Math.floor(leftTime / 1000 / 60 / 60 % 24),
           m = Math.floor(leftTime / 1000 / 60 % 60),
           s = Math.floor(leftTime / 1000 % 60),
-          rh=d*24+h,
           count = "list[" + i + "].count",
-          rhCount = "list[" + i + "].rh",
+          dCount = "list[" + i + "].d",
+          hCount = "list[" + i + "].h",
           mCount = "list[" + i + "].m",
           sCount = "list[" + i + "].s";
-      if(rh<10){
-        rh="0"+rh;
+      if(h<10){
+        h="0"+h;
       }
       if (m < 10) {
         m = "0" + m;
@@ -108,7 +117,8 @@ Page({
       }
       this.setData({
         [count]:leftTime,
-        [rhCount]:rh,
+        [dCount]:d,
+        [hCount]:h,
         [mCount]:m,
         [sCount]:s
       })

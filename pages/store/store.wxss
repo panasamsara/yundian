@@ -184,7 +184,7 @@ page {
 .address image {
   width: 30rpx;
   height: 32rpx;
-  margin-right: 15rpx;
+  padding-right: 15rpx;
 }
 
 .phone, .briefText {

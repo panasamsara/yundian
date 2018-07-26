@@ -100,7 +100,7 @@ Page({
     } 
     this.setData({
       isService: isService, //0只有商品没有服务 1有服务
-      spellingType: options.spellingType,
+      spellingType: options.spellingType || "",
       isSeckill: options.isSeckill,//1秒杀 0拼团
       groupId: options.groupId || 0,//不拼团就传0  拼团传拼团id
       smallGroupId: options.smallGroupId||0,// 参与拼团要传，秒杀传0就OK
@@ -438,7 +438,7 @@ Page({
     var bussinessType = 1;
     var deliveryMoney = this.data.deliveryMoney;//快递金额
     console.log("快递金额" + deliveryMoney)
-    if (this.data.totalMoney == "0.00") {//总价为0专用
+    if (this.data.totalMoney == "0") {//总价为0专用
       console.log("总价为0")
       var payStatus = 1;
     } else {
@@ -485,7 +485,7 @@ Page({
         extend4: '129',//版本
         groupId: 0, //不拼团就传0  拼团传拼团id
         smallGroupId: 0,//参与拼团要传，秒杀传0就OK
-        payStatus: 0,//支付状态 
+        payStatus: payStatus,//支付状态 
         realMoney: this.data.totalMoney,//所有商品总价 不加运费的
         areaId: this.data.areaId,
         provinceId: this.data.provinceId,
@@ -498,9 +498,9 @@ Page({
           this.setData({
             orderNo: res.data.data //生成订单号
           })
-          if (this.data.totalMoney == "0.00") {  //金额为0直接成功下单绕过支付
+          if (this.data.totalMoney == "0") {  //金额为0直接成功下单绕过支付
             this.setData({
-              flagOrder: true,
+              flagOrder: false,
               isPay: 1
             })
           } else {
@@ -588,7 +588,7 @@ Page({
         extend4: '129',//版本
         groupId: this.data.groupId, //不拼团就传0  拼团传拼团id
         smallGroupId: this.data.smallGroupId,//参与拼团要传，秒杀传0就OK
-        payStatus: 0,//支付状态 
+        payStatus: this.data.payStatus,//支付状态 
         realMoney: this.data.totalMoney,//所有商品总价 不加运费的
         areaId: this.data.areaId,
         provinceId: this.data.provinceId,
@@ -602,9 +602,9 @@ Page({
           this.setData({
             orderNo: res.data.data //生成订单号
           })
-          if (this.data.totalMoney == "0.00") {  //金额为0直接成功下单绕过支付
+          if (this.data.totalMoney == "0") {  //金额为0直接成功下单绕过支付
             this.setData({
-              flagOrder: true,
+              flagOrder: false,
               isPay: 1
             })
           } else {

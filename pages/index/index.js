@@ -76,7 +76,7 @@ Page({
      if (!this.data.shopInformation.shopInfo) this.getShopInfo()
      // 若无店铺及店铺ID，则跳转到扫码界面
      if (!util.hasShop()) {
-       wx.navigateTo({ url: '/pages/scan/scan' });
+       wx.redirectTo({ url: '/pages/scan/scan' });
        return
      }
      // 缓存首页视频地址
@@ -151,11 +151,6 @@ Page({
        this.getPhotoNum(shop.id, 0) //图片数
        this.getPhotoNum(shop.id, 1) //视频数
 
-      if (shop && shop.shopHomeConfig) {
-       if (shop.shopHomeConfig.videoPathList.length != 0) {
-         wx.setStorageSync('videoUrl', shop.shopHomeConfig.videoPathList[0].filePath)
-       }
-     }
      // 获取秒杀
      this.getSecKillData()
      
@@ -449,7 +444,8 @@ Page({
        pageNo: 1,
        pageSize: 2,
        shopId: wx.getStorageSync('shop').id,
-       status: 1  
+       merchantId: wx.getStorageSync('shop').merchantId,
+       statusList: "0,1" 
      }).then((res) => {
        if (res.data.data.list.length>0) {
          let list = res.data.data.list,

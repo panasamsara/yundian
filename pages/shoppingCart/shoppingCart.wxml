@@ -61,16 +61,16 @@
       <image src="img/delete.png"></image>
     </view> -->
     <view class='sum-info' wx:if="{{isEdit==0}}"> <!--未编辑-->
-      <button class='account-btn'  size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}"
-         bindtap="edits" hover-class="other-button-hover"> 编辑 </button>
-      <button class='account-btn'  size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}"
-         bindtap="default" hover-class="other-button-hover"> 结算 </button>
+      <view class='account-btn'
+         bindtap="edits" hover-class="other-button-hover"> 编辑 </view>
+      <view class='account-btn'
+         bindtap="default" hover-class="other-button-hover"> 结算 </view>
     </view>
      <view class='sum-info' wx:if="{{isEdit==1}}"> <!--正在编辑-->
-      <button class='account-btn'  size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}"
-         bindtap="over" hover-class="other-button-hover"> 完成 </button>
-      <button class='account-btn'  size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}"
-         bindtap="allDel" hover-class="other-button-hover"> 删除 </button>
+      <view class='account-btn'
+         bindtap="over" hover-class="other-button-hover"> 完成 </view>
+      <view class='account-btn'
+         bindtap="allDel" hover-class="other-button-hover"> 删除 </view>
     </view>
   </view>
 </view>

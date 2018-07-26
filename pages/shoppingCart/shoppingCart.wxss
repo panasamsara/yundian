@@ -222,7 +222,7 @@
   width:40rpx;
   height:40rpx;
   position:absolute;
-  top:25%;
+  top:30%;
 }
 .all text{
   margin-left: 50rpx;
@@ -333,27 +333,30 @@
 .acount-lft{
   width: 65%;
   float: left;
+  vertical-align:middle;
 }
 .sum-info{
   width: 35%;
   float: right;
   height:100rpx;
 }
-.sum-info button{
-  width: 50%;
+.sum-info .account-btn{
   height: 100rpx;
   border-radius: 0;
   border:0;
   margin:0;
   line-height: 100rpx;
   float:left;
-  font-size: 28rpx;
+  font-size: 26rpx;
+  text-align: center;
 }
-.sum-info button:first-child{
+.sum-info .account-btn:first-child{
+  width: 52%;
   background: #ff722c;
   color:#fff;
 }
-.sum-info button:last-child{
+.sum-info .account-btn:last-child{
+  width: 48%;
   background: #fb442c;
   color:#fff;
 }

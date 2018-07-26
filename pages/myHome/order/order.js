@@ -88,8 +88,7 @@ Page({
         customerId: this.data.customerId,
         orderStatusVo: this.data.currentTab,
         pageNo: Number(this.data.currentPage) + 1,
-        pageSize: 10,
-        shopId: this.data.shopId
+        pageSize: 10
       }).then((res) => {
         if (res.data.code == 1) {
            //下拉加载
@@ -126,8 +125,7 @@ Page({
         customerId: this.data.customerId,
         orderStatusVo: this.data.currentTab,
         pageNo: 1,
-        pageSize: 10,
-        shopId: this.data.shopId
+        pageSize: 10
       }).then((res) => {
         if (res.data.code == 1) {
           for (var i in res.data.data) {

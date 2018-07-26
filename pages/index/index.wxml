@@ -7,7 +7,7 @@
     <image class='lingqu-btn' bindtap="getCoupon" src="./img/yundian_libaolingquanniu@2x.png" />
     <image class='close-btn' bindtap="closeModal" src='./img/yundian_lipinguanbi@2x.png'></image>
   </view>
-  <image class='newCouponBag' wx:if='{{showCoupnBox}}' bindtap='openCouponBag' src='../../images/libao.gif'></image>
+  <image class='newCouponBag' wx:if='{{showCoupnBox && showIndex}}' bindtap='openCouponBag' src='../../images/libao.gif'></image>
 
   <view id="top" class="cate-box" wx:if='{{showIndex}}' animation="{{animationData}}">
     <view class="bg-mask"></view>
@@ -100,10 +100,10 @@
         <view class='left-line'></view>
       </view>
       <view class="activity-swiper">
-        <swiper class='activity-swiper-box' indicator-dots="{{shopInformation.goodsInfos.length>1}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
-          <block wx:for="{{shopInformation.goodsInfos}}" wx:key="index">
-            <swiper-item>
-              <view class="swiper-item">
+        <!-- <swiper class='activity-swiper-box' indicator-dots="{{shopInformation.goodsInfos.length>1}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}"> -->
+          <view class='active-block' wx:for="{{shopInformation.goodsInfos}}" wx:key="index">
+            <!-- <swiper-item> -->
+              <!-- <view class="swiper-item"> -->
                 <view class='activity-img'>
                   <image src='{{item.pictureUrl}}' bindtap='goToActivityDetail' data-activityid='{{item.id}}'></image>
                 </view>
@@ -118,10 +118,10 @@
                     <view class='font-size-24 text-align-right'>{{item.startTime}}-{{item.endTime}}</view>
                   </view>
                 </view>
-              </view>
-            </swiper-item>
-          </block>
-        </swiper>
+              <!-- </view> -->
+            <!-- </swiper-item> -->
+          </view>
+        <!-- </swiper> -->
       </view>
     </view>   
     <!-- 智享秒杀 -->

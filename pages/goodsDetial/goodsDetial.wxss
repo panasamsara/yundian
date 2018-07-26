@@ -38,7 +38,7 @@ swiper-item image{
 }
 
 .countDown .left{
-  width: 650rpx;
+  width: 450rpx;
   height: 120rpx;
   background-color: #fb452c;
   font-size: 28rpx;
@@ -61,7 +61,7 @@ swiper-item image{
   width: 300rpx;
   height: 120rpx;
   background-color: #faddcd;
-  font-size: 30rpx;
+  font-size: 28rpx;
   color: #fe3f2c;
   text-align: center;
 }
@@ -519,12 +519,15 @@ button::after {
 .layer .item{
   padding:20rpx 20rpx;
   border-top:1rpx solid #e5e5e5;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 .layer .item:first-child{
   margin-top: 115rpx
 }
 
-.layer .item>image{
+.layer .item image{
   width:100rpx;
   height: 100rpx;
   border-radius: 50%;
@@ -838,4 +841,96 @@ button::after {
 
 .cart{
   background-color:#fe732e;
+}
+
+.coupon{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 30rpx;
+  font-size: 28rpx;
+  align-items: center;
+}
+
+.coupon image.left{
+  width: 62rpx;
+  height: 28rpx;
+  margin-right: 25rpx;
+}
+
+.coupon .right{
+  width: 15rpx;
+  height: 25rpx;
+}
+
+/* 优惠券弹出层样式 */
+.quan-box{
+  position:fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 9999;
+  width: 100%;
+  height: auto;
+  background-color: rgba(255, 255, 255, 1);
+  padding: 20rpx 0 0 0;
+}
+
+.quan-box view:last-of-type .quan-box-detail{
+  margin-bottom: 40rpx;
+}
+
+.quan-box-detail{
+  position: relative;
+  width: 702rpx;
+  height: 188rpx;
+  margin: 0 auto;
+}
+.quan-box-bg{
+  width: 100%;
+  height: 188rpx;
+}
+
+.quan-box-content{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 430rpx;
+  height:148rpx;
+  border-right: 1rpx dashed #fff;
+  color: #fff;
+  padding: 20rpx 30rpx;
+  font-size: 24rpx;
+}
+
+.quan-price-box{
+  margin-bottom: 15rpx;
+}
+
+.quan-price{
+  font-size: 45rpx;
+}
+
+.header{
+  display: inline-block;
+  text-align: center;
+  width: 100%;
+  height: 80rpx;
+  line-height: 80rpx;
+  font-size: 30rpx;
+}
+
+.mask{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #000;
+    z-index: 9000;
+    opacity: 0.7;
+}
+
+.contBox,.userBox{
+  display: flex;
+  flex-direction: row;
 }

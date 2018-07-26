@@ -26,12 +26,12 @@
 
 .title{
   font-size: 30rpx;
-  height: 80rpx;
+  height: 70rpx;
 }
 
 .price{
-  height: 90rpx;
-  line-height: 90rpx;
+  height: 60rpx;
+  line-height: 60rpx;
 }
 
 .newPrice{
@@ -46,12 +46,19 @@
   color: #999999;
 }
 
-.secKill .end{
+.secKill .end,.secKill .start{
   font-size: 26rpx;
   color: #666666;
+  height: 50rpx;
+  line-height: 50rpx;
+  text-indent: 8rpx;
 }
 
-.secKill .end text{
+.secKill .timeBox{
+  height: 60rpx;
+}
+
+.secKill .timeBox text{
   background-color: #666666;
   color: #ffffff;
   font-size: 24rpx;
@@ -62,10 +69,17 @@
 
 .buyBox{
   display: flex;
-  height: 70rpx;
+  height: 110rpx;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
+}
+
+.secBox{
+  display: flex;
+  height: 110rpx;
+  flex-direction: column;
+  /* align-items: flex-start; */
 }
 
 .buy{

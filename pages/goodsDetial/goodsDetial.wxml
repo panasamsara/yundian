@@ -13,9 +13,9 @@
   <view class='countDown' wx:if="{{status==2}}">
     <view class='left'>¥<text id='newPrice'>{{listData[0].goodsPreferentialStockPrice}}</text><text id='oldPrice'>¥{{listData[0].goodsOriginalStockPrice}}</text></view>
     <view class='right'>
-      <view id='text'>距结束还剩:</view>
+      <view id='text'>距结束还剩<span wx:if="{{listData[0].d>0}}">{{listData[0].d}}天</span></view>
       <view id='countBox'>
-        <text>{{listData[0].rh?listData[0].rh:0}}</text>:<text>{{listData[0].m?listData[0].m:0}}</text>:<text>{{listData[0].s?listData[0].s:0}}</text>
+        <text>{{listData[0].h?listData[0].h:0}}</text>:<text>{{listData[0].m?listData[0].m:0}}</text>:<text>{{listData[0].s?listData[0].s:0}}</text>
       </view>
     </view>
   </view>
@@ -42,11 +42,19 @@
     <view class='middle clearfix'>
       <image src='{{data.gift.pictureUrl}}'></image>
       <view class='rt'>
-        <text>超级无敌噼里啪啦小礼物</text>
-        <view class='bot'>1份</view>     
+        <text>{{data.gift.descTitle}}</text>
+        <view class='bot'>1{{data.gift.units!=null?data.gift.units:'个'}}</view>     
       </view>
     </view>
     <image class='right' src='../../images/yundian_spxq_gengduo.png' bindtap='toGive'></image>
+  </view>
+  <!-- 优惠券部分 -->
+  <view class='coupon'>
+    <view>
+      <image class='left' src='../../images/give.png'></image>
+    <text>领取优惠券</text> 
+    </view>    
+    <image class='right' src='../../images/yundian_spxq_gengduo.png' bindtap='showQuanBox'></image>
   </view>
   <view class='separate'></view>
   <!-- 因后台返给的数据很多小程序无法解析,所以先暂时屏蔽掉,后期需要再改 -->
@@ -54,16 +62,16 @@
     <text class='{{descContent==""?"hide":"show"}}' >{{descContent}}</text>
   </view> -->
   <!-- 拼单 -->
-  <view class='spellList' wx:if="{{status==1&&data.groupBuyList.length>0}}">
+  <view class='spellList' wx:if="{{status==1&&listData.length>0}}">
     <view class='top'>
       <text>{{data.groupBuyingNum}}人正在拼单, 可直接参与</text>
-      <image src='../../images/yundian_spxq_gengduo.png' bindtap='toLayer'></image>
+      <image src='../../images/yundian_spxq_gengduo.png'></image>
     </view>
     <view class='item clearfix groupBox' wx:for='{{listData}}' wx:key='key'>
       <view class='picBox'><image src='{{item.userPic}}'></image></view>
       <text class='name'>{{item.userName}}</text>  
-      <view class='cont'>还差<span>{{data.population-item.totalNum}}人</span>拼成<view><span>剩余{{item.rh}}:{{item.m}}:{{item.s}}</span></view></view>
-      <view bindtap='toLayer' class='gogroup' data-cUser='{{item.cUser}}' data-groupId="{{item.groupBuyingId}}">去拼单</view> 
+      <view class='cont'>还差<span>{{data.population-item.totalNum}}人</span>拼成<view><span>剩余{{item.h}}:{{item.m}}:{{item.s}}</span></view></view>
+      <view bindtap='toLayer' class='gogroup' data-cuser='{{item.cUser}}' data-groupid="{{item.groupBuyingId}}">去拼单</view> 
     </view>
   </view>
   <!-- <view wx:if="{{(status==2||status==3)&&(data.secondKillInfo.length>1||data.scShopGoodsStockList.length>1)}}" id='stockBox'>
@@ -174,10 +182,14 @@
     <view class='top'>正在拼单</view>
     <scroll-view scroll-y style='height:860rpx'>
       <view class='item clearfix' wx:for='{{allListData}}' wx:key='key'>
-        <image src='{{item.userPic}}'></image>
-        <text>{{item.userName}}</text>
-        <button bindtap='toJoin'>去拼单</button>      
-        <view class='cont'>还差<span>{{item.totalNum}}人</span>拼成<view><span>剩余15:30:26</span></view></view>
+        <view class='userBox'>
+          <image src='{{item.userPic}}'></image>
+          <text>{{item.userName}}</text>
+        </view>
+        <view class='contBox'>
+          <view class='cont'>还差<span>{{item.totalNum}}人</span>拼成<view><span>剩余15:30:26</span></view></view>
+          <button bindtap='toJoin'>去拼单</button>  
+        </view> 
       </view>
       <!-- 底部提示信息 -->
       <view class='bot'>仅显示10个正在拼单的人</view>
@@ -202,7 +214,7 @@
     <view class='top'>
       <image src='{{data.pictureUrl}}' ></image>
       <text class='price'>¥{{total}}</text>
-      <text class='count'>库存 {{balance}}</text>
+      <text class='count' wx:if="{{data.goodsType==0}}">库存 {{balance}}</text>
       <view class='size clearfix'>
         <block wx:for='{{data.scShopGoodsStockList}}' wx:key='index' wx:if="{{status==1}}">
           <span bindtap='chose' class="{{cur==item.index?'active':''}}" data-index="{{index}}">{{item.stockName}}</span>    
@@ -225,5 +237,45 @@
     </view>
     <view class='tot' bindtap='buyNow' wx:if="{{buy=='buyNow'}}">立即购买</view>
     <view class='tot cart' bindtap='addCart' wx:if="{{buy=='addCart'}}">加入购物车</view>
+  </view>
+  <!-- 优惠券弹出层 -->
+  <view class='mask' catchtouchmove='preventTouchMove' bindtap='closeQuanBox' wx:if='{{showQuanBox}}'></view> 
+  <view  class='quan-box'  wx:if='{{showQuanBox}}' catchtouchmove='preventTouchMove'>
+    <!-- 优惠券 -->
+    <view id='couponType1' wx:if="{{couponType1.name}}">
+      <text class='header'>{{couponType1.name}}</text>
+      <view class='quan-box-detail' bindtap='get' data-id="{{couponType1.id}}">
+        <image class='quan-box-bg' src='../../images/yundian_dpzy_youhuiquan@2x.png'></image>
+        <view class='quan-box-content'>
+            <view class='quan-price-box'>￥<text class='quan-price'>{{couponType1.amount}}</text></view>
+            <view>满{{couponType1.amountMin}}元可使用</view>
+            <view>有效期{{couponType1.beginTime}}-{{couponType1.endTime}}</view>
+        </view>
+      </view>
+    </view>
+    <!-- 代金券 -->
+    <view id='couponType2' wx:if="{{couponType2.name}}">
+      <text class='header'>{{couponType2.name}}</text>
+      <view class='quan-box-detail' bindtap='get' data-id="{{couponType2.id}}">
+        <image class='quan-box-bg' src='../../images/yundian_dpzy_youhuiquan@2x.png'></image>
+        <view class='quan-box-content'>
+            <view class='quan-price-box'>￥<text class='quan-price'>{{couponType2.amount}}</text></view>
+            <view>{{couponType2.instruction}}</view>
+            <view>有效期{{couponType2.beginTime}}-{{couponType2.endTime}}</view>
+        </view>
+      </view>
+    </view>
+    <!-- 包邮 -->
+    <view id='couponType3' wx:if="{{couponType3.name}}">
+      <text class='header'>{{couponType3.name}}</text>
+      <view class='quan-box-detail' bindtap='get' data-id="{{couponType3.id}}">
+        <image class='quan-box-bg' src='../../images/yundian_dpzy_youhuiquan@2x.png'></image>
+        <view class='quan-box-content'>
+            <view class='quan-price-box'>￥<text class='quan-price'>包邮券</text></view>
+            <view>满{{couponType3.amountMin}}元可包邮</view>
+            <view>有效期{{couponType3.beginTime}}-{{couponType3.endTime}}</view>
+        </view>
+      </view>
+    </view>
   </view>
 </view>

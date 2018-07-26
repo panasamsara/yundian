@@ -14,8 +14,8 @@
       <scroll-view scroll-y style="height: 100%;" scroll-into-view="{{toView}}">
       <view  class="food-grouping" id="catGood_{{item.id}}">
         <view wx:for="{{goodsInCategory}}" wx:for-item="good" wx:key='index' class="foods-item" id="{{good.id}}">
-          <image  class="icon" src="{{good.pictureUrl}}" id="{{good.id}}" bindtap='goToDetail'></image>
-          <view   class="content" bindtap='goToDetail'>
+          <image  class="icon" src="{{good.pictureUrl}}" id="{{good.id}}" data-status='{{good.status}}' bindtap='goToDetail'></image>
+          <view   class="content" data-status='{{good.status}}' bindtap='goToDetail'>
             <text class="title">{{good.goodsName}}</text>
              <text class="yangjiao">¥</text> <text class="price">{{good.price}}</text>
           </view>
@@ -47,16 +47,25 @@
         <view class="content-left" bindtap="showShopCartFn">
 
           <view class="logo-wrapper">
-            <image class="logo" src="./image/fenlei_gouwuche@2x.png" style="background-image:url(./image/fenlei_gouwuche@2x.png)">
-              <i class="icon-shopping_cart"></i>
-            </image>
+            
+              <image class="logo" src="./image/cart_gray.png" wx:if='{{cart_length == 0}}'>
+                <i class="icon-shopping_cart"></i>
+              </image>
+          
+              <image class="logo" src="./image/cart_active.png" wx:if='{{cart_length > 0}}'>
+                <i class="icon-shopping_cart"></i>
+              </image>
+
             <view class="num" wx:if="{{totalNum}}">{{totalNum}}</view>
           </view>  
 
           <view class="price {{(cart_length > 0)? 'highlight':''}}"><text class='jiesuan-yangjiao'>￥</text>{{totalPay}}</view>
         </view>
         <view class="content-right">
-          <view bindtap="goToCart" class="pay payClass">去结算
+          <view bindtap="goToCart" class="pay payClass" wx:if='{{cart_length > 0}}'>去结算
+          <!-- <text wx:if='{{totalNum >0}}'>（{{totalNum}}）</text> -->
+          </view>
+          <view class="pay-gray" wx:if='{{cart_length == 0}}'>去结算
           <!-- <text wx:if='{{totalNum >0}}'>（{{totalNum}}）</text> -->
           </view>
         </view>
@@ -64,9 +73,16 @@
 
       
       <view class="shopcart-list {{showShopCart?'':'hidden'}}">
-        <!-- <view class="list-header">
-          <view class="title"><text class="title-line">已选商品</text> <text class="empty" bindtap="clearShopCartFn">清空</text></view>
-        </view> -->
+        <view class="list-header">
+          <view class="title">
+            <text class="title-line">已选商品</text> 
+            <view class="empty" bindtap="clearShopCartFn" >
+              <image class='delete_icon' src='./image/delete.png'></image>
+              <text>清空</text>
+            </view>
+            
+          </view>
+        </view>
         <scroll-view scroll-y >
         <view class="list-content" >
           

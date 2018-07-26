@@ -24,7 +24,7 @@
           <text>{{item.text}}</text>
         </view>
       </view>
-      <view class="shoporder borderTop">
+      <view class="shoporder">
         <block wx:for="{{items}}" wx:key="{{item.id}}">
           <view data-path="{{ item.path }}" data-index="{{ index }}" bindtap="navigateTo">
             <image src="{{item.icon}}"></image>

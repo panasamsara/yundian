@@ -243,12 +243,17 @@ putInCart-img{
 }
 .activity-swiper{
   display: block;
-  height: 300rpx;
+  height: auto;
   margin: 30rpx;
-  overflow: hidden;
+  /* overflow: hidden; */
   border-radius: 5rpx;
   margin-bottom:30rpx;
+}
+.active-block{
+  margin-bottom: 20rpx;
   box-shadow : 0rpx 0rpx 20rpx 8rpx #e2e2e2;
+  border-radius:10rpx;
+  overflow:hidden;
 }
 .activity-swiper-box{
   height: 300rpx;

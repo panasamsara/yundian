@@ -38,6 +38,7 @@ Page({
     //  goodlist: this.data.goodlist,
       isAllSelect: false,
       totalMoney: 0,
+      isEdit: 0
     })
   },
   getData:function(e){

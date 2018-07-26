@@ -690,7 +690,8 @@ Page({
           cartGoodsList: 0,
           totalNum: 0,//总数量
           totalPay: 0,
-          showShopCart: false
+          showShopCart: false,
+          cart_length: 0,
         })
       }
     

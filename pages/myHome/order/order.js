@@ -12,12 +12,13 @@ Page({
     scrollLeft: 0, //tab标题的滚动条位置
     goodlist: [], //"orderStatus" 订单状态（待发货0，配送中1，已收货2， 配送失败3, 取消4，异常订单5）
     length:0,
-    customerId:''
+    customerId:'',
+    shopId:''
   },
   onLoad: function (options) {
     var user = wx.getStorageSync('scSysUser');
     var userid = wx.getStorageSync('scSysUser').id;
-
+    var shopId = wx.getStorageSync('shop').id;
     var that = this;
     // 高度自适应
     wx.getSystemInfo({
@@ -33,7 +34,8 @@ Page({
     });
     that.setData({
       currentTab: options.index ||0,
-      customerId: userid
+      customerId: userid,
+      shopId: shopId
     });
     that.getData(); //全部
     console.log(userid)
@@ -82,11 +84,12 @@ Page({
   getData: function(type){
     //调接口
     if(type==1){
-      app.util.reqAsync('shop/orderList', {
+      app.util.reqAsync('shop/getShopOrderListNews', {
         customerId: this.data.customerId,
         orderStatusVo: this.data.currentTab,
         pageNo: Number(this.data.currentPage) + 1,
-        pageSize: 10
+        pageSize: 10,
+        shopId: this.data.shopId
       }).then((res) => {
         if (res.data.code == 1) {
            //下拉加载
@@ -119,11 +122,12 @@ Page({
         })
       })
     }else{
-      app.util.reqAsync('shop/orderList', {
+      app.util.reqAsync('shop/getShopOrderListNews', {
         customerId: this.data.customerId,
         orderStatusVo: this.data.currentTab,
         pageNo: 1,
-        pageSize: 10
+        pageSize: 10,
+        shopId: this.data.shopId
       }).then((res) => {
         if (res.data.code == 1) {
           for (var i in res.data.data) {

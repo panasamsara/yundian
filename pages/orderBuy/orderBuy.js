@@ -83,7 +83,14 @@ Page({
     var shopProvince = shop.provinceId;
     var shopArea = shop.areaId;
     var shopCity = shop.cityId;
-    var arr = JSON.parse(goods[0].deliveryCalcContent) || 0;
+    if (goods[0].deliveryCalcContent==""){
+      var arr = 0;
+    } else if (goods[0].deliveryCalcContent != "null"){
+      var arr = goods[0].deliveryCalcContent;
+    }else{
+      var arr = 0;
+    }
+    
     console.log(goods)
     this.setData({
       customerId: userid,

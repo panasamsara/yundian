@@ -30,24 +30,6 @@ Page({
   },
   onLoad: function(options){
     console.log(options)
-    //  this.setData({
-    //    status:-1
-    //  })
-    //  if (options.status==1){//拼团
-    //    this.setData({
-    //      status: options.status,
-    //      groupBuyingId: options.groupBuyingId,
-    //      cUser: options.cUser
-    //    })    
-    //  } else if (options.status == 2){//秒杀
-    //    this.setData({
-    //      status: options.status
-    //    });
-    //  }else{//普通商品
-    //   this.setData({
-    //      status: options.status
-    //   })
-    //  }
     this.setData({
       status:options.status
     })
@@ -55,21 +37,7 @@ Page({
        shopId: options.shopId,
        goodsId: options.goodsId,
      }
-     if(this.data.status==3){
-       this.getDataNormal(parm)
-     }else{
-       this.getData(parm);
-     }
-    //获取店铺信息
-    // var shop = wx.getStorageSync('shop');
-    // this.setData({
-    //   shopId: options.shopId,
-    //   goodsId: options.goodsId,      
-    //   shopName:shop.shopName,
-    //   picImg: shop.logoUrl,
-    //   shopDesc: shop.shopDesc,
-    //   score: shop.score
-    // });
+    this.getData(parm);
     //获取商品评论
     app.util.reqAsync('shop/commentList',{
       type: 0,
@@ -130,26 +98,26 @@ Page({
     });  
   },
   //获取普通商品详情
-  getDataNormal:function(parm){
-    app.util.reqAsync('shop/goodsDetail',parm).then((res) => {
-      if(res.data.data){
-        let stockList=res.data.data.stockList;
-        for(let i=0;i<stockList.length;i++){
-          stockList[i].index=i
-        }
-        this.setData({
-          data:res.data.data
-        })
-      }
-    });
-  },
+  // getDataNormal:function(parm){
+  //   app.util.reqAsync('shop/goodsDetail',parm).then((res) => {
+  //     if(res.data.data){
+  //       let stockList=res.data.data.stockList;
+  //       for(let i=0;i<stockList.length;i++){
+  //         stockList[i].index=i
+  //       }
+  //       this.setData({
+  //         data:res.data.data
+  //       })
+  //     }
+  //   });
+  // },
   // 获取详情
   getData: function (parm) {
     wx.showLoading({
       title: '加载中'
     })
     app.util.reqAsync('shopSecondskilActivity/getServerNowTime').then((res) => {
-      if (res.data) {
+      if (res.data.data) {
         this.setData({
           nowTime: res.data.data
         })
@@ -214,6 +182,11 @@ Page({
             this.setData({
               listData: list
             })
+        }else{//普通商品
+          let stockList = res.data.data.stockList;
+          for(let i=0;i<stockList.length;i++){
+            stockList[i].index=i
+          }
         }
         this.setData({
           data:data
@@ -229,23 +202,24 @@ Page({
     })
   },  
   //跳转到拼单
-  toLayer(){   
+  toLayer(e){   
     this.setData({
       flag:true ,
       flag1:true
     });
-    app.util.reqAsync('shop/getSmallGroupListYQ',{
-      groupBuyingId:this.data.groupBuyingId,//对应拼团表的id"
-      status:this.data.status,   //状态：0未生效，1成功,2过期"
-      cUser: this.data.cUser,   //发起拼组者id",
-      pageNo: 1,
-      pageSize: 10        
-    }).then((res)=>{
-      var data=res.data.data;
-      this.setData({
-        allListData:data
-      })
-    })
+    let dataset = e.currentTarget.dataset;
+        data={
+          cUser: dataset.cUser,
+          groupBuyingId: dataset.groupId,
+          pageNo: 1,
+          pageSize: 10
+        }
+        app.util.reqAsync('shop/getSmallGroupListYQ',data).then((res)=>{
+          var data=res.data.data;
+          this.setData({
+            allListData: groupOrderList
+          })
+        })
   },
   //关闭拼单弹出层
   closeLayer(){
@@ -427,12 +401,18 @@ Page({
           price: scShopGoodsStockList[0].stockPrice,
           buyType: 'solo'
         }) 
+        if (scShopGoodsStockList <= 1) {
+          this.buyNow();
+        }
       }else{//发起拼单
         this.setData({ 
           total: scShopGoodsStockList[0].stockBatchPrice,
           price: scShopGoodsStockList[0].stockBatchPrice,
           buyType:'group'
         })
+        if (scShopGoodsStockList<=1){
+          this.buyNow();
+        }
       }  
       this.setData({
         balance: scShopGoodsStockList[0].stockNum
@@ -453,6 +433,10 @@ Page({
         balance: stockList[0].balance,
         price: stockList[0].stockPrice
       })
+      if (stockList.length <= 1) {//无其他规格
+        this.buyNow()
+        return
+      }
     }
     this.setData({
       showBuy: true,
@@ -498,6 +482,13 @@ Page({
     }
   },
   buyNow:function(){//立即购买
+    if (this.data.balance<=0){
+      wx.showToast({
+        title: '库存不足',
+        icon:'none'
+      })
+      return
+    }
     var status=this.data.status,
         data=this.data.data,
         cur=this.data.cur,
@@ -531,7 +522,7 @@ Page({
         url ="../orderBuy/orderBuy?totalMoney="+this.data.total
       }
     }else if(status==2){//秒杀
-      url = '../secKillBuy/secKillBuy?realMoney=' + this.data.total + '&goodsId=' + data.id + '&goodsPrice=' + this.data.price + '&secondskillActivityId=' + data.secondKillInfo[cur].id + '&goodsType=' + data.goodsType + '&remake=' + data.descTitle + '&stockId=' + data.secondKillInfo[cur].goodsStockId + '&goodsName=' + data.goodsName + '&stockName=' + data.secondKillInfo[cur].stockName + '&goodsNum=' + this.data.number + '&pictureUrl=' + data.pictureUrl + '&deliveryCalcContent=' + data.deliveryCalcContent  + '&isSeckill=' + 1
+      url = '../secKillBuy/secKillBuy?realMoney=' + this.data.total + '&goodsId=' + data.id + '&goodsPrice=' + this.data.price + '&secondskillActivityId=' + data.secondKillInfo[cur].secondskillActivityId + '&goodsType=' + data.goodsType + '&remake=' + data.descTitle + '&stockId=' + data.secondKillInfo[cur].goodsStockId + '&goodsName=' + data.goodsName + '&stockName=' + data.secondKillInfo[cur].stockName + '&goodsNum=' + this.data.number + '&pictureUrl=' + data.pictureUrl + '&deliveryCalcContent=' + data.deliveryCalcContent  + '&isSeckill=' + 1
     }else{//普通
       info[0]['goodsId'] = data.stockList[0].goodsId,
       info[0]['stockId'] = data.stockList[cur].id,

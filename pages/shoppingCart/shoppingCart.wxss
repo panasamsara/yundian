@@ -178,7 +178,7 @@
   z-index:33;
 }
 .account-box .all{
-  padding: 10rpx 40rpx;
+  padding: 10rpx 20rpx 10rpx 20rpx;
   display: inline-block;
   height: 80rpx;
   line-height:80rpx;
@@ -331,11 +331,11 @@
   margin-top:15rpx;
 }
 .acount-lft{
-  width: 50%;
+  width: 65%;
   float: left;
 }
 .sum-info{
-  width: 40%;
+  width: 35%;
   float: right;
   height:100rpx;
 }

@@ -35,19 +35,19 @@
     <view class='info' wx:if="{{status==2}}"><span>库存 {{listData[0].salesCount}}</span><span>月销量 {{listData[0].goodsCount}}</span></view>
     <view class='info' wx:if="{{status==3}}"><span>库存 {{data.stockBalance}}</span><span>月销量 {{data.payCount}}</span></view>
   </view>
-  <!-- <view class='separate'></view> -->
+  <view class='separate'></view>
   <!-- 赠品部分 -->
-  <!-- <view class='give clearfix'>
+  <view class='give clearfix' wx:if="{{data.gift!=null}}">
     <image class='left' src='../../images/give.png'></image>
     <view class='middle clearfix'>
-      <image src='../../images/yundian_bangdingdianji_logo.png'></image>
+      <image src='{{data.gift.pictureUrl}}'></image>
       <view class='rt'>
         <text>超级无敌噼里啪啦小礼物</text>
         <view class='bot'>1份</view>     
       </view>
     </view>
     <image class='right' src='../../images/yundian_spxq_gengduo.png' bindtap='toGive'></image>
-  </view> -->
+  </view>
   <view class='separate'></view>
   <!-- 因后台返给的数据很多小程序无法解析,所以先暂时屏蔽掉,后期需要再改 -->
   <!-- <view class='descrip'>
@@ -63,7 +63,7 @@
       <view class='picBox'><image src='{{item.userPic}}'></image></view>
       <text class='name'>{{item.userName}}</text>  
       <view class='cont'>还差<span>{{data.population-item.totalNum}}人</span>拼成<view><span>剩余{{item.rh}}:{{item.m}}:{{item.s}}</span></view></view>
-      <view bindtap='toLayer' class='gogroup'>去拼单</view> 
+      <view bindtap='toLayer' class='gogroup' data-cUser='{{item.cUser}}' data-groupId="{{item.groupBuyingId}}">去拼单</view> 
     </view>
   </view>
   <!-- <view wx:if="{{(status==2||status==3)&&(data.secondKillInfo.length>1||data.scShopGoodsStockList.length>1)}}" id='stockBox'>
@@ -162,7 +162,7 @@
       </view>
     </view>
     <view wx:if="{{status==2||status==3}}" class='buyBox'>
-      <view class='add' bindtap='tobuy' id='addCart'>加入购物车</view>
+      <!-- <view class='add' bindtap='tobuy' id='addCart'>加入购物车</view> -->
       <view class='add' bindtap='tobuy' id='buyNow'>立即购买</view>
     </view>
   </view>  
@@ -176,7 +176,7 @@
       <view class='item clearfix' wx:for='{{allListData}}' wx:key='key'>
         <image src='{{item.userPic}}'></image>
         <text>{{item.userName}}</text>
-        <button data-groupBuyingId='{{item.groupBuyingId}}' data-cUser='{{item.cUser}}' data-status='{{item.status}}' bindtap='toJoin'>去拼单</button>      
+        <button bindtap='toJoin'>去拼单</button>      
         <view class='cont'>还差<span>{{item.totalNum}}人</span>拼成<view><span>剩余15:30:26</span></view></view>
       </view>
       <!-- 底部提示信息 -->

@@ -677,15 +677,15 @@ button::after {
 }
 
 /* 秒杀 */
-#addCart{
+/* #addCart{
   background-color: #fe732e;
   width: 50%;
   padding-top: 0;
   line-height: 110rpx;
-}
+} */
 
 #buyNow{
-  width: 50%;
+  width: 100%;
   padding-top: 0;
   line-height: 110rpx;
 }

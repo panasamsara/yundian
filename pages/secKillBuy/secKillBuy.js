@@ -386,12 +386,12 @@ Page({
       if (this.data.isSeckill==1){//秒杀
         //跳到线上订单
         wx.redirectTo({
-          url: '../myHome/orderDeatil/orderDeatil?orderNo=' + this.data.orderNo + '&isGroupBuying=' + 0
+          url: '../myHome/orderDetail/orderDetail?orderNo=' + this.data.orderNo + '&isGroupBuying=' + 0
         })
       }else{
         //跳到线上订单
         wx.redirectTo({
-          url: '../myHome/orderDeatil/orderDeatil?orderNo=' + this.data.orderNo + '&isGroupBuying=' + 1
+          url: '../myHome/orderDetail/orderDetail?orderNo=' + this.data.orderNo + '&isGroupBuying=' + 1
         })
       }
      
@@ -447,24 +447,23 @@ Page({
     }
 
 
-    for (var i in this.data.goods) {
-
-      var goos = this.data.goods[i];
-      goodsList.push({
-        goodsId: goos.goodsId,
-        goodsPrice: goos.goodsPrice,
-        goodsType: goos.goodsType,
-        remake: goos.remake,
-        stockId: goos.stockId,
-        goodsName: goos.goodsName,
-        stockName: goos.stockName,
-        goodsPrice: goos.goodsPrice,
-        goodsNum: goos.goodsNum,
-        pictureUrl: goos.pictureUrl
-      });
-    }
-
     if (this.data.isSeckill==1){ //秒杀
+      for (var i in this.data.goods) {
+
+        var goos = this.data.goods[i];
+        goodsList.push({
+          goodsId: goos.goodsId,
+          goodsPrice: goos.goodsPrice,
+          goodsType: goos.goodsType,
+          remake: goos.remake,
+          stockId: goos.stockId,
+          goodsName: goos.goodsName,
+          stockName: goos.stockName,
+          goodsPrice: goos.goodsPrice,
+          goodsNum: goos.goodsNum,
+          pictureUrl: goos.pictureUrl
+        });
+      }
 
       app.util.reqAsync('shopSecondskilActivity/saveSecondskillOrder', {
         secondskillActivityId: this.data.secondskillActivityId, //秒杀id
@@ -482,7 +481,7 @@ Page({
         contactName: this.data.contactName,
         contactMobile: this.data.contactMobile,
         bussinessId: this.data.shopId,
-        bussinessType: bussinessType,
+        bussinessType: 15,//秒杀15，拼团16
         extend4: '129',//版本
         groupId: 0, //不拼团就传0  拼团传拼团id
         smallGroupId: 0,//参与拼团要传，秒杀传0就OK
@@ -550,6 +549,26 @@ Page({
       })
 
     }else{ //拼团
+      for (var i in this.data.goods) {
+
+        var goos = this.data.goods[i];
+        goodsList.push({
+          goodsName: goos.goodsName,
+          stockId: goos.stockId,
+          goodsPic: goos.pictureUrl,
+          goodsIndex:0,
+          balance:"",
+          remake: goos.stockName,
+          unitPrice: goos.goodsPrice,
+          goodsId: goos.goodsId,
+          goodsType: goos.goodsType,
+          num: goos.goodsNum,
+          goodsNum: goos.goodsNum,
+          actualPayment:goos.goodsPrice,//实付单价
+          goodsPrice: goos.goodsPrice,
+
+        });
+      }
       app.util.reqAsync('shop/submitOnlineOrderNew', {
         payType: 3, //支付方式 （货到付款0，在线支付1，支付宝支付2，微信支付3）
         customerId: this.data.customerId, //顾客id
@@ -565,7 +584,7 @@ Page({
         contactName: this.data.contactName,
         contactMobile: this.data.contactMobile,
         bussinessId: this.data.shopId,
-        bussinessType: bussinessType,
+        bussinessType: 16,
         extend4: '129',//版本
         groupId: this.data.groupId, //不拼团就传0  拼团传拼团id
         smallGroupId: this.data.smallGroupId,//参与拼团要传，秒杀传0就OK
@@ -610,7 +629,7 @@ Page({
                     self.setData({
                       isPay: 0
                     })
-
+                    
                     wx.navigateBack({ changed: true });//返回上一页
 
                   }

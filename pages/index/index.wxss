@@ -54,10 +54,11 @@ page, .main{
   font-size: 24rpx;
   line-height: 28rpx;
   display: inline-block;
-  width: 100%;
+  width: 110rpx;
   text-align: center;
   position: relative;
   top: -18rpx;
+  left: -16rpx;
   color: #b6b6b6;
 }
 

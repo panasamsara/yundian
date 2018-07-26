@@ -85,7 +85,6 @@ page{
 .nav .shopNav image{
   width: 40rpx;
   height: 46rpx;
-  vertical-align: middle;
 }
 .nav .shopNav .bg2{
   width: 68rpx;
@@ -210,6 +209,13 @@ page{
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+.shopNav .title{
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 300rpx;
+  display: inline-block;
 }
 .item .itemCi{
   width: 100%;

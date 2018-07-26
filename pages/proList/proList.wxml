@@ -53,7 +53,7 @@
             <view class="num" wx:if="{{totalNum}}">{{totalNum}}</view>
           </view>  
 
-          <view class="price {{(totalPay > 0)? 'highlight':''}}"><text class='jiesuan-yangjiao'>￥</text>{{totalPay}}</view>
+          <view class="price {{(cart_length > 0)? 'highlight':''}}"><text class='jiesuan-yangjiao'>￥</text>{{totalPay}}</view>
         </view>
         <view class="content-right">
           <view bindtap="goToCart" class="pay payClass">去结算

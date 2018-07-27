@@ -152,13 +152,16 @@
 .listcon{
   background: #fff;
   padding: 20rpx 20rpx;
-  /* display: flex;
-  justify-content: space-between; */
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 .product-item{
-  width: 335rpx;
-  display: inline-block;
-  margin: 0 8rpx;
+  width: 345rpx; 
+  margin-bottom: 20rpx;
+}
+.product-item:nth-of-type(even){
+  margin-right: 0;
 }
 .itemimg-con{
   width: 335rpx;

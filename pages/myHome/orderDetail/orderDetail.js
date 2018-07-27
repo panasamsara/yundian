@@ -19,8 +19,9 @@ Page({
     provinceName: '',
     canvasHidden: false,
     imagePath: '',
-    isGroupBuying:'',// 是否为拼团
+    isGroupBuying:'',// 是否为拼团，拼团为1，非拼团为0,秒杀为3
     userList:'', // 参与拼团人员
+    spellUser:[], // 保存参与人员头像
     timeStatus: '', // 状态：0拼单进行中，1成功,2拼单时间到，已过期未成功'
     nowTime:'', // 服务器当前时间
     groupEndTime:'', // 拼单结束时间
@@ -28,28 +29,35 @@ Page({
     goodsName:'', // 商品名称
     stockName:'', // 商品描述
     groupId:'',//拼单 Id 
-    shopId: '' //店铺id
-
+    shopId: '', //店铺id
+    ifshare:0, //是否分享
+    population:'' //拼团人数
   },
   onLoad: function (options) {
     var user = wx.getStorageSync('scSysUser');
     var userid = wx.getStorageSync('scSysUser').id;
     var orderNo = options.orderNo;
+    var isGroupBuying = options.isGroupBuying;
 
+    console.log('is  ' + isGroupBuying);
     this.setData({
       userid: userid,
-      orderNo: orderNo
+      orderNo: orderNo,
+      isGroupBuying: isGroupBuying
     })
 
+    var _this = this;
     //调接口
     app.util.reqAsync('shop/orderDetail', {
-      orderNo: this.data.orderNo
+      orderNo: this.data.orderNo,
+      // orderNo: 'ZXCSSHOP201807171639029160082',
+      isGroupBuying: this.data.isGroupBuying
     }).then((data) => {
       if (data.data.code == 1) {
         var areaName = app.util.area.getAreaNameByCode(data.data.data[0].orderInfo.areaId);
         var cityName = app.util.area.getAreaNameByCode(data.data.data[0].orderInfo.cityId);
         var ProvinceName = app.util.area.getAreaNameByCode(data.data.data[0].orderInfo.provinceId);
-        console.log(data.data.data[0]);
+
         this.setData({
           goods: data.data.data,
           phone: data.data.data[0].shopInfo.phoneService,
@@ -57,13 +65,19 @@ Page({
           orderStatusVo: data.data.data[0].orderInfo.orderStatusVo,
           areaName: areaName,
           cityName: cityName,
-          ProvinceName: ProvinceName
+          ProvinceName: ProvinceName,
+          storeUrl: data.data.data[0].orderInfo.serialNumber,
+          userList: data.data.data[0].userList,
+          timeStatus: data.data.data[0].groupDetail.timeStatus,
+          groupEndTime: data.data.data[0].groupDetail.endTime
         })
-        // if (data.data.data[0].orderInfo.orderStatusVo == 1) { //待付款
 
-        //     this.countTime();
-
-        // } 
+        console.log('状态：' +data.data.data[0].orderInfo.orderStatusVo);
+        console.log(this.data.timeStatus);
+        if (data.data.data[0].orderInfo.orderStatusVo == 1) { 
+            //待付款
+            this.countTime();
+        } 
         if (data.data.data[0].orderInfo.orderStatusVo == 2 && data.data.data[0].orderInfo.deliveryType == 2) { //自提
           // 页面初始化 options为页面跳转所带来的参数
           var size = this.setCanvasSize();//动态设置画布大小
@@ -79,26 +93,53 @@ Page({
           icon: 'none'
         })
       }
-
     }).catch((err) => {
       wx.showToast({
-        title: '失败……',
+        title: '失败11……',
         icon: 'none'
       })
-    })
+    }).then(
+      app.util.reqAsync('shopSecondskilActivity/getServerNowTime').then((res) => {
+        if (res.data.code == 1) {
+          this.setData({
+            nowTime: res.data.data
+          })
+        } else {
+          wx.showToast({
+            title: res.data.msg,
+            icon: 'none'
+          })
+        }
+      })
+    )
+    .then(
+      function(){
+        // 倒计时
+        var _ordertimer = null;
+        var nowTime = _this.data.nowTime;
+        var nowTimeNum = Date.parse(nowTime);
+        setInterval(function () {
+          _this.count(nowTimeNum);
+          nowTimeNum  += 1000;
+        }, 1000)
+      }
+    )
 
+    
   },
   onShow: function (e) {
     //调接口
     app.util.reqAsync('shop/orderDetail', {
-      orderNo: this.data.orderNo
+      orderNo: this.data.orderNo,
+      isGroupBuying: this.data.isGroupBuying 
+      // orderNo: 'ZXCSSHOP201807171639029160082',
+      // isGroupBuying: this.data.isGroupBuying
     }).then((data) => {
+      // debugger;
       if (data.data.code == 1) {
         var areaName = app.util.area.getAreaNameByCode(data.data.data[0].orderInfo.areaId);
         var cityName = app.util.area.getAreaNameByCode(data.data.data[0].orderInfo.cityId);
         var ProvinceName = app.util.area.getAreaNameByCode(data.data.data[0].orderInfo.provinceId);
-
-
         this.setData({
           goods: data.data.data,
           phone: data.data.data[0].shopInfo.phoneService,
@@ -106,16 +147,42 @@ Page({
           orderStatusVo: data.data.data[0].orderInfo.orderStatusVo,
           areaName: areaName,
           cityName: cityName,
-          ProvinceName: ProvinceName
+          ProvinceName: ProvinceName,
+          userList: data.data.data[0].userList,
+          timeStatus: data.data.data[0].groupDetail.timeStatus,
+          goodsName: data.data.data[0].orderInfo.orderItemList[0].goodsName,
+          groupId: data.data.data[0].groupDetail.groupId,
+          shopId: data.data.data[0].shopInfo.id,
+          groupEndTime: data.data.data[0].groupDetail.endTime,
+          population: data.data.data[0].groupDetail.population
         })
-        // if (data.data.data[0].orderInfo.orderStatusVo == 1) { //待付款
 
-        //   this.countTime();
-
-        // }
+        if (data.data.data[0].orderInfo.orderStatusVo == 1) { //待付款
+          this.countTime();
+        }
+        console.log('0000' + this.data.population);
+        
         this.setData({
           no: this.data.orderNo
         })
+        // 拼接参与拼单用户数组
+        var usersArr = [];
+        if ( this.data.userList.length > 0){
+          usersArr.concat(this.data.userList);
+        }
+        
+        if (usersArr.length < data.data.data[0].groupDetail.population) {
+          var len = data.data.data[0].groupDetail.population - usersArr.length;
+          var obj = { "userpic": "images/yundian_pindantouxiang@2x.png" };
+          for (let i = 0; i < len; i++) {
+            usersArr.push(obj);
+          }
+        }
+        this.setData({
+          spellUser: usersArr
+        })
+
+
       } else {
         wx.showToast({
           title: data.data.msg,
@@ -125,10 +192,11 @@ Page({
 
     }).catch((err) => {
       wx.showToast({
-        title: '失败222……',
+        title: '失败……',
         icon: 'none'
       })
     })
+
 
   },//适配不同屏幕大小的canvas
   setCanvasSize: function () {
@@ -447,7 +515,6 @@ Page({
       })
       setTimeout(this.countTime, 1000);
     } else {
-      console.log(1)
       this.setData({
         time: 0
       })
@@ -564,48 +631,76 @@ Page({
   // 获取服务器当前时间
   getData: function () {
     app.util.reqAsync('shopSecondskilActivity/getServerNowTime').then((res) => {
-      if (res.data) {
+      if (res.data.code == 1) {
         this.setData({
           nowTime: res.data.data
         })
-      }
-      var now = Date.parse(this.data.nowTime);
-      var endTime = Date.parse(this.data.groupEndTime);
-      console.log('服务器当前时间：  '+this.data.nowTime);
-      console.log('拼单结束时间：  '+this.data.groupEndTime);
-      var leftTime = parseInt(endTime) - parseInt(now);
-      var d, h, m, s;
-      if (leftTime >= 0) {
-        d = Math.floor(leftTime / 1000 / 60 / 60 / 24);
-        h = Math.floor(leftTime / 1000 / 60 / 60 % 24);
-        m = Math.floor(leftTime / 1000 / 60 % 60);
-        s = Math.floor(leftTime / 1000 % 60);
-        this.setData({
-          spellLeftTime: h + '小时' + m + '分' + s + '秒'
-        })
-        setTimeout(this.countTime, 1000);
+        console.log('1111' + this.data.nowTime);
       } else {
-        this.setData({
-          spellLeftTime: 0
+        wx.showToast({
+          title: res.data.msg,
+          icon: 'none'
         })
-        var self = this;
-        clearTimeout(this.count);//解除
       }
     }).catch((err) => {
-      console.log(err);
+      wx.showToast({
+        title: '失败……',
+        icon: 'none'
+      })
     })
+    
+  },
+  // 计算拼团剩余时间
+  count: function (nowTime) {
+    var endTime = this.data.groupEndTime;
+    // console.log(nowTime);
+    // console.log(endTime);
+    var nowTimeSec = nowTime;
+    var endTimeSec = Date.parse(endTime);
+    var leftTimeSec = endTimeSec - nowTimeSec;
+    var leftTime = new Date(leftTimeSec);
+    // console.log(leftTimeSec);
+    var day,hour,minute,second;
+    // 时间未截至
+    if (leftTimeSec > 0) {
+      day = Math.floor(leftTimeSec / 1000 / 60 / 60 / 24);
+      hour = Math.floor(leftTimeSec / 1000 / 60 / 60 % 24);
+      minute = Math.floor(leftTimeSec / 1000 / 60 % 60);
+      second = Math.floor(leftTimeSec / 1000 % 60);
+      if (day <= 9) day = '0' + day;
+      if (hour <= 9) hour = '0' + hour;
+      if (minute <= 9) minute = '0' + minute;
+      if (second <= 9) second = '0' + second;
+
+      this.setData({
+        spellLeftTime: day + '天' + hour + '小时' + minute + '分' + second + '秒'
+      })
+    }
+    // 时间已截至
+    else{
+      this.setData({
+        spellLeftTime: 0
+      })
+
+    }
   },
   // 邀请好友拼单
   onShareAppMessage: function (res) {
     return {
       title: this.data.goodsName,
-      desc: this.data.goodsName
+      desc: this.data.goodsName,
+      success: (res) => {
+        this.setData({
+          ifshare: 1
+        })
+      }
     }
   },
   // 查看拼单详情
   openDetail:function(){
+    console.log(this.data.population);
     wx.navigateTo({
-      url: '../../spelldetails/spelldetails?groupId=' + this.data.groupId + '&orderNo=' + this.data.orderNo + '&shopId=' + this.data.shopId + '&cUser=' + this.data.userid
+      url: '../../spelldetails/spelldetails?groupId=' + this.data.groupId + '&orderNo=' + this.data.orderNo + '&shopId=' + this.data.shopId + '&cUser=' + this.data.userid + '&population=' + this.data.population 
     })
   }
   

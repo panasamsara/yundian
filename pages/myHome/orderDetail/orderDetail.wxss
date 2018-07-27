@@ -283,7 +283,7 @@ page,.content{
   height: 70rpx;
   font-size: 28rpx;
   float: right;
-  margin:15rpx 30rpx;
+  margin:15rpx 20rpx;
 }
 .ctronl-btn .reimburse-btn,.ctronl-btn .cancel-btn,.ctronl-btn .return-btn,.ctronl-btn .delete-btn,.ctronl-btn .audit-btn{
   background: #fff;
@@ -410,4 +410,11 @@ page,.content{
   padding: 0;
   text-align: center;
   line-height: 60rpx;
+}
+.ctronl-btn button.invite-btn{
+  width: 242rpx;
+}
+.usersimg{
+  width: 100rpx;
+  height: 100rpx;
 }

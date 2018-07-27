@@ -15,37 +15,111 @@ Page({
     moreGroupList: [], //推荐更多拼团商品list
     groupOrderList:[], //已加入拼团用户list
     groupOrderListLength:'',
-    showStock:false
+    showStock:false,
+    shopId:'',
+    goodId:'',
+    population:'',
+    spellUser:''
   },
   /**
   * 生命周期函数--监听页面加载
   */
   onLoad: function (options) {
+    console.log(options.population);
+    this.setData({
+      groupId: options.groupId,
+      orderNo: options.orderNo,
+      population: options.population,
+      shopId: options.shopId,
+      cUser: options.cUser
+    })
     app.util.reqAsync('shop/getGroupBuyOrderDetail', {
-      groupId: '1230', //拼团id
-      orderNo: 'ZXCSSHOP201807171639029160082',//订单编号
+      groupId: this.data.groupId, //拼团id
+      orderNo: this.data.orderNo, //订单编号
       pageNo: 1,
-      shopId: '288',//店铺id
+      shopId: this.data.shopId,//店铺id
       pageSize: 10,
-      cUser: '37'//拼团用户
+      cUser: this.data.cUser//拼团用户
     }).then((res) => {
+      // debugger;
       var data = res.data.data;
       console.log(data);
       this.setData({
-        // isMaster: data.isMaster,
-        isMaster: 0,
-        groupId: data.groupId || '',
-        pictureUrl: data.pictureUrl || '',
-        goodsTitle: data.goodsTitle || '',
-        descTitle: data.descTitle || '',
-        discountPrice: data.discountPrice || '',
-        endTime: data.endTime ||'',
-        // timeStatus: data.timeStatus || '',
-        timeStatus: 0,
-        lackUser: data.lackUser || '',
-        moreGroupList: data.moreGroupList || '',
-        groupOrderList: data.groupOrderList || '',
-        groupOrderListLength: data.groupOrderList.length ||''
+        isMaster: data.isMaster,
+        groupId: data.groupId,
+        pictureUrl: data.pictureUrl,
+        goodsTitle: data.goodsTitle,
+        descTitle: data.descTitle,
+        discountPrice: data.discountPrice,
+        endTime: data.endTime ? data.endTime : '0',
+        timeStatus: data.timeStatus,
+        lackUser: data.lackUser ? data.lackUser : '0',
+        moreGroupList: data.moreGroupList,
+        groupOrderList: data.groupOrderList,
+        groupOrderListLength: data.groupOrderList.length,
+        goodId: data.goodsId
+      })
+    })
+  },
+  onShow: function (e) {
+    //调接口
+    app.util.reqAsync('shop/getGroupBuyOrderDetail', {
+      groupId: this.data.groupId, //拼团id
+      orderNo: this.data.orderNo, //订单编号
+      pageNo: 1,
+      shopId: this.data.shopId,//店铺id
+      pageSize: 10,
+      cUser: this.data.cUser//拼团用户
+    }).then((res) => {
+      // debugger;
+      console.log(res);
+      if (res.data.code == 1) {
+        var data = res.data.data;
+
+        this.setData({
+          isMaster: data.isMaster,
+          groupId: data.groupId,
+          pictureUrl: data.pictureUrl,
+          goodsTitle: data.goodsTitle,
+          descTitle: data.descTitle,
+          discountPrice: data.discountPrice,
+          endTime: data.endTime,
+          timeStatus: data.timeStatus,
+          lackUser: data.lackUser,
+          moreGroupList: data.moreGroupList,
+          groupOrderList: data.groupOrderList,
+          groupOrderListLength: data.groupOrderList.length
+        })
+        console.log(this.data.discountPrice);
+        // 拼接参与拼单用户数组
+        var usersArr = [];
+        // debugger;
+        if (this.data.groupOrderList.length > 0) {
+          usersArr.concat(this.data.groupOrderList);
+        }
+
+        if (usersArr.length < this.data.population) {
+          var len = this.data.population - usersArr.length;
+          var obj = { "userpic": "images/yundian_pindantouxiang@2x.png" };
+          for (let i = 0; i < len; i++) {
+            usersArr.push(obj);
+          }
+        }
+        this.setData({
+          spellUser: usersArr
+        })
+
+
+      } else {
+        wx.showToast({
+          title: data.data.msg,
+          icon: 'none'
+        })
+      }
+    }).catch((err) => {
+      wx.showToast({
+        title: '失败……',
+        icon: 'none'
       })
     })
   },
@@ -69,9 +143,13 @@ Page({
   // 参与拼单
   participate: function(e){
     wx.navigateTo({
-      url: '../../goodsDetial/goodsDetial?shopId=' + shopId + '&goodsId=' + goodId + '&showBuy=true'
+      url: '../goodsDetial/goodsDetial?shopId=' + this.data.shopId + '&goodsId=' + this.data.goodId + '&showBuy=true' + '&status=' + 1 
     })
-  }
+  },
   // 再次发起拼单
-  
+  againInitiate: function (e) {
+    wx.navigateTo({
+      url: '../goodsDetial/goodsDetial?shopId=' + this.data.shopId + '&goodsId=' + this.data.goodId + '&showBuy=true' + '&status=' + 1 
+    })
+  },
 })

@@ -129,15 +129,20 @@
   <!-- 规格弹框 -->
   <view class='stock-mask' catchtouchmove='preventTouchMove' catchtap='closeMask' wx:if='{{showStock}}'>
   </view> 
-  <view class='stock-box'wx:if='{{showStock}}'>
-  <image class='mask-close-btn' bindtap='closeMask' src='../../images/yundian_yyxx_guanbi@2x.png'></image>
+  <view class='stock-box' wx:if='{{showStock}}'>
+    <image class='mask-close-btn' bindtap='closeMask' src='../../images/yundian_yyxx_guanbi@2x.png'></image>
     <view class='stock-box-title'>选购规格</view>
     <view class='stock-box-content'>
-      <view class='stock-box-content-title'>规格:</view>
+      
       <scroll-view scroll-y class='stock-scroll-box'>
-        <view class='stock-box-content-content'>
-          <view class='stock-list' wx:for="{{stocks}}" wx:for-item="stock" wx:key='index' id="stock_{{index}}_{{stock.id}}" class="{{(stockHighLightIndex == index) ? 'stock-list-active':'stock-list'}}" data-price="{{stock.stockPrice}}" bindtap="choseStock">{{stock.stockName}}</view>
+        <view class='stock-box-content-content' wx:if='{{hasAttrList}}' wx:for='{{attrList}}' wx:for-item="item" wx:index='{{index}}' wx:key='{{index}}'>
+          <view class='stock-box-content-title'>{{item.pname}}:</view>
+          <view wx:for="{{item.attrIdAndNameList}}" wx:for-item="stock" wx:key='index' data-attrid='{{stock.attrId}}' id="stock_{{stock.pindex}}_{{index}}" class="{{ myStockTrueFalseArr[stock.pindex][index] ? 'stock-list-active':'stock-list'}}"  bindtap="choseStock">{{stock.attrName}}</view>
 
+        </view>
+        <view class='stock-box-content-content' wx:if='{{!hasAttrList}}'>
+          <view class='stock-box-content-title'>规格:</view>
+          <view wx:for='{{stocks}}' wx:key='index' wx:for-item='item' id="stock_{{index}}_{{item.id}}" data-price="{{item.stockPrice}}" class="{{(stockHighLightIndex == index) ? 'stock-list-service-active':'stock-list-service'}}" bindtap='choseDefaultStock'>{{item.stockName}}</view>
         </view>
       </scroll-view>
       

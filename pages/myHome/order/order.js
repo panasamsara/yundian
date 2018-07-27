@@ -351,10 +351,28 @@ Page({
   // },
   orderSkip: function(e){
     var orderNo = e.currentTarget.dataset.no;
+    var isGroupBuying = e.currentTarget.dataset.isgrop;//是否拼单 0不是 1是
+    var remark = e.currentTarget.dataset.remark;//是否秒杀活动
+
     //跳转到订单详情
-    wx.navigateTo({
-      url: '../orderDetail/orderDetail?orderNo=' + orderNo + '&isGroupBuying=' + 0
-    })
+    if (isGroupBuying==1){ //拼团
+      wx.navigateTo({
+        url: '../orderDetail/orderDetail?orderNo=' + orderNo + '&isGroupBuying=' + 1
+      })
+    }else{
+      if (remark.indexOf("秒杀")==-1){ //普通商品
+      console.log("普通")
+        wx.navigateTo({
+          url: '../orderDetail/orderDetail?orderNo=' + orderNo + '&isGroupBuying=' + 0
+        })
+      }else{ //秒杀
+      console.log("秒杀")
+        wx.navigateTo({
+          url: '../orderDetail/orderDetail?orderNo=' + orderNo + '&isGroupBuying=' + 3
+        })
+      }
+    }
+    
   },
   onReachBottom: function () {
     //下拉加载

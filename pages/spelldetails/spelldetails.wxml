@@ -22,10 +22,10 @@
   <view class='grouplist'>
     <scroll-view scroll-x   upper-threshold="750rpx" class='groupscroll'>
       <!-- 参团用户 -->
-       <view wx:for="{{groupOrderList}}" wx:key="*this" class='scroll-view-item'>
+       <view wx:for="{{spellUser}}" wx:key="*this" class='scroll-view-item useritem'>
           <image class="headportrait" src='{{item.userpic}}' data-src=''></image> 
-          <view wx:if="{{index===0}}" class='scroll-view-icon'>
-            <image src='images/yundian_pinzhu@2x.png' data-src=''></image>
+          <view class='scroll-view-icon' wx:if="{{index == 0}}">
+            <image class='mainicon' src='images/yundian_pinzhu@2x.png' data-src=''></image>
           </view>
        </view>
       <!-- 参团用户 end-->      
@@ -63,14 +63,14 @@
       <image class="faileicon" bindtap='closeMask' src='images/yundain_tixing@2x.png'></image>
       拼单失败，款项将原路退还
     </view>
-    <button class='spellbtn' hover-class='spellbtn-hover' bindtap="primary">再次发起拼单</button>
+    <button class='spellbtn' hover-class='spellbtn-hover' bindtap="againInitiate">再次发起拼单</button>
   </view>
 
 
   <!-- 拼团规则 -->
   <view class='spllrule'>
-     <text class='ruletit'>拼单规则</text>
-     <text class='ruletext' bindtap="showRule">好友拼单·人满发货·人不满退款</text>
+     <text class='ruletit'  bindtap="showRule">拼单规则</text>
+     <text class='ruletext'>好友拼单·人满发货·人不满退款</text>
   </view>
   <!-- 拼团规则 end-->
   <view class='listwrap'>

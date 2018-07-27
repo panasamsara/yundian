@@ -289,14 +289,14 @@ page{
 .shopcart-list{
   position:absolute;
   left:0;
-  bottom:47px;
+  bottom: 48px;
   z-index:-1;
   width:100%;
-  height: 350rpx;
+  height: 380rpx;
   background: #fff;
 }
 .shopcart-list scroll-view{
-  height: 100%;
+  height: 300rpx;
 }
 .food{
   border-bottom: 1px solid rgba(7, 17, 27, 0.1);
@@ -416,7 +416,7 @@ page{
 .stock-box{
   position: absolute;
   width: 650rpx;
-  height: 600rpx;
+  height: 700rpx;
   top:200rpx;
   background-color: #fff;
   margin-left: 50rpx;
@@ -443,28 +443,31 @@ page{
   padding: 25rpx;
 }
 .stock-box-content-title{
+  display: block;
+  width: 100%;
+  height: 40rpx;
+  line-height: 40rpx;
   font-size: 28rpx;
-  height: 80rpx;
-  line-height: 80rpx;
   padding-left:10rpx;
 }
 .stock-scroll-box{
-  height: 270rpx;
+  height: 440rpx;
 }
 .stock-box-content-content{
   width: 100%;
-  height: 270rpx;
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
   justify-content: flex-start;
   margin-left:9rpx;
+  margin-bottom: 20rpx;
 }
 .stock-list{
   width: 180rpx;
   height: 80rpx;
   line-height: 80rpx;
   margin-right: 16rpx;
+  margin-bottom:10rpx;
   border-radius: 10rpx;
   text-align: center;
   background-color: #fff;
@@ -491,17 +494,49 @@ page{
     -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
     -webkit-line-clamp: 1; /** 显示的行数 **/
 }
+.stock-list-service{
+  width: 270rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  margin-right: 16rpx;
+  margin-bottom:10rpx;
+  border-radius: 10rpx;
+  text-align: center;
+  background-color: #fff;
+  border: 1rpx solid #666; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box; /** 将对象作为伸缩盒子模型 **/
+  -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
+  -webkit-line-clamp: 1; /** 显示的行数 **/
+}
+.stock-list-service-active{
+  width: 270rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  margin-right: 16rpx;
+  border-radius: 10rpx;
+  text-align: center;
+  background-color: #fb452d;
+  color: #fff;
+  border: 1rpx solid #fb452d; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box; /** 将对象作为伸缩盒子模型 **/
+    -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
+    -webkit-line-clamp: 1; /** 显示的行数 **/
+}
 .stock-box-bottom{
+  position: absolute;
+  bottom:  -2rpx;
   width: 650rpx;
   height: 120rpx;
   line-height: 100rpx;
-  position: relative;
-  bottom: 0;
   background-color: #eee;
   font-size: 34rpx;
   color: #f60436;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 .stock-money{
   width: 200rpx;

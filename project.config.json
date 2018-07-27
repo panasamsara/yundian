@@ -236,6 +236,24 @@
 					"name": "拼团 下单",
 					"pathName": "pages/groupBuyOrder/groupBuyOrder",
 					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "拼单详情",
+					"pathName": "pages/spelldetails/spelldetails",
+					"query": ""
+				},
+				{
+					"id": 34,
+					"name": "订单详情",
+					"pathName": "pages/myHome/orderDetail/orderDetail",
+					"query": "orderNo=ZXCSSHOP201807180918593180012"
+				},
+				{
+					"id": -1,
+					"name": "在线订单列表",
+					"pathName": "pages/myHome/order/order",
+					"query": ""
 				}
 			]
 		}

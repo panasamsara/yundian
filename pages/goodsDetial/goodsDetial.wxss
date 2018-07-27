@@ -487,6 +487,7 @@ button::after {
   top:200rpx;
   left: 35rpx;
   border-radius: 8rpx;
+  z-index:999; 
 }
 .layer .close{
   width: 42rpx;
@@ -504,15 +505,10 @@ button::after {
 }
 .layer .top{
   text-align: center;
-  height: 115rpx;
+  height: 110rpx;
   width:680rpx;
-  line-height: 115rpx;
+  line-height: 110rpx;
   font-size: 34rpx;
-  position: fixed;
-  top:200rpx;
-  left: 35rpx;
-  background-color: #fff;
-  z-index: 1;
   border-top-left-radius: 8rpx;
   border-top-right-radius: 8rpx;
 }
@@ -523,8 +519,9 @@ button::after {
   flex-direction: row;
   justify-content: space-between;
 }
-.layer .item:first-child{
-  margin-top: 115rpx
+
+.layer .item:last-of-type{
+  border-bottom: 1rpx solid #e5e5e5;
 }
 
 .layer .item image{
@@ -728,7 +725,8 @@ button::after {
   left: 0;
   width:100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.6)
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index:999;
 }
 .main{
   width:100%;
@@ -930,7 +928,32 @@ button::after {
     opacity: 0.7;
 }
 
-.contBox,.userBox{
+.layer .contBox,.layer .userBox{
   display: flex;
   flex-direction: row;
+  align-items: center;
+}
+
+.layer .cont{
+  width: auto;
+}
+
+.layer .userBox text{
+  text-indent: 15rpx;
+}
+
+.layer .userBox text{
+  width: 150rpx;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.layer scroll-view{
+  height: 669rpx;
+}
+
+button{
+  padding-left: 0;
+  padding-right: 0;
+  text-align: center;
 }

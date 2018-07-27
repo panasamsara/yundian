@@ -18,8 +18,9 @@ Page({
     stockHighLightIndex: -1,
     cartData: null,
     goodsInfo: {},
-
+    attrList: {},
     cartGoodsList: [],
+    attrid: null,
 
     logs: [],
     starbg: '../../static/img/drawable-xxdpi/title-bar_collection_normal.png',
@@ -102,38 +103,40 @@ Page({
             categoryId: shopCategory[i].categoryId
           }).then((res) => {
             let goods = res.data.data
+            if (goods){
+              if (goods.length != 0) {
+                for (let j = 0; j < goods.length; j++) {
+                  goodMap[goods[j].id] = goods[j];
+                  goodMap[goods[j].id].number = 0
+                  goodsInCategory.push(goods[j])
 
-            if (goods.length != 0) {
-              for (let j = 0; j < goods.length; j++) {
-                goodMap[goods[j].id] = goods[j];
-                goodMap[goods[j].id].number = 0
-                goodsInCategory.push(goods[j])
-
-                if (goods[j].stockList.length != 0) {
-                  for (let k = 0; k < goods[j].stockList.length; k++) {
+                  if (goods[j].stockList.length != 0) {
+                    for (let k = 0; k < goods[j].stockList.length; k++) {
+                      let goodStock = []
+                      goodStock.goodsName = goods[j].goodsName
+                      goodStock.goodsId = goods[j].id
+                      goodStock.stockId = goods[j].stockList[k].id
+                      goodStock.number = 0
+                      goodStock.goodsPrice = goods[j].price
+                      goodStock.stockPrice = goods[j].stockList[k].stockPrice
+                      goodStock.stockPrice = goods[j].stockList[k].stockPrice
+                      stockMap[goodStock.stockId] = goodStock
+                    }
+                  } else {
                     let goodStock = []
                     goodStock.goodsName = goods[j].goodsName
                     goodStock.goodsId = goods[j].id
-                    goodStock.stockId = goods[j].stockList[k].id
+                    goodStock.stockId = null
                     goodStock.number = 0
                     goodStock.goodsPrice = goods[j].price
-                    goodStock.stockPrice = goods[j].stockList[k].stockPrice
-                    goodStock.stockPrice = goods[j].stockList[k].stockPrice
-                    stockMap[goodStock.stockId] = goodStock
+                    goodStock.stockPrice = null
+                    goodStock.stockBalance = goods[j].stockBalance
+                    stockMap[goodStock.goodsId] = goodStock
                   }
-                } else {
-                  let goodStock = []
-                  goodStock.goodsName = goods[j].goodsName
-                  goodStock.goodsId = goods[j].id
-                  goodStock.stockId = null
-                  goodStock.number = 0
-                  goodStock.goodsPrice = goods[j].price
-                  goodStock.stockPrice = null
-                  goodStock.stockBalance = goods[j].stockBalance
-                  stockMap[goodStock.goodsId] = goodStock
                 }
               }
             }
+            
 
           }).catch((err) => {
             console.log(err)
@@ -405,6 +408,40 @@ Page({
     this.linePos = app.bezier([this.busPos, topPoint, this.finger], 30);
 
     let _id = e.target.id.split('_')[1];
+    let goodMap = this.data.goodMap
+    console.log(goodMap[_id])
+    if (goodMap[_id].attrList){
+      this.setData({
+        hasAttrList: true
+      })
+      if (goodMap[_id].attrList.length != 0){
+        let attrList = goodMap[_id].attrList
+        let myStockTrueFalseArr = []
+        let mychosenArr = []
+        for(let i = 0; i<attrList.length; i++){
+          myStockTrueFalseArr[i]=[]
+          mychosenArr[i] = false
+          for (let j = 0; j < attrList[i].attrIdAndNameList.length; j++){
+            myStockTrueFalseArr[i][j] = false
+            attrList[i].attrIdAndNameList[j].pindex = i
+          }
+        }
+
+        console.log(attrList)
+        
+        this.setData({
+          attrList: goodMap[_id].attrList,
+          myStockTrueFalseArr: myStockTrueFalseArr,
+          mychosenArr: mychosenArr
+        })
+      }
+    }else{
+      console.log("没有规格")
+      this.setData({
+        hasAttrList: false,
+        stocks: this.data.goodMap[_id].stockList,
+      })
+    }
 
     if (this.data.goodMap[_id].stockList.length != 0){
       this.setData({
@@ -417,11 +454,70 @@ Page({
     }
     
   },
-  //选择规格
+  //选择规格(有规格)
   choseStock: function(e){
+    let p_index = e.target.id.split('_')[1];
+    let _index = e.target.id.split('_')[2];
+    // let _id = e.target.id.split('_')[2];
+    let attrid = e.currentTarget.dataset['attrid']
+    
+    let myStockTrueFalseArr = this.data.myStockTrueFalseArr
+    let mychosenArr = this.data.mychosenArr
+    for (let i = 0; i < myStockTrueFalseArr[p_index].length; i ++){
+      myStockTrueFalseArr[p_index][i] = false
+    }
+    myStockTrueFalseArr[p_index][_index] = true
+    mychosenArr[p_index] = true
+    let attrArr = []
+    for (let i = 0; i < mychosenArr.length; i++){
+      attrArr[i] = null
+    }
+    let attrList = this.data.attrList
+    for (let i = 0; i < myStockTrueFalseArr.length; i++){
+      for (let j = 0; j < myStockTrueFalseArr[i].length; j++){
+        if (myStockTrueFalseArr[i][j] == true){
+          attrArr[i] = attrList[i].attrIdAndNameList[j].attrId
+        }
+      }
+    }
+
+    console.log(attrArr)
+    this.setData({
+      myStockTrueFalseArr: myStockTrueFalseArr,
+      mychosenArr: mychosenArr
+    });
+ 
+    for (let i = 0; i < attrArr.length; i++){
+      if (attrArr[i] == null){
+        console.log("无法选出规格")
+        return false
+      }
+    }
+
+    var newStr = ''
+    attrArr.sort()
+    for (let i = 0; i< attrArr.length; i++){
+      attrArr[i] = parseInt(attrArr[i])
+    }
+    newStr = attrArr.toString()
+
+    let stocks = this.data.stocks
+    // 找stockId
+    for (let i = 0; i < stocks.length; i++){
+      if (stocks[i].attrIds == newStr){
+        this.setData({
+          chosenStockId: stocks[i].id,
+          chosenStockPrice: stocks[i].stockPrice
+        })
+      }
+    }
+
+  },
+  // 没有规格时 选择默认规格
+  choseDefaultStock: function(e){
     let _index = e.target.id.split('_')[1];
     let _id = e.target.id.split('_')[2];
-    
+
     this.setData({
       stockHighLightIndex: _index,
       chosenStockId: _id,
@@ -430,10 +526,11 @@ Page({
   },
   //选择规格的确认按钮
   choseStockYesBtn: function(){
-    // 不能使用下面关闭方法， 否则规格会被清掉
     this.setData({
       showStock: false,
-      stockHighLightIndex: -1,
+      attrList: [],
+      stocks: [],
+      stockHighLightIndex: -1
     })
     if (this.data.chosenStockId){
       this.startAnimation(this.data.chooseGoodEvent);
@@ -444,7 +541,8 @@ Page({
     this.setData({
       showStock: false,
       chosenStockId: null,
-      stockHighLightIndex: -1,
+      attrList: [],
+      stocks: [],
       chosenStockPrice: null
     })
   },

@@ -65,13 +65,13 @@
   <view class='spellList' wx:if="{{status==1&&listData.length>0}}">
     <view class='top'>
       <text>{{data.groupBuyingNum}}人正在拼单, 可直接参与</text>
-      <image src='../../images/yundian_spxq_gengduo.png'></image>
+      <image src='../../images/yundian_spxq_gengduo.png' bindtap='toLayer'></image>
     </view>
     <view class='item clearfix groupBox' wx:for='{{listData}}' wx:key='key'>
       <view class='picBox'><image src='{{item.userPic}}'></image></view>
       <text class='name'>{{item.userName}}</text>  
       <view class='cont'>还差<span>{{data.population-item.totalNum}}人</span>拼成<view><span>剩余{{item.h}}:{{item.m}}:{{item.s}}</span></view></view>
-      <view bindtap='toLayer' class='gogroup' data-cuser='{{item.cUser}}' data-groupid="{{item.groupBuyingId}}">去拼单</view> 
+      <view bindtap='toJoin' class='gogroup' data-cuser='{{item.cUser}}' data-groupid="{{item.groupBuyingId}}" data-smallid="{{item.id}}" data-endtime="{{item.endTime}}">去拼单</view> 
     </view>
   </view>
   <!-- <view wx:if="{{(status==2||status==3)&&(data.secondKillInfo.length>1||data.scShopGoodsStockList.length>1)}}" id='stockBox'>
@@ -180,33 +180,34 @@
   <view class='layer {{flag1?"show":"hide"}}'>
     <view class='close' bindtap='closeLayer'>×</view>
     <view class='top'>正在拼单</view>
-    <scroll-view scroll-y style='height:860rpx'>
-      <view class='item clearfix' wx:for='{{allListData}}' wx:key='key'>
+    <scroll-view scroll-y="true">
+      <view class='item clearfix' wx:for='{{listDatas}}' wx:key='key'>
         <view class='userBox'>
           <image src='{{item.userPic}}'></image>
           <text>{{item.userName}}</text>
         </view>
         <view class='contBox'>
-          <view class='cont'>还差<span>{{item.totalNum}}人</span>拼成<view><span>剩余15:30:26</span></view></view>
+          <view class='cont'>还差<span>{{data.population-item.totalNum}}人</span>拼成<view><span>剩余{{item.h}}:{{item.m}}:{{item.s}}</span></view></view>
           <button bindtap='toJoin'>去拼单</button>  
         </view> 
       </view>
-      <!-- 底部提示信息 -->
-      <view class='bot'>仅显示10个正在拼单的人</view>
-    </scroll-view>        
+    </scroll-view>
+    <!-- 底部提示信息 -->
+    <view class='bot'>仅显示10个正在拼单的人</view>       
   </view>
   <!-- 去拼单弹出层 -->
   <view class='layer {{flag2?"show":"hide"}} layer2'>
     <view class='close' bindtap='closeLayer'>×</view>  
-    <view class='title'>参与喵喵喵的拼单</view> 
-    <view class='cont'>仅剩<span>3个</span>名额, 20:06:59后结束</view>
-    <view class='pic-list clearfix'>
-      <image src='{{item.userPic}}' wx:for='{{picData}}'wx:key='key'></image>
-      <!-- <image src='../../images/pic_03.gif'></image>
-      <image src='../../images/pic_03.gif'></image>
-      <image src='../../images/pic_03.gif'></image>
-      <image src='../../images/pic_03.gif'></image> -->
-    </view> 
+    <view class='title'>参与{{picData[0].username}}的拼单</view>
+    <view class='cont'>仅剩<span>{{data.population-picData[0].num}}个</span>名额, {{picData[0].h}}:{{picData[0].m}}:{{picData[0].s}}后结束</view>
+    <view wx:for='{{picData}}' wx:key='key'>
+      <view class='pic-list clearfix'>
+        <image src='{{item.userPic}}'></image>
+        <view wx:for="{{data.population-picData[0].num}}" wx:key="index">
+          <image src='../../images/yundian_pindantouxiang.png'></image>
+        </view>    
+      </view> 
+    </view>
     <view class='joinBuy' bindtap='joinBuy'>参与并拼单</view>    
   </view>
   <!-- 购买弹出层 -->

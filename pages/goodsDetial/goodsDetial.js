@@ -26,17 +26,33 @@ Page({
     flagSpellList:'',
     number:1,
     showBuy:false,
-    cur:0
+    cur:0,
+    timer:''
   },
   onLoad: function(options){
     console.log(options)
+    if(options.status){
+      this.setData({
+        status: options.status
+      })
+    }
+    if(options.showBuy){
+      this.setData({
+        showBuy: options.showBuy
+      })
+    }
+    if (options.buy) {
+      this.setData({
+        buy: options.buy
+      })
+    }
+    var parm = {
+      shopId: options.shopId,
+      goodsId: options.goodsId,
+    }
     this.setData({
-      status:options.status
+      parm:parm
     })
-     var parm = {
-       shopId: options.shopId,
-       goodsId: options.goodsId,
-     }
     this.getData(parm);
     //获取商品评论
     app.util.reqAsync('shop/commentList',{
@@ -143,8 +159,14 @@ Page({
                 scShopGoodsStockList[i].index = i;
               }
             }
-            let list = data.groupBuyingList;
-            for (let i = 0; i < list.length; i++) {
+            let list = data.groupBuyingList,
+                length=list.length;
+            if(length>2){
+              length=2
+            }else{
+              length=list.length
+            }
+            for (let i = 0; i < length; i++) {
               list[i].activityStartTime = Date.parse(this.data.nowTime);
               list[i].activityEndTime = Date.parse(list[i].endTime);
               list[i].count = list[i].activityEndTime - list[i].activityStartTime;
@@ -181,38 +203,44 @@ Page({
       }  
       wx.hideLoading();
       let _this = this
+      clearInterval(_this.data.timer)
       if (this.data.status == 1 || this.data.status == 2) {
-        setInterval(function () {
-          _this.count()
+        this.data.timer=setInterval(function () {
+          _this.count(_this.data.listData,'listData')
         }, 1000)
       } 
     })
   },  
   //跳转到拼单
-  // toLayer(e){   
-  //   this.setData({
-  //     flag:true ,
-  //     flag1:true
-  //   });
-  //   let dataset = e.currentTarget.dataset,
-  //       data={
-  //         cUser: dataset.cuser,
-  //         groupBuyingId: dataset.groupid,
-  //         pageNo: 1,
-  //         pageSize: 10
-  //       }
-  //       app.util.reqAsync('shop/getSmallGroupListYQ',data).then((res)=>{
-  //         var data=res.data.data;
-  //         for(let i=0;i<data.length;i++){
-  //           data.activityStartTime = Date.parse(this.data.nowTime);
-  //           data.activityEndTime = Date.parse(secList.activityEndTime);
-  //           data.count = secList.activityEndTime - secList.activityStartTime;
-  //         }
-  //         this.setData({
-  //           allListData: data,
-  //         })
-  //       })
-  // },
+  toLayer(e){   
+    this.setData({
+      flag:true ,
+      flag1:true
+    });
+    let dataset = e.currentTarget.dataset,
+        data={
+          groupBuyingId: this.data.listData[0].groupBuyingId,
+          pageNo: 1,
+          pageSize: 10,
+          status:0
+        }
+        app.util.reqAsync('shop/getSmallGroupListYQ',data).then((res)=>{
+          var timeData=res.data.data;
+          for (let i = 0; i < timeData.length;i++){
+            timeData[i].nowTime = Date.parse(this.data.nowTime);
+            timeData[i].endTime = Date.parse(timeData[i].endTime);
+            timeData[i].count = timeData[i].endTime - timeData[i].nowTime;
+          }
+          this.setData({
+            listDatas: timeData,
+          })
+        })
+        let _this = this;
+        clearInterval(_this.data.timer)
+        this.data.timer=setInterval(function () {
+          _this.count(_this.data.listDatas, 'listDatas')
+        }, 1000)
+  },
   //关闭拼单弹出层
   closeLayer(){
     this.setData({
@@ -220,6 +248,7 @@ Page({
       flag1:false,
       flag2:false
     })
+    this.getData(this.data.parm)
   },
   //去拼单
   toJoin(e){         //需要的数据已存到e里面
@@ -228,19 +257,30 @@ Page({
       flag1:false,
       flag2:true
     });
-    app.util.reqAsync('shop/getSmallGroupUserListYQ',{
-      groupId:'',
-      smallGroupId:'' ,//   #（选填）对应拼组表id",
-      status:'', //状态：0已付款，1申请退款",
-      cUser:'',   //参与者用户id",
-      pageNo:'', 
-      pageSize: ''    
-    }).then((res)=>{
-      var data=res.data.data 
+    var dataset=e.currentTarget.dataset,
+        data={
+          groupId: dataset.groupid,
+          smallGroupId: dataset.smallid,//   #（选填）对应拼组表id",
+          cUser: dataset.cuser,   //参与者用户id"
+        }
+    app.util.reqAsync('shop/getSmallGroupUserListYQ',data).then((res)=>{
+      var timeData=res.data.data 
+      console.log(timeData)
+      for(let i=0;i<timeData.length;i++){
+        timeData[i].endTime = Date.parse(dataset.endtime);
+        timeData[i].nowTime=Date.parse(this.data.nowTime);
+        timeData[i].count = timeData[i].endTime - timeData[i].nowTime;
+        console.log(timeData[i].endTime,timeData[i].nowTime)
+      }
       this.setData({
-        picData:data
+        picData:timeData
       })
     })
+    let _this=this;
+    clearInterval(_this.data.timer)
+    this.data.timer=setInterval(function(){
+      _this.count(_this.data.picData,'picData')
+    },1000)
   },
   //参与并拼单
   joinBuy(e){
@@ -284,9 +324,9 @@ Page({
     })
   },
   // 倒计时方法
-  count(){
-    for (let i = 0; i < this.data.listData.length; i++) {
-      let leftTime = this.data.listData[i].count;
+  count:function(datas,arrayName){
+    for (let i = 0; i < datas.length; i++) {
+      let leftTime = datas[i].count;
       leftTime -= 1000;
       if (leftTime <= 0) {
         leftTime=0
@@ -295,11 +335,11 @@ Page({
           h = Math.floor(leftTime / 1000 / 60 / 60 % 24),
           m = Math.floor(leftTime / 1000 / 60 % 60),
           s = Math.floor(leftTime / 1000 % 60),
-          count = "listData[" + i + "].count",
-          dCount = "listData[" + i + "].d",
-          hCount = "listData[" + i + "].h",
-          mCount = "listData[" + i + "].m",
-          sCount = "listData[" + i + "].s";
+          count = arrayName+"[" + i + "].count",
+          dCount = arrayName + "[" + i + "].d",
+          hCount = arrayName + "[" + i + "].h",
+          mCount = arrayName + "[" + i + "].m",
+          sCount = arrayName + "[" + i + "].s";
       if (h < 10) {
         h = "0" + h;
       }
@@ -361,8 +401,11 @@ Page({
   closeMask:function(){
     this.setData({
       flag:false,
+      flag1:false,
+      flag2:false,
       showBuy:false
     })
+    this.getData(this.data.parm)
   },
   //跳转到立即购买
   tobuy: function (e) {
@@ -420,7 +463,6 @@ Page({
         }) 
       } 
     } else if (this.data.status == 2) {//秒杀
-    console.log(this.data.listData[0].count)
       if (this.data.listData[0].count <= 0) {
         wx.showToast({
           title: '活动已结束',
@@ -562,11 +604,18 @@ Page({
     })
   },
   addCart:function(){//加入购物车
+    if (this.data.balance <= 0) {
+      wx.showToast({
+        title: '库存不足',
+        icon: 'none'
+      })
+      return
+    }
     let data={
-      goodsId: this.data.data.secondKillInfo[0].goodsId,
+      goodsId: this.data.data.stockList[0].goodsId,
       customerId: wx.getStorageSync('scSysUser').id,
       shopId: wx.getStorageSync('shop').id,
-      stockId: this.data.data.secondKillInfo[this.data.cur].goodsStockId,
+      stockId: this.data.data.stockList[this.data.cur].goodsStockId,
       number: this.data.number
     }
     app.util.reqAsync('shop/updateNewShopCartV2',data).then((res) => {
@@ -602,7 +651,6 @@ Page({
           }
         }
       }
-      console.log(this.data.couponType1)
     }).catch((err) => {
       console.log(err)
     })

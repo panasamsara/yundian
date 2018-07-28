@@ -15,7 +15,6 @@ page{
 .appointment .list{
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
   height: 120rpx;
   font-size: 32rpx;
@@ -35,7 +34,7 @@ page{
 
 .appointment .picker{
   display: flex;
-  width: 510rpx;
+  width: 545rpx;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
@@ -59,7 +58,7 @@ page{
 }
 
 .appointment .detail{
-  width: 494rpx;
+  width: 495rpx;
   height: 120rpx;
   line-height: 120rpx;
   float: left;
@@ -73,9 +72,15 @@ page{
   color: #666666;
 }
 
+.appointment .chooseBox{
+  width: 50rpx;
+  height: 120rpx;
+  line-height: 120rpx;
+}
+
 .appointment .choose{
   width: 16rpx;
-  height: 25rpx;
+  height: 28rpx;
 }
 
 .appoint{

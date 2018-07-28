@@ -13,7 +13,7 @@
     <view class="bg-mask"></view>
     <image src='{{shopInformation.bgImageLong}}' mode='scaleToFill' class='top-bg' wx:if='{{showImg}}'></image>
     <image src='{{shopInformation.videoImagecover}}' mode='scaleToFill' class='top-bg' wx:if='{{showVideo}}'></image> 
-    <image src='../../images/yundian_shipinbofang@2x.png' bindtap='goIndexVideo' class='index-video-cover' wx:if='{{showVideo}}'></image>
+    <image src='../../images/yundian_shipinbofang@2x.png' bindtap='goIndexVideo' class='index-video-cover' wx:if='{{showVideo &&  shopInformation.shopInfo.shopHomeConfig.openServiceList[1]}}'></image>
     <!-- <image class='up-icon' src='../../images/yundian_dpzy_shangla@2x.png'></image> -->
     <image class='up-icon' bindtap='clickScrollTop' src='../../images/up.gif'></image>
 
@@ -45,8 +45,8 @@
         <text class='text-below'>直播</text>
       </view>
       <view>
-         <image bindtap='hideBtnList' wx:if='{{showBtnList}}' class='btn-img-show' src='./img/hide.png'></image> 
-         <image bindtap='showBtnList' wx:if='{{hideBtnList}}' class='btn-img-show' src='./img/show.png'></image> 
+         <image bindtap='hideBtnList' wx:if='{{showBtnList && (shopInformation.shopInfo.shopHomeConfig.openServiceList[0]  || shopInformation.shopInfo.shopHomeConfig.openServiceList[1] || shopInformation.shopInfo.shopHomeConfig.openServiceList[2] || shopInformation.shopInfo.shopHomeConfig.openServiceList[3]) }}' class='btn-img-show' src='./img/hide.png'></image> 
+         <image bindtap='showBtnList' wx:if='{{hideBtnList && (shopInformation.shopInfo.shopHomeConfig.openServiceList[0]  || shopInformation.shopInfo.shopHomeConfig.openServiceList[1] || shopInformation.shopInfo.shopHomeConfig.openServiceList[2] || shopInformation.shopInfo.shopHomeConfig.openServiceList[3]) }}' class='btn-img-show' src='./img/show.png'></image> 
       </view>
     </view>
 

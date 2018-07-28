@@ -504,11 +504,27 @@ Page({
     let stocks = this.data.stocks
     // 找stockId
     for (let i = 0; i < stocks.length; i++){
-      if (stocks[i].attrIds == newStr){
-        this.setData({
-          chosenStockId: stocks[i].id,
-          chosenStockPrice: stocks[i].stockPrice
-        })
+      
+      if (stocks[i].attrIds.split(',').sort().toString() == newStr){
+        console.log(stocks[i])
+        if (stocks[i].balance == 0){
+          wx.showModal({
+            title: '库存不足',
+            content: '请选购其他商品',
+            showCancel: false,
+            success: function (res) {
+              if (res.confirm) {
+                // console.log('用户点击确定')
+              } 
+            }
+          })
+        }else{
+          this.setData({
+            chosenStockId: stocks[i].id,
+            chosenStockPrice: stocks[i].stockPrice
+          })
+        }
+        
       }
     }
 
@@ -686,19 +702,6 @@ Page({
           icon: 'none'
         })
       }
-      // 库存不足弹出提示
-      // if (res.data.data.isLowStock == 1){
-      //   wx.showModal({
-      //     title: '库存不足',
-      //     content: '请选购其他商品',
-      //     showCancel: false,
-      //     success: function (res) {
-      //       if (res.confirm) {
-      //         // console.log('用户点击确定')
-      //       } 
-      //     }
-      //   })
-      // }
 
     }).catch((err) => {
       console.log(err)

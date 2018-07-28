@@ -6,7 +6,9 @@
       <view class='detail'>
         <text id='startTime' bindtap='start'>{{startTime}}</text> 至 <text id='endTime' bindtap='end'>{{endTime}}</text>
       </view>
-      <image src='images/yundian_yyxx_gengduo.png' class='choose' bindtap='end'></image>
+      <view class='chooseBox'>
+        <image src='images/yundian_yyxx_gengduo.png' class='choose' bindtap='end'></image>
+      </view>
     </view>
     <picker-view  value="{{multiIndex}}" bindchange="bindChange" indicator-style="height: 45px!important;" wx:if="{{picker}}">
       <view class='close' bindtap='close'><image src='images/yundian_yuyue_xuanshijian_guanbi.png'></image></view>
@@ -23,7 +25,9 @@
     <picker bindchange="bindPickerChange"  range='{{numArray}}' id='num'>
       <view class='picker'>
         <view class="detail">{{numText}}</view>
-        <image src='images/yundian_yyxx_gengduo.png' class='choose'></image>
+        <view class='chooseBox'>
+          <image src='images/yundian_yyxx_gengduo.png' class='choose'></image>
+        </view>
       </view>
     </picker>
   </view>
@@ -31,21 +35,27 @@
     <text class='listLabel'>设备/设施</text>
     <view id='device' bindtap='showModal' class='picker'>
       <view class="detail">{{deviceText}}</view>
-      <image src='images/yundian_yyxx_gengduo.png' class='choose'></image>
+      <view class='chooseBox'>
+        <image src='images/yundian_yyxx_gengduo.png' class='choose'></image>
+      </view>
     </view>
   </view>
   <view class='list'>
     <text class='listLabel'>服务人员</text>
     <view id='service' bindtap='showModal' class='picker'>
       <view class="detail">{{serviceText}}</view>
-      <image src='images/yundian_yyxx_gengduo.png' class='choose'></image>
+      <view class='chooseBox'>
+        <image src='images/yundian_yyxx_gengduo.png' class='choose'></image>
+      </view>
     </view>
   </view>
   <view class='list'>
     <text class='listLabel'>服务项目</text>
     <view id='serviceName' bindtap='showModal' class='picker'>
       <view class="detail">{{serviceNameText}}</view>
-      <image src='images/yundian_yyxx_gengduo.png' class='choose'></image>
+      <view class='chooseBox'>
+        <image src='images/yundian_yyxx_gengduo.png' class='choose'></image>
+      </view>
     </view>
   </view>
   <view class='list name'>

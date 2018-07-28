@@ -1,4 +1,4 @@
 <!--pages/video/video.wxml-->
 <view class='video-bg' >
-  <video class='video-ctx' id="myVideo" src="{{videoUrl}}" binderror="videoErrorCallback"></video>
+  <video class='video-ctx' id="myVideo" src="{{videoUrl}}" autoplay='true' binderror="videoErrorCallback"></video>
 </view>

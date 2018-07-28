@@ -88,12 +88,15 @@ Page({
          }
        }
      }
+     // 查看新人礼包
+     this.checkCoupon()
    },
    // 获取店铺信息
    getShopInfo: function () {
      util.reqAsync('shop/getShopHomePageInfo', {
        customerId: wx.getStorageSync('scSysUser').id,
        shopId: wx.getStorageSync('shop').id,
+       visitFrom: 3,  // 访问来源
      }).then((res) => {
 
        var shop = res.data.data.shopInfo;
@@ -156,8 +159,7 @@ Page({
      
      // 获取拼团
      this.getGroupBuyData()
-     // 查看新人礼包
-     this.checkCoupon()
+     
      this.getCouponList()
      })
    },

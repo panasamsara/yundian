@@ -19,7 +19,8 @@ Page({
     shopId:'',
     goodId:'',
     population:'',
-    spellUser:''
+    spellUser:'',
+    orderStatusVo:'' //付款状态
   },
   /**
   * 生命周期函数--监听页面加载
@@ -31,8 +32,10 @@ Page({
       orderNo: options.orderNo,
       population: options.population,
       shopId: options.shopId,
-      cUser: options.cUser
+      cUser: options.cUser,
+      orderStatusVo: options.orderStatusVo
     })
+    console.log('orderStatusVo:' + this.data.orderStatusVo);
     app.util.reqAsync('shop/getGroupBuyOrderDetail', {
       groupId: this.data.groupId, //拼团id
       orderNo: this.data.orderNo, //订单编号
@@ -90,7 +93,7 @@ Page({
           groupOrderList: data.groupOrderList,
           groupOrderListLength: data.groupOrderList.length
         })
-        console.log(this.data.discountPrice);
+        console.log(this.data.moreGroupList);
         // 拼接参与拼单用户数组
         var usersArr = [];
         // debugger;
@@ -143,13 +146,29 @@ Page({
   // 参与拼单
   participate: function(e){
     wx.navigateTo({
-      url: '../goodsDetial/goodsDetial?shopId=' + this.data.shopId + '&goodsId=' + this.data.goodId + '&showBuy=true' + '&status=' + 1 
+      url: '../goodsDetial/goodsDetial?shopId=' + this.data.shopId + '&goodsId=' + this.data.goodId + '&showBuy=true' + '&status=' + 1 + '&buy=buyNow'
     })
   },
   // 再次发起拼单
   againInitiate: function (e) {
     wx.navigateTo({
-      url: '../goodsDetial/goodsDetial?shopId=' + this.data.shopId + '&goodsId=' + this.data.goodId + '&showBuy=true' + '&status=' + 1 
+      url: '../goodsDetial/goodsDetial?shopId=' + this.data.shopId + '&goodsId=' + this.data.goodId + '&showBuy=true' + '&status=' + 1 + '&buy=buyNow'
+    })
+  },
+  // 跳转商品详情
+  goToGroupBuy: function (e) {
+    var goodsid = e.currentTarget.dataset['goodsid']
+    var groupId = e.currentTarget.dataset['groupid']
+    var shopId = e.currentTarget.dataset['shopid']
+    console.log(goodsid);
+    console.log(groupId);
+    console.log(shopId);
+    var user = wx.getStorageSync('scSysUser')
+    wx.navigateTo({
+      url: '../goodsDetial/goodsDetial?goodsId=' + goodsid + '&shopId=' + shopId + '&showBuy=true' + '&status=' + 1 + '&buy=buyNow',
+      success: function (res) {
+        // success
+      }
     })
   },
 })

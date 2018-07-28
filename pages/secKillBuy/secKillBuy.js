@@ -438,6 +438,7 @@ Page({
     var bussinessType = 1;
     var deliveryMoney = this.data.deliveryMoney;//快递金额
     console.log("快递金额" + deliveryMoney)
+    // debugger
     if (this.data.totalMoney == "0") {//总价为0专用
       console.log("总价为0")
       var payStatus = 1;
@@ -588,7 +589,7 @@ Page({
         extend4: '129',//版本
         groupId: this.data.groupId, //不拼团就传0  拼团传拼团id
         smallGroupId: this.data.smallGroupId,//参与拼团要传，秒杀传0就OK
-        payStatus: this.data.payStatus,//支付状态 
+        payStatus: payStatus,//支付状态 
         realMoney: this.data.totalMoney,//所有商品总价 不加运费的
         areaId: this.data.areaId,
         provinceId: this.data.provinceId,
@@ -664,7 +665,6 @@ Page({
         trade_type: 'JSAPI',
         openid: wx.getStorageSync('scSysUser').wxOpenId
       }
-
     };
     //发起网络请求 微信统一下单   
     app.util.reqAsync('payBoot/wx/pay/unifiedOrder', data).then((res) => {

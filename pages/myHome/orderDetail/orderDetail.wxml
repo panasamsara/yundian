@@ -3,111 +3,113 @@
   <view class="info" wx:for="{{goods}}" wx:for-index="inx"  wx:key="*this" wx:for-item='item'>
     <scroll-view class='detail-list' scroll-y='true' >
       <view class="top"> 
-        <!-- 秒杀单 -->
-        <view class="detail-type" wx:if="{{ isGroupBuying == 3}}">
-          <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==1}}">
-            订单关闭倒计时：{{time}}
+          <view class="detail-type">
+            <image src="../images/bgmall.png"></image>
+            <!-- 秒杀单 -->
+            <view  wx:if="{{ isGroupBuying == 0 && orderkind == 3 }}">
+              <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==1}}">
+                订单关闭倒计时：{{time}}
+              </view>
+            </view>
+            <!-- 普通单 -->
+            <view wx:if="{{ isGroupBuying == 0 }}">
+              <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==1 && orderkind != 3 }}">
+              待付款
+              </view>
+              <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType != 2}}">
+                等待发货   
+              </view>
+              <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType == 2}}">
+                等待取货
+              </view>
+              <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==3}}">
+                等待收货
+              </view>
+              <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==6}}">
+                已申请退款，等待商家审核
+              </view>
+              <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==4}}">
+                等待评价
+              </view>
+              <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==5}}">
+                已取消
+              </view>
+              <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==7}}">
+                已申请退货，等待商家审核
+              </view>
+              <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==8}}">
+                已退款
+              </view>
+              <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==9}}">
+                已退货
+              </view>
+              <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==10}}">
+                已评论
+              </view>
+            </view>
+            <!-- 拼团单 -->
+            <view wx:elif="{{ isGroupBuying == 1}}">
+              <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==1}}">
+                待付款
+              </view>
+              <!--0 拼单中 -->
+              <view wx:if="{{ item.groupDetail.timeStatus == 0 }}">
+                <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType != 2}}">
+                  拼单还未成功，邀请好友来拼单吧  
+                </view>
+                <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==5}}">
+                  已取消
+                </view>
+                <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==6}}">
+                  已申请退款，等待商家审核
+                </view>
+              </view>
+              <!-- 1 拼单成功 -->
+              <view wx:elif="{{ item.groupDetail.timeStatus == 1 }}">
+                <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType != 2}}">
+                  等待发货   
+                </view>
+                <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType == 2}}">
+                  等待取货
+                </view>
+                <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==3}}">
+                  等待收货
+                </view>
+                <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==6}}">
+                  已申请退款，等待商家审核
+                </view>
+                <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==4}}">
+                  等待评价
+                </view>
+                <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==7}}">
+                  已申请退货，等待商家审核
+                </view>
+                <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==8}}">
+                  已退款
+                </view>
+                <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==9}}">
+                  已退货
+                </view>
+                <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==10}}">
+                  已评论
+                </view>
+              </view>
+              <!-- 2 拼单失败 -->
+              <view wx:elif="{{ item.groupDetail.timeStatus == 2}}"> 
+                <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType != 2 && spellLeftTime != 0 }}">
+                  等待发货   
+                </view>
+                <view class="common-type"  wx:if="{{item.orderInfo.orderStatusVo!=1  && spellLeftTime == 0 }}">
+                  拼单未成功，已退款
+                </view>
+                <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==8}}">
+                  已退款
+                </view>
+              </view>
+            </view>
           </view>
-        </view>
         <!-- 普通单 -->
-        <view class="detail-type" wx:if="{{ isGroupBuying == 0}}">
-          <image src="../images/bgmall.png"></image>
-          <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==1}}">
-            待付款
-          </view>
-          <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType != 2}}">
-            等待发货   
-          </view>
-          <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType == 2}}">
-            等待取货
-          </view>
-          <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==3}}">
-            等待收货
-          </view>
-          <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==6}}">
-            已申请退款，等待商家审核
-          </view>
-          <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==4}}">
-            等待评价
-          </view>
-          <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==5}}">
-            已取消
-          </view>
-          <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==7}}">
-            已申请退货，等待商家审核
-          </view>
-          <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==8}}">
-            已退款
-          </view>
-          <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==9}}">
-            已退货
-          </view>
-          <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==10}}">
-            已评论
-          </view>
-        </view>
-        <!-- 拼单 -->
-        <view class="detail-type" wx:if="{{ isGroupBuying == 1}}">
-          <image src="../images/bgmall.png"></image>
-          <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==1}}">
-            待付款
-          </view>
-          <!--0 拼单中 -->
-          <view wx:if="{{ item.groupDetail.timeStatus == 0 }}">
-            <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType != 2}}">
-              拼单还未成功，邀请好友来拼单吧  
-            </view>
-            <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==5}}">
-              已取消
-            </view>
-            <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==6}}">
-              已申请退款，等待商家审核
-            </view>
-          </view>
-          <!-- 1 拼单成功 -->
-          <view wx:elif="{{ item.groupDetail.timeStatus == 1 }}">
-            <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType != 2}}">
-              等待发货   
-            </view>
-            <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType == 2}}">
-              等待取货
-            </view>
-            <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==3}}">
-              等待收货
-            </view>
-            <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==6}}">
-              已申请退款，等待商家审核
-            </view>
-            <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==4}}">
-              等待评价
-            </view>
-            <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==7}}">
-              已申请退货，等待商家审核
-            </view>
-            <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==8}}">
-              已退款
-            </view>
-            <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==9}}">
-              已退货
-            </view>
-            <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==10}}">
-              已评论
-            </view>
-          </view>
-          <!-- 2 拼单失败 -->
-          <view wx:elif="{{ item.groupDetail.timeStatus == 2}}"> 
-          <!-- {{ spellLeftTime }} -->
-            <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType != 2 && spellLeftTime != 0 }}">
-              等待发货   
-            </view>
-            <view class="common-type"  wx:if="{{item.orderInfo.orderStatusVo!=1  && spellLeftTime == 0 }}">
-              拼单未成功，已退款
-            </view>
-            <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==8}}">
-              已退款
-            </view>
-          </view>
-        </view>
+
         <!--用户信息-->
         <view class="user-info" id="userInfo">
           <!--配送方式-->
@@ -140,8 +142,26 @@
       </view>  
       <!--订单编号-下单时间-->
       <!-- 普通订单 -->
-      <view wx:if="{{ isGroupBuying == 0 || isGroupBuying == 3}}">
-        <view class="order-box a" wx:if="{{ item.orderInfo.orderStatusVo==3}}" style="margin-top:240rpx">
+      <view wx:if="{{ isGroupBuying == 0 && orderkind !=3 }}">
+        <view class="order-box a" wx:if="{{ item.orderInfo.orderStatusVo==3}}" style="margin-top:110rpx">
+          <view class="order-type siz-three">{{item.orderInfo.orderStatusStr}}</view>
+          <view class="order-num siz-four">订单编号：{{item.orderInfo.orderNo}}</view>
+          <view class="order-time siz-four">下单时间：{{item.orderInfo.createTime}}</view>
+        </view>
+        <view class="order-box b" wx:else style="margin-top:90rpx">
+          <view class="order-type siz-three">{{item.orderInfo.orderStatusStr}}</view>
+          <view class="order-num siz-four">订单编号：{{item.orderInfo.orderNo}}</view>
+          <view class="order-time siz-four">下单时间：{{item.orderInfo.createTime}}</view>
+        </view>
+      </view>
+      <!-- 秒杀订单 -->
+      <view wx:if="{{ isGroupBuying == 0 && orderkind ==3 }}">
+        <view class="order-box a" wx:if="{{ item.orderInfo.orderStatusVo==1}}" style="margin-top:110rpx">
+          <view class="order-type siz-three">待付款</view>
+          <view class="order-num siz-four">订单编号：{{item.orderInfo.orderNo}}</view>
+          <view class="order-time siz-four">下单时间：{{item.orderInfo.createTime}}</view>
+        </view>
+        <view class="order-box a" wx:elif="{{ item.orderInfo.orderStatusVo==3}}" style="margin-top:110rpx">
           <view class="order-type siz-three">{{item.orderInfo.orderStatusStr}}</view>
           <view class="order-num siz-four">订单编号：{{item.orderInfo.orderNo}}</view>
           <view class="order-time siz-four">下单时间：{{item.orderInfo.createTime}}</view>
@@ -153,7 +173,7 @@
         </view>
       </view>
       <!-- 拼团订单 -->
-      <view wx:if="{{ isGroupBuying == 1}}">
+      <view wx:elif="{{ isGroupBuying == 1}}">
         <view class="order-box a" wx:if="{{ timeStatus == 0}}" style="margin-top:60rpx">
           <view class="order-type siz-three">拼单中</view>
           <view class="order-num siz-four">订单编号：{{item.orderInfo.orderNo}}</view>
@@ -165,7 +185,8 @@
           <view class="order-time siz-four">下单时间：{{item.orderInfo.createTime}}</view>
         </view>
         <view class="order-box a" wx:elif="{{ timeStatus == 2}}" style="margin-top:90rpx">
-          <view class="order-type siz-three">拼单失败</view>
+          <view class="order-type siz-three" wx:if="{{ item.orderInfo.orderStatusVo==1}}">待付款</view>
+          <view class="order-type siz-three" wx:else>拼单失败</view>
           <view class="order-num siz-four">订单编号：{{item.orderInfo.orderNo}}</view>
           <view class="order-time siz-four">下单时间：{{item.orderInfo.createTime}}</view>
         </view>
@@ -296,7 +317,7 @@
       </view>
     </scroll-view>  
     <!-- 非拼团订单 -->
-    <view class="ctronl-btn" wx:if="{{isGroupBuying==0 ||isGroupBuying==3 }}">
+    <view class="ctronl-btn" wx:if="{{isGroupBuying==0}}">
       <button wx:if="{{item.orderInfo.orderStatusVo==1}}" class='cancel-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="cancel" hover-class="other-button-hover" data-no="{{item.orderInfo.orderNo}}"> 取消订单 </button>
       <button wx:if="{{item.orderInfo.orderStatusVo==1}}" class='pay-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="pay" hover-class="other-button-hover" data-no="{{item.orderInfo.orderNo}}"> 付款 </button>
       <button wx:if="{{item.orderInfo.orderStatusVo==2}}" class='reimburse-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="reimburse" hover-class="other-button-hover" data-no="{{item.orderInfo.orderNo}}" data-statu="{{item.orderStatus}}" data-money="{{item.orderInfo.amount}}"> 申请退款 </button>
@@ -313,9 +334,10 @@
         <!-- 0 拼单中 -->
         <view wx:if="{{timeStatus==0}}">
           <button wx:if="{{item.orderInfo.orderStatusVo==1}}" class='invite-btn pay-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" open-type='share'>邀请好友拼单 </button>
+          <button wx:if="{{item.orderInfo.orderStatusVo==1}}" class='cancel-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="cancel" hover-class="other-button-hover" data-no="{{item.orderInfo.orderNo}}"> 取消订单 </button>
           <button wx:if="{{item.orderInfo.orderStatusVo==1}}" class='pay-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="pay" hover-class="other-button-hover" data-no="{{item.orderInfo.orderNo}}"> 付款 </button>
           <button wx:if="{{item.orderInfo.orderStatusVo==2}}" class='reimburse-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="reimburse" hover-class="other-button-hover" data-no="{{item.orderInfo.orderNo}}" data-statu="{{item.orderStatus}}" data-money="{{item.orderInfo.amount}}"> 申请退款 </button>
-          <button wx:if="{{item.orderInfo.orderStatusVo==1}}" class='cancel-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="cancel" hover-class="other-button-hover" data-no="{{item.orderInfo.orderNo}}"> 取消订单 </button>
+
         </view>
         <!-- 1 拼单成功 -->
         <view wx:if="{{timeStatus==1}}">
@@ -329,6 +351,8 @@
         </view>
         <!-- 2 拼单失败 -->
         <view wx:if="{{timeStatus==2}}">
+          <button wx:if="{{item.orderInfo.orderStatusVo==1}}" class='cancel-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="cancel" hover-class="other-button-hover" data-no="{{item.orderInfo.orderNo}}"> 取消订单 </button>
+          <button wx:if="{{item.orderInfo.orderStatusVo==1}}" class='pay-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="pay" hover-class="other-button-hover" data-no="{{item.orderInfo.orderNo}}"> 付款 </button>
           <button wx:if="{{item.orderInfo.orderStatusVo==5 || item.orderInfo.orderStatusVo==8 || item.orderInfo.orderStatusVo==9 || item.orderInfo.orderStatusVo==10}}" class='delete-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="delete" hover-class="other-button-hover" data-no="{{item.orderInfo.orderNo}}" data-shopid="{{item.orderInfo.bussinessId}}" data-customerid="{{item.orderInfo.customerId}}" > 删除订单
           </button>
         </view>

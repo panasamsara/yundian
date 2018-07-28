@@ -10,6 +10,11 @@ Page({
     shopId:'',
     goodsId:''
   },
+  onLoad: function (options) {
+    console.log('1'+options);
+    shopId = options.shopId,
+    goodsId = options.goodsId
+  },
   // 获取页面信息
   getData:function(){
     var parm={
@@ -51,6 +56,7 @@ Page({
    */
   onLoad: function (options) {
     var user = wx.getStorageSync('scSysUser')
+    console.log(user);
     //获取商品信息
     var goodInfo = wx.getStorageSync('goodsInfo');
     this.setData({

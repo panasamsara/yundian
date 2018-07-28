@@ -417,4 +417,7 @@ page,.content{
 .usersimg{
   width: 100rpx;
   height: 100rpx;
+  position: absolute;
+  bottom: 10rpx;
+  left:20rpx;
 }

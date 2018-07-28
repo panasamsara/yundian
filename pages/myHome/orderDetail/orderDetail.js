@@ -19,7 +19,8 @@ Page({
     provinceName: '',
     canvasHidden: false,
     imagePath: '',
-    isGroupBuying:'',// 是否为拼团，拼团为1，非拼团为0,秒杀为3
+    orderkind: '',// orderkind = 3 && isGroupBuying=0 是为秒杀
+    isGroupBuying:'',// 前后端数据传输：是否为拼团，拼团为1，非拼团为0
     userList:'', // 参与拼团人员
     spellUser:[], // 保存参与人员头像
     timeStatus: '', // 状态：0拼单进行中，1成功,2拼单时间到，已过期未成功'
@@ -33,31 +34,40 @@ Page({
     ifshare:0, //是否分享
     population:'' //拼团人数
   },
+  
   onLoad: function (options) {
     var user = wx.getStorageSync('scSysUser');
     var userid = wx.getStorageSync('scSysUser').id;
     var orderNo = options.orderNo;
     var isGroupBuying = options.isGroupBuying;
+    if (options.orderkind ){
+      var orderkind = options.orderkind;
+    }
 
-    console.log('is  ' + isGroupBuying);
+    console.log('isGroupBuying: ' + isGroupBuying);
+    console.log('orderkind: ' + orderkind);
     this.setData({
       userid: userid,
       orderNo: orderNo,
-      isGroupBuying: isGroupBuying
+      isGroupBuying: isGroupBuying 
     })
+
+    if (orderkind ){
+      this.setData({
+        orderkind: orderkind
+      })
+    }
 
     var _this = this;
     //调接口
     app.util.reqAsync('shop/orderDetail', {
       orderNo: this.data.orderNo,
-      // orderNo: 'ZXCSSHOP201807171639029160082',
       isGroupBuying: this.data.isGroupBuying
     }).then((data) => {
       if (data.data.code == 1) {
         var areaName = app.util.area.getAreaNameByCode(data.data.data[0].orderInfo.areaId);
         var cityName = app.util.area.getAreaNameByCode(data.data.data[0].orderInfo.cityId);
         var ProvinceName = app.util.area.getAreaNameByCode(data.data.data[0].orderInfo.provinceId);
-
         this.setData({
           goods: data.data.data,
           phone: data.data.data[0].shopInfo.phoneService,
@@ -66,24 +76,23 @@ Page({
           areaName: areaName,
           cityName: cityName,
           ProvinceName: ProvinceName,
-          storeUrl: data.data.data[0].orderInfo.serialNumber,
-          userList: data.data.data[0].userList,
-          timeStatus: data.data.data[0].groupDetail.timeStatus,
-          groupEndTime: data.data.data[0].groupDetail.endTime
+          storeUrl: data.data.data[0].orderInfo.serialNumber ? data.data.data[0].orderInfo.serialNumber : ''
         })
 
-        console.log('状态：' +data.data.data[0].orderInfo.orderStatusVo);
-        console.log(this.data.timeStatus);
-        if (data.data.data[0].orderInfo.orderStatusVo == 1) { 
+        // 秒杀
+        if (this.data.isGroupBuying == 0 && this.data.orderkind == 3) {
+          // 倒计时
+          if (data.data.data[0].orderInfo.orderStatusVo == 1) {
             //待付款
             this.countTime();
+          }
         } 
-        if (data.data.data[0].orderInfo.orderStatusVo == 2 && data.data.data[0].orderInfo.deliveryType == 2) { //自提
-          // 页面初始化 options为页面跳转所带来的参数
-          var size = this.setCanvasSize();//动态设置画布大小
-          var initUrl = this.data.storeUrl;
-          this.createQrCode(initUrl, "mycanvas", size.w, size.h);
-        }
+        // if (data.data.data[0].orderInfo.orderStatusVo == 2 && data.data.data[0].orderInfo.deliveryType == 2) { //自提
+        //   // 页面初始化 options为页面跳转所带来的参数
+        //   var size = this.setCanvasSize();//动态设置画布大小
+        //   var initUrl = this.data.storeUrl;
+        //   this.createQrCode(initUrl, "mycanvas", size.w, size.h);
+        // }
         // this.setData({
         //   no: this.data.orderNo
         // })
@@ -95,7 +104,7 @@ Page({
       }
     }).catch((err) => {
       wx.showToast({
-        title: '失败11……',
+        title: '失败……',
         icon: 'none'
       })
     }).then(
@@ -131,9 +140,7 @@ Page({
     //调接口
     app.util.reqAsync('shop/orderDetail', {
       orderNo: this.data.orderNo,
-      isGroupBuying: this.data.isGroupBuying 
-      // orderNo: 'ZXCSSHOP201807171639029160082',
-      // isGroupBuying: this.data.isGroupBuying
+      isGroupBuying: this.data.isGroupBuying
     }).then((data) => {
       // debugger;
       if (data.data.code == 1) {
@@ -148,40 +155,55 @@ Page({
           areaName: areaName,
           cityName: cityName,
           ProvinceName: ProvinceName,
-          userList: data.data.data[0].userList,
-          timeStatus: data.data.data[0].groupDetail.timeStatus,
-          goodsName: data.data.data[0].orderInfo.orderItemList[0].goodsName,
-          groupId: data.data.data[0].groupDetail.groupId,
           shopId: data.data.data[0].shopInfo.id,
-          groupEndTime: data.data.data[0].groupDetail.endTime,
-          population: data.data.data[0].groupDetail.population
+          goodsName: data.data.data[0].orderInfo.orderItemList[0].goodsName
         })
-
-        if (data.data.data[0].orderInfo.orderStatusVo == 1) { //待付款
-          this.countTime();
-        }
-        console.log('0000' + this.data.population);
-        
-        this.setData({
-          no: this.data.orderNo
-        })
-        // 拼接参与拼单用户数组
-        var usersArr = [];
-        if ( this.data.userList.length > 0){
-          usersArr.concat(this.data.userList);
-        }
-        
-        if (usersArr.length < data.data.data[0].groupDetail.population) {
-          var len = data.data.data[0].groupDetail.population - usersArr.length;
-          var obj = { "userpic": "images/yundian_pindantouxiang@2x.png" };
-          for (let i = 0; i < len; i++) {
-            usersArr.push(obj);
+        // 秒杀
+        if (this.data.isGroupBuying == 0 && this.data.orderkind == 3) {
+          // 倒计时
+          if (data.data.data[0].orderInfo.orderStatusVo == 1) { 
+            //待付款
+            this.countTime();
           }
         }
-        this.setData({
-          spellUser: usersArr
-        })
+        // 拼单
+        else if (this.data.isGroupBuying == 1 ){
+          this.setData({
+            userList: data.data.data[0].userList ? data.data.data[0].userList : '',
+            timeStatus: data.data.data[0].groupDetail.timeStatus,
+            groupId: data.data.data[0].groupDetail.groupId,
+            groupEndTime: data.data.data[0].groupDetail.endTime ? data.data.data[0].groupDetail.endTime : '',
+            population: data.data.data[0].groupDetail.population ? data.data.data[0].groupDetail.population : ''
+          })
 
+          // 拼接参与拼单用户数组
+          var usersArr = [];
+          if (this.data.userList.length > 0) {
+            usersArr.concat(this.data.userList);
+          }
+
+          if (usersArr.length < data.data.data[0].groupDetail.population) {
+            var len = data.data.data[0].groupDetail.population - usersArr.length;
+            var obj = { "userpic": "images/yundian_pindantouxiang@2x.png" };
+            for (let i = 0; i < len; i++) {
+              usersArr.push(obj);
+            }
+          }
+          this.setData({
+            spellUser: usersArr
+          })
+        }
+        // 普通订单
+        else{
+
+        }
+
+        console.log('orderStatusVo:   ' + data.data.data[0].orderInfo.orderStatusVo);
+        console.log('timeStatus:  ' + this.data.timeStatus);
+        console.log('population: ' + this.data.population); 
+        // this.setData({
+        //   no: this.data.orderNo
+        // })
 
       } else {
         wx.showToast({
@@ -700,7 +722,7 @@ Page({
   openDetail:function(){
     console.log(this.data.population);
     wx.navigateTo({
-      url: '../../spelldetails/spelldetails?groupId=' + this.data.groupId + '&orderNo=' + this.data.orderNo + '&shopId=' + this.data.shopId + '&cUser=' + this.data.userid + '&population=' + this.data.population 
+      url: '../../spelldetails/spelldetails?groupId=' + this.data.groupId + '&orderNo=' + this.data.orderNo + '&shopId=' + this.data.shopId + '&cUser=' + this.data.userid + '&population=' + this.data.population + '&orderStatusVo=' + this.data.orderStatusVo 
     })
   }
   

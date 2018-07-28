@@ -368,7 +368,7 @@ Page({
       }else{ //秒杀
       console.log("秒杀")
         wx.navigateTo({
-          url: '../orderDetail/orderDetail?orderNo=' + orderNo + '&isGroupBuying=' + 3
+          url: '../orderDetail/orderDetail?orderNo=' + orderNo + '&isGroupBuying=' + 0 + '&orderkind=' + 3
         })
       }
     }
@@ -427,7 +427,7 @@ Page({
     };
     //发起网络请求 微信统一下单   
     app.util.reqAsync('payBoot/wx/pay/unifiedOrder', data).then((res) => {
-      console.log(res.data.data);
+      console.log(res.data.data.data);
       if (res.data.code == 1) {
         //获取预支付信息
         var wxResult = res.data.data.wxResult;

@@ -463,7 +463,8 @@ page{
   margin-bottom: 20rpx;
 }
 .stock-list{
-  width: 180rpx;
+  /* width: 180rpx; */
+  padding: 0 10rpx;
   height: 80rpx;
   line-height: 80rpx;
   margin-right: 16rpx;
@@ -479,7 +480,8 @@ page{
     -webkit-line-clamp: 1; /** 显示的行数 **/
 }
 .stock-list-active{
-  width: 180rpx;
+  /* width: 180rpx; */
+  padding: 0 10rpx;
   height: 80rpx;
   line-height: 80rpx;
   margin-right: 16rpx;
@@ -495,7 +497,8 @@ page{
     -webkit-line-clamp: 1; /** 显示的行数 **/
 }
 .stock-list-service{
-  width: 270rpx;
+  /* width: 270rpx; */
+  padding: 0 10rpx;
   height: 80rpx;
   line-height: 80rpx;
   margin-right: 16rpx;
@@ -511,7 +514,8 @@ page{
   -webkit-line-clamp: 1; /** 显示的行数 **/
 }
 .stock-list-service-active{
-  width: 270rpx;
+  /* width: 270rpx; */
+  padding: 0 10rpx;
   height: 80rpx;
   line-height: 80rpx;
   margin-right: 16rpx;

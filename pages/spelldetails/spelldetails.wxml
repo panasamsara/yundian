@@ -33,16 +33,16 @@
   </view>
   <!-- 拼团成员 end-->
   <!-- 0 进行中 -->
-  <view wx:if="{{timeStatus===0}}">
+  <view wx:if="{{timeStatus==0}}">
     <!-- 1 拼主  -->
-    <view wx:if="{{isMaster===1}}">
+    <view wx:if="{{isMaster==1}}">
       <view class='status'>
         仅剩<span class='redtext'>{{lackUser}}</span>个名额，{{endTime}}后结束
       </view>
       <button open-type='share' class='spellbtn' hover-class='spellbtn-hover'>邀请好友拼单</button>
     </view>
     <!-- 0 非拼主 -->
-    <view wx:elif="{{isMaster===0}}">
+    <view wx:elif="{{isMaster==0}}">
       <view class='status'>
         仅剩<span class='redtext'>{{lackUser}}</span>个名额，{{endTime}}后结束
       </view>
@@ -50,7 +50,7 @@
     </view>
   </view>
   <!-- 1 成团 -->
-  <view wx:if="{{timeStatus===1}}">
+  <view wx:if="{{timeStatus==1}}">
     <view class='status success-status'>
       <image class="faileicon" bindtap='closeMask' src='images/yundain_chengoing@2x.png'></image>
       拼单成功
@@ -58,8 +58,12 @@
     <button class='spellbtn' hover-class='spellbtn-hover' bindtap="primary">继续逛逛</button>
   </view>
   <!-- 2 过期失败 -->    
-  <view wx:if="{{timeStatus===2}}">
-    <view class='status failtext'>
+  <view wx:if="{{timeStatus==2}}">
+    <view class='status failtext' wx:if="{{orderStatusVo==1}}">
+      <image class="faileicon" bindtap='closeMask' src='images/yundain_tixing@2x.png'></image>
+      待付款
+    </view>
+    <view class='status failtext' wx:if="{{orderStatusVo!=1}}">
       <image class="faileicon" bindtap='closeMask' src='images/yundain_tixing@2x.png'></image>
       拼单失败，款项将原路退还
     </view>
@@ -78,7 +82,7 @@
     <!-- 单个推荐 -->
       <view wx:for="{{moreGroupList}}" wx:key="*this"  wx:for-index="mdx" wx:for-item="groupList"  class='product-item'>
         <view class='itemimg-con'>
-          <image class="itemimg" src='{{groupList.pictureUrl}}' data-src=''></image> 
+          <image class="itemimg" src='{{groupList.pictureUrl}}' data-src='' data-goodsid='{{groupList.itemId}}' data-groupid='{{groupList.groupId}}' data-shopid='{{groupList.shopId}}'   bindtap='goToGroupBuy'></image> 
         </view>
          <view class='itemtext'>
             <text class='itemtitle'>{{pictureUrl.itemTitle}}</text>

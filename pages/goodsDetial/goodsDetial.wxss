@@ -169,10 +169,18 @@ swiper-item image{
 }
 .give .right{
   float: right;
-  width: 15rpx;
-  height: 25rpx;
-  margin-top:25rpx;
+  width: 100rpx;
+  height: 28rpx;
+  line-height: 28rpx;
+  margin-top:22rpx;
+  text-align: right;
 }
+
+.give .right image{
+  width: 15rpx;
+  height: 28rpx;
+}
+
 .descrip{
   padding: 0 30rpx;
 }
@@ -189,14 +197,24 @@ swiper-item image{
   justify-content: space-between;
   align-items: center;
 }
+
+.spellList .enter{
+  width: 100rpx;
+  height: 28rpx;
+  line-height: 28rpx;
+  text-align: right;
+}
+
+.spellList .enter image{
+  width:15rpx;
+  height: 28rpx;
+}
+
 .spellList .top>text{
   font-size: 30rpx;
   float: left;
 }
-.spellList .top>image{
-  width:15rpx;
-  height: 25rpx;
-}
+
 .spellList .item{
   padding:20rpx 0;
   border-top:1rpx solid #e5e5e5;
@@ -447,6 +465,22 @@ button::after {
   padding-top: 10rpx
 }
 
+view.activityBuy #buyNow{
+  width: 100%;
+  padding-top: 0;
+  line-height: 110rpx;
+}
+
+view.normalBuy #buyNow,view.normalBuy #addCart{
+  width:50%!important;
+  line-height: 110rpx;
+  padding-top: 0;
+}
+
+#addCart{
+  background-color: #fe732e;
+}
+
 #buy{
   width: 230rpx;
   background-color:#fea297;
@@ -490,19 +524,18 @@ button::after {
   z-index:999; 
 }
 .layer .close{
-  width: 42rpx;
-  height: 42rpx;
-  color:#fff;
-  line-height: 36rpx;
   text-align: center;
-  background-color: #fb452c;
-  border: 4rpx solid #fff;
-  border-radius: 50%;
   position: absolute;
-  top:-30rpx;
-  right:-22rpx;
+  top:-27rpx;
+  right:-27rpx;
   z-index: 2
 }
+
+.layer .close image{
+  width: 54rpx;
+  height: 54rpx;
+}
+
 .layer .top{
   text-align: center;
   height: 110rpx;
@@ -572,20 +605,28 @@ button::after {
 .layer2 .cont>span{
   color:#fb452c;
 }
-.pic-list{
-  margin-left: 88rpx;
+.layer2 .pic-list{
+  width: 520rpx;
+  height: 430rpx!important;
+  padding: 0 80rpx;
 }
 .pic-list image{
   width:100rpx;
   height: 100rpx;
   float:left;
   border-radius: 50%;
-  margin-right: 30rpx;
+  margin-right: 40rpx;
   margin-bottom: 30rpx;
 }
-.pic-list image:nth-child(4n){
+
+.layer2 .pic-list view:nth-of-type(3) image{
   margin-right: 0;
 }
+
+.layer2 .pic-list view:nth-of-type(4n+3) image{
+  margin-right: 0;
+}
+
 .layer2 .joinBuy{
   width: 520rpx;
   height: 70rpx;
@@ -676,20 +717,6 @@ button::after {
   line-height: 70rpx;
 }
 
-/* 秒杀 */
-/* #addCart{
-  background-color: #fe732e;
-  width: 50%;
-  padding-top: 0;
-  line-height: 110rpx;
-} */
-
-#buyNow{
-  width: 100%;
-  padding-top: 0;
-  line-height: 110rpx;
-}
-
 #stockBox{
   display: flex;
   flex-direction: row;
@@ -767,9 +794,10 @@ button::after {
 .main .top .size{
   padding:60rpx 0;
   border-bottom: 1rpx solid #e5e5e5;
-
+  max-height: 307rpx;
 }
-.main .top .size>span{
+
+.main .top .size span{
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -832,7 +860,7 @@ button::after {
   font-size: 36rpx;
 }
 
-.main .top .size>span.active{
+.main .top .size .active{
   background-color: #fb452c;
   color:#fff;
 }
@@ -857,8 +885,15 @@ button::after {
 }
 
 .coupon .right{
+  width: 100rpx;
+  height: 28rpx;
+  line-height: 28rpx;
+  text-align: right;
+}
+
+.coupon .right image{
   width: 15rpx;
-  height: 25rpx;
+  height: 28rpx;
 }
 
 /* 优惠券弹出层样式 */
@@ -948,7 +983,7 @@ button::after {
   text-overflow: ellipsis;
   overflow: hidden;
 }
-.layer scroll-view{
+.layer1 scroll-view{
   height: 669rpx;
 }
 
@@ -956,4 +991,8 @@ button{
   padding-left: 0;
   padding-right: 0;
   text-align: center;
+}
+
+.layer .listBox{
+  height: 674rpx;
 }

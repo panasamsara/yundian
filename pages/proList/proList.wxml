@@ -13,9 +13,9 @@
     <view class="foods-wrapper" style="height: {{goodsH}}px;">
       <scroll-view scroll-y style="height: 100%;" scroll-into-view="{{toView}}">
       <view  class="food-grouping" id="catGood_{{item.id}}">
-        <view wx:for="{{goodsInCategory}}" wx:for-item="good" wx:key='index' class="foods-item" id="{{good.id}}">
-          <image  class="icon" src="{{good.pictureUrl}}" id="{{good.id}}" data-status='{{good.status}}' bindtap='goToDetail'></image>
-          <view   class="content" data-status='{{good.status}}' bindtap='goToDetail'>
+        <view wx:for="{{goodsInCategory}}" wx:for-item="good" wx:key='index' class="foods-item" data-id="{{good.id}}" data-status='{{good.goodsType}}' bindtap='goToDetail'>
+          <image  class="icon" src="{{good.pictureUrl}}" ></image>
+          <view   class="content">
             <text class="title">{{good.goodsName}}</text>
              <text class="yangjiao">¥</text> <text class="price">{{good.price}}</text>
           </view>
@@ -29,7 +29,7 @@
                   </view>
                 </block> -->
                 <text class="cart-count">{{(goodMap[good.id].number >0 ) ? goodMap[good.id].number: ""}}</text>
-               <image src="./image/yundian_sygouwuche@2x.png" bindtap="touchOnGoods" id="add_{{good.id}}" class="cart-add icon-add_circle"></image>
+               <image src="./image/yundian_sygouwuche@2x.png" catchtap="touchOnGoods" id="add_{{good.id}}" class="cart-add icon-add_circle"></image>
             </view>  
           </view>
         </view>        
@@ -150,6 +150,7 @@
     <view class='stock-box-bottom'>
       <view class='stock-money' wx:if='{{chosenStockPrice}}'> <text class='stock-yangjiao'>￥</text>{{chosenStockPrice}}</view>
       <view class='stock-btn' bindtap='choseStockYesBtn'>确认</view>
+      <!-- <view class='stock-btn gray' wx:if='{{!hasChooseStock}}'>确认</view> -->
     </view>
   </view>
  

@@ -192,24 +192,37 @@ Page({
   cancel: function(e){
     var orderNo = e.currentTarget.dataset.no;
     //取消订单
-    app.util.reqAsync('shop/cancelOnlineOrder', {
-      orderNo: orderNo
-    }).then((res) => {
-      if(res.data.code==1){
-        this.getData();
-      }else{
-        wx.showToast({
-          title: res.data.msg,
-          icon: 'none'
-        })
+    var that = this;
+    wx.showModal({
+      title: '取消订单',
+      content: '是否取消订单？',
+      success: function (res) {
+        if (res.confirm) {
+          app.util.reqAsync('shop/cancelOnlineOrder', {
+            orderNo: orderNo
+          }).then((res) => {
+            if (res.data.code == 1) {
+              that.getData();
+            } else {
+              wx.showToast({
+                title: res.data.msg,
+                icon: 'none'
+              })
+            }
+
+          }).catch((err) => {
+            wx.showToast({
+              title: '失败……',
+              icon: 'none'
+            })
+          })
+        } else if (res.cancel) {
+          //用户点击取消
+
+        }
       }
-      
-    }).catch((err) => {
-      wx.showToast({
-        title: '失败……',
-        icon: 'none'
-      })
     })
+   
   },
   audit:function(){
     //退款中、退货中
@@ -360,17 +373,25 @@ Page({
         url: '../orderDetail/orderDetail?orderNo=' + orderNo + '&isGroupBuying=' + 1
       })
     }else{
-      if (remark.indexOf("秒杀")==-1){ //普通商品
-      console.log("普通")
+      if (remark && remark!=null){
+        if (remark.indexOf("秒杀") == -1) { //普通商品
+          console.log("普通")
+          wx.navigateTo({
+            url: '../orderDetail/orderDetail?orderNo=' + orderNo + '&isGroupBuying=' + 0
+          })
+        } else { //秒杀
+          console.log("秒杀")
+          wx.navigateTo({
+            url: '../orderDetail/orderDetail?orderNo=' + orderNo + '&isGroupBuying=' + 0 + '&orderkind=' + 3
+          })
+        }
+      }else{
+        console.log("普通")
         wx.navigateTo({
           url: '../orderDetail/orderDetail?orderNo=' + orderNo + '&isGroupBuying=' + 0
         })
-      }else{ //秒杀
-      console.log("秒杀")
-        wx.navigateTo({
-          url: '../orderDetail/orderDetail?orderNo=' + orderNo + '&isGroupBuying=' + 0 + '&orderkind=' + 3
-        })
       }
+      
     }
     
   },
@@ -418,9 +439,10 @@ Page({
   bindTestCreateOrder: function (code) {
     var data = {
       requestBody: {
-        body: '测试支付功能',
+        body: '云店小程序普通订单',
         out_trade_no: code,
-        notify_url: 'http://apptest.izxcs.com:81/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
+        notify_url: 'https://wxappprod.izxcs.com/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
+       // notify_url: app.globalData.notify_url,
         trade_type: 'JSAPI',
         openid: wx.getStorageSync('scSysUser').wxOpenId
       }

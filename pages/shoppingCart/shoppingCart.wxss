@@ -331,12 +331,12 @@
   margin-top:15rpx;
 }
 .acount-lft{
-  width: 65%;
+  width: 62%;
   float: left;
   vertical-align:middle;
 }
 .sum-info{
-  width: 35%;
+  width: 38%;
   float: right;
   height:100rpx;
 }

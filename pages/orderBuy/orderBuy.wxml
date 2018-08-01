@@ -18,7 +18,7 @@
         <text>{{userInfo.recvAddress.phone}}</text>
       </view>
       <view class="address">
-        <image src="img/address-gray.png"></image>
+        <image src="../../images/address-gray.png"></image>
         {{ProvinceName}}-{{cityName}}-{{areaName}} {{userInfo.recvAddress.address}}
       </view>
     </view>
@@ -40,7 +40,7 @@
   <!--商品-->
   <view class="detail">
     <view class='detail-top'>
-      <image class="shop-icon" src="../../images/1_05.gif"></image>
+      <image class="shop-icon" src="../../images/yundian_spxq_dianpu@2x.png"></image>
       <text class='detail-tit'>{{shopName}}</text>
     </view>
     <view class="total-num">
@@ -107,7 +107,7 @@
 <!--房间弹出窗-->
 <view class="modal-box" hidden="{{flag}}">
   <view class="modal-body">
-    <image src="img/close.png" bindtap="hide"></image>
+    <image src="../../images/yundian_yyxx_guanbi@2x.png" bindtap="hide"></image>
     <view class="modal-title">选择房间</view>
     <view class="modal-content">
       <view  class="room-list {{roomInx==inx?'acv':''}}" wx:for="{{room}}" wx:for-item='rooms' wx:key="room" wx:for-index="inx" bindtap="selectRoom" data-index="{{inx}}" data-val="{{rooms.title}}" data-merchant="{{rooms.merchantId}}" data-facilityid="{{rooms.id}}">
@@ -124,7 +124,7 @@
   <!--下单成功-->
   <view class="modal-box order-tip" hidden="{{flagOrder}}" >
   <view class="modal-body">
-    <image class="order-success" src="img/success.png"></image>
+    <image class="order-success" src="../../images/success.png"></image>
     <view class="modal-content">
       <text>下单成功!</text>
       <text>选择继续购物或查看此订单</text>

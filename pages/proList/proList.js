@@ -21,6 +21,7 @@ Page({
     attrList: {},
     cartGoodsList: [],
     attrid: null,
+    // hasChooseStock: false,
 
     logs: [],
     starbg: '../../static/img/drawable-xxdpi/title-bar_collection_normal.png',
@@ -182,8 +183,15 @@ Page({
                 }
               }
             }
+
+            let g = {}
+            for (let j = 0; j < goodMap.length; j++) {
+              if (goodMap[j] && goodMap[j])
+                g[j] = goodMap[j]
+            }
+            
             this.setData({
-              goodMap: goodMap,
+              goodMap: g,
               stockMap: stockMap,
               goodsInCategory: goodsInCategory,
               showLoading: false
@@ -198,46 +206,10 @@ Page({
         
       }
       
-      console.log('goodMap')
+      console.log('goodMap1')
       console.log(goodMap)
-      console.log('stockMap')
-      console.log(stockMap)
-      console.log('goodsInCategory')
-      console.log(goodsInCategory)
+      console.log('goodMap2',this.data.goodMap)
 
-
-    /*  util.reqAsync('shop/shopCartList', {
-        customerId: user.id,
-        shopId: shop.id
-      }).then((res) => {
-        if (res.data.data.length != 0){
-          console.log('购物车')
-          console.log(res.data.data[0].goodsList)
-          let cartGoodsList = res.data.data[0].goodsList
-          for (let i = 0; i < cartGoodsList.length; i++){
-            console.log(goodMap[cartGoodsList[i].goodsId].number)
-
-            goodMap[cartGoodsList[i].goodsId].number = cartGoodsList[i].number
-            if (cartGoodsList[i].stockId){
-              console.log(99999)
-              stockMap[cartGoodsList[i].stockId].number = cartGoodsList[i].number
-            }else{
-              console.log(8888)
-              // stockMap[cartGoodsList[i].goodsId].number = cartGoodsList[i].number
-            }
-            
-          }
-          this.setData({
-            goodMap: goodMap,
-            stockMap: stockMap
-          })
-          console.log('新的stockMap')
-          console.log(this.data.stockMap)
-        }
-
-      }).catch((err) => {
-        console.log(err)
-      })*/
 
     }).catch((err) => {
       console.log(err)
@@ -246,28 +218,25 @@ Page({
   onShow: function(){
     // 获取购物车
     this.shopCartList()
-    // 获取购物车信息
-  /*  util.reqAsync('shop/shopCartList', {
-      customerId: wx.getStorageSync('scSysUser').id,
-      shopId: wx.getStorageSync('shop').id
-    }).then((res) => {
-      wx.setStorageSync('shopCartList', res.data.data);
 
-      //获取店铺类别列表
-      this.getCategoryList()
-    })*/
   },
   onHide: function () {
      // 清空购物车缓存
     // wx.removeStorageSync('shopCartList')
-    // this.setData({
-    //   goodStockMapArr: [],
-    //   totalNum: 0,
-    //   totalPay: 0,
-    //   chooseGoodArr: [],
-    //   shoppingCart: {}
-    // });
-    
+    let goodMap = this.data.goodMap
+    for (var prop in goodMap){
+      goodMap[prop].number = 0
+    }
+    this.setData({
+      goodStockMapArr: [],
+      totalNum: 0,
+      totalPay: 0,
+      chooseGoodArr: [],
+      shoppingCart: {},
+      cartGoodsList: [],
+      goodMap: goodMap
+    });
+
   },
 
   //左侧列表点击事件
@@ -329,7 +298,8 @@ Page({
 
     // 添加成功后，清除之前选中的规格
     this.setData({
-      chosenStockId: null
+      chosenStockId: null,
+      // hasChooseStock: false
     })
 
   },
@@ -385,7 +355,8 @@ Page({
   },
 
   touchOnGoods: function (e) {
-    this.finger = {}; var topPoint = {};
+
+  /*  this.finger = {}; var topPoint = {};
     this.finger['x'] = e.touches[0].clientX;//点击的位置
     this.finger['y'] = e.touches[0].clientY;
 
@@ -402,10 +373,7 @@ Page({
       topPoint['x'] = (this.busPos['x'] - this.finger['x']) / 2 + this.finger['x'];
     }
 
-    //topPoint['x'] = this.busPos['x'] + 80
-    //this.linePos = app.bezier([this.finger, topPoint, this.busPos], 30);
-
-    this.linePos = app.bezier([this.busPos, topPoint, this.finger], 30);
+    this.linePos = app.bezier([this.busPos, topPoint, this.finger], 30);*/
 
     let _id = e.target.id.split('_')[1];
     let goodMap = this.data.goodMap
@@ -416,8 +384,8 @@ Page({
       })
       if (goodMap[_id].attrList.length != 0){
         let attrList = goodMap[_id].attrList
-        let myStockTrueFalseArr = []
-        let mychosenArr = []
+        let myStockTrueFalseArr = []  // 决定属性高亮的数组
+        let mychosenArr = []  //已选属性
         for(let i = 0; i<attrList.length; i++){
           myStockTrueFalseArr[i]=[]
           mychosenArr[i] = false
@@ -450,7 +418,8 @@ Page({
         chooseGoodEvent: e
       })
     }else{
-      this.startAnimation(e);
+      this.addGoodToCartFn(e)
+      // this.startAnimation(e); 
     }
     
   },
@@ -521,7 +490,8 @@ Page({
         }else{
           this.setData({
             chosenStockId: stocks[i].id,
-            chosenStockPrice: stocks[i].stockPrice
+            chosenStockPrice: stocks[i].stockPrice,
+            // hasChooseStock: true
           })
         }
         
@@ -549,7 +519,8 @@ Page({
       stockHighLightIndex: -1
     })
     if (this.data.chosenStockId){
-      this.startAnimation(this.data.chooseGoodEvent);
+      this.addGoodToCartFn(this.data.chooseGoodEvent)
+      // this.startAnimation(this.data.chooseGoodEvent);
     }
   },
   // 关闭 选择规格弹框
@@ -557,39 +528,40 @@ Page({
     this.setData({
       showStock: false,
       chosenStockId: null,
+      // hasChooseStock: false,
       attrList: [],
       stocks: [],
       chosenStockPrice: null
     })
   },
 
-  startAnimation: function (e) {
-    var index = 0, that = this,
-      bezier_points = that.linePos['bezier_points'];
+  // startAnimation: function (e) {
+  //   var index = 0, that = this,
+  //     bezier_points = that.linePos['bezier_points'];
       
-    this.setData({
-      hide_good_box: false,
-      bus_x: that.finger['x'],
-      bus_y: that.finger['y']
-    })
-    var len = bezier_points.length;
+  //   this.setData({
+  //     hide_good_box: false,
+  //     bus_x: that.finger['x'],
+  //     bus_y: that.finger['y']
+  //   })
+  //   var len = bezier_points.length;
 
-    index = len
-    this.timer = setInterval(function () {
-      index--;
-      that.setData({
-        bus_x: bezier_points[index]['x'],
-        bus_y: bezier_points[index]['y']
-      })
-      if (index < 1) {
-        clearInterval(that.timer);
-        that.addGoodToCartFn(e);
-        that.setData({
-          hide_good_box: true
-        })
-      }
-    }, 22);
-  },
+  //   index = len
+  //   this.timer = setInterval(function () {
+  //     index--;
+  //     that.setData({
+  //       bus_x: bezier_points[index]['x'],
+  //       bus_y: bezier_points[index]['y']
+  //     })
+  //     if (index < 1) {
+  //       clearInterval(that.timer);
+  //       that.addGoodToCartFn(e);
+  //       that.setData({
+  //         hide_good_box: true
+  //       })
+  //     }
+  //   }, 22);
+  // },
 
   //购物列表切换隐藏或者现实
   showShopCartFn: function (e) {
@@ -816,7 +788,7 @@ Page({
     }
     this.setData({
       totalNum: totalNum,
-      totalPay: totalPay,
+      totalPay: totalPay.toFixed(2),
       cart_length: cart_length
     })
     
@@ -824,12 +796,12 @@ Page({
 
   preventTouchMove1: function(){},
   goToDetail: function(e){
-    let goods_id = e.target.id
-    let status = e.currentTarget.dataset['status']
+    let goods_id = e.currentTarget.dataset.id
+    // let status = e.currentTarget.dataset.status
 
     var shop = wx.getStorageSync('shop');
     wx.navigateTo({
-      url: '../goodsDetial/goodsDetial?goodsId=' + goods_id + '&shopId=' + shop.id + '&status=' + status,
+      url: '../goodsDetial/goodsDetial?goodsId=' + goods_id + '&shopId=' + shop.id + '&status=' + 3, // 3 普通商品
     })
   }
 })

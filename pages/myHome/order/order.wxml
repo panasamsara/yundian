@@ -40,7 +40,7 @@
               <text wx:if="{{item.orderStatusVo==9}}">已退货</text>
               <text wx:if="{{item.orderStatusVo==10}}">已评论</text>
             </view>
-            <view class='goods' wx:for='{{item.orderItemList}}' wx:for-item='items' wx:key="goods" data-no="{{item.orderNo}}"  data-isgrop="{{item.isGroupBuying}}" data-remark="{{item.remark}}" bindtap="orderSkip" >
+            <view class='goods' wx:for='{{item.orderItemList}}' wx:for-item='items' wx:key="goods" data-no="{{item.orderNo}}"  data-isgrop="{{item.isGroupBuying}}" data-remark="{{item.goodsName}}" bindtap="orderSkip" >
               <view class='good-content' data-pindex="{{inx}}" data-index="{{index}}" data-id="{{items.id}}" >
                 <view class='good-left' data-pindex="{{inx}}" data-index="{{index}}" data-id="{{items.id}}" data-no="{{item.orderNo}}" >
                   <image class='good-img' src='{{items.pictureUrl}}'></image>

@@ -37,7 +37,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 19,
+			"current": -1,
 			"list": [
 				{
 					"id": -1,
@@ -233,12 +233,6 @@
 				},
 				{
 					"id": -1,
-					"name": "拼团 下单",
-					"pathName": "pages/groupBuyOrder/groupBuyOrder",
-					"query": ""
-				},
-				{
-					"id": -1,
 					"name": "拼单详情",
 					"pathName": "pages/spelldetails/spelldetails",
 					"query": ""
@@ -253,6 +247,12 @@
 					"id": -1,
 					"name": "在线订单列表",
 					"pathName": "pages/myHome/order/order",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "search",
+					"pathName": "pages/search/search",
 					"query": ""
 				}
 			]

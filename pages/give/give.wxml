@@ -1,2 +1,15 @@
 <!--pages/give/give.wxml-->
-<text>pages/give/give.wxml</text>
+<view class='gift'>
+  <swiper indicator-dots="true" autoplay="true" interval="2000" duration="500" class='imageBox'>
+    <block wx:for="{{imageList}}" wx:key="index">
+      <swiper-item>
+        <image src='{{item.smallFilePath}}'></image>
+      </swiper-item>
+    </block>
+  </swiper>
+  <view class='contentBox'>
+    <text class='title'>{{data.descTitle}}</text>
+    <text class='title'>赠品详情</text>
+    <text class='content'>{{data.descContent}}</text>
+  </view>
+</view>

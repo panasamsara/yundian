@@ -88,7 +88,7 @@ Page({
     if (options.deliveryCalcContent == 'null'){
       var arr = 0;
     }else{
-      var arr = options.deliveryCalcContent;
+      var arr = JSON.parse(options.deliveryCalcContent);
     }
     
     var secondskillActivityId = options.secondskillActivityId || "";//秒杀id
@@ -98,12 +98,14 @@ Page({
     }else{
       var isService = 1
     } 
+    console.log(options)
+
     this.setData({
       isService: isService, //0只有商品没有服务 1有服务
       spellingType: options.spellingType || "",
       isSeckill: options.isSeckill,//1秒杀 0拼团
       groupId: options.groupId || 0,//不拼团就传0  拼团传拼团id
-      smallGroupId: options.smallGroupId||0,// 参与拼团要传，秒杀传0就OK
+      smallGroupId: options.SmallGroupId||0,// 参与拼团要传，秒杀传0就OK
       customerId: userid,
       shopName: shopName,
       shopId: shopid,
@@ -126,6 +128,7 @@ Page({
       }],
     })
     if (arr!=0) {
+      console.log(typeof(arr))
       this.setData({
         notInCityPrice: arr.notInCityPrice,
         inCityPrice: arr.inCityPrice,
@@ -321,12 +324,16 @@ Page({
           deliveryMoney: 0
         })
     }
-
+    //加了运费之后的总合计
+    var summoney = Number(this.data.deliveryMoney) + Number(this.data.totalMoney)
+    this.setData({
+      oldTotal: (summoney).toFixed(2)
+    })
   },
   addressSkip: function (e) {
     //跳到地址管理
     wx.navigateTo({
-      url: '../myHome/address/index/list?id=' + this.data.customerId + '&select=' + 2
+      url: '../myHome/address/index/list?id=' + this.data.customerId + '&select=' + 1
     })
   },
   bindPickerChange: function (e) {
@@ -439,7 +446,7 @@ Page({
     var deliveryMoney = this.data.deliveryMoney;//快递金额
     console.log("快递金额" + deliveryMoney)
     // debugger
-    if (this.data.totalMoney == "0") {//总价为0专用
+    if (this.data.oldTotal == "0" || this.data.oldTotal == "0.00") {//合计为0专用
       console.log("总价为0")
       var payStatus = 1;
     } else {
@@ -476,7 +483,7 @@ Page({
         deliveryTime: 0, //送货时间(0-不限，1只工作日送货，2-工作日不送货)
         deliveryMoney: deliveryMoney,
         shopOrderItemList: goodsList,
-        amount: this.data.oldTotal,   //所有商品总价加运费
+        amount: this.data.totalMoney,   //所有商品总价加运费（后来又说不加运费）
         source: "MOBILE",//订单来源
         address: this.data.address,
         contactName: this.data.contactName,
@@ -487,7 +494,7 @@ Page({
         groupId: 0, //不拼团就传0  拼团传拼团id
         smallGroupId: 0,//参与拼团要传，秒杀传0就OK
         payStatus: payStatus,//支付状态 
-        realMoney: this.data.totalMoney,//所有商品总价 不加运费的
+        realMoney: this.data.oldTotal,//所有商品总价 不加运费的（后来又说加运费）
         areaId: this.data.areaId,
         provinceId: this.data.provinceId,
         cityId: this.data.cityId
@@ -499,7 +506,7 @@ Page({
           this.setData({
             orderNo: res.data.data //生成订单号
           })
-          if (this.data.totalMoney == "0") {  //金额为0直接成功下单绕过支付
+          if (this.data.totalMoney == "0" || this.data.oldTotal == "0.00") {  //金额为0直接成功下单绕过支付
             this.setData({
               flagOrder: false,
               isPay: 1
@@ -579,7 +586,7 @@ Page({
         deliveryTime: 0, //送货时间(0-不限，1只工作日送货，2-工作日不送货)
         deliveryMoney: deliveryMoney,
         shopOrderItemList: goodsList,
-        amount: this.data.oldTotal,   //所有商品总价加运费
+        amount: this.data.totalMoney,   //所有商品总价加运费(后来又说是不加运费的)
         source: "MOBILE",//订单来源
         address: this.data.address,
         contactName: this.data.contactName,
@@ -590,7 +597,7 @@ Page({
         groupId: this.data.groupId, //不拼团就传0  拼团传拼团id
         smallGroupId: this.data.smallGroupId,//参与拼团要传，秒杀传0就OK
         payStatus: payStatus,//支付状态 
-        realMoney: this.data.totalMoney,//所有商品总价 不加运费的
+        realMoney: this.data.oldTotal,//所有商品总价 不加运费的（后来又说是加了运费的）
         areaId: this.data.areaId,
         provinceId: this.data.provinceId,
         cityId: this.data.cityId,
@@ -603,7 +610,7 @@ Page({
           this.setData({
             orderNo: res.data.data //生成订单号
           })
-          if (this.data.totalMoney == "0") {  //金额为0直接成功下单绕过支付
+          if (this.data.totalMoney == "0" || this.data.oldTotal == "0.00") {  //金额为0直接成功下单绕过支付
             this.setData({
               flagOrder: false,
               isPay: 1
@@ -661,7 +668,9 @@ Page({
       requestBody: {
         body: '云店小程序普通订单',
         out_trade_no: code,
-        notify_url: 'http://apptest.izxcs.com:81/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
+        notify_url: 'https://wxappprod.izxcs.com/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
+       // notify_url: 'http://apptest.izxcs.com:81/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
+      //  notify_url: app.globalData.notify_url,
         trade_type: 'JSAPI',
         openid: wx.getStorageSync('scSysUser').wxOpenId
       }

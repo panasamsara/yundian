@@ -23,6 +23,9 @@ Page({
       if(res.data.data){
         res.data.data.startTime = app.util.formatActivityDate(res.data.data.startTime);
         res.data.data.endTime = app.util.formatActivityDate(res.data.data.endTime)
+        if (res.data.data.descContent != null && res.data.data.descContent!=''){
+          res.data.data.descContent = res.data.data.descContent.replace(/\s+(id|class|style)(=(([\"\']).*?\4|\S*))?/g, "").replace(/background-color[\s:]+[^;]*;/gi, '').replace(/\"=\"\"/g, "").replace(/\<img/gi, '<img style="max-width:100%;height:auto" ');
+        }  
         this.setData({
           data: res.data.data
         })

@@ -42,7 +42,7 @@
     <view id='dynamic'>
       <view class='title'>
         <view class='titleBox'>
-          <image src='images/yundain_dpzy_yddt.png' class='titleName'></image>
+          <image src='images/yundain_dpzy_yddt.png' class='titleName dynamicTitle'></image>
           <navigator url='../manage/manage?url=dynamic&index=0' hover-class='none'>
             <image src='images/yundian_gengduohui.png' class='enter'></image>
           </navigator>
@@ -111,7 +111,7 @@
     <view id='headline'>
       <view class='title'>
         <view class='titleBox'>
-          <image src='images/yundain_dpzy_tdtt.png' class='titleName'></image>
+          <image src='images/yundain_dpzy_tdtt.png' class='titleName headlineTitle'></image>
           <navigator url='../manage/manage?url=headline&index=1' hover-class='none'>
             <image src='images/yundian_gengduohui.png' class='enter'></image>
           </navigator>
@@ -152,7 +152,7 @@
     <view id='player'>
       <view class='title'>
         <view class='titleBox'>
-          <image src='images/yundain_dpzy_wdwjq.png' class='titleName'></image>
+          <image src='images/yundain_dpzy_wdwjq.png' class='titleName playerTitle'></image>
           <navigator url='../manage/manage?url=player&index=2' hover-class='none'>
             <image src='images/yundian_gengduohui.png' class='enter'></image>
           </navigator>
@@ -187,7 +187,7 @@
     <view id='fans'>
       <view class='title'>
         <view class='titleBox'>
-          <image src='images/yundain_dpzy_ydftd.png' class='titleName'></image>
+          <image src='images/yundain_dpzy_ydftd.png' class='titleName fansTitle'></image>
           <navigator url='../manage/manage?url=fans&index=3' hover-class='none'>
             <image src='images/yundian_gengduohui.png' class='enter'></image>
           </navigator>

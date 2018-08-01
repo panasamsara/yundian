@@ -47,7 +47,6 @@
     "pages/store/player/player",
     "pages/store/fans/fans",
     "pages/askDetail/askDetail",
-    "pages/test/test",
     "pages/reg/reg",
     "pages/photos/photos",
     "pages/videoLists/videoLists",
@@ -55,10 +54,10 @@
     "pages/secKill/secKill",
     "pages/secKillBuy/secKillBuy",
     "pages/groupBuy/groupBuy",
-    "pages/buyNow/buyNow",
     "pages/give/give",
     "pages/spelldetails/spelldetails",
-    "pages/groupBuyOrder/groupBuyOrder"
+    "pages/myHome/downLoadIos/downLoadIos",
+    "pages/myHome/downLoadAndroid/downLoadAndroid"
   ],
   "window": {
     "backgroundTextStyle": "light",

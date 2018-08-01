@@ -244,7 +244,7 @@ putInCart-img{
 .activity-swiper{
   display: block;
   height: auto;
-  margin: 30rpx;
+  margin: 20rpx;
   /* overflow: hidden; */
   border-radius: 5rpx;
   margin-bottom:30rpx;
@@ -282,15 +282,17 @@ putInCart-img{
   flex: 1;
   width: 670rpx;
   /* height: 100rpx; */
-  padding:0 10rpx;
+  padding:0 20rpx;
 
 }
 .activity-desc-container{
-  height: 80rpx;
+  height: 74rpx;
   width:50%;
+  margin-top: 5rpx;
 }
 .activity-name{
-  color: orange;
+  color: #fe5c45;
+  font-weight: bold;
 }
 .text-align-right{
   text-align: right;
@@ -449,7 +451,7 @@ putInCart-img{
   top: 28rpx;
   left: 190rpx;
   height: 160rpx;
-  width: 140rpx;
+  width: 150rpx;
 }
 .now-price{
   color: #ff0036;

@@ -20,7 +20,8 @@ Page({
     goodId:'',
     population:'',
     spellUser:'',
-    orderStatusVo:'' //付款状态
+    orderStatusVo:'', //付款状态 
+    stockId: '' //商品是否有默认规格，默认规格 不返回 stockId
   },
   /**
   * 生命周期函数--监听页面加载
@@ -33,9 +34,12 @@ Page({
       population: options.population,
       shopId: options.shopId,
       cUser: options.cUser,
-      orderStatusVo: options.orderStatusVo
+      orderStatusVo: options.orderStatusVo,
+      stockId: options.stockId
     })
+
     console.log('orderStatusVo:' + this.data.orderStatusVo);
+    console.log('stockId:' + this.data.stockId);
     app.util.reqAsync('shop/getGroupBuyOrderDetail', {
       groupId: this.data.groupId, //拼团id
       orderNo: this.data.orderNo, //订单编号
@@ -145,15 +149,27 @@ Page({
   },
   // 参与拼单
   participate: function(e){
-    wx.navigateTo({
-      url: '../goodsDetial/goodsDetial?shopId=' + this.data.shopId + '&goodsId=' + this.data.goodId + '&showBuy=true' + '&status=' + 1 + '&buy=buyNow'
-    })
+    if ( this.data.stockId ){
+      wx.navigateTo({
+        url: '../goodsDetial/goodsDetial?shopId=' + this.data.shopId + '&goodsId=' + this.data.goodId + '&showBuy=true' + '&status=' + 1 + '&buy=buyNow'
+      })
+    }else{
+      wx.navigateTo({
+        url: '../goodsDetial/goodsDetial?shopId=' + this.data.shopId + '&goodsId=' + this.data.goodId + '&showBuy=false' + '&status=' + 1 + '&buy=buyNow'
+      })
+    }
   },
   // 再次发起拼单
   againInitiate: function (e) {
-    wx.navigateTo({
-      url: '../goodsDetial/goodsDetial?shopId=' + this.data.shopId + '&goodsId=' + this.data.goodId + '&showBuy=true' + '&status=' + 1 + '&buy=buyNow'
-    })
+    if (this.data.stockId) {
+      wx.navigateTo({
+        url: '../goodsDetial/goodsDetial?shopId=' + this.data.shopId + '&goodsId=' + this.data.goodId + '&showBuy=true' + '&status=' + 1 + '&buy=buyNow'
+      })
+    } else {
+      wx.navigateTo({
+        url: '../goodsDetial/goodsDetial?shopId=' + this.data.shopId + '&goodsId=' + this.data.goodId + '&showBuy=false' + '&status=' + 1 + '&buy=buyNow'
+      })
+    }
   },
   // 跳转商品详情
   goToGroupBuy: function (e) {

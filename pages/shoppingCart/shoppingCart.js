@@ -27,9 +27,6 @@ Page({
       shopid: shopid
     })
     this.initEleWidth();
-    console.log("购物车启动")
-    console.log(userid)
-    console.log(shopid)
   },
   onShow:function(e){
     console.log("进入购物车onshow")
@@ -113,7 +110,6 @@ Page({
       pinx = parseInt(e.currentTarget.dataset.pindex), //父级index
       shopList = this.data.goodlist[pinx],
       k = 0;//标记多少个店铺全选
-    console.log(shopList)
     
     shopList.goodsList[index].checked = !shopList.goodsList[index].checked;
     if (shopList.goodsList[index].checked) { //勾选
@@ -122,17 +118,17 @@ Page({
           k++;
         }
       }
-      console.log(k)
+      
       if (k == shopList.goodsList.length) {
         shopList.checked = true;
         this.data.shopk++;
       }
-      console.log(this.data.shopk)
+     
       //全选是否生效
       if (this.data.shopk == this.data.goodlist.length) {
         this.data.isAllSelect = true; //全选按钮
       }
-      console.log(this.data.goodlist.length)
+     
     } else {
       if (this.data.shopk==0){
         this.data.shopk =0;
@@ -191,7 +187,7 @@ Page({
     }
 
     this.data.goodlist[pinx].goodsList[index].number = num;
-    console.log(stockId)
+   
     this.updateCart(goodsId, num, stockId);//调保存到购物车接口
     if (isCheck) {      //若选中，合计计算
       this.sum();//合计
@@ -254,7 +250,7 @@ Page({
     }
   },
   bindPlus: function (e) {
-    console.log(e)
+   
     //加数量
     var id = e.target.dataset.id,
       index = parseInt(e.target.dataset.index), //当前index
@@ -264,10 +260,7 @@ Page({
       stockBalance = e.currentTarget.dataset.stockban,//库存
       goodsId = e.currentTarget.dataset.goodid,
       stockId = e.currentTarget.dataset.stockid;
-    console.log('stockBalance' + stockBalance)
-    console.log('num' +num)
-    console.log('stockId' + stockId)
-    console.log('goodsId' + goodsId)
+  
     if (num >= stockBalance){
       wx.showToast({
         title: '已达到库存上限，不能再添加',
@@ -289,7 +282,7 @@ Page({
     });
   },
   updateCart: function (goodsId, numbe, stockId){ //加减之后要更新购物车
-    console.log("shopId" + this.data.shopId)
+    
     app.util.reqAsync('shop/updateNewShopCartV2', {
      
       customerId: this.data.customerId,
@@ -525,11 +518,11 @@ Page({
               'goodsType': this.data.goodlist[0].goodsList[n].goodsType,
               'balance': '',
               'goodsIndex': n,
-              'remake': '',
+              'remake': this.data.goodlist[0].goodsList[n].stockName,
               'deliveryCalcContent': this.data.goodlist[0].goodsList[n].deliveryCalcContent,
               'actualPayment': actupay, //实付单价
               'goodsPic': this.data.goodlist[0].goodsList[n].goodsImageUrl,
-              'unitPrice': this.data.goodlist[0].goodsList[n].goodsPrice//单价
+              'unitPrice': actupay//单价
             });
   
           }

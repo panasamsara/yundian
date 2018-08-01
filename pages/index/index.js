@@ -12,7 +12,7 @@ Page({
       hotCommoditiesList: [],
       hasHotCommodities: false,
       showModal: false,
-      showCoupnBox: true,
+      showCoupnBox: false,
       showImg: true,
       showVideo: false,
       has720: false,
@@ -98,7 +98,22 @@ Page({
        shopId: wx.getStorageSync('shop').id,
        visitFrom: 3,  // 访问来源
      }).then((res) => {
-
+       // 获取店铺信息失败时
+       if(res.data.code == 9){
+         wx.showModal({
+           title: '错误',
+           content: res.data.msg,
+           showCancel: false,
+           success: function (res) {
+             if (res.confirm) {
+               // console.log('用户点击确定')
+               wx.redirectTo({ url: '/pages/scan/scan' });
+               return
+             }
+           }
+         })
+         
+       }
        var shop = res.data.data.shopInfo;
        shop.fansCounter = res.data.data.fansCounter
        if (res.data.data.shopInfo.shopHomeConfig.imagePathList.length != 0){
@@ -140,6 +155,17 @@ Page({
        }
        console.log(res.data.data)
        this.setData({ shopInformation: res.data.data });
+       if (shop.shopHomeConfig.openServiceList[0] && shop.shopHomeConfig.openServiceList[4] == false){
+         this.setData({
+           showVideo: true,
+           showImg: false
+         })
+       } else if (shop.shopHomeConfig.openServiceList[4]){
+         this.setData({
+           showVideo: false,
+           showImg: true
+         })
+       }
        // 判断是否有720全景地址
        if (shop.shopHomeConfig.fullView720Path.length == 0){
          this.setData({ has720: false });
@@ -453,9 +479,16 @@ Page({
          let list = res.data.data.list,
            newData = oldData.concat(list);
          for (let i = 0; i < list.length; i++) {
-           list[i].activityStartTime = Date.parse(this.data.nowTime);
-           list[i].activityEndTime = Date.parse(list[i].activityEndTime);
-           list[i].count = list[i].activityEndTime - list[i].activityStartTime;
+           list[i].nowTime = Date.parse(app.util.formatIOS(this.data.nowTime));
+           list[i].activityStartTime = Date.parse(app.util.formatIOS(this.data.nowTime));
+           list[i].activityEndTime = Date.parse(app.util.formatIOS(list[i].activityEndTime));
+           if (list[i].nowTime - list[i].activityStartTime < 0) {//活动未开始
+             list[i].count = list[i].activityStartTime - list[i].nowTime;
+             list[i].status = 0
+           } else {//活动已开始
+             list[i].count = list[i].activityEndTime - list[i].nowTime;
+             list[i].status = 1
+           }
          }
          this.setData({
            list: newData
@@ -466,41 +499,41 @@ Page({
      })
    },
    // 倒计时
-   count: function () {
-     let _this = this;
-     for (let i = 0; i < this.data.list.length; i++) {
-       let leftTime = this.data.list[i].count;
-       leftTime -= 1000;
-       if (leftTime<=0){
-         leftTime = 0
-       }
-       let d = Math.floor(leftTime / 1000 / 60 / 60 / 24),
-         h = Math.floor(leftTime / 1000 / 60 / 60 % 24),
-         m = Math.floor(leftTime / 1000 / 60 % 60),
-         s = Math.floor(leftTime / 1000 % 60),
-         rh = d * 24 + h,
-         count = "list[" + i + "].count",
-
-         rhCount = "list[" + i + "].rh",
-         mCount = "list[" + i + "].m",
-         sCount = "list[" + i + "].s";
-       if (rh < 10) {
-         rh = "0" + rh;
-       }
-       if (m < 10) {
-         m = "0" + m;
-       }
-       if (s < 10) {
-         s = "0" + s;
-       }
-       this.setData({
-         [count]: leftTime,
-         [rhCount]: rh,
-         [mCount]: m,
-         [sCount]: s
-       })
-     }
-   },
+  count: function () {
+    let _this = this;
+    for (let i = 0; i < this.data.list.length; i++) {
+      let leftTime = this.data.list[i].count;
+      leftTime -= 1000;
+      if (leftTime <= 0) {
+        leftTime = 0;
+      }
+      let d = Math.floor(leftTime / 1000 / 60 / 60 / 24),
+        h = Math.floor(leftTime / 1000 / 60 / 60 % 24),
+        m = Math.floor(leftTime / 1000 / 60 % 60),
+        s = Math.floor(leftTime / 1000 % 60),
+        count = "list[" + i + "].count",
+        dCount = "list[" + i + "].d",
+        hCount = "list[" + i + "].h",
+        mCount = "list[" + i + "].m",
+        sCount = "list[" + i + "].s";
+      if (h < 10) {
+        h = "0" + h;
+      }
+      if (m < 10) {
+        m = "0" + m;
+      }
+      if (s < 10) {
+        s = "0" + s;
+      }
+      this.setData({
+        [count]: leftTime,
+        [dCount]: d,
+        [hCount]: h,
+        [mCount]: m,
+        [sCount]: s
+      })
+    }
+  },
    // 获取拼团
    getGroupBuyData: function () {
      let oldData = []
@@ -588,5 +621,20 @@ Page({
        showBtnList: true,
        hideBtnList: false
      })
-   }
+   },
+  onShareAppMessage: function () {
+
+  },
+  /**
+   * 页面上拉触底事件的处理函数
+   */
+  onReachBottom: function () {
+    // this.setData({
+    //   list:[]
+    // })
+    // this.getShopInfo() // 获取店铺信息
+    this.getHotList() // 获取店铺活动
+    // this.getSecKillData() // 获取秒杀
+    // this.getGroupBuyData() // 获取拼团
+  },
 })

@@ -30,7 +30,7 @@
   <!--商品-->
   <view class="detail">
     <view class='detail-top'>
-      <image class="shop-icon" src="../../images/1_05.gif"></image>
+      <image class="shop-icon" src="../../images/yundian_spxq_dianpu@2x.png"></image>
       <text class='detail-tit'>{{shopName}}</text>
     </view>
     <view class="total-num">

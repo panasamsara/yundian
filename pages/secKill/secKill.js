@@ -62,9 +62,9 @@ Page({
         let list=res.data.data.list,
             newData = oldData.concat(list);
         for(let i=0;i<list.length;i++){
-          list[i].nowTime = Date.parse(this.data.nowTime);
-          list[i].activityStartTime = Date.parse(list[i].activityStartTime);
-          list[i].activityEndTime = Date.parse(list[i].activityEndTime);
+          list[i].nowTime = Date.parse(app.util.formatIOS(this.data.nowTime));
+          list[i].activityStartTime = Date.parse(app.util.formatIOS(list[i].activityStartTime));
+          list[i].activityEndTime = Date.parse(app.util.formatIOS(list[i].activityEndTime));
           if (list[i].nowTime - list[i].activityStartTime<0){//活动未开始
             list[i].count = list[i].activityStartTime - list[i].nowTime;
             list[i].status = 0

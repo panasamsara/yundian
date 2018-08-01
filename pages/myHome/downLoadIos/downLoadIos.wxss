@@ -1,0 +1,68 @@
+/* pages/store/code/code.wxss */
+.container{
+  padding: 60rpx 70rpx;
+  letter-spacing: 2rpx;
+}
+
+.code .storeInfo,.code .storeCode{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.code .storeInfo image{
+  width: 140rpx;
+  height: 140rpx;
+}
+
+.code #storeName{
+  font-size: 30rpx;
+  line-height: 50rpx;
+}
+
+.code #fans{
+  font-size: 24rpx;
+  color: #636363; 
+  line-height: 50rpx;
+}
+
+.code .storeCode{
+  position: relative;
+}
+
+.code .storeCode image{
+  width: 480rpx;
+  height: 480rpx;
+  margin: 58rpx 0;
+}
+
+.code .storeCode #codeBox{
+  position: relative;
+}
+
+.code .storeCode .img-box{
+  width: 410rpx;
+  height: 410rpx;
+  position: absolute;
+  top: 35rpx;
+  left: 35rpx;
+}
+
+.code .storeCode .img-box image{
+  width: 410rpx;
+  height: 410rpx;
+  margin: 0;
+}
+
+.code #scan{
+  font-size: 30rpx;
+  color: #636363; 
+}
+
+.canvas-box{
+  position: fixed;
+  top:999999rpx;
+  left: 0
+}
+

@@ -13,26 +13,26 @@
     <view class="bg-mask"></view>
     <image src='{{shopInformation.bgImageLong}}' mode='scaleToFill' class='top-bg' wx:if='{{showImg}}'></image>
     <image src='{{shopInformation.videoImagecover}}' mode='scaleToFill' class='top-bg' wx:if='{{showVideo}}'></image> 
-    <image src='../../images/yundian_shipinbofang@2x.png' bindtap='goIndexVideo' class='index-video-cover' wx:if='{{showVideo &&  shopInformation.shopInfo.shopHomeConfig.openServiceList[1]}}'></image>
+    <image src='../../images/yundian_shipinbofang@2x.png' bindtap='goIndexVideo' class='index-video-cover' wx:if='{{showVideo &&  shopInformation.shopInfo.shopHomeConfig.openServiceList[0]}}'></image>
     <!-- <image class='up-icon' src='../../images/yundian_dpzy_shangla@2x.png'></image> -->
     <image class='up-icon' bindtap='clickScrollTop' src='../../images/up.gif'></image>
 
-    <view class='total-photo-box' wx:if='{{showImg && shopInformation.shopInfo.shopHomeConfig.openServiceList[0] }}' bindtap='goPhotos'>
+    <view class='total-photo-box' wx:if='{{showImg && shopInformation.shopInfo.shopHomeConfig.openServiceList[4] }}' bindtap='goPhotos'>
       <image class="total-photo-icon" src='./img/yundian_zhaopian@2x.png'></image>
       <view class='total-photo-num'>{{photoNum}}</view>
     </view>
-    <view class='total-photo-box' wx:if='{{showVideo && shopInformation.shopInfo.shopHomeConfig.openServiceList[1] }}' bindtap='goVideoLists'>
+    <view class='total-photo-box' wx:if='{{  showVideo && shopInformation.shopInfo.shopHomeConfig.openServiceList[0] }}' bindtap='goVideoLists'>
       <image class="total-photo-icon" src='./img/yundian_shipin@2x.png'></image>
       <view class='total-photo-num'>{{videoNum}}</view>
     </view>
 
     <view class='btn-list'>
-      <view bindtap='showPotos' wx:if='{{showBtnList && shopInformation.shopInfo.shopHomeConfig.openServiceList[0] }}'>
+      <view bindtap='showPotos' wx:if='{{showBtnList && shopInformation.shopInfo.shopHomeConfig.openServiceList[4] }}'>
         <!-- <view class='btn-img '></view> -->
         <image class="btn-img {{showImg ? 'btn-img-active':''}}" src='./img/yundian_zhaopian@2x.png'></image>
         <text class='text-below'>照片</text>
       </view>
-      <view bindtap='showVideo' wx:if='{{showBtnList && shopInformation.shopInfo.shopHomeConfig.openServiceList[1] }}'>
+      <view bindtap='showVideo' wx:if='{{showBtnList && shopInformation.shopInfo.shopHomeConfig.openServiceList[0] }}'>
         <image class="btn-img {{showVideo ? 'btn-img-active':''}}" src='./img/yundian_shipin@2x.png'></image>
         <text class='text-below'>视频</text>
       </view>
@@ -141,9 +141,10 @@
           <view class='sec-kill-detail'>
             <view class='now-price'> <text class='miaosha-yangjiao'>￥</text><text class='now-price-num-sec'>{{item.minPrice}}</text> </view>
             <view class='old-price'>￥{{item.minOriginalPrice}}</view>
-            <view class='end-word'>距结束</view>
+            <view class='end-word' wx:if="{{item.status==1}}">距结束<text wx:if="{{item.d>0}}">{{item.d}}天</text></view>
+            <view class='end-word' wx:if="{{item.status==0}}">距开始<text wx:if="{{item.d>0}}">{{item.d}}天</text></view>
             <view class='end-time'>
-              <text>{{item.rh?item.rh:0}}</text>:<text>{{item.m?item.m:0}}</text>:<text>{{item.s?item.s:0}}</text>
+              <text>{{item.h?item.h:0}}</text>:<text>{{item.m?item.m:0}}</text>:<text>{{item.s?item.s:0}}</text>
             </view>
           </view>
         </view>

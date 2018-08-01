@@ -1,0 +1,2 @@
+<!--pages/myHome/downLoadAndroid/downLoadAndroid.wxml-->
+<web-view src="{{storeUrl}}"></web-view>

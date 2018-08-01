@@ -132,6 +132,10 @@ page {
   height: 34rpx;
 }
 
+.playerTitle,.fansTitle{
+  width: 260rpx;
+}
+
 .title .enter {
   width: 15rpx;
   height: 26rpx;

@@ -27,10 +27,12 @@ Page({
     number:1,
     showBuy:false,
     cur:0,
-    timer:''
+    timer:'',
+    tabcur:'product',
+    info:''
   },
   onLoad: function(options){
-    console.log(options)
+    console.log('options',options)
     if(options.status){
       this.setData({
         status: options.status
@@ -48,7 +50,8 @@ Page({
     }
     var parm = {
       shopId: options.shopId,
-      goodsId: options.goodsId
+      goodsId:options.goodsId,
+      customerId: wx.getStorageSync('scSysUser').id
     }
     this.setData({
       shopId: options.shopId,
@@ -58,7 +61,10 @@ Page({
     this.setData({
       parm:parm
     })
+    //获取页面商品主要详情数据
     this.getData(parm);
+    //获取购物车数量
+    this.getCartNum({ customerId: wx.getStorageSync('scSysUser').id, shopId: wx.getStorageSync('shop').id})
     //获取商品评论
     app.util.reqAsync('shop/commentList',{
       type: 0,
@@ -132,7 +138,7 @@ Page({
       }
     })
     app.util.reqAsync('shop/goodsDetailAddGroupBuying',parm).then((res) => {
-      // debugger;
+      console.log(parm)
       var status=this.data.status,
           prostatus=res.data.data.status,
           msg;
@@ -159,6 +165,9 @@ Page({
             secondKillInfo = data.secondKillInfo,
             scShopGoodsStockList = data.scShopGoodsStockList;
         data.shopScore=parseInt(data.shopScore);
+        if(data.descContent!=null&&data.descContent!=''){
+          data.descContent = data.descContent.replace(/\s+(id|class|style)(=(([\"\']).*?\4|\S*))?/g, "").replace(/background-color[\s:]+[^;]*;/gi, '').replace(/\"=\"\"/g, "").replace(/\<img/gi, '<img style="max-width:100%;height:auto" ');
+        }
         if(status==1){//拼团
             if (scShopGoodsStockList.length > 0) {
               for (let i = 0; i < scShopGoodsStockList.length; i++) {
@@ -173,8 +182,8 @@ Page({
               length=list.length
             }
             for (let i = 0; i < length; i++) {
-              list[i].activityStartTime = Date.parse(this.data.nowTime);
-              list[i].activityEndTime = Date.parse(list[i].endTime);
+              list[i].activityStartTime = Date.parse(app.util.formatIOS(this.data.nowTime));
+              list[i].activityEndTime = Date.parse(app.util.formatIOS(list[i].endTime));
               list[i].count = list[i].activityEndTime - list[i].activityStartTime;
             };
             this.setData({
@@ -190,23 +199,23 @@ Page({
             }
             let secList = data.secondKillInfo[0],
                 list=[];
-            secList.activityStartTime = Date.parse(this.data.nowTime);
-            secList.activityEndTime = Date.parse(secList.activityEndTime);
+            secList.activityStartTime = Date.parse(app.util.formatIOS(this.data.nowTime));
+            secList.activityEndTime = Date.parse(app.util.formatIOS(secList.activityEndTime));
             secList.count = secList.activityEndTime - secList.activityStartTime;
             list.push(secList)
             this.setData({
               listData: list
             })
         }else{//普通商品
-          let stockList = res.data.data.stockList;
-          for(let i=0;i<stockList.length;i++){
-            stockList[i].index=i
+          let stockListDefault = res.data.data.stockListDefault;
+          for(let i=0;i<stockListDefault.length;i++){
+            stockListDefault[i].index=i
           }
         }
         this.setData({
-          data:data
+          data:data,
+          info: data.descContent
         })
-        console.log(this.data.data.buyTotalCount)
       }  
       wx.hideLoading();
       let _this = this
@@ -217,9 +226,16 @@ Page({
         }, 1000)
       } 
     })
-  },  
+  },
+  getCartNum:function(data){
+    app.util.reqAsync('shop/shopCartList', data).then((res) => {
+      this.setData({
+        cartTotal:res.data.total
+      })
+    })
+  }, 
   //跳转到拼单
-  toLayer(e){   
+  tolayer(e){   
     this.setData({
       flag:true ,
       flag1:true
@@ -234,8 +250,8 @@ Page({
         app.util.reqAsync('shop/getSmallGroupListYQ',data).then((res)=>{
           var timeData=res.data.data;
           for (let i = 0; i < timeData.length;i++){
-            timeData[i].nowTime = Date.parse(this.data.nowTime);
-            timeData[i].endTime = Date.parse(timeData[i].endTime);
+            timeData[i].nowTime = Date.parse(app.util.formatIOS(this.data.nowTime));
+            timeData[i].endTime = Date.parse(app.util.formatIOS(timeData[i].endTime));
             timeData[i].count = timeData[i].endTime - timeData[i].nowTime;
           }
           this.setData({
@@ -270,17 +286,25 @@ Page({
           smallGroupId: dataset.smallid,//   #（选填）对应拼组表id",
           cUser: dataset.cuser,   //参与者用户id"
         }
+    this.setData({
+      smallGroupId: dataset.smallid
+    })
     app.util.reqAsync('shop/getSmallGroupUserListYQ',data).then((res)=>{
+      console.log(res.data)
+      if(res.data.total){
+        this.setData({
+          num:res.data.total
+        })
+      }
       var timeData=res.data.data;
       for(let i=0;i<timeData.length;i++){
         if(dataset.flag=="layer"){
           timeData[i].endTime = dataset.endtime;
         }else{
-          timeData[i].endTime = Date.parse(dataset.endtime);
+          timeData[i].endTime = Date.parse(app.util.formatIOS(dataset.endtime));
         } 
-        timeData[i].nowTime=Date.parse(this.data.nowTime);
+        timeData[i].nowTime = Date.parse(app.util.formatIOS(this.data.nowTime));
         timeData[i].count = timeData[i].endTime - timeData[i].nowTime;
-        console.log(timeData[i].endTime,timeData[i].nowTime)
       }
       this.setData({
         picData:timeData
@@ -292,22 +316,29 @@ Page({
       _this.count(_this.data.picData,'picData')
     },1000)
   },
-  //参与并拼单
-  joinBuy:function(e){
-    var pictureUrl = this.data.goodsData.pictureUrl;//图片地址
-    var groupBuyingPrice = this.data.groupBuyingPrice;//价格
-    var stockBalance = this.data.stockBalance;//库存
-    wx.navigateTo({
-      url: '../buyNow/buyNow?pictureUrl=' + pictureUrl + '&groupBuyingPrice=' + groupBuyingPrice + '&stockBalance=' + stockBalance
-    })
 
+  //参与并拼单
+  joinBuy:function(){
+    this.setData({
+      spellingType:1,
+      buy:'buyNow',
+      showBuy:true,
+      flag:true,
+      flag2:false,
+      total: this.data.data.scShopGoodsStockList[0].stockBatchPrice,
+      price: this.data.data.scShopGoodsStockList[0].stockBatchPrice,
+      balance: this.data.data.scShopGoodsStockList[0].stockNum
+    })
   },
+
   //跳转到赠品
   toGive(){
+    let gift=this.data.data.gift;
+    wx.setStorageSync('imageList',gift.imageList);
+    let urls = '/pages/give/give?descTitle=' + gift.descTitle + '&descContent=' + gift.descContent
     wx.navigateTo({
-      url: '/pages/give/give',
+      url: urls,
     })
-
   },
   //跳转到评价
   toAppraise(){
@@ -329,8 +360,8 @@ Page({
   },
   //跳转到店铺
   goShop(){
-    wx.switchTab({
-      url: '/pages/index/index'
+    wx.navigateTo({
+      url: '/pages/store/store'
     })
   },
   // 倒计时方法
@@ -375,6 +406,20 @@ Page({
     if(option=='add'){//加数量
       number += 1;
       num=1;
+      if (this.data.status == 1 && number > this.data.limitNum){//拼团限购数量
+        wx.showToast({
+          title: '已超过最大购买数量',
+          icon:'none'
+        })
+        return
+      } 
+      if (this.data.status == 2 && number > this.data.goodsPurchasingCount) {//秒杀限购数量
+        wx.showToast({
+          title: '已超过限购数量',
+          icon: 'none'
+        })
+        return
+      }
       if (number > this.data.balance) {
         wx.showToast({
           title: '已超过库存',
@@ -400,7 +445,7 @@ Page({
     } else if (this.data.status == 2) {//秒杀
       price = this.data.data.secondKillInfo[this.data.cur].goodsPreferentialStockPrice
     } else if(this.data.status == 3){//普通商品
-      price = this.data.data.stockList[this.data.cur].stockPrice
+      price = this.data.data.stockListDefault[this.data.cur].stockPrice
     }
     this.setData({
       number: this.data.number +num,
@@ -439,7 +484,7 @@ Page({
     }
     let secondKillInfo = this.data.data.secondKillInfo,
         scShopGoodsStockList = this.data.data.scShopGoodsStockList,
-        stockList = this.data.data.stockList;
+        stockListDefault = this.data.data.stockListDefault;
     if (this.data.status == 1){//拼团
       if (e.currentTarget.id == 'buy') {//单独购买
         this.setData({
@@ -451,7 +496,7 @@ Page({
           this.buyNow();
           return
         }
-      }else{//发起拼单
+      } else{//发起拼单
         this.setData({ 
           total: scShopGoodsStockList[0].stockBatchPrice,
           price: scShopGoodsStockList[0].stockBatchPrice,
@@ -495,15 +540,19 @@ Page({
         })
       }else{
         this.setData({
-          balance: stockList[0].balance
+          balance: stockListDefault[0].balance
         })
       }
       this.setData({
-        total: stockList[0].stockPrice,
-        price: stockList[0].stockPrice
+        total: stockListDefault[0].stockPrice,
+        price: stockListDefault[0].stockPrice
       })
-      if (stockList.length <= 1) {//无其他规格
-        this.buyNow()
+      if (stockListDefault.length <= 1) {//无其他规格
+        if(this.data.buy=='addCart'){
+          this.addCart()
+        }else{
+          this.buyNow()
+        }
         return
       }
     }
@@ -516,6 +565,7 @@ Page({
     this.setData({
       cur: e.currentTarget.dataset.index,
     })
+    console.log(this.data.cur)
     let data = this.data.data;
     if(this.data.status==1){//拼团
     let buyType=this.data.buyType;
@@ -549,10 +599,18 @@ Page({
         number: 1
       })
     }else if(this.data.status==3){//普通商品购买
+      if (this.data.data.goodsType != 0){
+        this.setData({
+          balance: this.data.stockBalance
+        })
+      }else{
+        this.setData({
+          balance: data.stockListDefault[this.data.cur].balance,
+        })
+      }
       this.setData({
-        total: data.stockList[this.data.cur].stockPrice,
-        balance: data.stockList[this.data.cur].balance,
-        price: data.stockList[this.data.cur].stockPrice,
+        total: data.stockListDefault[this.data.cur].stockPrice,
+        price: data.stockListDefault[this.data.cur].stockPrice,
         number: 1
       })
     }
@@ -579,32 +637,41 @@ Page({
           'number': this.data.number,
           'goodsType': data.goodsType,
           'goodsIndex': 0,
-          'remake': data.descTitle,
           'deliveryCalcContent': data.deliveryCalcContent,
           'actualPayment': this.data.price, //实付单价
           'goodsPic': data.pictureUrl,
           'unitPrice': this.data.price //单价
         }]
     if(status==1){//拼团
-      let urls = '../secKillBuy/secKillBuy?realMoney=' + this.data.total + '&goodsId=' + data.scShopGoodsStockList[0].goodsId + '&goodsPrice=' + this.data.price + '&goodsType=' + data.goodsType + '&remake=' + data.descTitle + '&stockId=' + data.scShopGoodsStockList[cur].id + '&goodsName=' + data.goodsName + '&stockName=' + data.scShopGoodsStockList[cur].stockName + '&goodsNum=' + this.data.number + '&pictureUrl=' + data.pictureUrl + '&deliveryCalcContent=' + data.deliveryCalcContent + '&isSeckill=' + 0 + '&groupId=' + data.isGroupBuying + '&SmallGroupId=' + data.id;
-      if (spellingType==0){
-        url = urls +"&spellingType="+0;
-      }else{ 
+      console.log(this.data.smallGroupId)
+      let urls = '../secKillBuy/secKillBuy?realMoney=' + this.data.total + '&goodsId=' + data.scShopGoodsStockList[0].goodsId + '&goodsPrice=' + this.data.price + '&goodsType=' + data.goodsType + '&remake=' + data.scShopGoodsStockList[cur].stockName + '&stockId=' + data.scShopGoodsStockList[cur].id + '&goodsName=' + data.goodsName + '&stockName=' + data.scShopGoodsStockList[cur].stockName + '&goodsNum=' + this.data.number + '&pictureUrl=' + data.pictureUrl + '&deliveryCalcContent=' + data.deliveryCalcContent + '&isSeckill=' + 0 + '&groupId=' + data.isGroupBuying;
+      if (spellingType==0){//发起拼单
+        url = urls + "&spellingType=" + 0 + '&SmallGroupId=' + 0;
+      } else if (spellingType == 1){//参与拼单
+        url = urls + "&spellingType=" + 1 + '&SmallGroupId=' + this.data.smallGroupId;
+      } else{ //单独购买
         info[0]['goodsId'] = data.scShopGoodsStockList[0].goodsId
         info[0]['stockId'] = data.scShopGoodsStockList[cur].id,
         info[0]['stockName'] = data.scShopGoodsStockList[cur].stockName,
-        info[0]['balance'] = data.scShopGoodsStockList[cur].stockNum
-        wx.setStorageSync('info', info);
+        info[0]['balance'] = data.scShopGoodsStockList[cur].stockNum,
+        info[0]['remake'] = data.scShopGoodsStockList[cur].stockName
+        wx.setStorageSync('cart', info);
         url ="../orderBuy/orderBuy?totalMoney="+this.data.total
       }
     }else if(status==2){//秒杀
-      url = '../secKillBuy/secKillBuy?realMoney=' + this.data.total + '&goodsId=' + data.id + '&goodsPrice=' + this.data.price + '&secondskillActivityId=' + data.secondKillInfo[cur].secondskillActivityId + '&goodsType=' + data.goodsType + '&remake=' + data.descTitle + '&stockId=' + data.secondKillInfo[cur].goodsStockId + '&goodsName=' + data.goodsName + '&stockName=' + data.secondKillInfo[cur].stockName + '&goodsNum=' + this.data.number + '&pictureUrl=' + data.pictureUrl + '&deliveryCalcContent=' + data.deliveryCalcContent  + '&isSeckill=' + 1
+      let urls = '../secKillBuy/secKillBuy?realMoney=' + this.data.total + '&goodsId=' + data.id + '&goodsPrice=' + this.data.price + '&secondskillActivityId=' + data.secondKillInfo[cur].secondskillActivityId + '&goodsType=' + data.goodsType + '&remake=' + data.secondKillInfo[cur].stockName + '&stockId=' + data.secondKillInfo[cur].goodsStockId + '&goodsName=' + data.goodsName + '&goodsNum=' + this.data.number + '&pictureUrl=' + data.pictureUrl + '&deliveryCalcContent=' + data.deliveryCalcContent + '&isSeckill=' + 1
+      if (data.secondKillInfo.length <= 1 && data.secondKillInfo[0].isDefault == 0){
+        url = urls + '&stockName=' + data.secondKillInfo[cur].stockSku
+      }else{
+        url = urls + '&stockName=' + data.secondKillInfo[cur].stockName
+      }
     }else{//普通
-      info[0]['goodsId'] = data.stockList[0].goodsId,
-      info[0]['stockId'] = data.stockList[cur].id,
-      info[0]['stockName'] = data.stockList[cur].stockName,
-      info[0]['balance'] = data.stockList[cur].stockNum
-      wx.setStorageSync('info', info);
+      info[0]['goodsId'] = data.stockListDefault[0].goodsId,
+      info[0]['stockId'] = data.stockListDefault[cur].id,
+      info[0]['stockName'] = data.stockListDefault[cur].stockName,
+      info[0]['balance'] = data.stockListDefault[cur].balance,
+        info[0]['remake'] = data.stockListDefault[cur].stockName
+      wx.setStorageSync('cart', info);
       url = "../orderBuy/orderBuy?totalMoney=" + this.data.total
     }
     console.log(url)
@@ -621,10 +688,10 @@ Page({
       return
     }
     let data={
-      goodsId: this.data.data.stockList[0].goodsId,
+      goodsId: this.data.data.stockListDefault[0].goodsId,
       customerId: wx.getStorageSync('scSysUser').id,
       shopId: wx.getStorageSync('shop').id,
-      stockId: this.data.data.stockList[this.data.cur].id,
+      stockId: this.data.data.stockListDefault[this.data.cur].id,
       number: this.data.number,
       goodsName:this.data.data.goodsName
     }
@@ -637,7 +704,11 @@ Page({
         })
       }
     })
-    let _this=this
+    let _this=this,
+        total=this.data.cartTotal;
+    // this.setData({
+    //   cartTotal:total+1
+    // })
     setTimeout(function(){
       _this.closeMask();
     },1000)
@@ -697,6 +768,18 @@ Page({
   closeQuanBox: function () {
     this.setData({
       showQuanBox: false
+    })
+  },
+  /**
+   * 用户点击右上角分享
+   */
+  onShareAppMessage: function () {
+
+  },
+  tabchange:function(e){
+    console.log(e.currentTarget.id)
+    this.setData({
+      tabcur:e.currentTarget.id
     })
   }
 })

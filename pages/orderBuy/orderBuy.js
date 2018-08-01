@@ -1,5 +1,7 @@
 //获取应用实例
+import util from '../../utils/util.js';
 const app = getApp();
+
 Page({
   data: {
     array: ['快递配送', '店内下单','自提'],
@@ -71,11 +73,13 @@ Page({
     scanRoom:''//扫码进来的房间名
   },
   onLoad: function (options) {
+    console.log(options)
     var user = wx.getStorageSync('scSysUser');
     var shop = wx.getStorageSync('shop');
     var ispay = wx.getStorageSync('isPay') || 0;
     var userid = wx.getStorageSync('scSysUser').id;
     var shopid = wx.getStorageSync('shop').id;
+    var shopName = wx.getStorageSync('shop').shopName;
     var username=wx.getStorageSync('scSysUser').username;
     var offline = wx.getStorageSync('shop').offline || "";
     //获取商品
@@ -83,15 +87,21 @@ Page({
     var shopProvince = shop.provinceId;
     var shopArea = shop.areaId;
     var shopCity = shop.cityId;
+    console.log(typeof(goods[0].deliveryCalcContent))
     if (goods[0].deliveryCalcContent==""){
       var arr = 0;
-    } else if (goods[0].deliveryCalcContent != "null"){
-      var arr = goods[0].deliveryCalcContent;
+    } else if (goods[0].deliveryCalcContent != null){
+      if (typeof (goods[0].deliveryCalcContent)=='string'){
+        var arr = JSON.parse(goods[0].deliveryCalcContent);
+      }else{
+        var arr = goods[0].deliveryCalcContent;
+      }
+      
     }else{
       var arr = 0;
     }
     
-    console.log(goods)
+    console.log(typeof (arr))
     this.setData({
       customerId: userid,
       shopId: shopid,
@@ -100,7 +110,8 @@ Page({
       shopArea: shopArea,
       shopCity: shopCity,
       deliveyArr: arr,
-      offline: offline
+      offline: offline,
+      shopName: shopName
     })
     if (this.data.offline==1){ //扫码进来的
       this.setData({
@@ -321,7 +332,6 @@ Page({
     //   })
     // })
     this.setData({
-      shopName: options.shopName,
       totalMoney: options.totalMoney,
       oldTotal: options.totalMoney,
       amountMin: options.amountMin || 0,
@@ -331,7 +341,7 @@ Page({
       couponId: options.counid || ""
     });
     console.log(options.limtgood)
-    if (options.limtgood){
+    if (options.limtgood && options.limtgood!='null'){
       this.setData({
         limtgood: options.limtgood.split(',')
       });
@@ -340,6 +350,7 @@ Page({
         limtgood: ""
       });
     }
+    console.log("limtgood" + this.data.limtgood)
   },
   onShow:function(e){
     if (this.data.offline == 1) { //如果扫码进来遍历房间id取出房间号
@@ -365,7 +376,7 @@ Page({
         }
       }
     }
-    console.log(this.data.scanRoom)
+    console.log(this.data.customerId)
     //获取地址
     app.util.reqAsync('shop/getMyAddressAndCoupon', {
       customerId: this.data.customerId,
@@ -453,7 +464,7 @@ Page({
         contactMobile: this.data.contactMobile,
         contactName: this.data.contactName
       })  
-
+      console.log("458行" + this.data.limtgood)
       this.deliveryMone();
       this.discounts();
     })  
@@ -524,6 +535,8 @@ Page({
       if (this.data.name == "优惠券") {
 
         if (this.data.limtgood != "") { //指定商品   //先筛选符合满减的指定商品
+          console.log("指定商品" + this.data.limtgood)
+        console.log("有指定商品满减券")
         var limtarr = [];//有指定商品
           for (var a in this.data.goods){
             for (var b in this.data.limtgood){
@@ -585,6 +598,7 @@ Page({
             })
           }
         }else{ //没有指定商品
+          console.log('没有指定商品')
           if (Number(this.data.totalMoney) >= Number(this.data.amountMin)) {
 
             var countMoney = Number(newmoney) - Number(this.data.amounts);
@@ -990,6 +1004,7 @@ Page({
           shopId: goos.shopId,
           unitPrice: goos.unitPrice,
           stockId: goos.stockId,
+          remake: goos.remake,
           shouldPay: parseInt(goos.number) * Number(goos.stockPrice)
         });
       }else{
@@ -1000,6 +1015,7 @@ Page({
           goodsNum: goos.number,
           goodsPrice: goos.goodsPrice,
           goodsType: goos.goodsType,
+          remake: goos.remake,
           id: goos.id,
           num: goos.number,
           shopId: goos.shopId,
@@ -1068,7 +1084,7 @@ Page({
             goodsType: goos.goodsType,
             goodsNum: goos.number,
             goodsIndex: i,
-            remake: "",
+            remake: goos.remake,
             num: goos.number,
             goodsName: goos.goodsName,
             actualPayment: goos.actualPayment,
@@ -1083,7 +1099,7 @@ Page({
            goodsType: goos.goodsType,
            goodsNum: goos.number,
            goodsIndex: i,
-           remake: "",
+           remake: goos.remake,
            num: goos.number,
            goodsName: goos.goodsName,
            actualPayment: goos.actualPayment,
@@ -1180,12 +1196,15 @@ Page({
     })
   },
   bindTestCreateOrder: function (code) {
+    console.log(app.globalData.notify_url)
       var data = {
       subject: this.data.goods[0].goodsName,
       requestBody: {
         body: '云店小程序普通订单',
         out_trade_no: code,
-        notify_url: 'http://apptest.izxcs.com:81/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
+        notify_url: 'https://wxappprod.izxcs.com/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
+        // notify_url: 'http://apptest.izxcs.com:81/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
+        // notify_url: app.globalData.notify_url,
         trade_type: 'JSAPI',
         openid: wx.getStorageSync('scSysUser').wxOpenId
       }

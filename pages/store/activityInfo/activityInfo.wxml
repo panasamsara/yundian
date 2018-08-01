@@ -10,4 +10,7 @@
   <view class='banner'>
     <image src='{{data.pictureUrl}}'></image>
   </view>
+  <view class='content'>
+    <rich-text nodes="{{data.descContent}}"></rich-text>
+  </view>
 </view>

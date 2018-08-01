@@ -69,6 +69,7 @@ Page({
       //   path: '/pages/myHome/order/order?index=4'
       // },
     ],
+    flag:false //手机系统是否是ios
   },
   onLoad: function (options) {
     var user = wx.getStorageSync('scSysUser')
@@ -77,6 +78,23 @@ Page({
     });
 
     this.getlist();
+
+    var that = this; //获取手机系统是否是ios
+    wx.getSystemInfo({
+      success: function (res) {
+        console.log(res)
+        if (res.system.indexOf("iOS")>-1){ //苹果
+          that.setData({
+            flag: true
+          })
+        }else{
+          that.setData({
+            flag: false
+          })
+        }
+        
+      }
+    })
   },
   onShow:function(){
     this.getlist();
@@ -115,4 +133,12 @@ Page({
   backShop:function (e) {
     wx.navigateTo({ url: e.currentTarget.dataset.path });
   },
+  appSkip:function(e){ //点击跳转到app下载页
+    if (this.data.flag){ //苹果
+      wx.navigateTo({ url: "/pages/myHome/downLoadIos/downLoadIos" });
+    }else{
+      wx.navigateTo({ url: "/pages/myHome/downLoadAndroid/downLoadAndroid" });
+    }
+    
+  }
 })

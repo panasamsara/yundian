@@ -22,7 +22,7 @@
             <view class="right edit">
               <view class="left ml" bindtap="aditAddress" data-id="{{item.id}}" data-name="{{item.name}}" data-phone="{{item.phone}}" data-address="{{item.address}}" data-default="{{item.isDefault}}" data-ProvinceName="{{item.ProvinceName}}" data-cityName="{{item.cityName}}" data-areaName="{{item.areaName}}">
               <image class="ml10" src="../../images/edit.png"></image><text>编辑</text></view>
-              <view class="left" bindtap="deleteAddress" data-id="{{item.id}}"><image class="ml10" src="../../images/delete.png"></image><text>删除</text></view>
+              <view class="left" catchtap="deleteAddress" data-id="{{item.id}}"><image class="ml10" src="../../images/delete.png"></image><text>删除</text></view>
             </view>
           </view>
         </view>

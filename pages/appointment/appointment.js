@@ -45,6 +45,9 @@ Page({
     };
     this.getData(data)
   },
+  onShow:function(){
+    app.util.checkWxLogin();
+  },
   start:function(){//开始时间
     this.change('start');
     this.setData({

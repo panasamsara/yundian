@@ -1,5 +1,6 @@
 import area from 'area.js'
 
+
 // 时间格式化-自带
 const formatTime = date => {
   const year = date.getFullYear()
@@ -13,12 +14,12 @@ const formatTime = date => {
 }
 // 测试链接
 const URL_QRCODE = 'https://wxapp.izxcs.com/qrcode/shop/';
+
 //测试环境
-const URL = 'http://apptest.izxcs.com:81/zxcity_restful/ws/rest'
+ const URL = 'https://wxappprod.izxcs.com/zxcity_restful/ws/rest';
 //正式环境
 // const URL = 'https://wxapp.izxcs.com/zxcity_restful/ws/rest';
-// const URL = 'http://192.168.11.201:8118/zxcity_restful/ws/rest';
-// const URL = 'http://pb8fbr.natappfree.cc/zxcity_restful/ws/rest';
+
 
 const formatNumber = n => {
   n = n.toString()
@@ -82,6 +83,12 @@ const formatAppoint= date => {
         dateArr = dates[0].split('-')
   return dateArr[1]+"月"+dateArr[2]+"日"+dates[1]
 }
+
+//兼容IOS时间格式转换
+const formatIOS= date =>{
+  const arr = date.split(/[- :]/);
+  return new Date(arr[0], arr[1] - 1, arr[2], arr[3], arr[4], arr[5]);
+} 
 
 // 封装小程序异步请求为Promise
 const reqAsync = (cmd, data) => {
@@ -258,6 +265,7 @@ module.exports = {
   formatAppoint: formatAppoint,
   formatPickerTime: formatPickerTime,
   formatTimeArray: formatTimeArray,
+  formatIOS: formatIOS,
   reqAsync: reqAsync,
   isEmpty: isEmpty,
   inArray: inArray,

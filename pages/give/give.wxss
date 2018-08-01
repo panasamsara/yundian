@@ -1,1 +1,27 @@
 /* pages/give/give.wxss */
+.gift{
+  letter-spacing: 2rpx;
+}
+
+.gift .imageBox image{
+  width: 100%;
+}
+
+.gift .contentBox{
+  display: flex;
+  flex-direction: column;
+
+}
+
+.gift .title{
+  font-size: 30rpx;
+  color: #333333;
+  line-height: 100rpx;
+  text-indent: 40rpx;
+}
+
+.gift .content{
+  padding: 20rpx;
+  font-size: 34rpx;
+  word-break: break-all;
+}

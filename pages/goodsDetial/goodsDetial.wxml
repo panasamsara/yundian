@@ -1,5 +1,8 @@
-
-<view class='page_main'>
+<view id='tabBox'>
+  <text id='product' bindtap='tabchange' class="tab {{tabcur=='product'?'active':''}}">商品</text>
+  <text id='info' bindtap='tabchange' class="tab {{tabcur=='info'?'active':''}}">详情</text>
+</view>
+<view class='page_main' wx:if="{{tabcur=='product'}}">
 <!-- banner区 -->
 <swiper indicator-dots='{{indicatorDots}}'>
   <block wx:for="{{data.imageList}}" wx:key='key'>
@@ -32,7 +35,7 @@
     </view>
     <text class='title'>{{data.goodsName}}</text>
     <view class='price' wx:if="{{status==3}}">￥{{data.price}}</view>
-    <view class='info' wx:if="{{status==2}}"><span>库存 {{listData[0].salesCount}}</span><span>月销量 {{listData[0].goodsCount}}</span></view>
+    <view class='info' wx:if="{{status==2}}"><span>库存 {{listData[0].salesCount}}</span><span>月销量 {{data.payCount}}</span></view>
     <view class='info' wx:if="{{status==3}}"><span>库存 {{data.stockBalance}}</span><span>月销量 {{data.payCount}}</span></view>
   </view>
   <view class='separate'></view>
@@ -61,10 +64,6 @@
     </view> 
   </view>
   <view class='separate'></view>
-  <!-- 因后台返给的数据很多小程序无法解析,所以先暂时屏蔽掉,后期需要再改 -->
-  <!-- <view class='descrip'>
-    <text class='{{descContent==""?"hide":"show"}}' >{{descContent}}</text>
-  </view> -->
   <!-- 拼单 -->
   <view class='spellList' wx:if="{{status==1&&listData.length>0}}">
     <view class='top'>
@@ -176,6 +175,16 @@
       </view>
     </view>
     <view wx:if="{{status==2||status==3}}" class="buyBox {{status==3?'normalBuy':'activityBuy'}}">
+      <navigator id='cartCount' url="../shoppingCart/shoppingCart" hover-class='none' open-type='switchTab' wx:if="{{status==3}}">
+        <view id='cartCountBox' wx:if="{{cartTotal>0}}">
+          <!-- <text>{{cartTotal}}</text> -->
+        </view>
+        <view>
+          <image src='../../images/yundian_sygouwuche@2x.png' wx:if="{{cartTotal<=0}}" class="cartIcon"></image>
+          <image src='../../images/yundian_sygouwuchexz@2x.png' wx:if="{{cartTotal>0}}" class='cartIcon'></image>
+        </view> 
+        <text>购物车</text>
+      </navigator>
       <view class='add' bindtap='tobuy' id='addCart' wx:if="{{status==3}}">加入购物车</view>
       <view class='add' bindtap='tobuy' id='buyNow'>立即购买</view>
     </view>
@@ -209,16 +218,16 @@
       <image src='../../images/yundian_yyxx_guanbi@2x.png'></image>
     </view>  
     <view class='title'>参与{{picData[0].userName}}的拼单</view>
-    <view class='cont'>仅剩<span>{{data.population-picData[0].num}}个</span>名额, {{picData[0].h}}:{{picData[0].m}}:{{picData[0].s}}后结束</view>
+    <view class='cont'>仅剩<span>{{data.population-num}}个</span>名额, {{picData[0].h}}:{{picData[0].m}}:{{picData[0].s}}后结束</view>
     <view wx:for='{{picData}}' wx:key='key'>
       <scroll-view class='pic-list clearfix' scroll-y="true">
         <image src='{{item.userPic}}'></image>
-        <view wx:for="{{data.population-picData[0].num}}" wx:key="index">
+        <view wx:for="{{data.population-num}}" wx:key="index">
           <image src='../../images/yundian_pindantouxiang.png'></image>
         </view>    
       </scroll-view> 
     </view>
-    <view class='joinBuy' bindtap='joinBuy'>参与并拼单</view>    
+    <view class='joinBuy' bindtap='joinBuy' id='joinBuy'>参与并拼单</view>    
   </view>
   <!-- 购买弹出层 -->
   <view class='main' wx:if="{{showBuy}}">
@@ -233,7 +242,7 @@
         <block wx:for='{{data.secondKillInfo}}' wx:key='index' wx:if="{{status==2}}">
           <span bindtap='chose' class="{{cur==item.index?'active':''}}" data-index="{{index}}">{{item.stockName}}</span>    
         </block>
-        <block wx:for='{{data.stockList}}' wx:key='index' wx:if="{{status==3}}">
+        <block wx:for='{{data.stockListDefault}}' wx:key='index' wx:if="{{status==3}}">
           <span bindtap='chose' class="{{cur==item.index?'active':''}}" data-index="{{index}}">{{item.stockName}}</span>    
         </block>
       </scroll-view>
@@ -289,4 +298,7 @@
       </view>
     </view>
   </view>
+</view>
+<view wx:if="{{tabcur=='info'}}" id='infoBox'>
+  <rich-text nodes="{{info}}" wx:if="{{info!=null}}"></rich-text>
 </view>

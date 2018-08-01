@@ -32,7 +32,8 @@ Page({
     groupId:'',//拼单 Id 
     shopId: '', //店铺id
     ifshare:0, //是否分享
-    population:'' //拼团人数
+    population:'', //拼团人数
+    stockId:'' // 是否有商品规格
   },
   
   onLoad: function (options) {
@@ -156,8 +157,11 @@ Page({
           cityName: cityName,
           ProvinceName: ProvinceName,
           shopId: data.data.data[0].shopInfo.id,
-          goodsName: data.data.data[0].orderInfo.orderItemList[0].goodsName
+          goodsName: data.data.data[0].orderInfo.orderItemList[0].goodsName,
+          stockId: data.data.data[0].orderInfo.orderItemList[0].stockId
         })
+
+        console.log('stockId:' + this.data.stockId);
         // 秒杀
         if (this.data.isGroupBuying == 0 && this.data.orderkind == 3) {
           // 倒计时
@@ -576,9 +580,10 @@ Page({
   bindTestCreateOrder: function (code) {
     var data = {
       requestBody: {
-        body: '测试支付功能',
+        body: '云店小程序普通订单',
         out_trade_no: code,
-        notify_url: 'http://apptest.izxcs.com:81/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
+        notify_url: 'https://wxappprod.izxcs.com/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
+     //   notify_url: app.globalData.notify_url,
         trade_type: 'JSAPI',
         openid: wx.getStorageSync('scSysUser').wxOpenId
       }
@@ -722,7 +727,7 @@ Page({
   openDetail:function(){
     console.log(this.data.population);
     wx.navigateTo({
-      url: '../../spelldetails/spelldetails?groupId=' + this.data.groupId + '&orderNo=' + this.data.orderNo + '&shopId=' + this.data.shopId + '&cUser=' + this.data.userid + '&population=' + this.data.population + '&orderStatusVo=' + this.data.orderStatusVo 
+      url: '../../spelldetails/spelldetails?groupId=' + this.data.groupId + '&orderNo=' + this.data.orderNo + '&shopId=' + this.data.shopId + '&cUser=' + this.data.userid + '&population=' + this.data.population + '&orderStatusVo=' + this.data.orderStatusVo + '&stockId=' + this.data.stockId 
     })
   }
   

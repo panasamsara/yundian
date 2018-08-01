@@ -5,6 +5,7 @@ page{
 .page_main{
   position: relative;
   letter-spacing: 2rpx;
+  padding-top: 70rpx;
 }
 .clearfix::after{
   content: '.';
@@ -995,4 +996,70 @@ button{
 
 .layer .listBox{
   height: 674rpx;
+  position: relative;
+}
+
+#cartCount{
+  width: 100rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  padding: 20rpx;
+  font-size: 20rpx;
+  color: #666666;
+}
+
+#cartCount image.cartIcon{
+  width: 36rpx;
+  height: 36rpx;
+}
+
+#cartCountBox{
+  width: 28rpx;
+  height: 28rpx;
+  position: absolute;
+  border-radius: 50%;
+  border: solid 4rpx #ffffff;
+  top: 0;
+  left: 72rpx;
+  z-index: 888;
+  font-size: 18rpx;
+  color: #ffffff;
+  background-color: #fb452c;
+  box-shadow: 1rpx 2rpx 1rpx 1rpx rgba(153,153,153,0.5)
+}
+
+#tabBox{
+  display: flex;
+  flex-direction: row;
+  height: 70rpx;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  z-index: 999;
+  background-color: #ffffff;
+  width: 100%;
+}
+
+#tabBox .tab{
+  height: 50rpx;
+  line-height: 50rpx;
+  font-size: 30rpx;
+  text-align: center;
+  margin-right: 40rpx;
+}
+
+#tabBox .tab:last-of-type{
+  margin-right: 0;
+}
+
+#tabBox text.active{
+  color: #FB4325;
+  border-bottom: solid 4rpx #FB4325;
+}
+
+#infoBox{
+  padding: 70rpx 25rpx 40rpx 25rpx;
+  font-size: 28rpx;
 }

@@ -134,11 +134,6 @@ Page({
     wx.navigateTo({ url: e.currentTarget.dataset.path });
   },
   appSkip:function(e){ //点击跳转到app下载页
-    if (this.data.flag){ //苹果
-      wx.navigateTo({ url: "/pages/myHome/downLoadIos/downLoadIos" });
-    }else{
-      wx.navigateTo({ url: "/pages/myHome/downLoadAndroid/downLoadAndroid" });
-    }
-    
+      wx.navigateTo({ url: "/pages/myHome/downLoadIos/downLoadIos?flag="+this.data.flag });   
   }
 })

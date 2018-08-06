@@ -248,7 +248,7 @@
           <!-- 拼单邀请/详情 -->
           <view class='operationbtn'>
             <button wx:if="{{timeStatus==0}}" class='invitebtn' hover-class='invitebtn-hover' open-type='share' >邀请好友</button>
-            <button wx:if="{{timeStatus==2}}" class='detailbtn' hover-class='detailbtn-hover' bindtap="openDetail">拼单详情</button>
+            <button wx:if="{{timeStatus==2 || timeStatus==1}}" class='detailbtn' hover-class='detailbtn-hover' bindtap="openDetail">拼单详情</button>
           </view>
         </view>
       </view>

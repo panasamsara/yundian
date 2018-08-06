@@ -227,6 +227,10 @@ Page({
     for (var prop in goodMap){
       goodMap[prop].number = 0
     }
+    let stockMap = this.data.stockMap
+    for (let item in stockMap){
+      stockMap[item].number = 0
+    }
     this.setData({
       goodStockMapArr: [],
       totalNum: 0,
@@ -234,7 +238,8 @@ Page({
       chooseGoodArr: [],
       shoppingCart: {},
       cartGoodsList: [],
-      goodMap: goodMap
+      goodMap: goodMap,
+      stockMap: stockMap
     });
 
   },
@@ -741,12 +746,14 @@ Page({
         for (let i = 0; i < cartGoodsList.length; i++) {
           // console.log(goodMap[cartGoodsList[i].goodsId])
 
-          goodMap[cartGoodsList[i].goodsId].number = cartGoodsList[i].number
-          if (cartGoodsList[i].stockId) {
-            // console.log(stockMap[cartGoodsList[i].stockId])
-            stockMap[cartGoodsList[i].stockId].number = cartGoodsList[i].number
-          } else {
-            stockMap[cartGoodsList[i].goodsId].number = cartGoodsList[i].number
+          if(goodMap[cartGoodsList[i].goodsId]) {
+            goodMap[cartGoodsList[i].goodsId].number = cartGoodsList[i].number
+            if (cartGoodsList[i].stockId) {
+              // console.log(stockMap[cartGoodsList[i].stockId])
+              stockMap[cartGoodsList[i].stockId].number = cartGoodsList[i].number
+            } else {
+              stockMap[cartGoodsList[i].goodsId].number = cartGoodsList[i].number
+            }
           }
 
         }
@@ -803,5 +810,30 @@ Page({
     wx.navigateTo({
       url: '../goodsDetial/goodsDetial?goodsId=' + goods_id + '&shopId=' + shop.id + '&status=' + 3, // 3 普通商品
     })
+  },
+  jiesuan: function () {
+    var user = wx.getStorageSync('scSysUser')
+    var shop = wx.getStorageSync('shop')
+
+    let cartGoodsList = this.data.cartGoodsList
+
+    if (cartGoodsList.length > 0) {
+      for (let i = 0; i < cartGoodsList.length; i++){
+        if (cartGoodsList[i].stockPrice){
+          cartGoodsList[i].actualPayment = cartGoodsList[i].stockPrice
+          cartGoodsList[i].unitPrice = cartGoodsList[i].stockPrice
+        }else{
+          cartGoodsList[i].actualPayment = cartGoodsList[i].goodsPrice
+          cartGoodsList[i].unitPrice = cartGoodsList[i].stockPrice
+        }
+      }
+
+      wx.setStorageSync('cart', cartGoodsList);
+      wx.navigateTo({
+        url: '../orderBuy/orderBuy?shopId=' + shop.id + '&shopName=' + shop.shopName + '&customerId=' + user.id + '&totalMoney=' + this.data.totalPay
+      })
+
+    } 
+
   }
 })

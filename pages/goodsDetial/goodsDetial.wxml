@@ -30,13 +30,13 @@
       </view>
       <view class='numBox'>
         <text class='groupNum'>{{data.population}}人拼</text>
-        <text class='groupAmount'>已拼{{data.groupBuyingAllNum}}件</text>
+        <text class='groupAmount'>已拼{{data.groupBuyingAllNum}}单</text>
       </view>
     </view>
     <text class='title'>{{data.goodsName}}</text>
     <view class='price' wx:if="{{status==3}}">￥{{data.price}}</view>
     <view class='info' wx:if="{{status==2}}"><span>库存 {{listData[0].salesCount}}</span><span>月销量 {{data.payCount}}</span></view>
-    <view class='info' wx:if="{{status==3}}"><span>库存 {{data.stockBalance}}</span><span>月销量 {{data.payCount}}</span></view>
+    <view class='info' wx:if="{{status==3||status==1}}"><span>库存 {{data.stockBalance}}</span><span>月销量 {{data.payCount}}</span></view>
   </view>
   <view class='separate'></view>
   <!-- 赠品部分 -->
@@ -190,7 +190,7 @@
     </view>
   </view>  
   <!-- 遮罩层 -->
-  <view class='shade {{flag?"show":"hide"}}' bindtap='closeMask'></view>
+  <view class='shade {{flag?"show":"hide"}}' bindtap='closeMask' catchtouchmove='preventTouchMove'></view>
   <!-- 弹出层 -->
   <view class='layer {{flag1?"show":"hide"}}'>
     <view class='close' bindtap='closeLayer'>
@@ -230,12 +230,14 @@
     <view class='joinBuy' bindtap='joinBuy' id='joinBuy'>参与并拼单</view>    
   </view>
   <!-- 购买弹出层 -->
-  <view class='main' wx:if="{{showBuy}}">
+  <view class='main' wx:if="{{showBuy}}" catchtouchmove='preventTouchMove'>
     <view class='top'>
       <image src='{{data.pictureUrl}}' ></image>
-      <text class='price'>¥{{total}}</text>
-      <text class='count' wx:if="{{data.goodsType==0}}">库存 {{balance}}</text>
-      <scroll-view class='size clearfix' scroll-y="true">
+      <view class='topBox'>
+        <text class='price'>¥{{total}}</text>
+        <text class='count' wx:if="{{data.goodsType==0}}">库存 {{balance}}</text>
+      </view>
+      <scroll-view class='size clearfix' scroll-y="true" catchtouchmove='preventTouchMove'>
         <block wx:for='{{data.scShopGoodsStockList}}' wx:key='index' wx:if="{{status==1}}">
           <span bindtap='chose' class="{{cur==item.index?'active':''}}" data-index="{{index}}">{{item.stockName}}</span>    
         </block>

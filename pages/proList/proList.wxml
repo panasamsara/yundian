@@ -62,7 +62,8 @@
           <view class="price {{(cart_length > 0)? 'highlight':''}}"><text class='jiesuan-yangjiao'>￥</text>{{totalPay}}</view>
         </view>
         <view class="content-right">
-          <view bindtap="goToCart" class="pay payClass" wx:if='{{cart_length > 0}}'>去结算
+          <!-- <view bindtap="goToCart" class="pay payClass" wx:if='{{cart_length > 0}}'>去结算 -->
+          <view bindtap="jiesuan" class="pay payClass" wx:if='{{cart_length > 0}}'>去结算
           <!-- <text wx:if='{{totalNum >0}}'>（{{totalNum}}）</text> -->
           </view>
           <view class="pay-gray" wx:if='{{cart_length == 0}}'>去结算

@@ -19,6 +19,7 @@
   width: 100%;
   position: absolute;
   top: 0;
+  bottom:0;
 }
 .listTop{
   overflow: hidden;
@@ -42,9 +43,11 @@
   margin-right: 20rpx;
 }
 .time{
-  color: #999;
-  font-size: 28rpx;
-  padding: 5rpx 0 20rpx 30rpx;
+  color:#999;
+  font-size:28rpx;
+  padding:5rpx 0 20rpx 30rpx;
+  position:absolute;
+  bottom:30rpx;
 }
 .gray{
   background: #f8f8f8;

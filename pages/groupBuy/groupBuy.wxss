@@ -45,3 +45,9 @@
 .groupBuy .buy{
   margin-top: 100rpx;
 }
+
+.groupBuy navigator.listBox{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}

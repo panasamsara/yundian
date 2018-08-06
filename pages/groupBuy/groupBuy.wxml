@@ -1,23 +1,25 @@
 <!--pages/groupBuy/groupBuy.wxml-->
 <view class='container groupBuy'>
   <view wx:for="{{list}}" wx:key="index" class='list'>
-    <image src='{{item.pictureUrl}}' class='pic'></image>
-    <view class='info'>
-      <text class='title'>{{item.itemTitle}}</text>
-      <view class='infoBox'>
-        <view class='price'>
-          <view class='priceBox'>
-            <text class='newPrice'>￥{{item.discountPrice}}</text>
-            <view class='group'>{{item.population}}人团</view>
+    <navigator url='../goodsDetial/goodsDetial?shopId={{item.shopId}}&goodsId={{item.itemId}}&cUser={{item.cUser}}&groupBuyingId={{item.id}}&status=1' class='listBox' hover-class='none'>
+      <image src='{{item.pictureUrl}}' class='pic'></image>
+      <view class='info'>
+        <text class='title'>{{item.itemTitle}}</text>
+        <view class='infoBox'>
+          <view class='price'>
+            <view class='priceBox'>
+              <text class='newPrice'>￥{{item.discountPrice}}</text>
+              <view class='group'>{{item.population}}人团</view>
+            </view>
+            <text class='oldPrice'>原价格￥{{item.originalPrice}}</text>
           </view>
-          <text class='oldPrice'>原价格￥{{item.originalPrice}}</text>
-        </view>
-        <view class='buyBox'>
-           <view class='buy'>
-            <navigator url='../goodsDetial/goodsDetial?shopId={{item.shopId}}&goodsId={{item.itemId}}&cUser={{item.cUser}}&groupBuyingId={{item.id}}&status=1'>去拼团</navigator>
-          </view> 
+          <view class='buyBox'>
+            <view class='buy'>
+              <navigator url='../goodsDetial/goodsDetial?shopId={{item.shopId}}&goodsId={{item.itemId}}&cUser={{item.cUser}}&groupBuyingId={{item.id}}&status=1'>去拼团</navigator>
+            </view> 
+          </view>
         </view>
       </view>
-    </view>
+    </navigator>
   </view>
 </view>

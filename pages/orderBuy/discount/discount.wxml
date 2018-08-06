@@ -8,12 +8,13 @@
         <view class='con'>
           <view class='listTop'>
           <view class='left'>
-          <image src='../../myHome/images/discount.png'></image>
+          <image src='{{item.shopLogoUrl}}'></image>
           </view>
           <view class='left'>
-            <view>礼品城市</view>
+            <view>{{item.shopName}}</view>
             <view>{{item.instruction}}</view>
-            <text class="zhid" wx:if="{{item.canLimitGoods==1}}">指定商品可用</text>
+             <view class='zhid' wx:if="{{item.canLimitGoods==1}}">指定商品可用</view>
+              <view class='zhid' wx:if="{{item.canLimitGoods==0}}"></view>
           </view>
         </view>
         <view class='time'><text class='mr10'>有效期至:</text>{{item.endTime}}</view>
@@ -24,10 +25,10 @@
         <view class='con'>
           <view class='listTop'>
           <view class='left'>
-          <image src='../../myHome/images/discount.png'></image>
+          <image src='{{item.shopLogoUrl}}'></image>
           </view>
           <view class='left'>
-            <view>礼品城市<text  class="no-userful">(此券不可用)</text></view>
+            <view>{{item.shopName}}<text  class="no-userful">(此券不可用)</text></view>
             <view>{{item.instruction}}</view>
             <text class="zhid" wx:if="{{item.canLimitGoods==1}}">指定商品可用</text>
           </view>
@@ -40,10 +41,10 @@
         <view class='con'>
           <view class='listTop'>
           <view class='left'>
-          <image src='../../myHome/images/discount.png'></image>
+          <image src='{{item.shopLogoUrl}}'></image>
           </view>
           <view class='left'>
-            <view>礼品城市<text class="no-userful">(此券不可用)</text></view>
+            <view>{{item.shopName}}<text class="no-userful">(此券不可用)</text></view>
             <view>{{item.instruction}}</view>
             <text class="zhid" wx:if="{{item.canLimitGoods==1}}">指定商品可用</text>
           </view>

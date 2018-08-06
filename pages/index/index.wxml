@@ -169,7 +169,7 @@
           <view class='sec-kill-detail'>
             <view class='now-price'> <text class='pintuan-yangjiao'>￥</text><text class='now-price-num'>{{item.discountPrice}}</text> </view>
             <view class='old-price'>￥{{item.originalPrice}}</view>
-             <view class='pingdan'>已拼<text>{{item.num}}</text>单</view> 
+             <view class='pingdan'>已拼<text>{{item.smallNum}}</text>单</view> 
             <view class='ping-group'><text class='ping-group-num'>{{item.population}}</text>人团</view>
           </view>
         </view>

@@ -1,69 +1,102 @@
 /* pages/store/code/code.wxss */
-.container{
-  padding: 60rpx 70rpx;
-  letter-spacing: 2rpx;
+page{
+  width: 100%;
+  height: 100%;
 }
 
-.code .storeInfo,.code .storeCode{
+.container{
+  width: 100%;
+  height: 100%;
+  padding: 60rpx 70rpx;
+  letter-spacing: 2rpx;
+  position: relative;
+}
+
+.code #codeborder{
+  width: 610rpx;
+  height: 800rpx;
+  position: absolute;
+}
+
+.code .storeInfo{
+  display: flex;
+  flex-direction: row;
+  margin-top: 60rpx;
+  margin-left: 40rpx;
+}
+
+.code .storeInfo #logoBox{
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.code .storeInfo image{
+  width: 100rpx;
+  height: 100rpx;
+}
+
+.code #infoBox{
+  display: flex;
+  flex-direction: column;
+  width: 430rpx;
+  line-height: 50rpx;
+  padding-left: 20rpx;
+}
+
+.code #storeName{
+  font-size: 36rpx;
+  line-height: 50rpx;
+  font-weight: bold;
+}
+
+.code #address,.code #phone{
+  color: #666666;
+  font-size: 26rpx;
+  word-break: break-all;
+}
+
+.code .storeCode{
   display: flex;
   flex-direction: column;
   justify-content: center;
   text-align: center;
-}
-
-.code .storeInfo image{
-  width: 140rpx;
-  height: 140rpx;
-  border-radius: 50%;
-}
-
-.code #storeName{
-  font-size: 34rpx;
-  line-height: 50rpx;
-}
-
-.code #fans{
-  font-size: 24rpx;
-  color: #636363; 
-  line-height: 50rpx;
-}
-
-.code .storeCode{
-  position: relative;
-}
-
-.code .storeCode image{
-  width: 480rpx;
-  height: 480rpx;
-  margin: 58rpx 0;
-}
-
-.code .storeCode #codeBox{
-  position: relative;
+  width: 610rpx;
+  margin-bottom: 180rpx;
 }
 
 .code .storeCode .img-box{
   width: 410rpx;
   height: 410rpx;
-  position: absolute;
-  top: 35rpx;
-  left: 35rpx;
+  margin:30rpx 0 20rpx 100rpx;
 }
 
 .code .storeCode .img-box image{
   width: 410rpx;
   height: 410rpx;
-  margin: 0;
 }
 
 .code #scan{
-  font-size: 30rpx;
+  font-size: 26rpx;
   color: #636363; 
 }
 
 .canvas-box{
   position: fixed;
   top:999999rpx;
-  left: 0
+  left: 0;
+}
+
+.code .save{
+  width: 530rpx;
+  height: 90rpx;
+  text-align: center;
+  line-height: 90rpx;
+  color: #ffffff;
+  font-size: 34rpx;
+  margin-left: 40rpx;
+  background-color: #fb452c;
+  border-radius: 45rpx;
 }
 

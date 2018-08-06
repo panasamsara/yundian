@@ -32,7 +32,7 @@
           </view>
         </block>
       </view>
-      <image bindtap="appSkip" class="popularize" src='images/wode.png'></image>
+      <image  class="popularize" src='images/wode.png'></image>
       <button type="warn" plain="{{plain}}" bindtap="warn" bindtap='back'>退出当前店铺</button>
       <view class='versions'>当前版本：0.1.1</view>
     </view> 

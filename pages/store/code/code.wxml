@@ -1,24 +1,26 @@
 <!--pages/store/code/code.wxml-->
 <view class='container code'>
+  <image id='codeborder' src='../images/dianpuerweima_biankuang@2x.png'></image>
   <view class='storeInfo'>
-    <view>
+    <view id='logoBox'>
       <image src='{{url}}'></image>
     </view>
-    <text id='storeName'>{{shopName}}</text>
-    <text id='fans'>粉丝<text id='fansNum'>{{fans}}</text></text>
+    <view id='infoBox'>
+      <text id='storeName'>{{shopName}}</text>
+      <text id='address'>{{address}}</text>
+      <text id='phone'>{{phoneService}}</text>
+    </view>  
   </view>
   <view class='storeCode'>
-    <view>
-      <image src='../images/yundain_dpewm.png' id='codeBox'>
-        <view class="img-box">
-          <image bindtap="previewImg" mode="scaleToFill" src="{{imagePath}}">
-          </image>
-        </view>
-      </image>
+    <view class="img-box">
+      <image bindtap="previewImg" mode="scaleToFill" src="{{imagePath}}"></image>
     </view>
-    <text id='scan'>扫一扫二维码图案,进入店铺</text>
+    <text id='scan'>点击保存可以将图片保存至系统相册</text>
   </view>
+  <button class="save" bindtap='save' wx:if="{{show=='view'}}">保存图片</button>
+  <button type='primary' class='openSetting save' open-type="openSetting" bindopensetting='handleSetting' wx:if="{{show=='button'}}">保存图片</button>
   <view class="canvas-box">
     <canvas  hidden="{{canvasHidden}}" style="width: 686rpx;height: 686rpx;background:#f1f1f1;" canvas-id="mycanvas"/>
+    <canvas canvas-id="picCanvas" style='width:610rpx;height:800rpx;' hidden='{{canvasHidden}}'></canvas>
   </view>
 </view>

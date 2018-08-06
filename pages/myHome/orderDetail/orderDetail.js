@@ -158,7 +158,8 @@ Page({
           ProvinceName: ProvinceName,
           shopId: data.data.data[0].shopInfo.id,
           goodsName: data.data.data[0].orderInfo.orderItemList[0].goodsName,
-          stockId: data.data.data[0].orderInfo.orderItemList[0].stockId
+          stockId: data.data.data[0].orderInfo.orderItemList[0].stockId,
+          userList: data.data.data[0].userList
         })
 
         console.log('stockId:' + this.data.stockId);
@@ -183,7 +184,9 @@ Page({
           // 拼接参与拼单用户数组
           var usersArr = [];
           if (this.data.userList.length > 0) {
-            usersArr.concat(this.data.userList);
+            for (var i = 0; i < this.data.userList.length; i++) {
+              usersArr.push(this.data.userList[i]);
+            }
           }
 
           if (usersArr.length < data.data.data[0].groupDetail.population) {
@@ -195,13 +198,13 @@ Page({
           }
           this.setData({
             spellUser: usersArr
-          })
+          })   
         }
         // 普通订单
         else{
 
         }
-
+        console.log(this.data.userList);
         console.log('orderStatusVo:   ' + data.data.data[0].orderInfo.orderStatusVo);
         console.log('timeStatus:  ' + this.data.timeStatus);
         console.log('population: ' + this.data.population); 
@@ -298,7 +301,7 @@ Page({
       if (data.data.code == 1) {
         if (data.data.data.status == 1 && data.data.data.goodsStatus == 1) {
           wx.navigateTo({
-            url: '../../goodsDetial/goodsDetial?shopId=' + shopId + '&goodsId=' + goodsId
+            url: '../../goodsDetial/goodsDetial?shopId=' + shopId + '&goodsId=' + goodsId + '&status=' + 1
           })
         } else {
           wx.showToast({
@@ -339,7 +342,8 @@ Page({
                 icon: 'none'
               })
               setTimeout(function () {
-                wx.navigateTo({
+                console.log(1)
+                wx.redirectTo({
                   url: '../order/order?customerId=' + customerId + '&=index' + 0
                 })
               }, 2000);
@@ -582,7 +586,7 @@ Page({
       requestBody: {
         body: '云店小程序普通订单',
         out_trade_no: code,
-        notify_url: 'https://wxappprod.izxcs.com/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
+      //  notify_url: 'https://wxappprod.izxcs.com/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
      //   notify_url: app.globalData.notify_url,
         trade_type: 'JSAPI',
         openid: wx.getStorageSync('scSysUser').wxOpenId

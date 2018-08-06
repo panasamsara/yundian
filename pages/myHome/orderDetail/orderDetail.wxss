@@ -400,6 +400,7 @@ page,.content{
   font-size: 28rpx;
   padding: 0;
   text-align: center;
+  line-height: 60rpx;
 }
 .detailbtn{
   width: 100%;

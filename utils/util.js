@@ -16,10 +16,13 @@ const formatTime = date => {
 const URL_QRCODE = 'https://wxapp.izxcs.com/qrcode/shop/';
 
 //测试环境
- const URL = 'https://wxappprod.izxcs.com/zxcity_restful/ws/rest';
+
+const URL = 'https://wxappprod.izxcs.com/zxcity_restful/ws/rest';
+const notify_url = 'http://wxappprod.izxcs.com/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult';
+
 //正式环境
 // const URL = 'https://wxapp.izxcs.com/zxcity_restful/ws/rest';
-
+// const notify_url = 'http://wxapp.izxcs.com/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult';
 
 const formatNumber = n => {
   n = n.toString()

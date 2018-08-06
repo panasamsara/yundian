@@ -280,8 +280,9 @@ Page({
   },
   deliveryMone: function () {
     //计算运费
-    var darr = this.data.deliveyArr;
-    console.log(darr)
+    if (this.data.isSend==0){
+      var darr = this.data.deliveyArr;
+      console.log(darr)
       if (darr != 0) {
         console.log(1)
         //比较是否在一个省
@@ -319,16 +320,22 @@ Page({
           })
         }
 
-    }else{
+      } else {
         this.setData({
           deliveryMoney: 0
         })
+      }
+      //加了运费之后的总合计
+      var summoney = Number(this.data.deliveryMoney) + Number(this.data.totalMoney)
+      this.setData({
+        oldTotal: (summoney).toFixed(2)
+      })
+    }else{
+      this.setData({
+        oldTotal: this.data.totalMoney
+      })
     }
-    //加了运费之后的总合计
-    var summoney = Number(this.data.deliveryMoney) + Number(this.data.totalMoney)
-    this.setData({
-      oldTotal: (summoney).toFixed(2)
-    })
+    
   },
   addressSkip: function (e) {
     //跳到地址管理
@@ -393,7 +400,7 @@ Page({
       if (this.data.isSeckill==1){//秒杀
         //跳到线上订单
         wx.redirectTo({
-          url: '../myHome/orderDetail/orderDetail?orderNo=' + this.data.orderNo + '&isGroupBuying=' + 3
+          url: '../myHome/orderDetail/orderDetail?orderNo=' + this.data.orderNo + '&isGroupBuying=' + 0 + '&orderkind=' + 3
         })
       }else{
         //跳到线上订单
@@ -668,7 +675,7 @@ Page({
       requestBody: {
         body: '云店小程序普通订单',
         out_trade_no: code,
-        notify_url: 'https://wxappprod.izxcs.com/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
+      //  notify_url: 'https://wxappprod.izxcs.com/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
        // notify_url: 'http://apptest.izxcs.com:81/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
       //  notify_url: app.globalData.notify_url,
         trade_type: 'JSAPI',

@@ -1202,7 +1202,7 @@ Page({
       requestBody: {
         body: '云店小程序普通订单',
         out_trade_no: code,
-        notify_url: 'https://wxappprod.izxcs.com/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
+      //  notify_url: 'https://wxappprod.izxcs.com/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
         // notify_url: 'http://apptest.izxcs.com:81/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
         // notify_url: app.globalData.notify_url,
         trade_type: 'JSAPI',

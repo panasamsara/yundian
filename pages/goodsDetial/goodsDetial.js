@@ -38,16 +38,6 @@ Page({
         status: options.status
       })
     }
-    if(options.showBuy){
-      this.setData({
-        showBuy: options.showBuy
-      })
-    }
-    if (options.buy) {
-      this.setData({
-        buy: options.buy
-      })
-    }
     var parm = {
       shopId: options.shopId,
       goodsId:options.goodsId,
@@ -124,6 +114,8 @@ Page({
       }
     });  
     this.getCouponList();
+
+    console.log('shuowbuy:'+this.data.showBuy);
   },
   // 获取详情
   getData: function (parm) {
@@ -402,18 +394,19 @@ Page({
   change:function(e){
     var option=e.currentTarget.id,
         number = this.data.number,
+        secondKillInfo = this.data.data.secondKillInfo[this.data.cur],
         num;
     if(option=='add'){//加数量
       number += 1;
       num=1;
-      if (this.data.status == 1 && number > this.data.limitNum){//拼团限购数量
+      if (this.data.status == 1 && (this.data.data.limitNum>0 && number > this.data.data.limitNum)){//拼团限购数量
         wx.showToast({
           title: '已超过最大购买数量',
           icon:'none'
         })
         return
       } 
-      if (this.data.status == 2 && number > this.data.goodsPurchasingCount) {//秒杀限购数量
+      if (this.data.status == 2 && (secondKillInfo.goodsPurchasingCount > 0 && number > secondKillInfo.goodsPurchasingCount)) {//秒杀限购数量
         wx.showToast({
           title: '已超过限购数量',
           icon: 'none'
@@ -706,9 +699,9 @@ Page({
     })
     let _this=this,
         total=this.data.cartTotal;
-    // this.setData({
-    //   cartTotal:total+1
-    // })
+    this.setData({
+      cartTotal:1
+    })
     setTimeout(function(){
       _this.closeMask();
     },1000)
@@ -781,5 +774,8 @@ Page({
     this.setData({
       tabcur:e.currentTarget.id
     })
+  },
+  preventTouchMove:function(){
+    
   }
 })

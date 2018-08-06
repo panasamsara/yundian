@@ -96,3 +96,9 @@
   background: linear-gradient(to right, #fb462b , #ff722b); /* 标准的语法 */
 }
 
+navigator.listBox{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+

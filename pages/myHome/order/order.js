@@ -369,25 +369,25 @@ Page({
 
     //跳转到订单详情
     if (isGroupBuying==1){ //拼团
-      wx.navigateTo({
+      wx.redirectTo({
         url: '../orderDetail/orderDetail?orderNo=' + orderNo + '&isGroupBuying=' + 1
       })
     }else{
       if (remark && remark!=null){
         if (remark.indexOf("秒杀") == -1) { //普通商品
           console.log("普通")
-          wx.navigateTo({
+          wx.redirectTo({
             url: '../orderDetail/orderDetail?orderNo=' + orderNo + '&isGroupBuying=' + 0
           })
         } else { //秒杀
           console.log("秒杀")
-          wx.navigateTo({
+          wx.redirectTo({
             url: '../orderDetail/orderDetail?orderNo=' + orderNo + '&isGroupBuying=' + 0 + '&orderkind=' + 3
           })
         }
       }else{
         console.log("普通")
-        wx.navigateTo({
+        wx.redirectTo({
           url: '../orderDetail/orderDetail?orderNo=' + orderNo + '&isGroupBuying=' + 0
         })
       }
@@ -441,7 +441,7 @@ Page({
       requestBody: {
         body: '云店小程序普通订单',
         out_trade_no: code,
-        notify_url: 'https://wxappprod.izxcs.com/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
+       // notify_url: 'https://wxappprod.izxcs.com/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
        // notify_url: app.globalData.notify_url,
         trade_type: 'JSAPI',
         openid: wx.getStorageSync('scSysUser').wxOpenId

@@ -151,11 +151,11 @@ Page({
   participate: function(e){
     if ( this.data.stockId ){
       wx.navigateTo({
-        url: '../goodsDetial/goodsDetial?shopId=' + this.data.shopId + '&goodsId=' + this.data.goodId + '&showBuy=true' + '&status=' + 1 + '&buy=buyNow'
+        url: '../goodsDetial/goodsDetial?shopId=' + this.data.shopId + '&goodsId=' + this.data.goodId  + '&status=' + 1 
       })
     }else{
       wx.navigateTo({
-        url: '../goodsDetial/goodsDetial?shopId=' + this.data.shopId + '&goodsId=' + this.data.goodId + '&showBuy=false' + '&status=' + 1 + '&buy=buyNow'
+        url: '../goodsDetial/goodsDetial?shopId=' + this.data.shopId + '&goodsId=' + this.data.goodId  + '&status=' + 1 
       })
     }
   },
@@ -163,11 +163,11 @@ Page({
   againInitiate: function (e) {
     if (this.data.stockId) {
       wx.navigateTo({
-        url: '../goodsDetial/goodsDetial?shopId=' + this.data.shopId + '&goodsId=' + this.data.goodId + '&showBuy=true' + '&status=' + 1 + '&buy=buyNow'
+        url: '../goodsDetial/goodsDetial?shopId=' + this.data.shopId + '&goodsId=' + this.data.goodId  + '&status=' + 1 
       })
     } else {
       wx.navigateTo({
-        url: '../goodsDetial/goodsDetial?shopId=' + this.data.shopId + '&goodsId=' + this.data.goodId + '&showBuy=false' + '&status=' + 1 + '&buy=buyNow'
+        url: '../goodsDetial/goodsDetial?shopId=' + this.data.shopId + '&goodsId=' + this.data.goodId  + '&status=' + 1 
       })
     }
   },
@@ -181,7 +181,7 @@ Page({
     console.log(shopId);
     var user = wx.getStorageSync('scSysUser')
     wx.navigateTo({
-      url: '../goodsDetial/goodsDetial?goodsId=' + goodsid + '&shopId=' + shopId + '&showBuy=true' + '&status=' + 1 + '&buy=buyNow',
+      url: '../goodsDetial/goodsDetial?goodsId=' + goodsid + '&shopId=' + shopId + '&status=' + 1,
       success: function (res) {
         // success
       }

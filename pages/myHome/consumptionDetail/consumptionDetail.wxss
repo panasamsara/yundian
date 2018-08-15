@@ -1,0 +1,53 @@
+.content .title{
+  text-align: center;
+  color: #333;
+  font-size: 30rpx;
+  margin-top: 48rpx;
+}
+.font-red{
+  color: #ff0036 !important;
+}
+.content .title image{
+  width: 48rpx;
+  height: 42rpx;
+  vertical-align: middle;
+  margin-right: 10rpx;
+  border-radius: 50%;
+}
+.money{
+  text-align: center;
+  padding: 80rpx 0;
+  font-size: 60rpx;
+  color: #333;
+  border-bottom: 2rpx solid #E5E5E5;
+}
+.info>view{
+  font-size: 30rpx;
+  color: #333;
+  margin: 0 30rpx;
+  overflow: hidden;
+  margin-top: 15rpx;
+}
+.info>view:first-child{
+  margin-top: 50rpx;
+}
+.info_box>view text:first-child{
+  float: left;
+}
+.info_box>view text:last-child{
+  float: right;
+}
+.detail>view:first-child{
+  margin-top: 20rpx;
+}
+.detail>view,.type{
+  font-size: 26rpx;
+  color: #9999;
+  padding: 0 30rpx;
+  margin-top: 15rpx;
+  overflow: hidden;
+}
+.type text{
+  font-size: 26rpx;
+  color: #9999;
+}

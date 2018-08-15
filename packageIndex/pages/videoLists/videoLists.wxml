@@ -1,0 +1,19 @@
+<!--pages/videoLists/videoLists.wxml-->
+<view class='btn-group'>
+  <view class="leftBtn {{(photofrom == 0) ? 'btn-active':''}}" bindtap='photoType' data-type='0'>官方视频</view>
+  <view class="rightBtn {{(photofrom == 1) ? 'btn-active':''}}" bindtap='photoType' data-type='1'>网友视频</view>
+</view>
+
+<view wx:if='{{!hasData}}'>
+  <image class='whitePic' src='../../../images/yundian_zjy_yddt@2x.png'></image>
+  <view class='tips'>暂时没有内容哦</view>
+</view>
+
+<view class='content' wx:if='{{hasData}}'>
+  <view class='photo-list' wx:for="{{photoLists}}" wx:for-item="list" bindtap='goPlayVideo' data-index='{{index}}'>
+    <image class='photo-pic' src='{{list.coverPath}}' ></image>
+    <image class='photo-cover' src='../../../images/yundian_shipinbofang@2x.png'></image>
+  </view>
+  
+</view>
+

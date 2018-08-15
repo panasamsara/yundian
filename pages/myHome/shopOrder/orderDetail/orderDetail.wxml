@@ -1,57 +1,96 @@
 <view class="manageDetail">
   <view class='header'>
     <image src="../../images/bgmall.png"></image>
-    <view class='type'>订单已提交</view>
+    <view data-type="{{activeIndex}}" wx-if="{{orderStatus==0 || orderStatus==1 || orderStatus==2}}" class='type'>订单已提交</view>
+    <view data-type="{{activeIndex}}" wx-if="{{orderStatus==3}}" class='type'>订单已完成</view>
   </view>
-  <view class='content' wx:for="{{orderList}}" wx:key="index">
+  <view class='content'>
     <view class="info">
       <view class='person'>
-        <view wx:if="{{item.facilityName}}">
+        <view wx:if="{{facilityName}}">
           <text>房间：</text>
-          <text>{{item.facilityName}}</text>
+          <text>{{facilityName}}</text>
         </view>
         <view>
           <text>商家店名：</text>
-          <text>{{item.shopName}}</text>
+          <text>{{shopName}}</text>
         </view>
         <view>
           <text>订单编号：</text>
-          <text>{{item.id}}</text>
+          <text>{{presaleId}}</text>
         </view>
       </view>
     </view>
-    <view class="list" bindtap='skip' data-id="{{item.id}}" data-index="{{index}}">
+    <view class="list" bindtap='skip' data-id="{{presaleId}}" data-index="{{index}}">
       <view class='shop'>
         <view class='left'>
           <image class="shopImg mr15" src="../../images/shopDefault.png"></image>
-          <text class="mr15">{{item.shopName}}</text>
+          <text class="mr15">{{shopName}}</text>
+        </view>
+        <view class="right right-index" bindtap='offlineSkip'>
+          <text>逛逛首页</text>
           <image class="rightIcon" src="../../images/right.png"></image>
         </view>
-        <view wx-if="{{activeIndex==0}}" class='right rightType'>订单已提交</view>
-        <view wx-if="{{activeIndex==1}}" class='right rightType'>订单已完成</view>
+        <!-- <view wx-if="{{activeIndex==0}}" class='right rightType'>订单已提交</view>
+        <view wx-if="{{activeIndex==1}}" class='right rightType'>订单已完成</view> -->
       </view>
-      <view wx:for="{{item.shopOrderInfo}}" wx:key="index">
+      <view wx:for="{{scPresaleInfoList}}" wx:key="index" wx:for-item='items'>
         <view class="orderInfo">
           <view class='left'>
-            <image src='{{item.goodsPic}}'></image>
+            <image src='{{items.pictureUrl}}'></image>
           </view>
           <view class='right'>
-            <text>{{item.goodsName}}</text>
-            <text class="size">{{item.remake}}</text>
+            <text>{{items.purchaseName}}</text>
+            <text class="size" wx:if="{{items.stockName}}">{{items.stockName}}</text>
             <text>
-              <text class='left font34 priceColor'><text class='font24'>￥</text>{{item.goodsPrice}}</text>
-            <text class='right color999 font28'>X{{item.goodsNum}}</text>
+              <text class='left font34 priceColor'><text class='font24'>￥</text>{{items.unitPrice}}</text>
+            <text class='right color999 font28'>X{{items.purchaseNum}}</text>
             </text>
           </view>
         </view>
       </view>
       <view>
         <view class='right'>
-          <text>共{{item.goodsNum}}件商品</text>
+          <!-- <text>共{{total}}件商品</text> -->
           <text>合计：</text>
-          <text class='font34 priceColor'><text class='font24'>￥</text>{{item.shouldPay}}</text>
+          <text class='font34 priceColor'><text class='font24'>￥</text>{{shouldPay}}</text>
         </view>
-      </view>
+      </view>   
+      <view class="appDlond" wx:if="{{activeIndex==1}}">
+          <image  class="popularize" bindtap='appSkip' src='../../images/wode.png'></image>
+        </view>
+        <view class="jiange">
+        </view>
+       <!--未完成-->
+       <view wx:if="{{hidden==true}}">
+        <view class="noover" wx:if="{{orderStatus==0 || orderStatus==1 || orderStatus==2}}">
+          <view class="button white-btn" data-no="{{presaleId}}" data-price="{{shouldPay}}" data-shopid="{{shopId}}"  data-name="{{item.goodsName}}" data-memberid ="{{memberId}}" data-subaccountid="{{subaccountId}}" data-discount="{{discount}}" data-userid="{{userId}}" data-facilityid="{{facilityId}}" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" disabled="{{disabled}}"  bindtap="goOn"  hover-class="other-button-hover"> 继续添加 </view>
+          <view class="button red-btn" data-no="{{presaleId}}" data-name="{{item.goodsName}}"  size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" disabled="{{disabled}}" bindtap="buyOrder" hover-class="other-button-hover" data-price="{{shouldPay}}" data-shopid="{{shopId}}"  > 立刻结算 </view>
+        </view>
+        </view>
+          <!--已完成-->
+       
+        <!-- <view class="over" wx:if="{{orderStatus==3}}">
+          <view class="button red-btn" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}"
+		disabled="{{disabled}}" data-price="{{item.shouldPay}}" data-shopid="{{item.shopId}}" bindtap="againBuy" hover-class="other-button-hover"> 再来一单 </view>
+        </view> -->
     </view>
   </view>
+</view>
+
+<!--下单成功-->
+  <view class="modal-box order-tip" hidden="{{flagOrder}}" >
+  <view class="modal-body">
+    <image class="order-success" src="../../../../images/success.png"></image>
+    <view class="modal-content">
+      <text>支付成功!</text>
+      <text>选择再来一单或查看此订单</text>
+    </view>
+    <view class="modal-btn">  
+      <text class="knowBtn" bindtap="look">查看订单</text>
+    </view>
+  </view>
+  </view>
+<view class='mask' catchtouchmove='preventTouchMove' hidden='{{hidden}}'>
+  <view class='loading'>努力加载中...</view>
 </view>

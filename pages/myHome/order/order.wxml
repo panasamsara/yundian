@@ -1,6 +1,7 @@
 <!--pages/myhome/order/order.wxml-->
 <view class="content">
   <scroll-view scroll-x="true" class="tab-h" scroll-left="{{scrollLeft}}">
+  <view class="navbox">
     <view class="tab-item {{currentTab==0?'active':''}}" data-current="0" bindtap="swichNav">
       <span>全部</span>
     </view>
@@ -16,6 +17,7 @@
     <view class="tab-item {{currentTab==4?'active':''}}" data-current="4" bindtap="swichNav">
       <span>待评价</span>
     </view>
+  </view>  
   </scroll-view>
   <view class="tab-content" current="{{currentTab}}" duration="300" style="height:{{winHeight}}rpx" >
     <view>

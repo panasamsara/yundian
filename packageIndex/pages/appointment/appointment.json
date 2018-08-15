@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "预约",
+  "backgroundColor":"#f8f8f8",
+  "usingComponents": {
+    "device-modal": "modal/device-modal/device-modal",
+    "service-modal": "modal/service-modal/service-modal",
+    "serviceName-modal" : "modal/serviceName-modal/serviceName-modal"
+  }
+}

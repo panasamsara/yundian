@@ -1,0 +1,133 @@
+.content{
+  padding-top: 90rpx;
+}
+.top-title{
+  width: 100%;
+  height: 90rpx;
+  line-height: 90rpx;
+  padding-left: 20rpx;
+  border-top: 1rpx solid #eee;
+  border-bottom: 1rpx solid #eee;
+  background-color: #fff;
+  color: #333;
+  font-size: 28rpx;
+  box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  background: #fff;
+  z-index: 999;
+}
+.top-title .sj{
+    width:0;
+    height:0;
+    border-style:solid;
+    position:relative;
+    margin-left: 5rpx;
+}
+.top-title .up{
+  border-width:0 18rpx 18rpx;
+  border-color:transparent transparent #666;/*透明 透明  灰*/
+  top: -25rpx;
+}
+.top-title .down{
+  border-width:18rpx 18rpx 0;
+  border-color:#666 transparent transparent;/*灰 透明 透明 */
+  top:28rpx;
+}
+.detail-list-box{
+  width: 100%;
+  padding: 0 30rpx;
+  box-sizing: border-box;
+}
+.detail-list{
+  width: 690rpx;
+  height: 144rpx;
+  border-bottom: 1rpx solid #eee;
+}
+.list-left{
+  float: left;
+  width: 400rpx;
+  margin-top: 25rpx;
+  color: #333;
+}
+.list-card-name{
+  font-size: 32rpx;
+  margin-bottom: 10rpx;
+  overflow:hidden; 
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.list-shop-name{
+  font-size: 28rpx;
+  color: #999;
+}
+.list-right{
+  float: right;
+  width: 290rpx;
+  margin-top:25rpx;
+}
+.use-detail{
+  text-align: right;
+  top:-40rpx;
+  font-size: 32rpx;
+  margin-bottom: 10rpx;
+}
+.use-time{
+  text-align: right;
+  font-size: 28rpx;
+  color: #999;
+}
+.font-red{
+  color: #ff0036;
+}
+.mask{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 102rpx;
+    left: 0;
+    background: #000;
+    z-index: 1;
+    opacity: 0.3;
+}
+.type-box{
+  position: fixed;
+  top: 96rpx;
+  z-index: 3;
+
+}
+.consume-type{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  width: 100%;
+  height: auto;
+  background: #fff;
+  padding: 30rpx;
+  z-index: 2;
+  box-sizing: border-box;
+}
+
+.consume-type-name{
+  width: 335rpx;
+  height: 90rpx;
+  line-height: 90rpx;
+  text-align: center;
+  margin-right: 11rpx;
+  margin-bottom: 20rpx;
+  background-color: #eee;
+  color: #666;
+  font-size: 28rpx;
+  border-radius: 10rpx;
+}
+.empty view{
+  font-size: 30rpx;
+  text-align: center;
+  color: #999;
+  margin-top: 20rpx;
+}
+.list-empty-img{
+  width: 326rpx;
+  height: 326rpx;
+  margin: 200rpx 212rpx 0;
+}

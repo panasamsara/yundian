@@ -2,17 +2,34 @@
 <view class="main">
   <!--模态框  -->
   <view class="mask" catchtouchmove="preventTouchMove" wx:if="{{showModal}}"></view>
-  <view class="modalDlg" wx:if="{{showModal}}">
-    <image class='new-coupon-img' src="./img/yundian_libaobeijing@2x.png" />
-    <image class='lingqu-btn' bindtap="getCoupon" src="./img/yundian_libaolingquanniu@2x.png" />
-    <image class='close-btn' bindtap="closeModal" src='./img/yundian_lipinguanbi@2x.png'></image>
+  <view class="modalDlg" wx:if="{{showCouponGetBox}}">
+    <view class='coupon-box'>
+      <image class='new-coupon-img' src="./img/yundian_libaobeijing.png" />
+      <view class='coupon-name'>{{couponInfo.coupon.instruction}}</view>
+      <image class='libao-img' src='./img/libaobeij.png'></image>
+      <image class='lingqu-btn' bindtap="getCoupon" src="./img/yundian_libaolingquanniu@2x.png" />
+      <image class='close-btn' bindtap="closeModal" src='./img/yundian_lipinguanbi@2x.png'></image>
+    </view>
   </view>
+
+  <view class='coupon-detail-modal' wx:if='{{showCouponDetail}}'>
+    <view class='coupon-detail-box'>
+      <image class='new-coupon-img' src="./img/libao_beijing.png" />
+      <view class='coupon-name'>{{couponInfo.coupon.instruction}}</view>
+      <image class='chakan-btn' bindtap="goMyCoupon" src="./img/yundian_libao_chakan@2x.png" />
+      <view class='coupon-goods-box'>
+        <view class='coupon-detail' wx:for='{{couponGoods}}' wx:key="index">{{item}}</view>
+      </view>
+      <image class='detail-close-btn' bindtap="closeDetailModal" src='./img/yundian_lipinguanbi@2x.png'></image>
+    </view>
+  </view>
+  
   <image class='newCouponBag' wx:if='{{showCoupnBox && showIndex}}' bindtap='openCouponBag' src='../../images/libao.gif'></image>
 
   <view id="top" class="cate-box" wx:if='{{showIndex}}' animation="{{animationData}}">
     <view class="bg-mask"></view>
-    <image src='{{shopInformation.bgImageLong}}' mode='scaleToFill' class='top-bg' wx:if='{{showImg}}'></image>
-    <image src='{{shopInformation.videoImagecover}}' mode='scaleToFill' class='top-bg' wx:if='{{showVideo}}'></image> 
+    <image src='{{shopInformation.bgImageLong}}' mode='aspectFill' class='top-bg' wx:if='{{showImg}}'></image>
+    <image src='{{shopInformation.videoImagecover}}' mode='aspectFill' class='top-bg' wx:if='{{showVideo}}'></image> 
     <image src='../../images/yundian_shipinbofang@2x.png' bindtap='goIndexVideo' class='index-video-cover' wx:if='{{showVideo &&  shopInformation.shopInfo.shopHomeConfig.openServiceList[0]}}'></image>
     <!-- <image class='up-icon' src='../../images/yundian_dpzy_shangla@2x.png'></image> -->
     <image class='up-icon' bindtap='clickScrollTop' src='../../images/up.gif'></image>
@@ -51,14 +68,15 @@
     </view>
 
     <view class='bottom-box'>
-      <navigator url='../store/store'><image class='logo' src='{{shopInformation.shopInfo.logoUrl}}'></image></navigator>
+      <image class='bottom-bg' src='./img/bottm_bg.png'></image>
+      <image class='logo' bindtap='goStore' src='{{shopInformation.shopInfo.logoUrl}}'></image>
       <view class='desc-box'>
         <view class='desc-name'>{{shopInformation.shopInfo.shopName}}</view>
         <view class='fans-num'>粉丝数
           <text>{{shopInformation.fansCounter}}</text>
         </view>
       </view>
-      <navigator url='../store/code/code'><image class='qrcode' src='../../images/yundian_erweima@2x.png'></image></navigator>
+      <image class='qrcode' bindtap='goQrCode' src='../../images/yundian_erweima@2x.png'></image>
     </view>
 
   </view>
@@ -105,7 +123,7 @@
             <!-- <swiper-item> -->
               <!-- <view class="swiper-item"> -->
                 <view class='activity-img'>
-                  <image src='{{item.pictureUrl}}' bindtap='goToActivityDetail' data-activityid='{{item.id}}'></image>
+                  <image src='{{item.pictureUrl}}' bindtap='goToActivityDetail' data-activityid='{{item.id}}' data-type='{{item.activityType}}'></image>
                 </view>
 
                 <view class='activity-desc-box'>
@@ -234,7 +252,7 @@
       <view class='quan-box-detail' bindtap='get' data-id="{{couponType3.id}}">
         <image class='quan-box-bg' src='../../images/yundian_dpzy_youhuiquan@2x.png'></image>
         <view class='quan-box-content'>
-            <view class='quan-price-box'>￥<text class='quan-price'>包邮券</text></view>
+            <view class='quan-price-box'><text class='quan-price'>包邮券</text></view>
             <view>满{{couponType3.amountMin}}元可包邮</view>
             <view>有效期{{couponType3.beginTime}}-{{couponType3.endTime}}</view>
         </view>

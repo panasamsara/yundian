@@ -1,6 +1,5 @@
 import area from 'area.js'
 
-
 // 时间格式化-自带
 const formatTime = date => {
   const year = date.getFullYear()
@@ -18,11 +17,11 @@ const URL_QRCODE = 'https://wxapp.izxcs.com/qrcode/shop/';
 //测试环境
 
 const URL = 'https://wxappprod.izxcs.com/zxcity_restful/ws/rest';
-const notify_url = 'http://wxappprod.izxcs.com/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult';
+const SHARE_URL ='http://share.zxtest.izxcs.com';
 
 //正式环境
 // const URL = 'https://wxapp.izxcs.com/zxcity_restful/ws/rest';
-// const notify_url = 'http://wxapp.izxcs.com/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult';
+// const SHARE_URL = 'http://share.izxcs.com';
 
 const formatNumber = n => {
   n = n.toString()
@@ -170,57 +169,147 @@ const setHistories = (shop) => {
 }
 
 // --------------------------------------登陆/注册/店铺-----------------------------------------------------------------
-// 检测是否已微信登陆，否，则先登陆微信
-// 微信登陆后判断是否登陆app，否，则跳转到app注册页
-// app登陆后判断是否有店铺信息，否，则跳转到扫码页
-const checkWxLogin = () => {
-  console.log('checkWxLogin')
-  wx.checkSession({
-    success: () => {
-      // 未登陆app则跳转到登陆/注册页
-      if (!isAppUser()) {
-        appLogin()
-        return;
+
+const boolCheckSession = () => {
+  var hasUser = false
+  let promi = new Promise((resolve, reject) => {
+    wx.checkSession({//检查小程序登录是否过期
+      success: (res) => {//未过期
+        if (!isAppUser()) {
+          // hasUser = false
+          // return
+          resolve({
+            hasUser: false
+          })
+        }
+        resolve({
+          hasUser: true
+        })
+        // hasUser = true
+      },
+      fail: (res) => {//已过期重新登录小程序
+
+        // hasUser = false
+        resolve({
+          hasUser: false
+        })
       }
-      // 无本地店铺则跳转到扫码页
-      if (!hasShop()) wx.navigateTo({ url: '/pages/scan/scan' });
-    },
-    // 未登陆，则登陆微信，获取code
-    fail: function () {
-      appLogin()
-    }
+    })
   })
+  
+  return promi
 }
-// app重新登陆
-const appLogin = () => {
-  console.log('app重新登陆')
-  wx.login({
-    success: (res) => {
-      // 后台登陆app账户
-      reqAsync('payBoot/wx/miniapp/login', {
-        code: res.code
-      }).then((res) => {
-        console.log("小程序登录：", res)
-        wx.setStorageSync('loginToken', res.data.data.loginToken);
-        // 失败则跳到注册页
-        if (res.data.code != 1) {
-          loginFailed()
-          wx.navigateTo({ url: '/pages/reg/reg' })
-          return
-        }
-        // 未注册用户跳转到注册页面
-        if (res.data.data.scSysUser == null) {
-          wx.navigateTo({ url: '/pages/reg/reg' });
-        }
-        // 成功则设置本地数据
-        
-        wx.setStorageSync('scSysUser', res.data.data.scSysUser);
-        // if (!isAppUser()) wx.navigateTo({ url: '/pages/reg/reg' });
-      })
-    },
-    fail: loginFailed
+const checkWxLogin = (source=null) => {
+  console.log(wx.getStorageSync('shop'))
+  let promi = new Promise((resolve, reject) => {
+
+    boolCheckSession().then((res)=>{
+      console.log('boolCheckSession')
+      console.log(res)
+      if (res.hasUser){
+        var user = wx.getStorageSync('scSysUser');
+        resolve(user)
+        wx.hideLoading();
+        if(!source)
+        setTimeout(function(){
+          wx.switchTab({ url: '/pages/index/index' });
+        },1000)
+      }else{
+        wx.login({
+          success: (res) => {
+            console.log(res)
+            // 后台登陆app账户
+            reqAsync('payBoot/wx/miniapp/login', {
+              code: res.code
+            }).then((res) => {
+              console.log(res)
+              console.log('登录app', res.data.data.scSysUser)
+              wx.setStorageSync('loginToken', res.data.data.loginToken);
+              // 失败则跳到注册页
+              if (res.data.code != 1) {
+                loginFailed()
+                wx.redirectTo({ url: '/pages/reg/reg' });
+                return
+              }
+              // 未注册用户跳转到注册页面
+              if (res.data.data.scSysUser == null) {
+                wx.redirectTo({ url: '/pages/reg/reg' });
+                return
+              }
+              else {
+                wx.setStorageSync('scSysUser', res.data.data.scSysUser);
+                resolve(res.data.data.scSysUser)
+                wx.hideLoading();
+                if(!source)
+                wx.switchTab({ url: '/pages/index/index' });
+                //因index获取店铺信息接口调用时取不到userid，所以在此添加访问记录
+                // if (hasShop()){
+                //   reqAsync('shop/addVisitorShopRecord', {
+                //     customerId: res.data.data.scSysUser.id,
+                //     visitFrom: 3,
+                //     shopId: hasShop()
+                //   })
+                // }
+
+              }
+            })
+          },
+          fail: () => {
+            reject({
+              title: '登陆失败，请稍后再试！',
+              icon: 'none',
+              duration: 2000
+            })
+          }
+        })
+      }
+     
+    })
   })
+  return promi
 }
+
+//登录小程序和app账户
+// const appLogin = () => {
+ 
+//   console.log('登录小程序')
+//   return wx.login({
+//     success: (res) => {
+//       console.log('wx.login:',res)
+//       // 后台登陆app账户
+//       reqAsync('payBoot/wx/miniapp/login', {
+//         code: res.code
+//       }).then((res) => {
+//         console.log('登录app',res.data.data.scSysUser)
+//         wx.setStorageSync('loginToken', res.data.data.loginToken);
+//         // 失败则跳到注册页
+//         if (res.data.code != 1) {
+//           loginFailed()
+//           wx.redirectTo({ url: '/pages/reg/reg' })
+//           return
+//         }
+//         // 未注册用户跳转到注册页面
+//         if (res.data.data.scSysUser == null) {
+//           wx.redirectTo({ url: '/pages/reg/reg' });
+//         }
+//         else{
+//           wx.setStorageSync('scSysUser', res.data.data.scSysUser);
+          
+//           //因index获取店铺信息接口调用时取不到userid，所以在此添加访问记录
+//           // if (hasShop()){
+//           //   reqAsync('shop/addVisitorShopRecord', {
+//           //     customerId: res.data.data.scSysUser.id,
+//           //     visitFrom: 3,
+//           //     shopId: hasShop()
+//           //   })
+//           // }
+          
+//         }
+//       })
+//     },
+//     fail: loginFailed
+//   })
+// }
 
 // 登陆失败处理
 const loginFailed = () => {
@@ -241,6 +330,33 @@ const isAppUser = () => {
   var scSysUser = wx.getStorageSync('scSysUser');
   return scSysUser && scSysUser.id
 }
+// 获取店铺信息 promise
+const getShop = (userId, shopId) => {
+
+// console.log('xxxxxxx',shopId)
+//   if (!shopId) {
+//     wx.redirectTo({ url: '/pages/scan/scan' });
+//     return
+//   }
+  let promi = new Promise((resolve, reject) => {
+    reqAsync('shop/getShopHomePageInfo', {
+      customerId: userId,
+      shopId: shopId,
+      visitFrom: 3,  // 访问来源
+      pageNo: 1,
+      pageSize: 100
+    }).then((res) => {
+      //shop存入storage
+      wx.setStorageSync('shop', res.data.data.shopInfo);
+      //活动
+      wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
+      resolve(res)
+    }).catch((res) =>{
+      reject(res)
+    })
+  });
+  return promi;
+}
 // -------------------------------------------------------------------------------------------------------
 
 // 16进制颜色替换成rgb => #000 -> rgb(0,0,0)
@@ -258,6 +374,7 @@ const hexToRGB = (color) => {
   var b = parseInt(`0x${hexArr[2]}`);
   return `rgb(${r}, ${g}, ${b})`
 }
+
 
 module.exports = {
   formatTime: formatTime,
@@ -280,5 +397,7 @@ module.exports = {
   setHistories: setHistories,
   URL_QRCODE: URL_QRCODE,
   hexToRGB: hexToRGB,
-  getParams: getParams
+  getParams: getParams,
+  // appLogin: appLogin,
+  getShop: getShop
 }

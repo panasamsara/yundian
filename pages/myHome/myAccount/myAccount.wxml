@@ -1,89 +1,102 @@
-<view>
-  <view class='header'>
-    <block wx:if="{{index==0&&arrayImg[index]!=arrayImg[0]}}">
-      <image class="bg" src="{{arrayImg[0]}}"></image>
-    </block>
-    <block wx:else if="{{index!=null}}">
-      <image class="bg" src="{{arrayImg[index]}}"></image>
-    </block>
-    <view class='shop'>
-      <picker bindchange="bindPickerChange" value="{{index}}" range="{{arrayName}}">
-        <view class="picker" wx:if="{{index==''}}">{{arrayName[0]}}</view>
-        <view class="picker" wx:else>{{arrayName[index]}}</view>
-      </picker>
-      <image class="shopIcon" src="../images/shopIcon.png"></image>
-    </view>
-    <view class='zhezhao'></view>
-  </view>
-
-  <view class="page-section-spacing">
-    <scroll-view class="scroll-view_H" scroll-x="true" bindscroll="scroll" style="width:100%">
-      <view id="demo1" class="scroll-view-item_H demo-text-1 {{accountList[0].mems?'addpadding':'padding'}}" wx:if="{{accountList[0].fans}}">
-        <view class="nav {{accountList[0].mems?'margin57':'margin87'}}">
-          <view class='shopNav'>
-            <view class='navTitle'>
-              <text class="mr30 colorfff title">{{accountList[0].fans.businessName}}</text>
-              <image class="mr60" src='../images/hg.png'></image>
-              <image class="mr20" src='../images/zh.png'></image>
-              <image class='bg2' src='../images/bgaccount.png'></image>
-              <view class='typetext'>粉账户</view>
-            </view>
-            <view class='shopInfo'>
-              <view class='left'>
-                <view>余额：</view>
-                <view class='font54'>{{accountList[0].fans.balance}}</view>
-                <view>到期时间：{{accountList[0].fans.periodTime}}</view>
-              </view>
-              <view class='right'>
-                <view>活动经费</view>
-                <view>{{accountList[0].fans.finance}}</view>
-              </view>
-            </view>
-          </view>
-          <view class='activity'>
-            <view class='item' wx:for="{{accountList[0].fans.memberRemainServices}}" wx:key="{{index}}">
-              <!-- <image class="sj" src="../images/sj.png"></image>
-                <text class='typetext sjtext'>14</text> -->
-              <view class='itemName'>{{item.cardName}}</view>
-              <view class='itemCi'>{{item.remainNum}}/{{item.totalNum}}</view>
-              <!-- <image class="zs" src="../images/zs.png"></image>
-                <text class='zstext'>赠送</text> -->
-            </view>
-          </view>
-        </view>
-      </view>
-      <view id="demo2" class="scroll-view-item_H demo-text-2" wx:if="{{accountList[0].mems}}">
-        <view class="nav {{!accountList[0].fans&&accountList[0].mems?'margin87':'margin57'}}" style="margin-right:57rpx">
-          <view class="shopNav" >
-            <view class='navTitle'>
-              <text class="mr30 colorfff title">{{accountList[0].mems.businessName}}</text>
-              <!-- <image class="mr60" src='../images/hg.png'></image> -->
-              <image class="mr20" src='../images/zh.png'></image>
-              <image class='bg2' src='../images/bgaccount.png'></image>
-              <view class='typetext padding'>会员账户</view>
-            </view>
-            <view class='shopInfo' style='height:100rpx;'>
-             
-            </view>
-          </view>
-          <view class='activity'>
-            <view class='item' wx:for="{{accountList[0].mems.memberRemainServices}}" wx:key="{{index}}">
-              <!-- <image class="sj" src="../images/sj.png"></image> -->
-              <!-- <text class='typetext sjtext'>14</text> -->
-              <view class='itemName'>{{item.cardName}}</view>
-              <view class='itemCi'>{{item.remainNum}}/{{item.totalNum}}</view>
-              <!-- <image class="zs" src="../images/zs.png"></image>
-                <text class='zstext'>赠送</text> -->
-            </view>
-          </view>
-        </view>
-      </view>
-    </scroll-view>
-  </view>
-  <block wx:if="{{accountList.length==0}}">
-    <view class="addessNull">
-      <image src="../images/zwhyk.png"></image>
-      <text>暂无会员卡</text>
-    </view>
-  </block>
+<view wx:if="{{cardList==null || cardList.length==0}}" class='empty' style='margin-top:300rpx;'>
+  <image class='list-empty-img' src='../images/zxcs_cszh_zwmx@3x.png'></image>
+  <view>暂无账户</view>
 </view>
+<view wx:else>
+  <view class="page-section page-section-spacing swiper">
+    <swiper indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" circular="{{circular}}" vertical="{{vertical}}" interval="{{interval}}" duration="{{duration}}" previous-margin="{{previousMargin}}px" next-margin="{{nextMargin}}px" indicator-active-color="{{indicatorActiveColor}}" indicator-color="{{indicatorColor}}" >
+      <block wx:for="{{cardList}}" wx:key="{{index}}">
+        <swiper-item>
+          <view class="swiper-item">
+            <image wx:if="{{item.isFans==1}}" src='../images/zxcs_cszh_fenzhanghu@2x.png'></image>
+            <image wx:if="{{item.isFans==0}}" src='../images/zxcs_cszh_huiyuanka@3x.png'></image>
+            <view class='kaType colorfff font26'>
+              <image src='../images/zxcs_cszh_huiyuanka@2x.png'></image>{{item.accountName}}
+            </view>
+            <view class='xfInfo colorfff font26' bindtap='expenseDetail'>
+              <image src='../images/zxcs_cszh_huiyuanka@2x.png'></image>消费明细
+            </view>
+            <view class='balance'>账户余额(元)</view>
+            <view class='money'>{{item.principal}}</view>
+          </view>
+        </swiper-item>
+      </block>
+    </swiper>
+  </view>
+  <view class='expenditure common' wx:if="{{expenditure.length!=0}}">
+    <image class="bg" src="../images/bg2x.png"></image>
+    <view class='mingx'>
+      <view class='right' bindtap='forDetail'>
+        <image src='../images/zxcs_cszh_mingxiblack@2x.png'></image>经费明细
+      </view>
+    </view>
+    <view class='activity'>活动经费(元)</view>
+    <view class='font50'>{{expenditure[0].finance}}</view>
+    <view class='time'>到期时间:{{expenditure[0].periodTime}}</view>
+  </view>
+  <view class='lose'  bindtap='loseEfficacy' >
+    <text class='left'>失效卡</text>
+    <image class="right" src="../images/right_icon.png"></image>
+  </view>
+  <view class='myka' wx:if="{{getCardByUser!=null}}">
+    <view class='left {{activeIndex==0?"active":""}}' bindtap='switchover' data-index="0">
+      我的卡项({{getCardByUser.total}})
+    </view>
+    <view class='left {{activeIndex==1?"active":""}}' bindtap='switchover' data-index="1">
+      留店商品({{leaveGoods.total}})
+    </view>
+  </view>
+  <!-- 1 次数 2 时长 5终身 -->
+  <view class='content' wx:if="{{getCardByUser!=null}}" hidden="{{hiddenKas}}">
+    <view class='common' wx:if="{{item.serviceType==5}}" wx:for="{{getCardByUser.card}}" wx:key="{{index}}"  data-item="{{item}}" data-purchaseId="{{item.purchaseId}}" data-serviceId="{{item.serviceId}}" bindtap='skip'>
+      <image class="bg" src="../images/bg2x.png"></image>
+      <view class='list'>
+        <image src='../images/zxcs_cszh_kaxiang@2x.png'></image>
+        <text class='name'>终身卡</text>
+      </view>
+      <view class='info'>
+        <text class='left'>{{item.cardName}}</text>
+        <text class='right color0036'>{{item.totalNum}}</text>
+      </view>
+    </view>
+    <view class='common' wx:if="{{item.serviceType==1||item.serviceType==2}}" data-item="{{item}}" data-purchaseId="{{item.purchaseId}}" data-serviceId="{{item.serviceId}}" wx:for="{{getCardByUser.card}}" wx:key="{{index}}" bindtap='skip' >
+      <image class="bg" src="../images/bg2x.png"></image>
+      <view class='list'>
+        <image src='../images/zxcs_cszh_kaxiang@2x.png'></image>
+        <text class='name' wx:if="{{item.serviceType==1}}">次数卡</text>
+        <text class='name' wx:if="{{item.serviceType==2}}">时长卡</text>
+      </view>
+      <view class='info kaX'>
+        <view>
+          <text class='left'>{{item.cardName}}</text>
+          <text class='right font28 color666' wx:if="{{item.serviceType==1}}">剩余次数</text>
+          <text class='right font28 color666' wx:if="{{item.serviceType==2}}">到期时间</text>
+        </view>
+        <view>
+          <text class='left font28 color0036' wx:if="{{item.serviceType==1}}">{{item.totalNum}}次</text>
+          <text class='left font28 color0036' wx:if="{{item.serviceType==2}}">{{item.packNumber}}个月</text>
+          <text class='right colyor0036 font28' wx:if="{{item.serviceType==1}}">{{item.totalNum-item.consumeNum}}次</text>
+           <text class='right color0036 font28' wx:if="{{item.serviceType==2}}">{{item.remainNum}}</text>
+        </view>  
+      </view>
+    </view>
+  </view>
+  <view class='content leave' hidden="{{hiddenGoods}}" >
+    <view class='common' bindtap='skip' wx:for="{{leaveGoods.data}}" wx:key="{{index}}" bindtap='goodsDetail' data-item="{{item}}" >
+      <image class="bg" src="../images/bg2x.png"></image>
+      <view class='info'>
+        <text class='left'>{{item.purchaseName}}</text>
+        <text class='right color0036'>x{{item.purchaseNum}}</text>
+      </view>
+    </view>
+  </view>
+  <view wx:if="{{getCardByUser.card.length==0 && hiddenKas==false}}" class='empty paddingb'>
+    <image class='list-empty-img' src='../images/zxcs_cszh_zwmx@3x.png'></image>
+    <view>暂无卡项</view>
+  </view>
+  <view wx:if="{{leaveGoods.data.length==0&& hiddenGoods==false}}" class='empty paddingb'>
+    <image class='list-empty-img' src='../images/zxcs_cszh_zwmx@3x.png'></image>
+    <view>暂无留店商品</view>
+  </view>
+</view>      
+

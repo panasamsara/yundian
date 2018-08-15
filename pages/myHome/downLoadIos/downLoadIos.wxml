@@ -32,21 +32,21 @@
     </view>
   </view>
   <view class='storeCode'>
-    <view class="logo">
+    <view class="logo" id='logoBox'>
       <image src='../../../images/yundian_bangdingdianji_logo.png'></image>
     </view>
-    <text class='storeName'>智享城市</text>
+    <text id='storeName' class='storeName'>智享城市</text>
     <view class="img-box">
       <image bindtap="previewImg" mode="scaleToFill" src="{{imagePath}}">
       </image>
     </view>
-    <text class='scan'>点击打开大图长按可将图片保存至系统相册</text>
+    <text class='scan'>长按保存可将图片保存至系统相册</text>
   </view>
-   <button class="save" bindtap='save' hidden='{{saveImgBtnHidden}}'>保存图片</button>
-    <button type='primary' class='openSetting' open-type="openSetting"
-bindopensetting='handleSetting' hidden='{{openSettingBtnHidden}}'>去授权</button>
-    <button class="downld" bindtap='downld' wx:if="{{flag=='false'}}">下载地址</button>
+   <button class="save" bindtap='save' wx:if="{{show=='view'}}">保存图片</button>
+  <button type='primary' class='openSetting save' open-type="openSetting" bindopensetting='handleSetting' wx:if="{{show=='button'}}">保存图片</button>
+    <!-- <button class="downld" bindtap='downld' wx:if="{{flag=='false'}}">下载地址</button> -->
   <view class="canvas-box">
-    <canvas  hidden="{{canvasHidden}}" style="width: 686rpx;height: 686rpx;background:#f1f1f1;" canvas-id="mycanvas"/>
+    <canvas  style="width: 686rpx;height: 686rpx;background:#f1f1f1;" canvas-id="mycanvas"/>
+    <canvas  style="width:610rpx;height:800rpx;" canvas-id="picCanvas" id="picCanvas"/>
   </view>
 </view>

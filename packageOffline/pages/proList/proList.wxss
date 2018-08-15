@@ -1,0 +1,833 @@
+page{
+  height:100%;
+}
+.hidden{
+  display: none !important;
+}
+
+.goods-title-view{
+  border-bottom: 1px solid #eee;
+  padding: 15px 10%;
+  text-align: center;
+  height: 26px;
+}
+.line-left,.line-right{
+  display: inline-block;
+  height: 1px;
+  border-bottom: 1px solid #ADADAD;
+  width: 30%;
+  margin-bottom: 4px;
+}
+.good-title{
+  padding: 0 15px;
+  color: #333;
+}
+.goods{
+    display: flex;
+    width: 100%;
+    /* overflow: hidden; */
+    /* height: 100%; */
+    /* padding-bottom: 35px; */
+}
+.menu-wrapper{
+    flex: 0 0 100px;
+    width: 100px;
+    background: #f3f5f7;
+    /* height: 100%; */
+    /* padding-bottom: 50px; */
+}
+.menu-item{
+  display:flex;
+  height:54px;
+  width:80px;
+  padding:0 12px;
+  line-height:18px;
+  color:#999;
+  font-size:0.8rem;
+  text-align:center;
+  overflow:hidden;
+  vertical-align:middle;
+  flex-direction:row;
+  align-items:center;
+
+}
+.menu-item.current{
+  color:#333;
+  background: #fff;
+}
+.foods-wrapper{
+  flex: 1;
+}
+.foods-item{
+  display:flex;
+  position:relative;
+  margin:0 18px;
+  padding-bottom:18px;
+  height:60px;
+  border-bottom:1px solid rgba(248,248,248,1);
+  padding-top:18px;
+}
+.food-grouping:last-child .foods-item:last-child{
+  border: none;
+  margin-bottom: 0;
+}
+.foods-item .icon{ 
+    display: inline-block;
+    width: 60px;
+    height: 60px;     
+    flex: 0 0 57px;
+    margin-right: 10px;
+}
+.foods-item .title{
+  display: block;
+  color: #2c2c2c;
+  font-size: 0.8rem;
+  width: 300rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box; /** 将对象作为伸缩盒子模型 **/
+  -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
+  -webkit-line-clamp: 1; /** 显示的行数 **/
+}
+.foods-item .content{
+  position: relative;
+  width: 270rpx;
+  margin-bottom:-5rpx;
+
+}
+.foods-item .price{
+  font-size: 34rpx;
+  color: #FF5035;
+  position: absolute;
+  bottom: 0;
+  left: 20rpx;
+}
+.foods-item .yangjiao{
+  font-size: 26rpx;
+  color: #FF5035;
+  position: absolute;
+  bottom: 5rpx;
+}
+.cartcontrol-wrap{
+  position: absolute;
+  right: 0;
+  bottom: 15px;
+}
+.cartcontrol{
+  font-size: 0;
+}
+.cart-decrease{
+  display:inline-block;
+  padding:6px;
+  opacity:1;
+  transform:translate3d(0, 0, 0);
+  width:22px;
+  height:22px;
+  background-repeat:no-repeat;
+  background-size: contain;
+  background-position:center;
+  padding:0;
+  float: left;
+}
+.cart-add{
+  width:22px;
+  height:22px;
+  display: inline-block;
+  padding: 6px;
+  padding:0;
+  line-height: 24px;
+  font-size: 24px;
+  color: rgb(0, 160, 220);
+  background-repeat:no-repeat;
+  background-size: contain;
+  background-position:center;
+
+}
+.inner{
+  display: inline-block;
+  line-height: 24px;
+  font-size: 24px;
+  color: rgb(0, 160, 220);
+  transition: all 0.4s linear;
+  transform: rotate(0);
+}
+.inner.move-enter-active, .inner.move-leave-active{
+  transition: all 0.4s linear;
+}
+.inner .move-enter, .inner.move-leave-active{
+  opacity: 0;
+  transform: translate3d(24px, 0, 0);
+}
+.inner{
+  transform: rotate(180deg);
+}
+    
+.icon-remove_circle_outline{
+
+}
+.cart-count{
+  display:inline-block;
+  vertical-align:top;
+  width:38px;
+  padding-top:2px;
+  line-height:24px;
+  text-align:center;
+  font-size:10px;
+  color:rgb(0, 0, 0);
+  line-height:20px;
+  float:left;
+  font-size:17px;
+}
+
+
+.icon-add_circle{
+
+}
+
+/*底部的购物车*/
+.shopcart{
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    z-index: 50;
+    width: 100%;
+    height: 48px;
+}
+.shopcart .content{
+    display: flex;
+    background: #fff;
+    font-size: 0;
+    color: rgba(255, 255, 255, 0.4);
+}
+.shopcart .content .content-left{
+  flex: 1;
+  border-top:1rpx solid #eee;
+}
+.shopcart .logo-wrapper{
+  display: inline-block;
+  vertical-align: top;
+  position: relative;
+  width: 128rpx;
+  height: 128rpx;
+  top: -40rpx;
+  left: 20rpx;
+  box-sizing: border-box;
+  border-radius: 50%;
+
+}
+.shopcart .logo{
+  width: 128rpx;
+  height: 128rpx;
+  position: relative;
+  /* left: 15%;
+  top: 15%;  */
+  text-align: center;
+  background-size: 100% 100%;
+}
+.shopcart .logo.highlight{
+  background: #ff0037;
+}
+.shopcart{
+  line-height: 44px;
+  font-size: 24px;
+  color: #80858a;
+}
+.shopcart.highlight{
+  color: #fff;
+}
+.shopcart .num{
+  position: absolute;
+  top: -5rpx;
+  left: 85rpx;
+  /* right: 0; */
+  width: 24px;
+  height: 18px;
+  line-height: 18px;
+  text-align: center;
+  border-radius: 8px;
+  font-size: 9px;
+  font-weight: 700;
+  color: #fff;
+  background: rgb(240, 20, 20);
+  /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4); */
+}
+.shopcart .price{
+  display: inline-block;
+  vertical-align: top;
+  margin-top: 12px;
+  margin-left:40rpx;
+  line-height: 24px;
+  padding-right: 12px;
+  box-sizing: border-box;
+  /* border-right: 1px solid rgba(255, 255, 255, 0.1); */
+  font-size: 16px;
+  font-weight: 700;
+}
+.shopcart .price.highlight{
+  color: #ff0037;
+  /* float:right; */
+
+}
+.shopcart .content-right{
+  flex: 0 0 105px;
+  width: 105px;
+}
+.content-right .pay{
+  height: 48px;
+  line-height: 48px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  background: #2b333b;
+}
+.content-right .pay.enough{
+  background: #00b43c;
+  color: #fff;
+}
+
+/*点击购物车弹出来的购买物品的列表*/
+.shopcart-list{
+  /* position:absolute;
+  left:0;
+  bottom: 48px;
+  z-index:-1; */
+  width:100%;
+  height: 580rpx;
+  padding-bottom: 128rpx;
+  background: #fff;
+  margin-top:10rpx;
+}
+.shopcart-list scroll-view{
+  height: 500rpx;
+}
+.food{
+  border-bottom: 1px solid rgba(7, 17, 27, 0.1);
+}
+.list-header{
+  height: 40px;
+  line-height: 40px;
+  padding: 0 30rpx;
+  background: #f8f8f8;
+  border-bottom: 1px solid rgba(7, 17, 27, 0.1);
+}
+.list-header .title{
+  float: left;
+  font-size: 30rpx;
+  color: #333;
+  width: 100%;
+}
+.list-header .title .title-line{
+  /* border-left:3px solid #0085CF; */
+  margin:10px 0;
+  height:20px;
+  line-height:26rpx;
+  padding-left: 6rpx;
+}
+.list-header .title .delete_icon{
+  position: relative;
+  top:7rpx;
+  margin-right: 24rpx;
+  width: 34rpx;
+  height: 34rpx;
+}
+.list-header .empty{
+  float: right;
+  width: 120rpx;
+  font-size: 30rpx;
+  color: #333;
+}
+.list-content{
+  padding: 0 18px 100rpx;
+  overflow: hidden;
+  background: #fff;
+}
+.list-content .food{
+  position: relative;
+  height:90rpx;
+  line-height:90rpx;
+}
+
+.list-content .name{
+  line-height:45px;
+  font-size:14px;
+  color:rgb(7, 17, 27);
+  width:300rpx;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  font-weight:bold;
+}
+
+.list-content .price{
+  position:absolute;
+  right:90px;
+  bottom:12px;
+  font-size:14px;
+  font-weight:700;
+  color:#ff0037;
+  top:-5rpx;
+}
+ .list-content .cartcontrol-wrapper{
+  position: absolute;
+  right: 0;
+  bottom: -10px;
+}
+ 
+.content-right .pay.payClass{
+  color: #fff;
+  background: rgba(254,115,45,1);
+}
+.pay-gray{
+  color: #666;
+  background: rgba(221,221,221,1);
+  height: 48px;
+  line-height: 48px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+.cover{
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #000;
+  opacity:0.5;
+}
+
+/*抛物线动画*/
+.good_box{
+  width: 18px;
+  height: 18px;
+  position: fixed;
+  border-radius: 50%;
+  overflow: hidden;
+  left: 50%;
+  top: 50%;
+  z-index: +99;
+  background:rgba(253,115,50,1);
+}
+
+.stock-mask{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  background-color: rgba(102, 102, 102, 0.4)
+}
+.stock-box{
+  position: absolute;
+  width: 650rpx;
+  height: 700rpx;
+  top:200rpx;
+  background-color: #fff;
+  margin-left: 50rpx;
+  margin-right: 35rpx;
+  border-radius: 10rpx;
+  /* overflow: hidden; */
+}
+.mask-close-btn{
+  position: absolute;
+  width: 54rpx;
+  height: 55rpx;
+  top: -20rpx;
+  right: -20rpx;
+}
+.stock-box-title{
+  width: 100%;
+  height: 100rpx;
+  line-height: 100rpx;
+  border-bottom: 1rpx solid #eee;
+  text-align: center;
+  font-size: 36rpx;
+}
+.stock-box-content{
+  padding: 25rpx;
+}
+.stock-box-content-title{
+  display: block;
+  width: 100%;
+  height: 40rpx;
+  line-height: 40rpx;
+  font-size: 28rpx;
+  padding-left:10rpx;
+  margin-bottom:12rpx;
+}
+.stock-scroll-box{
+  height: 440rpx;
+}
+.stock-box-content-content{
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  margin-left:9rpx;
+  margin-bottom: 20rpx;
+}
+.stock-list{
+  /* width: 180rpx; */
+  padding: 0 10rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  margin-right: 16rpx;
+  margin-bottom:10rpx;
+  border-radius: 10rpx;
+  text-align: center;
+  background-color: #fff;
+  border: 1rpx solid #666; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box; /** 将对象作为伸缩盒子模型 **/
+    -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
+    -webkit-line-clamp: 1; /** 显示的行数 **/
+}
+.stock-list-active{
+  /* width: 180rpx; */
+  padding: 0 20rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  margin-right: 16rpx;
+  border-radius: 10rpx;
+  text-align: center;
+  background-color: #fb452d;
+  color: #fff;
+  border: 1rpx solid #fb452d; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box; /** 将对象作为伸缩盒子模型 **/
+    -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
+    -webkit-line-clamp: 1; /** 显示的行数 **/
+}
+.stock-list-service{
+  /* width: 270rpx; */
+  padding: 0 10rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  margin-right: 16rpx;
+  margin-bottom:10rpx;
+  border-radius: 10rpx;
+  text-align: center;
+  background-color: #fff;
+  border: 1rpx solid #666; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box; /** 将对象作为伸缩盒子模型 **/
+  -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
+  -webkit-line-clamp: 1; /** 显示的行数 **/
+}
+.stock-list-service-active{
+  /* width: 270rpx; */
+  padding: 0 10rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  margin-right: 16rpx;
+  margin-bottom:10rpx;
+  border-radius: 10rpx;
+  text-align: center;
+  background-color: #fb452d;
+  color: #fff;
+  border: 1rpx solid #fb452d; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box; /** 将对象作为伸缩盒子模型 **/
+    -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
+    -webkit-line-clamp: 1; /** 显示的行数 **/
+}
+.stock-box-bottom{
+  position: absolute;
+  bottom:  -2rpx;
+  width: 650rpx;
+  height: 120rpx;
+  line-height: 100rpx;
+  background-color: #eee;
+  font-size: 34rpx;
+  color: #f60436;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+.stock-money{
+  width: 200rpx;
+  display: inline-block;
+  padding-left:15rpx;
+  padding-top:12rpx;
+  font-size:42rpx;
+  font-weight:700;
+}
+.stock-btn{
+  display: inline-block;
+  width: 200rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  margin-top: 20rpx;
+  margin-right: 35rpx;
+  border-radius: 10rpx;
+  background-color: #fb452d;
+  color: #fff;
+  float: right;
+  text-align: center;
+}
+.gray{
+  background-color:#999;
+}
+.mask{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  background-color: rgba(102, 102, 102, 0.4)
+}
+.loading{
+  text-align: center;
+  margin-top: 400rpx;
+}
+.jiesuan-yangjiao{
+  font-size: 26rpx;
+  font-weight: 700;
+}
+.list-yangjiao{
+  font-size: 24rpx;
+  font-weight: 700;
+}
+.stock-yangjiao{
+  font-size: 34rpx;
+  font-weight: 700;
+}
+/*新加的样式*/
+.select-stock{
+  width:100rpx;
+  height:48rpx;
+  display:inline-block;
+  background:rgba(254,115,45,1);
+  color:#fff;
+  font-size:22rpx;
+  line-height:48rpx;
+  text-align:center;
+  border-radius:30rpx;
+}
+.nav{
+  position: fixed;
+  right: 0;
+  z-index: 33;
+  top:388px;
+}
+.nav .openicon{
+  width: 120rpx;
+  height: 120rpx;
+}
+.nav .order-lists{
+  width: 400rpx;
+  position: relative;
+  top: -80rpx;
+}
+.nav .order-lists .order-icon{
+  position: relative;
+  width:91rpx;
+  height:90rpx;
+  float:left;
+  vertical-align:middle;
+  margin-top:85rpx;
+  margin-left:10rpx;
+}
+.nav .order-lists .order-icon image{
+  width: 100%;
+  height: 100%;
+}
+.nav .order-lists .oreder-ls{
+  width: 300rpx;
+  height: 260rpx;
+  background: #fff;
+  margin-left:100rpx;
+  border-radius:15rpx 0 0 15rpx;
+}
+.nav .order-lists image{
+  width: 80rpx;
+  height: 80rpx;
+}
+.nav .order-lists navigator{
+  width: 50%;
+  height: 130rpx;
+  float: left;
+  text-align: center;
+  border-radius: 15rpx 0 0 15rpx;
+}
+.nav .order-lists navigator .order-txt{
+  display: block;
+  text-align: center;
+  font-size:26rpx;
+  color:#999;
+}
+.order-box{
+  position:absolute;
+  left:0;
+  bottom:70px;
+  z-index:-1;
+  width: 100%;
+  height: 920rpx;
+}
+.buy-goods{
+  width:100%;
+  height:380rpx;
+  background:#fff;
+}
+.buy_icon{
+  width: 22rpx;
+  height:13rpx;
+  margin-right: 38rpx;
+}
+.buy-scroll{
+  height: 300rpx;
+}
+.buy-goods .cart-wrapper{
+  width: 140rpx;
+  height: 80rpx;
+  float: right;
+}
+.buy-goods .name{
+  float: left;
+  height: 80rpx;
+  line-height: 80rpx;
+}
+.buy-goods .food{
+  height: 80rpx;
+  padding: 0;
+}
+.buy-goods .cartcontrol{
+  background: #ff732e;
+  color:#fff;
+  height: 40rpx;
+  line-height: 40rpx;
+  text-align: center;
+  border-radius: 20rpx;
+  margin-top:20rpx;
+  font-size: 14px;
+}
+.navshow image{
+  width: 91rpx !important;
+  height: 89rpx !important;
+}
+
+/* 留店商品 */
+.gift{
+  width: 100px;
+  background: #fff;
+  height: 138rpx;
+  font-size: 0.8rem;
+  line-height: 110rpx;
+  color: #fb452c;
+  padding-left: 20rpx;
+  position:fixed;
+  bottom: 48px;
+}
+.gift-title{
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #333;
+  line-height: 75rpx;
+  padding-left: 20rpx;
+}
+.gift-item{
+  margin:0 10rpx 40rpx 10rpx;
+  display: flex;
+  display: -webkit-flex;
+  justify-content: flex-start;
+}
+.gift-item:last-child{
+  margin-bottom: 0px;
+}
+.gift-good{
+  width: 240rpx;
+  height: 240rpx;
+  margin-right: 10rpx;
+}
+.gift-content{
+  flex: 1;
+  position: relative;
+}
+.gift-top{
+  display: flex;
+  display: -webkit-flex;
+}
+/* .gift-opearbtn{
+  width: 34rpx;
+  height: 34rpx;
+} 
+.gift-opearbtn image{
+  width: 34rpx;
+  height: 34rpx;
+}*/
+.giftname{
+  flex: 1;
+  line-height: 34rpx;
+  padding-left: 10rpx;
+}
+.gift-content .gift-goodname{
+  font-size: 30rpx;
+  color: #333;
+  font-weight: 700;
+  line-height: 40rpx;
+}
+.gift-goodstatus .giftnum{
+  font-size: 24rpx;
+  color: #999;
+}
+.gift-goodstatus .price{
+  font-size: 24rpx;
+  color: #ff0036;
+  font-weight: 700;
+  padding-left: 10rpx;
+}
+.purchase{
+  height: 64rpx;
+  position: absolute;
+  left: 0;
+  bottom: 18rpx;
+  display: flex;
+  display: -webkit-flex;
+}
+.purchase view{
+  display: inline-block;
+  margin-right: 5rpx;
+}
+.purchase view.reduce{
+  width: 67rpx;
+  height: 100%;
+  font-size: 30rpx;
+  line-height: 64rpx;
+  text-align: center;
+}
+.purchase view.edit{
+  width: 100rpx;
+  height: 64rpx;
+}
+.purchase view.edit input{
+  width: 95rpx;
+  height: 64rpx;
+  background: #f4f4f4;
+  text-align: center;
+  line-height: 64rpx;
+  font-size:  0.8rem;
+  color: #999;
+}
+/* 显示数字 */
+.snum{
+  width: 100rpx;
+  height: 64rpx;
+  background: #f4f4f4;
+  text-align: center;
+  line-height: 64rpx;
+  font-size:  0.8rem;
+  color: #999;
+}
+.purchase view.add{
+  width: 67rpx;
+  height: 100%;
+  color: #ccc;
+  font-size: 30rpx;
+  text-align: center;
+  line-height: 67rpx;
+  border-radius: 0rpx 10rpx 10rpx 0rpx;
+  -webkit-border-radius: 0rpx 10rpx 10rpx 0rpx;
+  background: #f4f4f4;
+}

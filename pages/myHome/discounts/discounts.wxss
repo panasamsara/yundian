@@ -8,7 +8,7 @@
   margin-right: 10rpx;
 }
 .bg{
-  height: 232rpx;
+  height: 240rpx;
   width: 100%;
 }
 .list{
@@ -35,7 +35,6 @@
 .listTop view:last-child{
   font-size: 34rpx;
   font-weight: bold;
-  margin-top:7rpx;
 }
 .listTop .left image{
   width: 54rpx;

@@ -29,41 +29,6 @@ Page({
   onShow: function () {
  
   },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-  
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-  
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-  
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-  
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-  
-  },
   getPhoneNumber: function (e) {
     if (e.detail.errMsg =="getPhoneNumber:ok"){
       // wx.showLoading({ title: '登陆中，请稍候……', mask: true })
@@ -75,8 +40,9 @@ Page({
       })
         .then(res => {
           wx.hideLoading()
-          if (res.code == 1) {
-            wx.setStorageSync('scSysUser', res.data);
+          console.log(res);
+          if (res.data.code == 1) {
+            wx.setStorageSync('scSysUser', res.data.data.scSysUser);
           }
           wx.showToast({
             title: res.data.msg,

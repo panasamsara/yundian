@@ -1,0 +1,49 @@
+.detail-list-box{
+  padding: 0 30rpx;
+}
+.detail-list{
+  width: 690rpx;
+  height: 144rpx;
+  border-bottom: 1rpx solid #eee;
+}
+.detail-list>view{
+  padding-top: 42rpx;
+}
+.list-left{
+  float: left;
+  width: 400rpx;
+}
+.list-card-name{
+  font-size: 32rpx;
+  color: #333;
+}
+.list-right{
+  float: right;
+  width: 290rpx;
+}
+.use-detail{
+  text-align: right;
+  top:-40rpx;
+  font-size: 32rpx;
+  margin-bottom: 10rpx;
+}
+.use-time{
+  text-align: right;
+  font-size: 28rpx;
+  color: #999;
+}
+.font-red{
+  color: #ff0036;
+}
+.empty view{
+  font-size: 30rpx;
+  text-align: center;
+  color: #999;
+  margin-top: 20rpx;
+}
+.list-empty-img{
+  width: 326rpx;
+  height: 326rpx;
+  margin: 300rpx 212rpx 0; 
+}
+

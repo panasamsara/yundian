@@ -87,9 +87,11 @@ Page({
       app.util.reqAsync('shop/getShopOrderListNews', {
         customerId: this.data.customerId,
         orderStatusVo: this.data.currentTab,
+        shopId: this.data.shopId,
         pageNo: Number(this.data.currentPage) + 1,
         pageSize: 10
       }).then((res) => {
+        console.log(res)
         if (res.data.code == 1) {
            //下拉加载
             var oldData = this.data.goodlist;
@@ -98,11 +100,16 @@ Page({
               oldData.push(data[ins]);
             }
             for (var i in oldData) {
-              oldData[i].total = oldData[i].orderItemList.length;
+              oldData[i].amount = data[ins].amount.toFixed(2);
+              for (var z in res.data.data[i].orderItemList) {
+                oldData[i].total += data[ins].orderItemList[z].goodsNum;
+              }
             }
+          console.log(oldData)
             wx.hideLoading();
 
             this.data.currentPage = ++this.data.currentPage;
+          console.log(oldData)
             this.setData({
               goodlist: oldData,
               length: oldData.length
@@ -115,8 +122,9 @@ Page({
           })
         }
       }).catch((err) => {
+        console.log(err)
         wx.showToast({
-          title: '失败……',
+          title: '到底了哟',
           icon: 'none'
         })
       })
@@ -124,18 +132,23 @@ Page({
       app.util.reqAsync('shop/getShopOrderListNews', {
         customerId: this.data.customerId,
         orderStatusVo: this.data.currentTab,
+        shopId: this.data.shopId,
         pageNo: 1,
         pageSize: 10
       }).then((res) => {
         if (res.data.code == 1) {
           for (var i in res.data.data) {
-            res.data.data[i].total = res.data.data[i].orderItemList.length;
+            res.data.data[i].total = 0;
+            res.data.data[i].amount = res.data.data[i].amount.toFixed(2);
+            for (var z in res.data.data[i].orderItemList){
+              res.data.data[i].total += res.data.data[i].orderItemList[z].goodsNum;
+            }
           }
             this.setData({
               goodlist: res.data.data,
               length: res.data.data.length
             })
-           
+          console.log(res.data.data)
         } else {
           wx.showToast({
             title: res.data.msg,
@@ -171,6 +184,9 @@ Page({
               })
               setTimeout(function () {
                 that.getData();
+                that.setData({
+                  currentPage:1
+                })
               }, 2000);
             } else {
               wx.showToast({
@@ -203,6 +219,9 @@ Page({
           }).then((res) => {
             if (res.data.code == 1) {
               that.getData();
+              that.setData({
+                currentPage: 1
+              })
             } else {
               wx.showToast({
                 title: res.data.msg,

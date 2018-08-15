@@ -1,0 +1,2 @@
+<!--pages/720/720.wxml-->
+<web-view src="{{dataSrc}}"></web-view>

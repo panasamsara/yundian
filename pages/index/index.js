@@ -9,10 +9,13 @@ Page({
       shopInformation: {},
       hasUserInfo: false,
       couponInfo: {},
+      couponGoods: [],
       hotCommoditiesList: [],
       hasHotCommodities: false,
-      showModal: false,
-      showCoupnBox: false,
+      showModal: false, //大礼包模态框
+      showCoupnBox: false, // 礼包GIF
+      showCouponGetBox: false, 
+      showCouponDetail: false, // 礼包详情
       showImg: true,
       showVideo: false,
       has720: false,
@@ -45,149 +48,198 @@ Page({
 
    },
    onReady() {
-     var self = this;
    },
    onLoad: function (e) {
-     console.log('onLoad')
-     util.checkWxLogin();
-     var params, shopId;
-     // 【扫码进入】，获取店铺ID，存入本地，请求店铺数据
+     let _this = this
+     var shopId = e.shopId, hasShare;
      if (e && e.q) {
-       var uri = decodeURIComponent(e.q);
-       console.log("通过二维码加载", uri);
-       this.data.outQrCodeParam = util.getParams(uri)
-       shopId = this.data.outQrCodeParam.shopId;
+       console.log('二维码编译')
+       util.checkWxLogin().then((res) => {//判断是否已注册
+         // 返回登录信息
+         if (e.q || e.shopId) {
+           var uri = decodeURIComponent(e.q)
+           var p = util.getParams(uri)
+         }
+         let shopId = p.shopId || e.shopId;
+         if (shopId&&res.id) {
+           util.getShop(res.id, shopId).then((res) => {
+             if (this.onLaunchCallback)
+              this.onLaunchCallback(res.data.data)
+           })
+         }
+       });
+     }else{
+       console.log('扫码进 or 分享进')
+       // 由分享进入页面（参数带shopId）
+       if (shopId) {
+         hasShare=true
+         console.log('进页面有参数')
+         util.getShop(user.id, shopId).then((res) => {
+           if (res.data.code == 1) {
+             wx.setStorageSync('shop', res.data.data.shopInfo);
+             wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
+
+             var shop = res.data.data.shopInfo
+             // 设置首页展示内容
+             _this.getShopInfo({ shopInfo: shop, goodsInfos: res.data.data.goodsInfos})
+             _this.getIndexAllInfo(shop.id)
+             _this.checkCoupon()
+           }
+         })
+         return
+       }
+       if (!util.hasShop() && !shopId) {//判断是否有店铺
+         wx.redirectTo({ url: '/pages/scan/scan' });
+         return
+       } else {
+         util.checkWxLogin().then((res) => {//判断是否已注册
+           // 返回登录信息
+           console.log(res.id)
+           console.log(wx.getStorageSync('shop').id)
+           util.getShop(res.id, wx.getStorageSync('shop').id).then((res) => {
+             console.log(res)
+             let shopInfo=res.data.data.shopInfo;
+                 goodsInfos = res.data.data.goodsInfos
+                 _this.getShopInfo({ shopInfo: shopInfo, goodsInfos: goodsInfos })
+                 _this.getIndexAllInfo(shop.id)
+                 _this.checkCoupon()
+             if (this.data.outQrCodeParam && this.data.outQrCodeParam.offline === '1') {
+               wx.switchTab({
+                 url: '/pages/proList/proList'
+               })
+             } 
+           })
+         });
+       }
      }
-     // 另外的方式加载页面（可能已取到shopId）
-     if (e.shopId) {
-       shopId = e.shopId;
+
+
+     var shop = wx.getStorageSync('shop');
+     var user = wx.getStorageSync('scSysUser');
+     // 设置首页展示内容
+     this.onLaunchCallback = (shop) => {
+       _this.getShopInfo(shop)
+       _this.getIndexAllInfo(shop.shopInfo.id)
+       _this.checkCoupon()
+       return
      }
-     // 无shopId不设置，有shopId修改shop对象
-     shopId && wx.setStorageSync('shop', { id: shopId });
-     // 线下跳转到‘分类’ (跳转到 tabBar 页面，并关闭其他所有非 tabBar 页面)
-     if (this.data.outQrCodeParam && this.data.outQrCodeParam.offline === '1') {
-       wx.switchTab({
-         url: '/pages/proList/proList'
-       })
+
+
+
+     //缓存方式')
+     if (shop.shopname){
+       var goodsInfos = wx.getStorageSync('goodsInfos');
+       //设置首页展示内容
+       _this.getShopInfo({ shopInfo: shop, goodsInfos: goodsInfos})
+       _this.getIndexAllInfo(shop.id)
+       _this.checkCoupon()
      }
+
    },
    // 每次显示做个判断，本地没有店铺就扫码，当前没有店铺就请求数据
    onShow: function () {
-     if (!this.data.shopInformation.shopInfo) this.getShopInfo()
-     // 若无店铺及店铺ID，则跳转到扫码界面
-     if (!util.hasShop()) {
-       wx.redirectTo({ url: '/pages/scan/scan' });
-       return
-     }
+     this.onLoad();
      // 缓存首页视频地址
      var shop = wx.getStorageSync('shop');
      if (shop) {
        if (shop.shopHomeConfig) {
          if (shop.shopHomeConfig.videoPathList.length != 0) {
-           wx.setStorageSync('videoUrl', shop.shopHomeConfig.videoPathList[0].filePath)
+           let videoInfo = {}
+           videoInfo.url = shop.shopHomeConfig.videoPathList[0].filePath
+           videoInfo.cover = shop.shopHomeConfig.videoPathList[0].coverImagePath
+           wx.setStorageSync('videoInfo', videoInfo)
          }
        }
+       // 查看新人礼包
+       this.checkCoupon()
      }
-     // 查看新人礼包
-     this.checkCoupon()
+     
    },
    // 获取店铺信息
-   getShopInfo: function () {
-     util.reqAsync('shop/getShopHomePageInfo', {
-       customerId: wx.getStorageSync('scSysUser').id,
-       shopId: wx.getStorageSync('shop').id,
-       visitFrom: 3,  // 访问来源
-     }).then((res) => {
-       // 获取店铺信息失败时
-       if(res.data.code == 9){
-         wx.showModal({
-           title: '错误',
-           content: res.data.msg,
-           showCancel: false,
-           success: function (res) {
-             if (res.confirm) {
-               // console.log('用户点击确定')
-               wx.redirectTo({ url: '/pages/scan/scan' });
-               return
-             }
-           }
-         })
-         
-       }
-       var shop = res.data.data.shopInfo;
-       shop.fansCounter = res.data.data.fansCounter
-       if (res.data.data.shopInfo.shopHomeConfig.imagePathList.length != 0){
-         let imagePath = res.data.data.shopInfo.shopHomeConfig.imagePathList[0]
-         let index_of_query = imagePath.indexOf('?')
-         if (index_of_query >=0){
-           res.data.data.bgImageLong = imagePath.substr(0, index_of_query)
-         }else{
-           res.data.data.bgImageLong = imagePath
-         }
+  getShopInfo: function (resData) {
+    console.log(resData.shopInfo.shopHomeConfig)
+    //  var resData = res.data.data
+     var shop = resData.shopInfo;
+
+    //  shop.fansCounter = resData.fansCounter
+     if (shop.shopHomeConfig.imagePathList.length != 0) {
+       let imagePath = resData.shopInfo.shopHomeConfig.imagePathList[0]
+       let index_of_query = imagePath.indexOf('?')
+       if (index_of_query >= 0) {
+         resData.bgImageLong = imagePath.substr(0, index_of_query)
        } else {
-         res.data.data.bgImageLong = '../../images/bg1.jpg'
+         resData.bgImageLong = imagePath
        }
-       if (res.data.data.shopInfo.shopHomeConfig.videoPathList.length !=0){
-         wx.setStorageSync('videoUrl', res.data.data.shopInfo.shopHomeConfig.videoPathList[0].filePath)
-         let videoPath = res.data.data.shopInfo.shopHomeConfig.videoPathList[0].coverImagePath
-          let index_of_video = videoPath.indexOf('?')
-          if (index_of_video >= 0) {
-            res.data.data.videoImagecover = videoPath.substr(0, index_of_video)
-          } else {
-            res.data.data.videoImagecover = videoPath
-          }
+     } else {
+       resData.bgImageLong = '../../images/bg1.jpg'
+     }
+     if (resData.shopInfo.shopHomeConfig.videoPathList.length != 0) {
+       let videoInfo = {}
+       videoInfo.url = resData.shopInfo.shopHomeConfig.videoPathList[0].filePath
+       videoInfo.cover = resData.shopInfo.shopHomeConfig.videoPathList[0].coverImagePath
+       wx.setStorageSync('videoInfo', videoInfo)
+
+       let videoPath = resData.shopInfo.shopHomeConfig.videoPathList[0].coverImagePath
+       let index_of_video = videoPath.indexOf('?')
+       if (index_of_video >= 0) {
+         resData.videoImagecover = videoPath.substr(0, index_of_video)
        } else {
-         res.data.data.videoImagecover = '../../images/bg1.jpg'
+         resData.videoImagecover = videoPath
        }
-       // 设置二维码入参 offline：0-线上，1-线下; 
-       shop.offline = this.data.outQrCodeParam.offline;
-       shop.facilityId = this.data.outQrCodeParam.facilityId;
-       wx.setStorageSync('shop', shop);
-       app.util.setHistories(shop)
-       
-       if (res.data.data.goodsInfos.length != 0){
-         for (let i = 0; i < res.data.data.goodsInfos.length; i++){
-           res.data.data.goodsInfos[i].startTime = res.data.data.goodsInfos[i].startTime.substring(0, 10)
-           res.data.data.goodsInfos[i].endTime = res.data.data.goodsInfos[i].endTime.substring(0, 10)
-           res.data.data.goodsInfos[i].startTime = res.data.data.goodsInfos[i].startTime.replace(/\-/g,'.')
-           res.data.data.goodsInfos[i].endTime = res.data.data.goodsInfos[i].endTime.replace(/\-/g, '.')
-         }
+     } else {
+       resData.videoImagecover = '../../images/bg1.jpg'
+     }
+     // 设置二维码入参 offline：0-线上，1-线下; 
+     shop.offline = this.data.outQrCodeParam.offline;
+     shop.facilityId = this.data.outQrCodeParam.facilityId;
+     wx.setStorageSync('shop', shop);
+     app.util.setHistories(shop)
+
+    //活动
+     if (resData&&resData.goodsInfos&&resData.goodsInfos.length != 0) {
+       for (let i = 0; i < resData.goodsInfos.length; i++) {
+         resData.goodsInfos[i].startTime = resData.goodsInfos[i].startTime.substring(0, 10)
+         resData.goodsInfos[i].endTime = resData.goodsInfos[i].endTime.substring(0, 10)
+         resData.goodsInfos[i].startTime = resData.goodsInfos[i].startTime.replace(/\-/g, '.')
+         resData.goodsInfos[i].endTime = resData.goodsInfos[i].endTime.replace(/\-/g, '.')
        }
-       console.log(res.data.data)
-       this.setData({ shopInformation: res.data.data });
-       if (shop.shopHomeConfig.openServiceList[0] && shop.shopHomeConfig.openServiceList[4] == false){
-         this.setData({
-           showVideo: true,
-           showImg: false
-         })
-       } else if (shop.shopHomeConfig.openServiceList[4]){
-         this.setData({
-           showVideo: false,
-           showImg: true
-         })
-       }
-       // 判断是否有720全景地址
-       if (shop.shopHomeConfig.fullView720Path.length == 0){
-         this.setData({ has720: false });
-       }else{
-         this.setData({ has720: true });
-       }
-       // 设置当前页面标题
-       wx.setNavigationBarTitle({
-         title: shop.shopName,
+     }
+     this.setData({ shopInformation: resData });
+     if (shop.shopHomeConfig.openServiceList[0] && shop.shopHomeConfig.openServiceList[4] == false) {
+       this.setData({
+         showVideo: true,
+         showImg: false
        })
-       this.getHotList()
-       this.getPhotoNum(shop.id, 0) //图片数
-       this.getPhotoNum(shop.id, 1) //视频数
+     } else if (shop.shopHomeConfig.openServiceList[4]) {
+       this.setData({
+         showVideo: false,
+         showImg: true
+       })
+     }
+     // 判断是否有720全景地址
+     if (shop.shopHomeConfig.fullView720Path.length == 0) {
+       this.setData({ has720: false });
+     } else {
+       this.setData({ has720: true });
+     }
+     // 设置当前页面标题
+     wx.setNavigationBarTitle({
+       title: shop.shopName,
+     })
+     
+   },
+   // 获取首页 页面数据相关接口 （在获取到店铺信息之后调用）
+   getIndexAllInfo: function(shopId){
+     this.getHotList() //精品推荐
+     this.getPhotoNum(shopId, 0) //图片数
+     this.getPhotoNum(shopId, 1) //视频数
 
      // 获取秒杀
      this.getSecKillData()
-     
      // 获取拼团
      this.getGroupBuyData()
-     
+     // 获取优惠券
      this.getCouponList()
-     })
    },
    //精选商品推荐列表,获取店铺信息后调用此方法
    getHotList: function(){
@@ -213,7 +265,7 @@ Page({
    },
    goPhotos: function(){
      wx.navigateTo({
-       url: '../photos/photos',
+       url: '../../packageIndex/pages/photos/photos',
      })
    },
    showPotos: function(){
@@ -224,7 +276,7 @@ Page({
    },
    goVideoLists: function () {
      wx.navigateTo({
-       url: '../videoLists/videoLists',
+       url: '../../packageIndex/pages/videoLists/videoLists',
      })
 
    },
@@ -236,7 +288,12 @@ Page({
    },
    goIndexVideo: function(){
      wx.navigateTo({
-       url: '../video/video',
+       url: '../../packageIndex/pages/video/video',
+     })
+   },
+   goQrCode: function(){
+     wx.navigateTo({
+       url: '../store/code/code?shopId=' + wx.getStorageSync('shop').id,
      })
    },
    clickScrollTop: function(){
@@ -286,14 +343,14 @@ Page({
        }
      })
    },
-   goLive: function(){
-     var shop = wx.getStorageSync('shop');
-     wx.setStorageSync('videoUrl', shop.shopHomeConfig.livePath)
-    // 直播组件要用live-player重写
-     wx.navigateTo({
-       url: '../video/video',
-     })
-   },
+  //  goLive: function(){
+  //    var shop = wx.getStorageSync('shop');
+  //    wx.setStorageSync('videoUrl', shop.shopHomeConfig.livePath)
+  //   // 直播组件要用live-player重写
+  //    wx.navigateTo({
+  //      url: '../video/video',
+  //    })
+  //  },
    goSecKill: function(){
      wx.navigateTo({
        url: '../secKill/secKill',
@@ -308,7 +365,7 @@ Page({
      var user = wx.getStorageSync('scSysUser');
      console.log(user)
      wx.navigateTo({
-       url: '../appointment/appointment?name=' + user.username + '&phone=' + user.phone,
+       url: '../../packageIndex/pages/appointment/appointment?name=' + user.username + '&phone=' + user.phone,
      })
    },
    //模态框
@@ -320,37 +377,56 @@ Page({
    preventTouchMove: function () {
 
    },
+   // 关闭礼包弹框
    closeModal: function () {
      this.setData({
        showModal: false,
-       showCoupnBox: true
+       showCoupnBox: true,
+       showCouponGetBox: false,
+       showCouponDetail: false
      })
    },
+  closeDetailModal: function(){
+    this.setData({
+      showModal: false,
+      showCouponDetail: false
+    })
+  },
    //是否能领取新人礼包
    checkCoupon: function(){
      util.reqAsync('shop/getCouponUseStatusDetail', {
        customerId: wx.getStorageSync('scSysUser').id,
        shopId: wx.getStorageSync('shop').id
      }).then((res) => {
+       var couponGoods = []
+       couponGoods = res.data.data.coupon.goodsName.split("|&")
+       couponGoods = couponGoods.slice(0, couponGoods.length - 1)
+       for (let i = 0; i < couponGoods.length; i++ ){
+         if (couponGoods[i].length>8){
+           couponGoods[i] = couponGoods[i].substring(0,8) + '...'
+         }
+       }
        this.setData({
-         couponInfo: res.data.data
+         couponInfo: res.data.data,
+         couponGoods: couponGoods
        })
        if (res.data.data.receiveStatu == true && res.data.data.useStatu == false) {
          this.setData({
            showModal: true,
-           showCoupnBox: true
+           showCoupnBox: true,
+           showCouponGetBox: true,
+           showCouponDetail: true
          })
        }else{
          this.setData({
            showModal: false,
-           showCoupnBox: false
+           showCoupnBox: false,
+           showCouponGetBox: false,
+           showCouponDetail: false
          })
        }
      }).catch((err) => {
-       wx.showToast({
-         title: '失败……',
-         icon: 'none'
-       })
+        console.log(err)
      })
    },
    //领取新人礼包
@@ -359,6 +435,7 @@ Page({
        customerId: wx.getStorageSync('scSysUser').id,
        shopId: wx.getStorageSync('shop').id,
        couponId: this.data.couponInfo.coupon.couponId,//优惠券ID
+       promGoodsType: this.data.couponInfo.coupon.promGoodsType,
        number: 1
      }).then((res) => {
        // 领取成功后没有回调
@@ -367,27 +444,49 @@ Page({
          icon: 'success'
        })
        this.setData({
-         showModal: false,
-         showCoupnBox: false
+         showModal: true,
+         showCoupnBox: false,
+         showCouponGetBox: false,
+         showCouponDetail: true
        })
      }).catch((err) => {
-       wx.showToast({
-         title: '失败……',
-         icon: 'none'
-       })
+
      })
    },
    openCouponBag: function () {
      this.setData({
        showModal: true,
-       showCoupnBox: true
+       showCoupnBox: true,
+       showCouponGetBox: true,
+       showCouponDetail: true
      })
    },
+   // 进入我的优惠券
+  goMyCoupon: function(){
+    this.setData({
+      showModal: false,
+      showCouponDetail: false
+    })
+    wx.navigateTo({
+      url: '../myHome/discounts/discounts',
+      success: function (res) {
+        // success
+      }
+    })
+  },
+  goStore: function(){
+    wx.navigateTo({
+      url: '../store/store',
+      success: function (res) {
+        // success
+      }
+    })
+  },
    goToDetail: function(e){
      var goodsid = e.currentTarget.dataset['goodsid'];
      var shopId = this.data.shopInformation.shopInfo.id
      wx.navigateTo({
-       url: '../goodsDetial/goodsDetial?goodsId=' + goodsid + '&shopId=' + shopId + '&status=3',
+       url: '../goodsDetial/goodsDetial?goodsId=' + goodsid + '&shopId=' + shopId,
        success: function (res) {
          // success
        },
@@ -424,25 +523,31 @@ Page({
      })
    },
    goToActivityDetail: function(e){
-      var shopId = this.data.shopInformation.shopInfo.id
-      var goodsId = e.currentTarget.dataset['activityid'];
+    let user = wx.getStorageSync('scSysUser');
+    var shopId = this.data.shopInformation.shopInfo.id
+    var goodsId = e.currentTarget.dataset.activityid;
+    var activityType = e.currentTarget.dataset.type
+    if (activityType ==0){
       wx.navigateTo({
         url: '../store/activityInfo/activityInfo?shopId=' + shopId + '&goodsId=' + goodsId,
         success: function (res) {
           // success
-        },
-        fail: function () {
-          // fail
-        },
-        complete: function () {
-          // complete
         }
       })
+    }else{
+      wx.navigateTo({
+        url: '../store/posterActivity/posterActivity?shopId=' + shopId + '&goodsId=' + goodsId + '&customerId=' + user.id,
+        success: function (res) {
+          // success
+        }
+      })
+    }
+    
    },
    goTo720: function(){
      var dataSrc = this.data.shopInformation.shopInfo.shopHomeConfig.fullView720Path
      wx.navigateTo({
-       url: '../720/720?dataSrc=' + dataSrc,
+       url: '../../packageIndex/pages/720/720?dataSrc=' + dataSrc,
        success: function (res) {
          // success
        },
@@ -623,7 +728,10 @@ Page({
      })
    },
   onShareAppMessage: function () {
-
+    return {
+      title: wx.getStorageSync('shop').shopName,
+      path: "pages/index/index?shopId=" + wx.getStorageSync('shop').id ,
+    }
   },
   /**
    * 页面上拉触底事件的处理函数
@@ -638,3 +746,4 @@ Page({
     // this.getGroupBuyData() // 获取拼团
   },
 })
+

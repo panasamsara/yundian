@@ -1,149 +1,160 @@
 var app = getApp();
 Page({
+
+  /**
+   * 页面的初始数据
+   */
   data: {
-    arrayName: [],
-    shopmemberId: [],
-    arrayImg:[],
-    fansAccount:[],
-    memsYuanAccount:[],
-    accountList:[],
-    index:"",
-    indexImg:0,
-    shop:{},
-    shopId:[]
+    //轮播专用开始
+    indicatorDots: true,
+    indicatorColor: "rgba(255, 255, 255, .3)",//滑动圆点颜色
+    indicatorActiveColor: "rgba(255, 255, 255, 1)", //当前圆点颜色
+    vertical: false,
+    autoplay: false,
+    circular: false,
+    interval: 2000,
+    duration: 500,
+    previousMargin: 0,
+    nextMargin: 0,
+    //轮播专用结束
+    cardList: [],
+    user:"",
+    shop:"",
+    expenditure:[],
+    leaveGoods:[],//留店商品
+    activeIndex:0,
+    hiddenKas: false,
+    hiddenGoods: true,
   },
-  onLoad: function(options) {
-    var shop = wx.getStorageSync('shop');
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function (options) {
     var user = wx.getStorageSync('scSysUser');
+    var shop = wx.getStorageSync('shop');
+    wx.setNavigationBarTitle({
+      title: shop.shopName,
+    })
     this.setData({
+      user: user,
       shop: shop
-    })
-    // 获取缓存的shopOId和shopName存入数组
-    //获取店铺名称
-    wx.showLoading({
-      title: '加载中',
-    })
-    var shopName = [];
-    var shopmemberId = [];
-    var shopImg = [];
-    var shopId = [];
-    app.util.reqAsync('member/getShopInfosByUserId', {
-      "userId": user.id
-    }).then((res) => {
-      // 判断是否返回店铺列表
-      if (res.data.data != null){
-        res.data.data.forEach(function (item, index) {
-          shopName.push(item.shopName);
-          shopmemberId.push(item.memberId);
-          shopImg.push(item.backImage);
-          shopId.push(item.shopId);
-        })
-        this.setData({
-          shopId: shopId
-        });
-        // 判断当前id是否存在列表中,存在就显示它的卡，不存在就直接为空
-        //不存在
-        if (shopId.indexOf(this.data.shop.id) == -1) {
-          //将缓存存入选择店铺的数组中
-          shopName.unshift(this.data.shop.shopName);
-          // 不存在列表中时必定没有卡信息,就把0加入到数组最前面
-          shopmemberId.unshift(0);
-          shopImg.unshift(this.data.shop.bgImage);
-          this.setData({
-            arrayName: shopName,
-            shopmemberId: shopmemberId,
-            arrayImg: shopImg,
-            accountList: []
-          });
-        } else {
-          var newIndex = shopId.indexOf(this.data.shop.id);
-          //删除当前数组存在的shopName,shopmemberId,shopImg,并移到数组的第一位
-          var name = shopName[newIndex];
-          var memberId = shopmemberId[newIndex];
-          var img = shopImg[newIndex];
-          // 首先获取存在卡的数据
-          this.getCard(memberId);
-          // //删除数组里面的
-          shopName.splice(newIndex, 1);
-          shopName.unshift(name);
-          shopmemberId.splice(newIndex, 1);
-          shopmemberId.unshift(memberId);
-          shopImg.splice(newIndex, 1);
-          shopImg.unshift(img);
-          this.setData({
-            arrayName: shopName,
-            shopmemberId: shopmemberId,
-            arrayImg: shopImg,
-          });
-        }
-      }else{
-        shopName.unshift(this.data.shop.shopName);
-        // 不存在列表中时必定没有卡信息,就把0加入到数组最前面
-        shopmemberId.unshift(0);
-        shopImg.unshift(this.data.shop.bgImage);
-        this.setData({
-          arrayName: shopName,
-          shopmemberId: shopmemberId,
-          arrayImg: shopImg,
-          accountList: []
-        });
-      }
-     
-      wx.hideLoading()
-    }).catch((err) => {
-      wx.hideLoading()
-      wx.showToast({
-        title: '失败……',
-        icon: 'none'
-      })
-    })
+    });
+    this.getAccountByUser();
+    this.getFansAccountByUser();
+    this.getCardByUser();
+  },
+  onShow: function () {
 
   },
-  bindPickerChange: function(e) {
-    // console.log('picker发送选择改变，携带值为', e.detail.value)
-    this.setData({
-      index: e.detail.value,
-      indexImg:1
-    });
-    var shopIdActive = this.data.shopmemberId[this.data.index];
-    this.getCard(shopIdActive);
+  onReachBottom: function () {
+
   },
-  getCard: function(shopIdActive) {
-    //获取店铺id
+  getAccountByUser: function () {
     wx.showLoading({
       title: '加载中',
     })
-    var newdata=[];
-    app.util.reqAsync('member/getMemberCard', {
-      "memberId": shopIdActive
-    }).then((res) => {
-      this.setData({
-        accountList: []
-      })
-      if(res.data.data){
-        //截取粉账户的时间
-        if (res.data.data.fans){
-          res.data.data.fans.periodTime = res.data.data.fans.periodTime.substring(0, 10);
-          res.data.data.fans.balance = app.util.formatMoney(res.data.data.fans.balance, 2);
-          res.data.data.fans.finance = app.util.formatMoney(res.data.data.fans.finance, 2); 
+    app.util.reqAsync('member/getAccountByUser', { "userId": this.data.user.id, "shopId": this.data.shop.id  }).then((res) => {
+      var data = res.data.data;
+      if (data!=null){
+        for (var i = 0; i < data.length; i++) {
+          data[i].principal = app.util.formatMoney(data[i].principal, 2);
         }
-        newdata.push(res.data.data);
-        this.setData({
-          accountList: newdata
-        })
-        console.log(res.data.data);
-        console.log(this.data.accountList);
+        //缓存memberId到缓存里
+        wx.setStorageSync("shopMemberId", data[0].memberId);
+        //放在这里请求主要是为了存储shopMemberId后再请求
+        this.leaveGoods();
+        
       }
+      this.setData({ cardList: res.data.data});
       wx.hideLoading();
     }).catch((err) => {
       wx.hideLoading()
-      wx.showToast({
-        title: '失败……',
-        icon: 'none'
-      })
     })
   },
-  getShop: function() {
-    
+  getFansAccountByUser: function () {
+    wx.showLoading({
+      title: '加载中',
+    })
+    app.util.reqAsync('member/getFansAccountByUser', { "userId": this.data.user.id, "shopId": this.data.shop.id }).then((res) => {
+      var data = res.data.data;
+      if (data.length!=0){
+        data[0].finance = app.util.formatMoney(data[0].finance, 2);
+      }
+      this.setData({ expenditure: res.data.data});
+      wx.hideLoading();
+    }).catch((err) => {
+      wx.hideLoading()
+    })
+  },
+  getCardByUser: function () {
+    wx.showLoading({
+      title: '加载中',
+    })
+    // 1 次数 2 时长 5终身
+    app.util.reqAsync('member/getCardByUser', { "userId": this.data.user.id, "shopId": this.data.shop.id }).then((res) => {
+      var data = res.data.data;
+      // 去除后台返回值的截止
+      for (var i = 0; i < data.card.length;i++){
+        if (data.card[i].remainNum.indexOf("截止")!=-1){
+          data.card[i].remainNum = data.card[i].remainNum.replace("截止","");
+        }
+      }
+      this.setData({ getCardByUser: res.data.data });
+      wx.hideLoading();
+    }).catch((err) => {
+      wx.hideLoading()
+    })
+  },
+  leaveGoods:function(){
+    wx.showLoading({
+      title: '加载中',
+    })
+    // 1 次数 2 时长 5终身
+    app.util.reqAsync('member/accRecordList', { "memberId": wx.getStorageSync("shopMemberId") }).then((res) => {
+      this.setData({ leaveGoods: res.data });
+      wx.hideLoading();
+      console.log("3333")
+    }).catch((err) => {
+      wx.hideLoading()
+    })
+  },
+  loseEfficacy: function(){
+    wx.navigateTo({
+      url: '/pages/myHome/loseEfficacy/loseEfficacy',
+    })
+  },
+  skip:function(e){
+    var item = e.currentTarget.dataset.item;
+    wx.navigateTo({
+      url: '/pages/myHome/cardDetail/cardDetail?item=' + JSON.stringify(item) + "&loseKa=" + 0,
+    })
+  },
+  forDetail:function(){ 
+    wx.navigateTo({
+      url: '/pages/myHome/forDetail/forDetail',
+    })
+  }, 
+  expenseDetail: function() {
+    wx.navigateTo({
+      url: '/pages/myHome/expenseDetail/expenseDetail?carList=' + JSON.stringify(this.data.cardList),
+    })
+  }, 
+  //进入详情3种 ，失效卡详情0,卡项详情1,留店商品详情2,用loseKa判断
+  goodsDetail:function(e){
+    var item = e.currentTarget.dataset.item;
+    wx.navigateTo({
+      url: '/pages/myHome/cardDetail/cardDetail?item=' + JSON.stringify(item) + "&loseKa=" + 2,
+    })
+  },
+  switchover:function(e){
+    var index = e.currentTarget.dataset.index;
+    if (index == 0) {
+      this.setData({ activeIndex: 0, hiddenKas: false, hiddenGoods: true})
+    } else {
+      this.setData({ activeIndex: 1, hiddenKas: true, hiddenGoods: false})
+    }
+  },
+  onShareAppMessage: function () {
   }
 })

@@ -1,0 +1,93 @@
+<!--pages/appointment/appointment.wxml-->
+<view class='container appointment'>
+   <view class="list" id='date'>
+    <view class="listLabel" id='time'>时间<text class='req'> * </text></view>
+    <view class='picker'>
+      <view class='detail'>
+        <text id='startTime' bindtap='start'>{{startTime}}</text> 至 <text id='endTime' bindtap='end'>{{endTime}}</text>
+      </view>
+      <view class='chooseBox'>
+        <image src='images/yundian_yyxx_gengduo.png' class='choose' bindtap='end'></image>
+      </view>
+    </view>
+    <picker-view  value="{{multiIndex}}" bindchange="bindChange" indicator-style="height: 45px!important;" wx:if="{{picker}}">
+      <view class='close' bindtap='close'><image src='images/yundian_yuyue_xuanshijian_guanbi.png'></image></view>
+      <picker-view-column class="date" style="background-color:#eeeeee;">
+        <view wx:for="{{multiArray[0]}}" style='line-height:45px;color:#fd7975' wx:key="index">{{item}}</view>
+      </picker-view-column>
+      <picker-view-column class="time">
+        <view wx:for="{{multiArray[1]}}" style='line-height:45px;text-indent:40rpx;' wx:key="index">{{item}}</view>
+      </picker-view-column>
+    </picker-view>
+  </view> 
+  <view class='list'>
+    <view class='listLabel' id='number'>人数<text class='req'> * </text></view>
+    <picker bindchange="bindPickerChange"  range='{{numArray}}' id='num'>
+      <view class='picker'>
+        <view class="detail">{{numText}}</view>
+        <view class='chooseBox'>
+          <image src='images/yundian_yyxx_gengduo.png' class='choose'></image>
+        </view>
+      </view>
+    </picker>
+  </view>
+  <view class='list'>
+    <text class='listLabel'>设备/设施</text>
+    <view id='device' bindtap='showModal' class='picker'>
+      <view class="detail">{{deviceText}}</view>
+      <view class='chooseBox'>
+        <image src='images/yundian_yyxx_gengduo.png' class='choose'></image>
+      </view>
+    </view>
+  </view>
+  <view class='list'>
+    <text class='listLabel'>服务人员</text>
+    <view id='service' bindtap='showModal' class='picker'>
+      <view class="detail">{{serviceText}}</view>
+      <view class='chooseBox'>
+        <image src='images/yundian_yyxx_gengduo.png' class='choose'></image>
+      </view>
+    </view>
+  </view>
+  <view class='list'>
+    <text class='listLabel'>服务项目</text>
+    <view id='serviceName' bindtap='showModal' class='picker'>
+      <view class="detail">{{serviceNameText}}</view>
+      <view class='chooseBox'>
+        <image src='images/yundian_yyxx_gengduo.png' class='choose'></image>
+      </view>
+    </view>
+  </view>
+  <view class='list name'>
+    <text class='listLabel'>姓名</text>
+    <view class='info'>{{name?name:''}}</view>
+  </view>
+  <view class='list'>
+    <text class='listLabel'>电话</text>
+    <view class='info'>{{phone?phone:''}}</view>
+  </view>
+  <view class='list remark'>
+    <text class='listLabel'>备注</text>
+    <view class='info'>
+      <textarea placeholder="如有特殊要求可在此填写" bindblur='summary' maxlength='25' wx:if="{{change=='area'}}" value='{{summary}}'></textarea>
+      <text wx:if="{{change=='text'}}">{{summary}}</text>
+    </view>
+  </view>
+  <view class='appoint' bindtap='submit'>
+      <text id='appoint'>立即预约</text>
+  </view>
+  <view class='mask' wx:if="{{showModal}}" catchtouchmove="preventTouchMove">
+    <device-modal wx:if="{{modal=='device-modal'}}" bind:close="closeModal" facilityTypes="{{data.facilityTypes}}" id="device-modal"></device-modal>
+    <service-modal wx:if="{{modal=='service-modal'}}" bind:close="closeModal" waiterList="{{data.waiterList}}" id="service-modal"></service-modal>
+    <serviceName-modal wx:if="{{modal=='serviceName-modal'}}" bind:close="closeModal" serviceList="{{data.serviceList}}" id="serviceName-modal"></serviceName-modal>
+  </view>
+  <!-- 电话号码授权弹窗 -->
+  <view class='mask' wx:if="{{settingModal}}" bindtap='cancel'>
+    <view class='modal'>
+      <text class='title'>为了更好的服务，需要绑定您的手机号</text>
+      <view id='option'>
+        <button open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber" id='login'>确定</button>
+      </view>
+    </view>
+  </view>
+</view>

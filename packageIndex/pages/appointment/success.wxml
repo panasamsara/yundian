@@ -1,0 +1,31 @@
+<!--pages/appointment/success.wxml-->
+<view class='container success'> 
+  <view class='status'>
+    <image src='images/yundian_dpzy_yytj.png'></image>
+    <text id='tip1'>商家正在处理您的订单</text>
+    <text id='tip2'>预计2~10分钟内，会将处理的结果推送给您</text>
+  </view>
+  <!-- <view class='list' wx:for="{{list}}" wx:key="index">
+    <text>{{item.infoLabel}}</text>
+    <text>{{item.info}}</text>
+  </view> -->
+  <view class='list storeName'>
+    <text>{{shopName}}</text>
+  </view>
+  <view class='list info'>
+    <view class='timeBox'>
+      <text>{{data.bespokeBeginTime}}</text>
+      <text>{{data.bespokeEndTime}}</text>
+    </view>
+    <text>{{data.receptionNum}}|{{data.facilityName}}</text>
+  </view>
+  <view class='list service' wx:if="{{data.serviceName||data.waiter}}">
+    <text>{{data.serviceName}}</text>
+    <text wx:if="{{data.waiter}}">服务人员:{{data.waiter}}</text>
+  </view>
+  <view class='list client'>
+    <text>{{data.customer}}</text>
+    <text>{{data.mobile}}</text>
+  </view>
+  <button type='primary' id='submit' bindtap='submit'>确认</button>
+</view>

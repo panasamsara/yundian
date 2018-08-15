@@ -450,7 +450,12 @@ Page({
     var merchantId = this.data.merchantId;//商户主键
     var userName = this.data.username;//用户名
     var bussinessType = 1;
-    var deliveryMoney = this.data.deliveryMoney;//快递金额
+    if (this.data.isSend==2){
+      var deliveryMoney =0;
+    }else{
+      var deliveryMoney = this.data.deliveryMoney;//快递金额
+    }
+    
     console.log("快递金额" + deliveryMoney)
     // debugger
     if (this.data.oldTotal == "0" || this.data.oldTotal == "0.00") {//合计为0专用
@@ -513,7 +518,7 @@ Page({
           this.setData({
             orderNo: res.data.data //生成订单号
           })
-          if (this.data.totalMoney == "0" || this.data.oldTotal == "0.00") {  //金额为0直接成功下单绕过支付
+          if (this.data.oldTotal == "0.00" || this.data.oldTotal == 0 || this.data.oldTotal == "0") {  //金额为0直接成功下单绕过支付
             this.setData({
               flagOrder: false,
               isPay: 1
@@ -617,7 +622,12 @@ Page({
           this.setData({
             orderNo: res.data.data //生成订单号
           })
-          if (this.data.totalMoney == "0" || this.data.oldTotal == "0.00") {  //金额为0直接成功下单绕过支付
+          //先调拼团接口
+          //this.groupBooking(res.data.data);
+
+
+
+          if ((this.data.oldTotal == "0.00" || this.data.oldTotal == 0 || this.data.oldTotal == "0")) {  //金额为0直接成功下单绕过支付
             this.setData({
               flagOrder: false,
               isPay: 1
@@ -669,6 +679,24 @@ Page({
     }
     
   },
+  // groupBooking:function(no){
+  //   app.util.reqAsync('shop/insertSmallGroupYQ', {
+  //     "groupId": this.data.groupId, //#拼团表id
+  //     "type": this.data.spellingType,// #type:0创建拼组，1加入拼组
+  //     "smallGroupId": this.data.smallGroupId,// #拼组表的id，当type为1的时候须传此参数否则无需传
+  //     "orderId": no,// #订单号
+  //     "cUser": this.data.customerId,//#参与用户者id
+  //     "num": this.data.goods[0].goodsNum //#用户购买件数
+  //   }).then((res) => {
+  //     console.log(res)
+  //       console.log("拼团成功")
+  //    }).catch((err) => {
+  //     wx.showToast({
+  //       title: res.data.msg,
+  //       icon: 'none'
+  //     })
+  //   })
+  // },
   bindTestCreateOrder: function (code) {
     var data = {
       subject: this.data.goods[0].goodsName,

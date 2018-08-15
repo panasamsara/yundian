@@ -1,0 +1,21 @@
+<!--pages/appointment/modal/device-modal.wxml-->
+<view class='deviceModal modal'>
+  <view>
+    <view class='close' bindtap='close'>
+      <image src='../../images/yundian_yyxx_guanbi.png'></image>
+    </view>
+    <text class='title'>选择设施/设备</text>
+    <scroll-view scroll-y="true">
+      <view class='choseBox'>
+        <view wx:for="{{facilityTypes}}" wx:key="index" class='deviceBox'>
+          <view class='facilityTypes'>{{item.facilityTypeName}}</view>
+          <view class='falicityBox'>
+            <view wx:for="{{item.facilityList}}" wx:for-item="items" wx:key='index' bindtap='chose' class="chose {{items.active==true?'active':''}}" data-flag="{{items.flag}}" data-id="{{items.id}}">{{items.name}}</view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+    <button type='primary' class="submit {{active==true?'active':'normal'}}" bindtap='submit'>确认</button>
+  </view>
+  <slot></slot>
+</view>

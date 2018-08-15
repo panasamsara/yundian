@@ -21,9 +21,9 @@ Page({
     imagePath: '',
     orderkind: '',// orderkind = 3 && isGroupBuying=0 是为秒杀
     isGroupBuying:'',// 前后端数据传输：是否为拼团，拼团为1，非拼团为0
-    userList:'', // 参与拼团人员
+    userList:[], // 参与拼团人员
     spellUser:[], // 保存参与人员头像
-    timeStatus: '', // 状态：0拼单进行中，1成功,2拼单时间到，已过期未成功'
+    timeStatus: '', // 状态：0拼单进行中，1成功,2过期 待付款'
     nowTime:'', // 服务器当前时间
     groupEndTime:'', // 拼单结束时间
     spellLeftTime:'',// 拼单剩余时间
@@ -33,7 +33,8 @@ Page({
     shopId: '', //店铺id
     ifshare:0, //是否分享
     population:'', //拼团人数
-    stockId:'' // 是否有商品规格
+    stockId:'', // 是否有商品规格
+    lackUser:'' // 拼团缺少人数
   },
   
   onLoad: function (options) {
@@ -88,15 +89,16 @@ Page({
             this.countTime();
           }
         } 
-        // if (data.data.data[0].orderInfo.orderStatusVo == 2 && data.data.data[0].orderInfo.deliveryType == 2) { //自提
-        //   // 页面初始化 options为页面跳转所带来的参数
-        //   var size = this.setCanvasSize();//动态设置画布大小
-        //   var initUrl = this.data.storeUrl;
-        //   this.createQrCode(initUrl, "mycanvas", size.w, size.h);
-        // }
-        // this.setData({
-        //   no: this.data.orderNo
-        // })
+
+        if (data.data.data[0].orderInfo.orderStatusVo == 2 && data.data.data[0].orderInfo.deliveryType == 2) { //自提
+          // 页面初始化 options为页面跳转所带来的参数
+          var size = this.setCanvasSize();//动态设置画布大小
+          var initUrl = this.data.storeUrl;
+          this.createQrCode(initUrl, "mycanvas", size.w, size.h);
+        }
+        this.setData({
+          no: this.data.orderNo
+        })
       } else {
         wx.showToast({
           title: data.data.msg,
@@ -109,6 +111,7 @@ Page({
         icon: 'none'
       })
     }).then(
+      // 获取服务器时间
       app.util.reqAsync('shopSecondskilActivity/getServerNowTime').then((res) => {
         if (res.data.code == 1) {
           this.setData({
@@ -123,19 +126,19 @@ Page({
       })
     )
     .then(
-      function(){
-        // 倒计时
-        var _ordertimer = null;
-        var nowTime = _this.data.nowTime;
-        var nowTimeNum = Date.parse(nowTime);
-        setInterval(function () {
-          _this.count(nowTimeNum);
-          nowTimeNum  += 1000;
-        }, 1000)
+      // 拼单中 倒计时
+      function() {
+          // 倒计时
+          var _ordertimer = null;
+          var nowTime = _this.data.nowTime;
+          var nowTimes = nowTime.replace(/\-/g, "/");
+          var nowTimeNum = Date.parse(nowTimes);
+          setInterval(function () {
+            _this.count(nowTimeNum);
+            nowTimeNum += 1000;
+          }, 1000)
       }
     )
-
-    
   },
   onShow: function (e) {
     //调接口
@@ -143,7 +146,7 @@ Page({
       orderNo: this.data.orderNo,
       isGroupBuying: this.data.isGroupBuying
     }).then((data) => {
-      // debugger;
+console.log(data)
       if (data.data.code == 1) {
         var areaName = app.util.area.getAreaNameByCode(data.data.data[0].orderInfo.areaId);
         var cityName = app.util.area.getAreaNameByCode(data.data.data[0].orderInfo.cityId);
@@ -158,8 +161,7 @@ Page({
           ProvinceName: ProvinceName,
           shopId: data.data.data[0].shopInfo.id,
           goodsName: data.data.data[0].orderInfo.orderItemList[0].goodsName,
-          stockId: data.data.data[0].orderInfo.orderItemList[0].stockId,
-          userList: data.data.data[0].userList
+          stockId: data.data.data[0].orderInfo.orderItemList[0].stockId
         })
 
         console.log('stockId:' + this.data.stockId);
@@ -178,15 +180,15 @@ Page({
             timeStatus: data.data.data[0].groupDetail.timeStatus,
             groupId: data.data.data[0].groupDetail.groupId,
             groupEndTime: data.data.data[0].groupDetail.endTime ? data.data.data[0].groupDetail.endTime : '',
-            population: data.data.data[0].groupDetail.population ? data.data.data[0].groupDetail.population : ''
+            population: data.data.data[0].groupDetail.population ? data.data.data[0].groupDetail.population : '',
+            lackUser: data.data.data[0].groupDetail.population - data.data.data[0].userList.length
+            
           })
 
           // 拼接参与拼单用户数组
           var usersArr = [];
           if (this.data.userList.length > 0) {
-            for (var i = 0; i < this.data.userList.length; i++) {
-              usersArr.push(this.data.userList[i]);
-            }
+            usersArr = this.data.userList
           }
 
           if (usersArr.length < data.data.data[0].groupDetail.population) {
@@ -246,7 +248,7 @@ Page({
   createQrCode: function (url, canvasId, cavW, cavH) {
     //调用插件中的draw方法，绘制二维码图片
     QR.api.draw(url, canvasId, cavW, cavH);
-    setTimeout(() => { this.canvasToTempImage(); }, 500);
+    setTimeout(() => { this.canvasToTempImage(); }, 200);
 
   },
   //获取临时缓存照片路径，存入data中
@@ -258,8 +260,8 @@ Page({
         var tempFilePath = res.tempFilePath;
         console.log(tempFilePath);
         that.setData({
-          imagePath: tempFilePath,
-          canvasHidden: true
+          canvasHidden: true,
+          imagePath: tempFilePath 
         });
       },
       fail: function (res) {
@@ -301,7 +303,7 @@ Page({
       if (data.data.code == 1) {
         if (data.data.data.status == 1 && data.data.data.goodsStatus == 1) {
           wx.navigateTo({
-            url: '../../goodsDetial/goodsDetial?shopId=' + shopId + '&goodsId=' + goodsId + '&status=' + 1
+            url: '../../goodsDetial/goodsDetial?shopId=' + shopId + '&goodsId=' + goodsId
           })
         } else {
           wx.showToast({
@@ -684,10 +686,11 @@ Page({
   // 计算拼团剩余时间
   count: function (nowTime) {
     var endTime = this.data.groupEndTime;
+    var endTimes = endTime.replace(/\-/g, "/");
     // console.log(nowTime);
     // console.log(endTime);
     var nowTimeSec = nowTime;
-    var endTimeSec = Date.parse(endTime);
+    var endTimeSec = Date.parse(endTimes);
     var leftTimeSec = endTimeSec - nowTimeSec;
     var leftTime = new Date(leftTimeSec);
     // console.log(leftTimeSec);
@@ -710,16 +713,28 @@ Page({
     // 时间已截至
     else{
       this.setData({
-        spellLeftTime: 0
+        spellLeftTime: ''
       })
 
     }
   },
   // 邀请好友拼单
   onShareAppMessage: function (res) {
+    let options = this.data;
+    let datas = {
+      groupId: options.groupId,
+      orderNo: options.orderNo,
+      population: options.population,
+      shopId: options.shopId,
+      cUser: options.userid,
+      orderStatusVo: options.orderStatusVo,
+      stockId: options.stockId
+    }
+    console.log(datas)
     return {
       title: this.data.goodsName,
       desc: this.data.goodsName,
+      path: '/pages/spelldetails/spelldetails?groupId=' + this.data.groupId + '&orderNo=' + this.data.orderNo + '&shopId=' + this.data.shopId + '&cUser=' + this.data.userid + '&population=' + this.data.population + '&orderStatusVo=' + this.data.orderStatusVo + '&stockId=' + this.data.stockId+'&share='+1,
       success: (res) => {
         this.setData({
           ifshare: 1
@@ -734,5 +749,6 @@ Page({
       url: '../../spelldetails/spelldetails?groupId=' + this.data.groupId + '&orderNo=' + this.data.orderNo + '&shopId=' + this.data.shopId + '&cUser=' + this.data.userid + '&population=' + this.data.population + '&orderStatusVo=' + this.data.orderStatusVo + '&stockId=' + this.data.stockId 
     })
   }
+
   
 })

@@ -42,24 +42,24 @@ page{
   background: #fff;
   margin: 0 20rpx;
   border-radius: 10rpx;
-  overflow: hidden;
   margin-top:48px;
+  padding-top: 4rpx;
 }
 .list .shopIcon{
   width: 120rpx;
   height: 120rpx;
   border-radius: 50%;
   position: absolute;
-  left: 325rpx;
-  top: 31rpx;
+  left: 295rpx;
+  top: -140rpx;
 }
 .list .shopname{
   margin-top: 80rpx !important;
 }
 .list .con{
-  overflow: hidden;
   height: 306rpx;
   border-bottom: 2rpx dashed #ddd;
+  position: relative;
 }
 .list .con>view{
   margin-top: 18rpx;
@@ -89,12 +89,16 @@ page{
  
 }
 .cicleLeft{
-  left:6rpx;
-  top:386rpx; 
+  /* left:6rpx;
+  top:386rpx;  */
+  bottom: -15rpx;
+  left:-15rpx;
 }
 .cicleRight{
-  right: 6rpx;
-  top:386rpx; 
+  /* right: 6rpx;
+  top:386rpx;  */
+  bottom: -15rpx;
+  right: -15rpx;
 }
 .colory{
   background-color: #fb8b33;
@@ -104,7 +108,7 @@ page{
   padding-bottom: 25rpx;
 }
 .discount .cicleLeft,.discount .cicleRight{
-  top:426rpx; 
+  /* top:426rpx;  */
 }
 .discount .info{
   padding: 30rpx;
@@ -250,4 +254,10 @@ discount .info .text-overflow{
 }
 .discount .namecheck{
   margin-bottom: 34rpx;
+}
+
+canvas#discountCanvas{
+  position: fixed;
+  top: 9999rpx;
+  left: 9999rpx;
 }

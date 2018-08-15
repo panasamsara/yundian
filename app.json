@@ -27,11 +27,6 @@
     "pages/goodsDetial/goodsDetial",
     "pages/ask/ask",
     "pages/search/search",
-    "pages/appointment/appointment",
-    "pages/appointment/success",
-    "pages/appointment/modal/device-modal/device-modal",
-    "pages/appointment/modal/service-modal/service-modal",
-    "pages/appointment/modal/serviceName-modal/serviceName-modal",
     "pages/store/location/location",
     "pages/store/code/code",
     "pages/store/activity/activity",
@@ -42,28 +37,54 @@
     "pages/orderBuy/orderBuy",
     "pages/orderBuy/discount/discount",
     "pages/store/dynamic/dynamic",
-    "pages/720/720",
     "pages/store/headline/headline",
     "pages/store/player/player",
     "pages/store/fans/fans",
     "pages/askDetail/askDetail",
     "pages/reg/reg",
-    "pages/photos/photos",
-    "pages/videoLists/videoLists",
-    "pages/video/video",
     "pages/secKill/secKill",
     "pages/secKillBuy/secKillBuy",
     "pages/groupBuy/groupBuy",
     "pages/give/give",
     "pages/spelldetails/spelldetails",
     "pages/myHome/downLoadIos/downLoadIos",
-    "pages/myHome/downLoadAndroid/downLoadAndroid"
+    "pages/myHome/downLoadAndroid/downLoadAndroid",
+    "pages/store/posterActivity/posterActivity",
+    "pages/myHome/loseEfficacy/loseEfficacy",
+    "pages/myHome/cardDetail/cardDetail",
+    "pages/myHome/expenseDetail/expenseDetail",
+    "pages/myHome/forDetail/forDetail",
+    "pages/myHome/consumptionDetail/consumptionDetail"
+  ],
+  "subPackages": [
+    {
+      "root": "packageIndex",
+      "pages": [
+        "pages/720/720",
+        "pages/photos/photos",
+        "pages/videoLists/videoLists",
+        "pages/video/video",
+        "pages/appointment/appointment",
+        "pages/appointment/success",
+        "pages/appointment/modal/device-modal/device-modal",
+        "pages/appointment/modal/service-modal/service-modal",
+        "pages/appointment/modal/serviceName-modal/serviceName-modal"
+      ]
+    },
+    {
+      "root": "packageOffline",
+      "pages": [
+        "pages/proList/proList",
+        "pages/goods/goods"
+      ]
+    }
   ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "WeChat",
-    "navigationBarTextStyle": "black"
+    "navigationBarTextStyle": "black",
+    "onReachBottomDistance":50
   },
   "tabBar": {
     "color": "#7A7E83",

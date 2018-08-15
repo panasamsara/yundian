@@ -20,14 +20,19 @@
 
   <!-- 拼团成员 -->
   <view class='grouplist'>
-    <scroll-view scroll-x   upper-threshold="750rpx" class='groupscroll'>
+    <scroll-view scroll-x upper-threshold="750rpx" class='groupscroll'>
       <!-- 参团用户 -->
-       <view wx:for="{{spellUser}}" wx:key="*this" class='scroll-view-item useritem'>
-          <image class="headportrait" src='{{item.userpic}}' data-src=''></image> 
-          <view class='scroll-view-icon' wx:if="{{index == 0}}">
+      <view class='groupbox'>
+        <view wx:for="{{data.groupOrderList}}" wx:key="*this" wx:for-index="gdx" wx:for-item="group" class='scroll-view-item useritem'>
+          <image class="headportrait" src='{{group.userpic}}' data-src=''></image> 
+          <view class='scroll-view-icon' wx:if="{{gdx == 0}}">
             <image class='mainicon' src='images/yundian_pinzhu@2x.png' data-src=''></image>
           </view>
        </view>
+       <view wx:for="{{lackUser}}" class='userbox' wx:key="*this" wx:for-index="ldx" wx:for-item="lackUser">
+        <image src='images/yundian_pindantouxiang@2x.png'></image>
+       </view>
+      </view>
       <!-- 参团用户 end-->      
     </scroll-view>
   </view>
@@ -36,17 +41,29 @@
   <view wx:if="{{timeStatus==0}}">
     <!-- 1 拼主  -->
     <view wx:if="{{isMaster==1}}">
-      <view class='status'>
-        仅剩<span class='redtext'>{{lackUser}}</span>个名额，{{endTime}}后结束
+      <view class='status' wx:if="{{count!=0}}">
+        仅剩<span class='redtext'>{{lackUser}}</span>个名额，<text wx:if="{{d>0}}">{{d?d:0}}天</text><text>{{h?h:0}}</text>:<text>{{m?m:0}}</text>:<text>{{s?s:0}}</text>后结束
       </view>
-      <button open-type='share' class='spellbtn' hover-class='spellbtn-hover'>邀请好友拼单</button>
+      <view class='status' wx:else>
+        <image class="faileicon" bindtap='closeMask' src='images/yundain_tixing@2x.png'></image>
+        拼单已过期
+      </view>
+
+      <button wx:if="{{count!=0}}" open-type='share' class='spellbtn' hover-class='spellbtn-hover'>邀请好友拼单</button>
+      <button wx:else bindtap="againInitiate" class='spellbtn' hover-class='spellbtn-hover'>再次发起拼单</button>
     </view>
     <!-- 0 非拼主 -->
     <view wx:elif="{{isMaster==0}}">
-      <view class='status'>
-        仅剩<span class='redtext'>{{lackUser}}</span>个名额，{{endTime}}后结束
+      <view class='status'  wx:if="{{count!=0}}">
+        仅剩<span class='redtext'>{{lackUser}}</span>个名额，<text wx:if="{{d>0}}">{{d?d:0}}天</text><text>{{h}}</text>:<text>{{m}}</text>:<text>{{s}}</text>后结束
       </view>
-      <button class='spellbtn' hover-class='spellbtn-hover' bindtap="participate ">参与拼单</button>
+      <view class='status' wx:else>
+        <image class="faileicon" bindtap='closeMask' src='images/yundain_tixing@2x.png'></image>
+        拼单已过期
+      </view>
+
+      <button wx:if="{{count!=0}}" class='spellbtn' hover-class='spellbtn-hover' bindtap="participate">参与拼单</button>
+      <button wx:else bindtap="againInitiate" class='spellbtn' hover-class='spellbtn-hover'>再次发起拼单</button>
     </view>
   </view>
   <!-- 1 成团 -->
@@ -57,7 +74,7 @@
     </view>
     <button class='spellbtn' hover-class='spellbtn-hover' bindtap="primary">继续逛逛</button>
   </view>
-  <!-- 2 过期失败 -->    
+  <!-- 2 过期失败 或未付款 -->    
   <view wx:if="{{timeStatus==2}}">
     <view class='status failtext' wx:if="{{orderStatusVo==1}}">
       <image class="faileicon" bindtap='closeMask' src='images/yundain_tixing@2x.png'></image>
@@ -65,7 +82,7 @@
     </view>
     <view class='status failtext' wx:if="{{orderStatusVo!=1}}">
       <image class="faileicon" bindtap='closeMask' src='images/yundain_tixing@2x.png'></image>
-      拼单失败，款项将原路退还
+      拼单失败
     </view>
     <button class='spellbtn' hover-class='spellbtn-hover' bindtap="againInitiate">再次发起拼单</button>
   </view>

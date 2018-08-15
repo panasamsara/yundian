@@ -1,13 +1,19 @@
 <view class='discountDetail {{couponType==06?"yellow":"red"}}'>
+<canvas canvas-id="shareCanvas" style='width:720rpx; height:568rpx; position:fixed; top: 99999rpx;' hidden='{{canvasHidden}}'></canvas>
+
   <view class='list discount' wx:if="{{couponType=='06'}}">
      <view class='con'>
       <image class="shopIcon" src='{{discountsNew.shopLogoUrl}}'></image>
       <view class='shopname color666 font28 namecheck'>{{discountsNew.shopName}}</view>
-      <view class='font40 {{discountsNew.expireState!=0||res.data.data.couponUseDate != null?"color999":"colorred"}}'>{{discountsNew.couponInstruction}}</view>
-      <view class='font36 text-overflow fontWeight color333'>{{discountsNew.couponGoodsName}}</view>
+      <view class='font40 {{discountsNew.expireState!=0||res.data.data.couponUseDate != null?"color999":"colorred"}}' wx:if="{{discountsNew.promGoodsType==0}}">{{discountsNew.couponInstruction}}</view>
+      <view class='font40 {{discountsNew.expireState!=0||res.data.data.couponUseDate != null?"color999":"colorred"}}' wx:if="{{discountsNew.promGoodsType==1}}" wx:for="{{descArr}}" wx:key="{{index}}">{{item}}</view>
+      <view class='font36 text-overflow fontWeight color333' wx:if="{{discountsNew.promGoodsType==0}}">{{discountsNew.couponGoodsName}}</view>
       <view class='color999 font26'>{{discountsNew.userCouponExpireTime}}</view>
       <image wx:if="{{discountsNew.expireState!=0}}" class="img" src="../../images/yd_yiguoqi@2x.png"></image>
       <image wx:if="{{res.data.data.couponLogStatus ==3}}" class="img" src="../../images/yd_yishiyong@2x.png"></image>
+    
+      <view class="cicrl cicleLeft {{couponType==06?'yellow':'red'}}"></view>
+      <view class="cicrl cicleRight {{couponType==06?'yellow':'red'}}"></view>
     </view> 
      <view class='info' wx:if="{{discountsNew.couponShare==1&&discountsNew.couponShared==0}}">
       <view>分享再获好礼</view>
@@ -19,6 +25,7 @@
     </view>  
     <view class='serial'>
       <view><text>序列号:{{discountsNew.couponCode}}</text></view>
+      
       <image bindtap="previewImg" mode="scaleToFill" src="{{imagePath}}"></image>
     </view>
     <view class='call'>
@@ -26,8 +33,6 @@
        <text>{{discountsNew.shopAddress}}</text> 
       <image src="../../images/wode_quandetail_phone@2x.png" bindtap='call' data-phone="{{discountsNew.shopPhone}}"></image>  
     </view>
-    <view class="cicrl cicleLeft {{couponType==06?'yellow':'red'}}"></view>
-    <view class="cicrl cicleRight {{couponType==06?'yellow':'red'}}"></view>
   </view>
   <view class='list' wx:else>
     <view class='con'>
@@ -35,6 +40,8 @@
       <view class='shopname color666 font28'>{{discounts.shopName}}</view>
       <view class='font36 fontWeight color333'>{{discounts.instruction}}</view>
       <view class='color999 font26'>有效期至：{{discounts.beginTime}}至{{discounts.endTime}}</view>
+      <view class="cicrl cicleLeft {{couponType==06?'yellow':'red'}}"></view>
+      <view class="cicrl cicleRight {{couponType==06?'yellow':'red'}}"></view>
     </view>
     <view class='info'>
       <view class='font30'>使用说明</view>
@@ -52,10 +59,9 @@
         <view class='colorred text-overflow'>￥:{{item.goodsPrice}}</view>
       </view>
     </view>
-    <view class="cicrl cicleLeft {{couponType==06?'yellow':'red'}}"></view>
-    <view class="cicrl cicleRight {{couponType==06?'yellow':'red'}}"></view>
   </view>
 </view>
 <view class="canvas-box">
 <canvas hidden="{{canvasHidden}}" style="width: 686rpx;height: 686rpx;background:#f1f1f1;" canvas-id="mycanvas"/>
 </view>
+<canvas canvas-id='discountCanvas' style='width:480rpx;height:400rpx;' id='discountCanvas'></canvas>

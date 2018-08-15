@@ -1,6 +1,6 @@
 /* pages/store/code/code.wxss */
 .container{
-  padding: 60rpx 50rpx 0;
+  padding: 60rpx 70rpx 0;
   letter-spacing: 2rpx;
 }
 
@@ -121,6 +121,7 @@
   height: auto;
   background: #fff;
   padding:40rpx 0;
+  border-radius: 15rpx;
 }
 .save{
   width: 80%;

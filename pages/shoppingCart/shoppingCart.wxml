@@ -51,7 +51,7 @@
     <view class="acount-lft">
       <view class='all'>
       <image class="item-select" data-is='{{isAllSelect}}' bindtap="allSelect" src="{{isAllSelect?'img/comment_select.png':'img/comment_normal.png'}}" />
-        <text>全选</text>
+        <text class="allselect">全选</text>
       </view>
       <view class='sum-box'>
         合计：<view class='sum-price'><text class="small-size">￥</text><span class="nummoney">{{totalMoney}}</span></view>

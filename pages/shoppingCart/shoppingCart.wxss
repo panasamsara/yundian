@@ -178,10 +178,11 @@
   z-index:33;
 }
 .account-box .all{
-  padding: 10rpx 20rpx 10rpx 20rpx;
-  display: inline-block;
-  height: 80rpx;
-  line-height:80rpx;
+  padding:0 20rpx 0 20rpx;
+  display:inline-block;
+  height:100rpx;
+  width:40rpx;
+  float:left;
 }
 .account-box .sum-box{
   height: 100rpx;
@@ -195,7 +196,7 @@
 }
 .sum-box .sum-price{
   color:#fb452c;
-  font-size:38rpx;
+  font-size:36rpx;
   line-height:70rpx;
 }
 .detail-title{
@@ -222,7 +223,7 @@
   width:40rpx;
   height:40rpx;
   position:absolute;
-  top:30%;
+  top:15%;
 }
 .all text{
   margin-left: 50rpx;
@@ -359,4 +360,12 @@
   width: 48%;
   background: #fb442c;
   color:#fff;
+}
+.allselect{
+  position:absolute;
+  font-size:20rpx;
+  width:40rpx;
+  top:60rpx;
+  height:20rpx;
+  left:-30rpx;
 }

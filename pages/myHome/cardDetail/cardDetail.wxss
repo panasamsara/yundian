@@ -1,0 +1,130 @@
+.card-box{
+  position: relative;
+  width: 100%;
+  height: 560rpx;
+}
+.card-bg-box{
+  position: relative;
+  width: 100%;
+  height: 393rpx;
+}
+.card-desc{
+  position: absolute;
+  top: 0;
+  padding: 30rpx;
+  color: #fff;
+  font-size: 30rpx;
+}
+.m-b-10{
+  margin-bottom: 10rpx;
+}
+.card-bg-img{
+  width: 100%;
+  height: 100%;
+}
+.card-info-box{
+  position: absolute;
+  bottom: 0;
+  width: 690rpx;
+  height: 378rpx;
+  margin-left: 30rpx;
+}
+.card-info-box .sxtype{
+  position: absolute;
+  width: 112rpx;
+  height: 112rpx;
+  top:98rpx;
+  right:128rpx;
+}
+.card-name{
+  position: absolute;
+  top: 138rpx;
+  width: 100%;
+  text-align: center;
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #333;
+}
+.left-num{
+  position: absolute;
+  left: 20rpx;
+  bottom: 60rpx;
+  font-size: 30rpx;
+  color: #333;
+}
+.card-type{
+  position: absolute;
+  right: 30rpx;
+  bottom: 60rpx;
+  width: 100rpx;
+  height: 46rpx;
+  text-align: center;
+  font-size: 32rpx;
+  color: #ff0036;
+  padding: 10rpx;
+  border: 1rpx solid #ff0036;
+  border-radius: 10rpx;
+}
+.detail-title{
+  width: 100%;
+  height: 60rpx;
+  text-align: center;
+  border-bottom: 1rpx solid #eee;
+  margin-top:5rpx;
+}
+.detail-title-img{
+  width: 228rpx;
+  height: 32rpx;
+}
+.detail-list-box{
+  width: 100%;
+  padding: 0 30rpx;
+  box-sizing: border-box;
+}
+.detail-list{
+  width: 690rpx;
+  height: 144rpx;
+  border-bottom: 1rpx solid #eee;
+}
+.list-left{
+  float: left;
+  width: 400rpx;
+  margin-top: 25rpx;
+}
+.list-card-name{
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+  color: #333;
+}
+.list-shop-name{
+  font-size: 28rpx;
+  color: #999;
+}
+.list-right{
+  float: right;
+  width: 290rpx;
+}
+.use-detail{
+  text-align: right;
+  top:-40rpx;
+  font-size: 32rpx;
+  margin-bottom: 10rpx;
+  color: #333;
+}
+.use-time{
+  text-align: right;
+  font-size: 28rpx;
+  color: #999;
+}
+.empty view{
+  font-size: 30rpx;
+  text-align: center;
+  color: #999;
+  margin-top: 20rpx;
+}
+.list-empty-img{
+  width: 326rpx;
+  height: 326rpx;
+  margin: 100rpx 212rpx 0; 
+}

@@ -90,8 +90,10 @@
             <view>
               <view class="food" wx:for="{{cartGoodsList}}" wx:for-item="good" wx:key='index' >
                 <view class="name">{{good.goodsName}}</view>
+                <text class='stock-name'>{{good.stockName}}</text>
+                
                 <view class="price">
-                  <view> <text class='list-yangjiao'>￥</text>{{good.stockPrice? good.stockPrice : good.goodsPrice}}</view>
+                  <view> <text class='list-yangjiao'>￥</text>{{good.stockPrice !=null ? good.stockPrice : good.goodsPrice}}</view>
                 </view>
 
                 <view class="cartcontrol-wrapper">
@@ -149,7 +151,7 @@
       
     </view>
     <view class='stock-box-bottom'>
-      <view class='stock-money' wx:if='{{chosenStockPrice}}'> <text class='stock-yangjiao'>￥</text>{{chosenStockPrice}}</view>
+      <view class='stock-money' wx:if='{{chosenStockPrice != null}}'> <text class='stock-yangjiao'>￥</text>{{chosenStockPrice}}</view>
       <view class='stock-btn' bindtap='choseStockYesBtn'>确认</view>
       <!-- <view class='stock-btn gray' wx:if='{{!hasChooseStock}}'>确认</view> -->
     </view>

@@ -93,6 +93,142 @@ Page({
       var goodMap = []
       var stockMap = []
       let goodsInCategory = []
+      let goods = []
+
+      // 新的获取所有商品
+      util.reqAsync('shop/getShopGoodsMore', {
+        merchantId: shop.merchantId,
+        shopId: shop.id,
+        customerId: user.id,
+        searchType: 1,
+        categoryId: null
+      }).then((res) => {
+         goods = res.data.data
+
+        if (shopCategory[1].type ==3) {
+          util.reqAsync('shop/getShopGoodsMore', {
+            merchantId: shop.merchantId,
+            shopId: shop.id,
+            customerId: user.id,
+            searchType: shopCategory[1].type,
+            categoryId: shopCategory[1].categoryId
+          }).then((res) => {
+
+            let newData = res.data.data
+            if (newData.length != 0) {
+              for (let i = 0; i < newData.length; i++) {
+                goods.push(newData[i])
+              }
+            }
+            if (goods.length != 0) {
+              for (let j = 0; j < goods.length; j++) {
+                goodMap[goods[j].id] = goods[j];
+                goodMap[goods[j].id].number = 0
+                goodsInCategory.push(goods[j])
+
+                if (goods[j].stockList.length != 0) {
+                  for (let k = 0; k < goods[j].stockList.length; k++) {
+                    let goodStock = []
+                    goodStock.goodsName = goods[j].goodsName
+                    goodStock.goodsId = goods[j].id
+                    goodStock.stockId = goods[j].stockList[k].id
+                    goodStock.number = 0
+                    goodStock.goodsPrice = goods[j].price
+                    goodStock.stockPrice = goods[j].stockList[k].stockPrice
+                    goodStock.stockPrice = goods[j].stockList[k].stockPrice
+                    stockMap[goodStock.stockId] = goodStock
+                  }
+                } else {
+                  let goodStock = []
+                  goodStock.goodsName = goods[j].goodsName
+                  goodStock.goodsId = goods[j].id
+                  goodStock.stockId = null
+                  goodStock.number = 0
+                  goodStock.goodsPrice = goods[j].price
+                  goodStock.stockPrice = null
+                  goodStock.stockBalance = goods[j].stockBalance
+                  stockMap[goodStock.goodsId] = goodStock
+                }
+              }
+            }
+            let g = {}
+            for (let j = 0; j < goodMap.length; j++) {
+              if (goodMap[j] && goodMap[j])
+                g[j] = goodMap[j]
+            }
+            let h = {}
+            for (let i = 0; i < stockMap.length; i++) {
+              if (stockMap[i] && stockMap[i])
+                h[i] = stockMap[i]
+            }
+            this.setData({
+              goodMap: g,
+              stockMap: h,
+              goodsInCategory: goodsInCategory,
+              showLoading: false
+            })
+
+          }).catch((err) => {
+            console.log(err)
+          })
+        }else{
+          if (goods.length != 0) {
+            for (let j = 0; j < goods.length; j++) {
+              goodMap[goods[j].id] = goods[j];
+              goodMap[goods[j].id].number = 0
+              goodsInCategory.push(goods[j])
+
+              if (goods[j].stockList.length != 0) {
+                for (let k = 0; k < goods[j].stockList.length; k++) {
+                  let goodStock = []
+                  goodStock.goodsName = goods[j].goodsName
+                  goodStock.goodsId = goods[j].id
+                  goodStock.stockId = goods[j].stockList[k].id
+                  goodStock.number = 0
+                  goodStock.goodsPrice = goods[j].price
+                  goodStock.stockPrice = goods[j].stockList[k].stockPrice
+                  goodStock.stockPrice = goods[j].stockList[k].stockPrice
+                  stockMap[goodStock.stockId] = goodStock
+                }
+              } else {
+                let goodStock = []
+                goodStock.goodsName = goods[j].goodsName
+                goodStock.goodsId = goods[j].id
+                goodStock.stockId = null
+                goodStock.number = 0
+                goodStock.goodsPrice = goods[j].price
+                goodStock.stockPrice = null
+                goodStock.stockBalance = goods[j].stockBalance
+                stockMap[goodStock.goodsId] = goodStock
+              }
+            }
+          }
+          let g = {}
+          for (let j = 0; j < goodMap.length; j++) {
+            if (goodMap[j] && goodMap[j])
+              g[j] = goodMap[j]
+          }
+          let h = {}
+          for (let i = 0; i < stockMap.length; i++) {
+            if (stockMap[i] && stockMap[i])
+              h[i] = stockMap[i]
+          }
+          this.setData({
+            goodMap: g,
+            stockMap: h,
+            goodsInCategory: goodsInCategory,
+            showLoading: false
+          })
+
+          this.shopCartList()
+        }
+        
+      }).catch((err) => {
+        console.log(err)
+      })
+   
+
+/*
       for (let i = 0; i < shopCategory.length; i++){
         // 根据每个类别 把所有商品查出来
         if (i != shopCategory.length-1){
@@ -205,11 +341,9 @@ Page({
         }
         
       }
-      
-      console.log('goodMap1')
+   */
+      console.log('goodMap')
       console.log(goodMap)
-      console.log('goodMap2',this.data.goodMap)
-
 
     }).catch((err) => {
       console.log(err)
@@ -272,7 +406,7 @@ Page({
    
     if (this.data.goodMap[_id].stockBalance == 0){
       wx.showToast({
-        title: '库存不足',
+        title: '已达库存上限，不能添加',
         icon: 'none'
       })
       return false
@@ -280,8 +414,7 @@ Page({
     
     // let goodStockMapArr = this.data.goodStockMapArr
     let stockMap = this.data.stockMap
-    console.log(stockMap)
-    console.log(_id)
+
     if (stockId != 'null' && stockId && stockId != undefined){
       console.log(stockMap[stockId])
       let new_number = stockMap[stockId].number + 1
@@ -339,10 +472,10 @@ Page({
       
 
     } else {
-      console.log(888888)
+
       let new_number = stockMap[_id].number - 1
       if (new_number <= 0){
-        console.log(888889)
+
         this.deleteGoods(user.id, shop.id, null, stockMap[_id].goodsId ) 
         // goodMap[stockMap[_id].goodsId].number = 0
         // this.setData({
@@ -382,7 +515,7 @@ Page({
 
     let _id = e.target.id.split('_')[1];
     let goodMap = this.data.goodMap
-    console.log(goodMap[_id])
+
     if (goodMap[_id].attrList){
       this.setData({
         hasAttrList: true
@@ -409,7 +542,7 @@ Page({
         })
       }
     }else{
-      console.log("没有规格")
+      console.log("没有属性列表")
       this.setData({
         hasAttrList: false,
         stocks: this.data.goodMap[_id].stockList,
@@ -667,10 +800,16 @@ Page({
       stockId: stockid, 
       goodsName: goodsName
     }).then((res) => {
-        
+
       if(res.data.code ==1){
         // 获取购物车
         this.shopCartList()
+        if (res.data.data.isLowStock == 1){
+          wx.showToast({
+            title: '已达库存上限，不能添加',
+            icon: 'none'
+          })
+        }
       }
       
       if (res.data.code == 9){
@@ -735,19 +874,19 @@ Page({
     var goodMap = this.data.goodMap
     var stockMap = this.data.stockMap
     util.reqAsync('shop/shopCartList', {
-        customerId: user.id,
-        shopId: shop.id
+      customerId: user.id,
+      shopId: shop.id,
+      cartType: 0 // 0:店外下单购物车 1:店内和留店购物车
     }).then((res) => {
-      console.log("购物车")
-      console.log(res.data.data)
+      console.log("开始计算")
+      console.log(goodMap)
+
       if (res.data.data.length != 0) {
 
         let cartGoodsList = res.data.data[0].goodsList
         for (let i = 0; i < cartGoodsList.length; i++) {
-          // console.log(goodMap[cartGoodsList[i].goodsId])
 
           if(goodMap[cartGoodsList[i].goodsId]) {
-            goodMap[cartGoodsList[i].goodsId].number = cartGoodsList[i].number
             if (cartGoodsList[i].stockId) {
               // console.log(stockMap[cartGoodsList[i].stockId])
               stockMap[cartGoodsList[i].stockId].number = cartGoodsList[i].number
@@ -757,6 +896,16 @@ Page({
           }
 
         }
+        // 先清零 goodMap里的数量， 然后将数量加总
+        for (let stockIndex in stockMap) {
+          let goodsId = stockMap[stockIndex].goodsId
+          goodMap[goodsId].number = 0
+        }
+        for(let stockIndex in stockMap){
+          let goodsId = stockMap[stockIndex].goodsId
+          goodMap[goodsId].number += stockMap[stockIndex].number
+        }
+
         this.setData({
           goodMap: goodMap,
           stockMap: stockMap,
@@ -824,7 +973,7 @@ Page({
           cartGoodsList[i].unitPrice = cartGoodsList[i].stockPrice
         }else{
           cartGoodsList[i].actualPayment = cartGoodsList[i].goodsPrice
-          cartGoodsList[i].unitPrice = cartGoodsList[i].stockPrice
+          cartGoodsList[i].unitPrice = cartGoodsList[i].goodsPrice
         }
       }
 

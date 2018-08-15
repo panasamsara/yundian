@@ -1,0 +1,24 @@
+<view class='content'>
+   <view class='common' wx:for="{{getCardByUser}}" wx:key="{{index}}" data-item="{{item}}" bindtap='skip'>
+    <image class="bg" src="../images/bg2x.png"></image>
+    <view class='list'>
+      <image src='../images/zxcs_cszh_kaxianghui@2x.png'></image>
+      <text class='name' wx:if="{{item.serviceType==2}}">时长卡</text>
+    </view>
+    <view class='info kaX'>
+      <view>
+        <text class='left'>{{item.cardName}}</text>
+        <text class='right font28 color666'>到期时间</text>
+      </view>
+      <view>
+        <text class='left font28 color999'>{{item.totalNum}}个月</text>
+        <text class='right font28 color999'>{{item.remainNum}}</text>
+      </view>
+      <image class="sxtype" src='../images/yd_yiguoqi@2x.png'></image>
+    </view>
+  </view>
+</view>
+<view wx:if="{{getCardByUser==null||getCardByUser.length==0}}" class='empty'>
+  <image class='list-empty-img' src='../images/zxcs_cszh_zwmx@3x.png'></image>
+  <view>暂无失效卡</view>
+</view>

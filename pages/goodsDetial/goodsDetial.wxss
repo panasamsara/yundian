@@ -5,7 +5,7 @@ page{
 .page_main{
   position: relative;
   letter-spacing: 2rpx;
-  padding-top: 70rpx;
+  padding-top: 88rpx;
 }
 .clearfix::after{
   content: '.';
@@ -242,7 +242,7 @@ swiper-item image{
   margin-left: 20rpx;
 }
 .dingwei{
-   padding:15rpx 30rpx 30rpx; 
+   padding:15rpx 30rpx 0 30rpx; 
 }
 .zw-pic{
   text-align: center;
@@ -314,19 +314,26 @@ swiper-item image{
   font-size: 25rpx;
   line-height: 45rpx;
 }
-.user-pic{
-  padding-top:10rpx;
+
+.fileBox{
+  width: 210rpx;
+  padding: 0 10rpx 10rpx 10rpx;
+  position: relative;
 }
-.user-pic image{
-  width:216rpx;
-  height: 216rpx;
-  border-radius:10rpx;
-  float:left;
-  margin: 0 20rpx 20rpx 0;
+
+.fileBox image,.fileBox video{
+  width: 100%;
+  height: 210rpx;
 }
-.user-pic image:nth-child(3n){
-  margin:0;
+
+.fileBox image.play{
+  position: absolute;
+  top: 84rpx;
+  left: 97rpx;
+  width: 36rpx;
+  height: 42rpx;
 }
+
 .user-info{
   height: 83rpx;
   line-height: 83rpx;
@@ -607,7 +614,7 @@ view.normalBuy #buyNow,view.normalBuy #addCart{
   color:#fb452c;
 }
 .layer2 .pic-list{
-  width: 520rpx;
+  /* width: 520rpx; */
   height: 430rpx!important;
   padding: 0 80rpx;
 }
@@ -620,13 +627,13 @@ view.normalBuy #buyNow,view.normalBuy #addCart{
   margin-bottom: 30rpx;
 }
 
-.layer2 .pic-list view:nth-of-type(3) image{
+/* .layer2 .pic-list view:nth-of-type(3) image{
   margin-right: 0;
 }
 
 .layer2 .pic-list view:nth-of-type(4n+3) image{
   margin-right: 0;
-}
+} */
 
 .layer2 .joinBuy{
   width: 520rpx;
@@ -1047,19 +1054,20 @@ button{
 #tabBox{
   display: flex;
   flex-direction: row;
-  height: 70rpx;
+  height: 88rpx;
   justify-content: center;
   position: fixed;
   top: 0;
   z-index: 999;
   background-color: #ffffff;
   width: 100%;
+  border-top: solid 1rpx #e5e5e5;
 }
 
 #tabBox .tab{
-  height: 50rpx;
-  line-height: 50rpx;
-  font-size: 30rpx;
+  height: 78rpx;
+  line-height: 88rpx;
+  font-size: 32rpx;
   text-align: center;
   margin-right: 40rpx;
 }
@@ -1074,6 +1082,38 @@ button{
 }
 
 #infoBox{
-  padding: 70rpx 25rpx 40rpx 25rpx;
+  padding: 90rpx 25rpx 40rpx 25rpx;
   font-size: 28rpx;
+}
+
+canvas{
+  position: fixed;
+  top: 9999rpx;
+}
+
+.untouch{
+  height: 90%;
+  overflow: hidden;
+}
+
+.uploadBox{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding-top: 10rpx;
+}
+
+#blank{
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  color: #999999;
+}
+
+#blank image{
+  width: 380rpx;
+  height: 320rpx;
+  margin: 200rpx 0 20rpx 0;
 }

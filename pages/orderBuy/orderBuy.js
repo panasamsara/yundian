@@ -75,6 +75,7 @@ Page({
   onLoad: function (options) {
     console.log(options)
     var user = wx.getStorageSync('scSysUser');
+    console.log('onload-user', user)
     var shop = wx.getStorageSync('shop');
     var ispay = wx.getStorageSync('isPay') || 0;
     var userid = wx.getStorageSync('scSysUser').id;
@@ -87,20 +88,19 @@ Page({
     var shopProvince = shop.provinceId;
     var shopArea = shop.areaId;
     var shopCity = shop.cityId;
-    console.log(typeof(goods[0].deliveryCalcContent))
-    if (goods[0].deliveryCalcContent==""){
-      var arr = 0;
-    } else if (goods[0].deliveryCalcContent != null){
-      if (typeof (goods[0].deliveryCalcContent)=='string'){
-        var arr = JSON.parse(goods[0].deliveryCalcContent);
-      }else{
-        var arr = goods[0].deliveryCalcContent;
-      }
-      
-    }else{
-      var arr = 0;
-    }
-    
+    var goodsDev = [];
+ 
+        for (var k in goods) {
+          if (typeof (goods[k].deliveryCalcContent) == 'string') {
+            if (goods[k].deliveryCalcContent != "" && JSON.parse(goods[k].deliveryCalcContent) != null ) {
+              goodsDev.push(JSON.parse(goods[k].deliveryCalcContent))
+            }else{
+              goodsDev.push(0);
+            }
+          } 
+        }
+        var arr = goodsDev;
+  
     console.log(typeof (arr))
     this.setData({
       customerId: userid,
@@ -113,6 +113,7 @@ Page({
       offline: offline,
       shopName: shopName
     })
+    console.log(arr)
     if (this.data.offline==1){ //扫码进来的
       this.setData({
         facilityId:wx.getStorageSync('shop').facilityId || ""
@@ -206,7 +207,7 @@ Page({
               ]
             })
           }
-        } else { //开通店内下单
+        } else { //开通店内下单线上线下分开所以不要店内下单
           console.log('开通店内下单')
           this.setData({
             room: data.data.data,
@@ -214,17 +215,13 @@ Page({
           })
           if (isSer == 0) { //普通商品
             this.setData({
-              array: ['快递配送', '店内下单', '自提'],
+              array: ['快递配送', '自提'],
               isShop: 0,//0开通店内下单 1未开通
               isService: 0, //0只有商品没有服务 1有服务
               objectArray: [
                 {
                   id: 0,
                   name: '快递配送'
-                },
-                {
-                  id: 1,
-                  name: '店内下单'
                 },
                 {
                   id: 2,
@@ -234,16 +231,12 @@ Page({
             })
           } else {
             this.setData({
-              isSend: 1,//0-快递  1-店内下单 2-自提
-              array: ['店内下单', '自提'],
+              isSend: 2,//0-快递  1-店内下单 2-自提
+              array: ['自提'],
               isShop: 0,//0开通店内下单 1未开通
               isService: 1, //0只有商品没有服务 1有服务
               index: 0,
               objectArray: [
-                {
-                  id: 1,
-                  name: '店内下单'
-                },
                 {
                   id: 2,
                   name: '自提'
@@ -272,65 +265,6 @@ Page({
       })
     })
 
-   
-    
-
-    //获取地址
-    // app.util.reqAsync('shop/getMyAddressAndCoupon', {
-    //   customerId: this.data.customerId,
-    //   shopId: this.data.shopId
-    //   }).then((data) => {
-    //     this.setData({
-    //       userInfo: data.data.data,
-    //       shopName: options.shopName,
-    //     })
-    //     if (data.data.data.recvAddress){
-    //       var areaName = app.util.area.getAreaNameByCode(data.data.data.recvAddress.areaId);
-    //       var cityName = app.util.area.getAreaNameByCode(data.data.data.recvAddress.cityId);
-    //       var ProvinceName = app.util.area.getAreaNameByCode(data.data.data.recvAddress.provinceId);
-    //       this.setData({
-    //         areaId: data.data.data.recvAddress.areaId,//地区主键
-    //         cityId: data.data.data.recvAddress.cityId,//城市主键
-    //         provinceId: data.data.data.recvAddress.provinceId,//省id
-    //         address: data.data.data.recvAddress.address,//地址
-    //         contactMobile: data.data.data.recvAddress.phone, //收货人
-    //         contactName: data.data.data.recvAddress.name, //电话
-    //         areaName: areaName,
-    //         cityName: cityName,
-    //         ProvinceName: ProvinceName
-    //       })        
-    //     }else{
-    //       this.setData({
-    //         areaId: "",//地区主键
-    //         cityId: "",//城市主键
-    //         provinceId: "",//省id
-    //         address: "",//地址
-    //         contactMobile: '',
-    //         contactName: '',
-    //         areaName: '',
-    //         cityName: '',
-    //         ProvinceName: ''
-    //       })     
-    //     }
-    //     if (data.data.data.couponList){
-    //       var counlits = [];//过滤掉新手礼包
-    //       for (var i in data.data.data.couponList){
-    //         if (data.data.data.couponList[i].couponType!='06'){
-    //           counlits.push(data.data.data.couponList[i]);
-    //         }
-    //       }
-    //       this.setData({
-    //         discount: counlits //优惠券
-    //       }) 
-    //     }
-        
-    //   }).catch((err) => {
-
-    //     wx.showToast({
-    //       title: '失败……',
-    //       icon: 'none'
-    //   })
-    // })
     this.setData({
       totalMoney: options.totalMoney,
       oldTotal: options.totalMoney,
@@ -472,6 +406,7 @@ Page({
   },
   deliveryMone: function (){
     var darr = this.data.deliveyArr;
+  
     if (this.data.name=="包邮券"){
       this.setData({
         deliveyMoney: 0
@@ -479,45 +414,66 @@ Page({
     }else{
     
       if (darr!=0){
+        var mony = [];//所有商品运费集合
         console.log(1)
-        //比较是否在一个省
-        if (this.data.provinceId == this.data.shopProvince) {  //在一个省
-          if (this.data.cityId == this.data.shopCity) { //同一个市
-            var detail = darr.inCityPriceDetails;
-            var flagos = false; //默认不匹配区
-            for (var k in detail) {
-              if (this.data.areaId == detail[k].area) {
-                flagos = true;
-                console.log('匹配的区')
-                this.setData({
-                  deliveyMoney: darr.inCityPriceDetails[k].areaPrice
-                })
-                break;
+        for (var a in darr){
+          //比较是否在一个省
+          if (this.data.provinceId == this.data.shopProvince) {  //在一个省
+            if (this.data.cityId == this.data.shopCity) { //同一个市
+              var detail = darr[a].inCityPriceDetails;
+              var flagos = false; //默认不匹配区
+              for (var k in detail) {
+                if (this.data.areaId == detail[k].area) {
+                  flagos = true;
+                  console.log('匹配的区')
+                  this.setData({
+                    deliveyMoney: darr[a].inCityPriceDetails[k].areaPrice
+                  })
+                  break;
+                }
               }
-            }
-            if (flagos == false) { //无匹配的区
-              console.log('无匹配的区')
+              if (flagos == false) { //无匹配的区
+                console.log('无匹配的区')
+                this.setData({
+                  deliveyMoney: darr[a].inCityPrice
+                })
+              }
+
+            } else { //不在一市
+              console.log('不在一个市')
               this.setData({
-                deliveyMoney: darr.inCityPrice
+                deliveyMoney: darr[a].notInCityPrice
               })
             }
-           
-          } else { //不在一市
-            console.log('不在一个市')
+          } else { //不在一个省
+            console.log('不在一个省')
             this.setData({
-              deliveyMoney: darr.notInCityPrice
+              deliveyMoney: darr[a].notInCityPrice
             })
           }
-        } else { //不在一个省
-          console.log('不在一个省')
-          this.setData({
-            deliveyMoney: darr.notInCityPrice
-          })
+
+          mony.push(this.data.deliveyMoney)
         }
-      }
+
+        if (mony.length > 1) {
+          var bigmon = mony.sort(this.compare);
+        } else {
+          var bigmon = mony
+        }
+
+        console.log(bigmon)
+        this.setData({
+          deliveyMoney: bigmon[0]
+        })
+        }
+      
+      
      
     }
     
+  },
+  compare:function (val1, val2) {
+    return val2 - val1;
   },
   discounts: function (e) { //优惠券
     if (this.data.isSend == 0){
@@ -1047,7 +1003,7 @@ Page({
         wx.navigateTo({
           url: '../shoppingCart/shoppingCart'
         })
-      } else if (data.data.code == 1) {
+      } else if (data.data.code == 1) { //需要调支付接口就要跳到详情页，再去支付调接口
         this.setData({
           flagOrder: false,
           isPay: 1
@@ -1064,9 +1020,15 @@ Page({
     var merchantId = this.data.merchantId;//商户主键
     var userName = this.data.username;//用户名
     var bussinessType = 1;
-    var deliveryMoney = this.data.deliveyMoney;//快递金额
+    if (this.data.isSend==2){ //自提
+      var deliveryMoney = 0;//快递金额
+    }else{
+      var deliveryMoney = this.data.deliveyMoney;//快递金额
+    }
+    
     console.log("快递金额" + deliveryMoney)
-    if (this.data.totalMoney == "0.00"){//总价为0专用
+
+    if (this.data.oldTotal == "0.00" || this.data.oldTotal == 0 || this.data.oldTotal =="0"){//总价为0专用
     console.log("总价为0")
       var payStatus =  1;
     }else{
@@ -1113,34 +1075,36 @@ Page({
       }
     
     
-      app.util.reqAsync('shop/submitOnlineOrder', {
-        deliveryType: this.data.isSend,//配送方式(0-快递；1-送货上门；2-自取)
-        shopOrderItemList: goodsList,
-        extend4: '129',//版本
-        areaId: this.data.areaId,
-        deliveryMoney: deliveryMoney,
-        amount: this.data.totalMoney,
-        deliveryTime: 0,
-        contactMobile: this.data.contactMobile,
-        contactName: this.data.contactName,
-        bussinessId: this.data.shopId,
-        source: "MOBILE",//订单来源
-        customerId: this.data.customerId,
-        payType: 3, //支付方式（货到付款0，在线支付1，支付宝支付2，微信支付3）目前只有微信支付
-        bussinessType: bussinessType,
-        payStatus: payStatus,////支付状态（未支付0，成功1，失败2）
-        address:this.data.address,
-        realMoney: this.data.oldTotal, //实际支付金额
-        provinceId: this.data.provinceId,
-        cityId: this.data.cityId,
-        couponId: this.data.couponId  //优惠券id
-     }).then((data) => {
+    var xx = {
+      deliveryType: this.data.isSend,//配送方式(0-快递；1-送货上门；2-自取)
+      shopOrderItemList: goodsList,
+      extend4: '129',//版本
+      areaId: this.data.areaId,
+      deliveryMoney: deliveryMoney,
+      amount: this.data.totalMoney,
+      deliveryTime: 0,
+      contactMobile: this.data.contactMobile,
+      contactName: this.data.contactName,
+      bussinessId: this.data.shopId,
+      source: "MOBILE",//订单来源
+      customerId: this.data.customerId,
+      payType: 3, //支付方式（货到付款0，在线支付1，支付宝支付2，微信支付3）目前只有微信支付
+      bussinessType: bussinessType,
+      payStatus: payStatus,////支付状态（未支付0，成功1，失败2）
+      address: this.data.address,
+      realMoney: this.data.oldTotal, //实际支付金额
+      provinceId: this.data.provinceId,
+      cityId: this.data.cityId,
+      couponId: this.data.couponId  //优惠券id
+    }
+    console.log(xx)
+      app.util.reqAsync('shop/submitOnlineOrder', xx).then((data) => {
        console.log(data)
        this.setData({
          showLoading: true
        })
        if (data.data.code == 1) {
-        if (this.data.totalMoney=="0.00"){  //金额为0直接成功下单绕过支付
+         if (this.data.oldTotal == "0.00" || this.data.oldTotal == 0 || this.data.oldTotal == "0"){  //金额为0直接成功下单绕过支付
           this.setData({
             flagOrder: false,
             isPay: 1

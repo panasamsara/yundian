@@ -1,0 +1,311 @@
+<view id='tabBox'>
+  <text id='product' bindtap='tabchange' class="tab {{tabcur=='product'?'active':''}}">商品</text>
+  <text id='info' bindtap='tabchange' class="tab {{tabcur=='info'?'active':''}}">详情</text>
+</view>
+<view class="page_main {{untouch=='untouch'?'untouch':''}}" wx:if="{{tabcur=='product'}}">
+<!-- banner区 -->
+<swiper indicator-dots='{{indicatorDots}}'>
+  <block wx:for="{{data.imageList}}" wx:key='key'>
+    <swiper-item>
+      <image src='{{item.smallFilePath}}' data-src='{{item.smallFilePath}}'></image>    
+    </swiper-item>
+  </block>
+</swiper>
+<scroll-view scroll-y="true">
+<!-- 倒计时 -->
+  <view class='countDown' wx:if="{{status==2}}">
+    <view class='left'>¥<text id='newPrice'>{{listData[0].goodsPreferentialStockPrice}}</text><text id='oldPrice'>¥{{listData[0].goodsOriginalStockPrice}}</text></view>
+    <view class='right'>
+      <view id='text'>距结束还剩<span wx:if="{{listData[0].d>0}}">{{listData[0].d}}天</span></view>
+      <view id='countBox'>
+        <text>{{listData[0].h?listData[0].h:0}}</text>:<text>{{listData[0].m?listData[0].m:0}}</text>:<text>{{listData[0].s?listData[0].s:0}}</text>
+      </view>
+    </view>
+  </view>
+  <view class='detail'>
+    <view class='infoBox'  wx:if="{{status==1}}">
+      <view class='priceBox'>
+        <text class='price'>¥{{data.groupBuyingPrice}}</text>
+        <text class='oldPrice'>￥{{data.price}}</text>
+      </view>
+      <view class='numBox'>
+        <text class='groupNum'>{{data.population}}人拼</text>
+        <text class='groupAmount'>已拼{{data.groupBuyingAllNum}}单</text>
+      </view>
+    </view>
+    <text class='title'>{{data.goodsName}}</text>
+    <view class='price' wx:if="{{status==3}}">￥{{data.price}}</view>
+    <view class='info' wx:if="{{status==2}}"><span>月销量 {{data.payCount}}</span></view>
+    <view class='info' wx:if="{{status==3||status==1}}"><span>月销量 {{data.payCount}}</span></view>
+  </view>
+  <view class='separate'></view>
+  <!-- 赠品部分 -->
+  <view class='give clearfix' wx:if="{{status==3&&data.gift!=null}}">
+    <image class='left' src='../../images/give.png'></image>
+    <view class='middle clearfix'>
+      <image src='{{data.gift.pictureUrl}}'></image>
+      <view class='rt'>
+        <text>{{data.gift.descTitle}}</text>
+        <view class='bot'>1{{data.gift.units!=null?data.gift.units:'份'}}</view>     
+      </view>
+    </view>
+    <view class='right' bindtap='toGive'>
+      <image src='../../images/yundian_spxq_gengduo.png'></image>
+    </view>
+  </view>
+  <!-- 优惠券部分 -->
+  <view class='coupon' wx:if="{{status==3&&(couponType1||couponType2||couponType3)}}">
+    <view>
+      <image class='left' src='../../images/give.png'></image>
+    <text>领取优惠券</text> 
+    </view>    
+    <view class='right' bindtap='showQuanBox'>
+      <image src='../../images/yundian_spxq_gengduo.png'></image>
+    </view> 
+  </view>
+  <view class='separate'></view>
+  <!-- 拼单 -->
+  <view class='spellList' wx:if="{{status==1&&listData.length>0}}">
+    <view class='top'>
+      <text>{{data.groupBuyingNum}}人正在拼单, 可直接参与</text>
+      <view bindtap='tolayer' class='enter'>
+        <image src='../../images/yundian_spxq_gengduo.png'></image>
+      </view>
+    </view>
+    <view class='item clearfix groupBox' wx:for='{{listData}}' wx:key='key' wx:if="{{data.population-item.totalNum>0}}">
+      <view class='picBox'><image src='{{item.userPic}}'></image></view>
+      <text class='name'>{{item.userName}}</text>  
+      <view class='cont'>还差<span>{{data.population-item.totalNum}}人</span>拼成<view><span>剩余{{item.h}}:{{item.m}}:{{item.s}}</span></view></view>
+      <view bindtap='toJoin' class='gogroup' data-cuser='{{item.cUser}}' data-groupid="{{item.groupBuyingId}}" data-smallid="{{item.id}}" data-endtime="{{item.endTime}}">去拼单</view> 
+    </view>
+  </view>
+  <!-- <view wx:if="{{(status==2||status==3)&&(data.secondKillInfo.length>1||data.scShopGoodsStockList.length>1)}}" id='stockBox'>
+    <text>选择规格</text>
+    <image src='../../images/yundian_spxq_gengduo.png' class='chose' bindtap='tobuy' id='choseStock'></image>
+  </view> -->
+  <!-- <view class='separate'></view> -->
+  <!-- 商品评价 -->
+  <view class='dingwei'>
+    <view class='tab clearfix' bindtap='toAppraise'>
+      <text class='appraise'>商品评价({{all}})</text>
+      <image src='../../images/yundian_spxq_gengduo.png'  class='{{hideView1?"show":"hide"}}'></image>   
+    </view>  
+    <view class='user' wx:for="{{userData}}" wx:key="key">
+      <view class='user-top'>
+        <image src='{{item.memberImgName}}'></image>
+        <span>{{item.anonymous==1?'匿名评价':item.userCode}}</span> 
+        <view class='right'>
+          <view class='star'>
+            <block wx:for="{{item.score}}" wx:key="name">
+              <image src='../../images/fullstar.png'></image>
+            </block>
+            <block wx:for="{{5-item.score}}" wx:key="key">
+              <image src='../../images/emptystar.png'></image>
+            </block>            
+          </view>
+        </view> 
+      </view>
+      <text class='text-remark'>{{item.commentContent}}</text>
+      <view class='uploadBox'>
+        <view class='user-pic clearfix' wx:for="{{item.commentUploadList}}" wx:key="name">
+          <view class='fileBox'>
+            <image src='{{item.filePath}}' wx:if="{{item.fileType=='image'}}"></image>
+            <video src='{{item.filePath}}' wx:if="{{item.fileType=='video'}}"></video>
+          </view>
+        </view>
+      </view>  
+      <view class='user-info clearfix'>
+        <span class='{{item.stockName==null?"hide":"show"}}'>规格: {{item.stockName}}</span>
+        <span>{{item.commentDate}}</span>
+      </view>
+    </view>
+    <view class='zw-pic {{hideView1?"hide":"show"}}'>
+      <image src='../../images/aparise.png'></image>
+      <text>暂无评价哦</text>
+    </view>    
+  </view>  
+   
+  <!-- 问大家 -->
+  <view class='dingwei'>
+    <view class='tab clearfix' bindtap='toAsk'>
+      <text>问大家({{askAcount}})</text>
+      <image src='../../images/yundian_spxq_gengduo.png' class='{{hideView2?"show":"hide"}}'></image>   
+    </view>
+    <view wx:for="{{askData}}" wx:key="key">
+      <view class='ask clearfix'>
+        <view class='ask-icon'><image src='../../images/ask11.png'></image></view>
+        <text>{{item.content}}</text>
+        <span>{{item.answerCount==null?0:item.answerCount}}个回答</span>
+      </view> 
+      <view class='answer clearfix'>
+        <view class='answer-icon'><image src='../../images/answer11.png'></image></view>
+        <text>{{item.answers[0]?item.answers[0].content:'暂无回答'}}</text>
+      </view>    
+    </view>
+    <view class='zw-pic {{hideView2?"hide":"show"}}'>
+      <image style='width:305rpx;height:249rpx' src='../../images/ask.png'></image>
+      <text>还没有问题,快去提问吧~</text>
+    </view>    
+  </view> 
+  <view class='separate'></view>
+
+  <view class='shop clearfix'>
+    <image src='{{data.shopLogoUrl}}'></image>
+    <view class='content'>
+      <text>{{data.shopName}}</text>
+      <block wx:for='{{data.shopScore}}' wx:key='key'>
+        <image src='../../images/fullstar.png'></image>
+      </block>
+      <block wx:for='{{5-data.shopScore}}' wx:key='key'>
+        <image src='../../images/emptystar.png'></image>
+      </block>      
+    </view>
+    <view class='goShop' bindtap='goShop'><image src='../../images/gotoshop.png'></image></view>
+  </view>
+  <view class='tips'>
+    <text>{{data.shopDesc}}</text>
+  </view> 
+ <view class='separate mb'></view>
+</scroll-view>
+<!-- 底部悬浮栏 -->
+  <view class='detail-nav'>
+    <view wx:if="{{status==1}}" class='buyBox'>
+      <view class='add' bindtap='tobuy' id='buy'>
+        <text>￥{{data.price}}</text>
+        <text>单独购买</text>
+      </view>
+      <view class='add' bindtap='tobuy' id='groupBuy'>
+        <text>￥{{data.groupBuyingPrice}}</text>
+        <text>发起拼单</text>
+      </view>
+    </view>
+    <!-- <view wx:if="{{status==2||status==3}}" class="buyBox {{status==3?'normalBuy':'activityBuy'}}">
+      <navigator id='cartCount' url="../shoppingCart/shoppingCart" hover-class='none' open-type='switchTab' wx:if="{{status==3}}">
+        <view id='cartCountBox' wx:if="{{cartTotal>0}}">
+          <text>{{cartTotal}}</text>
+        </view>
+        <view>
+          <image src='../../images/yundian_sygouwuche@2x.png' wx:if="{{cartTotal<=0}}" class="cartIcon"></image>
+          <image src='../../images/yundian_sygouwuchexz@2x.png' wx:if="{{cartTotal>0}}" class='cartIcon'></image>
+        </view> 
+        <text>购物车</text>
+      </navigator>
+      <view class='add' bindtap='tobuy' id='addCart' wx:if="{{status==3}}">加入购物车</view>
+    </view> -->
+  </view>  
+  <!-- 遮罩层 -->
+  <view class='shade {{flag?"show":"hide"}}' bindtap='closeMask' catchtouchmove='preventTouchMove'></view>
+  <!-- 弹出层 -->
+  <view class='layer {{flag1?"show":"hide"}}'>
+    <view class='close' bindtap='closeLayer'>
+      <image src='../../images/yundian_yyxx_guanbi@2x.png'></image>
+    </view>
+    <view class='top'>正在拼单</view>
+    <scroll-view scroll-y="true" class='listBox'>
+      <view class='item clearfix' wx:for='{{listDatas}}' wx:key='key'>
+        <view class='userBox'>
+          <image src='{{item.userPic}}'></image>
+          <text>{{item.userName}}</text>
+        </view>
+        <view class='contBox'>
+          <view class='cont'>还差<span>{{data.population-item.totalNum}}人</span>拼成<view><span>剩余{{item.h}}:{{item.m}}:{{item.s}}</span></view></view>
+          <button bindtap='toJoin' data-endtime="{{item.endTime}}" data-cuser='{{item.cUser}}' data-groupid="{{item.groupBuyingId}}" data-smallid="{{item.id}}" data-flag="layer">去拼单</button>  
+        </view> 
+      </view>
+    </scroll-view>
+    <!-- 底部提示信息 -->
+    <view class='bot'>仅显示10个正在拼单的人</view>       
+  </view>
+  <!-- 去拼单弹出层 -->
+  <view class='layer {{flag2?"show":"hide"}} layer2'>
+    <view class='close' bindtap='closeLayer'>
+      <image src='../../images/yundian_yyxx_guanbi@2x.png'></image>
+    </view>  
+    <view class='title'>参与{{picData[0].userName}}的拼单</view>
+    <view class='cont'>仅剩<span>{{data.population-num}}个</span>名额, {{picData[0].h}}:{{picData[0].m}}:{{picData[0].s}}后结束</view>
+    <scroll-view class='pic-list clearfix' scroll-y="true">
+      <view wx:for='{{picData}}' wx:key='key'>
+        <image src='{{item.userPic}}'></image>    
+      </view>
+      <view wx:for="{{data.population-num}}" wx:key="index">
+        <image src='../../images/yundian_pindantouxiang.png'></image>
+      </view> 
+    </scroll-view> 
+    <view class='joinBuy' bindtap='joinBuy' id='joinBuy'>参与并拼单</view>    
+  </view>
+  <!-- 购买弹出层 -->
+  <view class='main' wx:if="{{showBuy}}" catchtouchmove='preventTouchMove'>
+    <view class='top'>
+      <image src='{{data.pictureUrl}}' ></image>
+      <view class='topBox'>
+        <text class='price'>¥{{total}}</text>
+        <text class='count' wx:if="{{data.goodsType==0}}">库存 {{balance}}</text>
+      </view>
+      <scroll-view class='size clearfix' scroll-y="true" catchtouchmove='preventTouchMove'>
+        <block wx:for='{{data.scShopGoodsStockList}}' wx:key='index' wx:if="{{status==1}}">
+          <span bindtap='chose' class="{{cur==item.index?'active':''}}" data-index="{{index}}">{{item.stockName}}</span>    
+        </block>
+        <block wx:for='{{data.secondKillInfo}}' wx:key='index' wx:if="{{status==2}}">
+          <span bindtap='chose' class="{{cur==item.index?'active':''}}" data-index="{{index}}">{{item.stockName}}</span>    
+        </block>
+        <block wx:for='{{data.stockListDefault}}' wx:key='index' wx:if="{{status==3}}">
+          <span bindtap='chose' class="{{cur==item.index?'active':''}}" data-index="{{index}}">{{item.stockName}}</span>    
+        </block>
+      </scroll-view>
+      <view class='buyCount clearfix'>
+        <view class='left'>购买数量</view>
+        <view class='right clearfix'>
+          <span bindtap="change" class='light bet' id="minus">-</span>
+          <span class='dark middle'>{{number}}</span>
+          <span bindtap="change" class='dark bet' id="add">+</span>
+        </view>
+      </view>    
+    </view>
+    <view class='tot cart' bindtap='addCart' wx:if="{{buy=='addCart'}}">加入购物车</view>
+  </view>
+  <!-- 优惠券弹出层 -->
+  <view class='mask' catchtouchmove='preventTouchMove' bindtap='closeQuanBox' wx:if='{{showQuanBox}}'></view> 
+  <view  class='quan-box'  wx:if='{{showQuanBox}}' catchtouchmove='preventTouchMove'>
+    <!-- 优惠券 -->
+    <view id='couponType1' wx:if="{{couponType1.name}}">
+      <text class='header'>{{couponType1.name}}</text>
+      <view class='quan-box-detail' bindtap='get' data-id="{{couponType1.id}}">
+        <image class='quan-box-bg' src='../../images/yundian_dpzy_youhuiquan@2x.png'></image>
+        <view class='quan-box-content'>
+            <view class='quan-price-box'>￥<text class='quan-price'>{{couponType1.amount}}</text></view>
+            <view>满{{couponType1.amountMin}}元可使用</view>
+            <view>有效期{{couponType1.beginTime}}-{{couponType1.endTime}}</view>
+        </view>
+      </view>
+    </view>
+    <!-- 代金券 -->
+    <view id='couponType2' wx:if="{{couponType2.name}}">
+      <text class='header'>{{couponType2.name}}</text>
+      <view class='quan-box-detail' bindtap='get' data-id="{{couponType2.id}}">
+        <image class='quan-box-bg' src='../../images/yundian_dpzy_youhuiquan@2x.png'></image>
+        <view class='quan-box-content'>
+            <view class='quan-price-box'>￥<text class='quan-price'>{{couponType2.amount}}</text></view>
+            <view>{{couponType2.instruction}}</view>
+            <view>有效期{{couponType2.beginTime}}-{{couponType2.endTime}}</view>
+        </view>
+      </view>
+    </view>
+    <!-- 包邮 -->
+    <view id='couponType3' wx:if="{{couponType3.name}}">
+      <text class='header'>{{couponType3.name}}</text>
+      <view class='quan-box-detail' bindtap='get' data-id="{{couponType3.id}}">
+        <image class='quan-box-bg' src='../../images/yundian_dpzy_youhuiquan@2x.png'></image>
+        <view class='quan-box-content'>
+            <view class='quan-price-box'>￥<text class='quan-price'>包邮券</text></view>
+            <view>满{{couponType3.amountMin}}元可包邮</view>
+            <view>有效期{{couponType3.beginTime}}-{{couponType3.endTime}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+<view wx:if="{{tabcur=='info'}}" id='infoBox'>
+  <rich-text nodes="{{info}}" wx:if="{{info!=null}}"></rich-text>
+</view>
+<canvas canvas-id='seckill' style='width:480rpx;height:380rpx;' id='secKillCanvas'></canvas>
+<canvas canvas-id='groupbuy' style='width:480rpx;height:420rpx;' id='gruopBuyCanvas'></canvas>

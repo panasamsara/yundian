@@ -1,0 +1,35 @@
+<view class='top-title' bindtap='showType' wx:if="{{cardList.length>=0&&flag==1}}">
+  <text>{{select}}</text>
+  <text class='sj down' wx:if="{{showType==false}}"></text>
+  <text class='sj up' wx:if="{{showType==true}}"></text>
+</view>
+<view class='content' style='position:{{showType?"fixed":"inherit"}}'>
+<!-- 账单类型1-充值账单2-办卡账单3-服务账单4-预售转账单', -->
+  <view class='detail-list-box' wx:for="{{cardList}}" wx:key="{{index}}" wx:if="{{cardList.length>0}}" bindtap="skip" data-orderId="{{item.orderId}}">
+    <view class='detail-list'>
+      <view class='list-left'>
+        <view class='list-card-name'>{{item.purchaseName}}</view>
+        <view class='list-shop-name'>{{item.shopName}}</view>
+      </view>
+      <view class='list-right'>
+        <view class='use-detail font-red' wx:if="{{item.orderType==1}}">¥{{item.actualPay}}</view>
+        <view class='use-detail' wx:elif="{{item.payType==9}}">兑换</view>
+        <view class='use-detail' wx:else >- ¥{{item.actualPay}}</view>
+        <view class='use-time'>{{item.consumeTime}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class='mask' wx:if='{{showType}}'></view>
+  <view class='type-box' wx:if='{{showType}}'>
+    <view class='consume-type'>
+      <view class='consume-type-name' bindtap='searchall'>全部</view>
+      <view class='consume-type-name' wx:for="{{carIndex}}" wx:key="{{index}}" bindtap='search' data-subaccountId="{{item.subaccountId}}" 
+      data-accountName="{{item.accountName}}" data-memberId="{{item.memberId}}">{{item.accountName}}</view>
+    </view>
+  </view>
+</view>
+<view wx:if="{{cardList.length==0}}" class='empty'>
+  <image class='list-empty-img' src='../images/zxcs_cszh_zwmx@3x.png'></image>
+  <view>暂无消费明细</view>
+</view>

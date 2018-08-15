@@ -1,0 +1,111 @@
+/* pages/appointment/modal/device-modal.wxss */
+.modal{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 695rpx;
+  border-radius: 14rpx;
+  position: fixed;
+  z-index: 9999;
+  top: 220rpx;
+  left: 28rpx;
+  background-color: #ffffff;
+  padding-bottom: 50rpx;
+}
+
+.modal .title{
+  display: block;
+  width: 100%;
+  text-align: center;
+  line-height: 120rpx;
+  font-size: 34rpx;
+  margin-bottom: 20rpx;
+}
+
+.modal scroll-view{
+  width:695rpx;
+  height: 380rpx;
+  overflow-y: hidden;
+}
+
+.modal .choseBox{
+  display: flex;
+  overflow-y: scroll;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 0 20rpx;
+}
+
+.modal .chose{
+  text-align: center;
+  width: 200rpx;
+  height: 75rpx;
+  line-height: 73rpx;
+  font-size: 32rpx;
+  border: solid 1rpx #999999;
+  border-radius: 10rpx;
+  margin: 0 27.5rpx 30rpx 0; 
+  box-sizing: border-box;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden; 
+}
+
+.modal .chose:nth-child(3n){
+  margin-right: 0;
+}
+
+.modal .submit{
+  width: 250rpx;
+  height: 90rpx;
+  color: #ffffff;
+  background-color: #dadada;
+  font-size: 34rpx;
+  margin-top: 80rpx;
+}
+
+.modal button::after{
+  border: none;
+}
+
+.modal .close{
+  width: 50rpx;
+  height: 50rpx;
+  position: absolute;
+  top: -25rpx;
+  right: -25rpx; 
+  z-index: 99999;
+}
+
+.modal .close image{
+  width: 100%;
+  height: 100%;
+}
+
+.modal .active{
+  color: #ffffff;
+  border: none;
+  background: #fd452d;
+}
+
+.modal button.active{
+  background: -webkit-linear-gradient(left, #fb462b , #ff722b); /* Safari 5.1 - 6.0 */
+  background: -o-linear-gradient(right, #fb462b, #ff722b); /* Opera 11.1 - 12.0 */
+  background: -moz-linear-gradient(right, #fb462b, #ff722b); /* Firefox 3.6 - 15 */
+  background: linear-gradient(to right, #fb462b , #ff722b); /* 标准的语法 */
+}
+
+.modal .deviceBox{
+  width: 100%;
+}
+
+.modal .falicityBox{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.modal .facilityTypes{
+  font-size: 34rpx;
+  line-height: 80rpx;
+}

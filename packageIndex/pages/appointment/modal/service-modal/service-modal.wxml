@@ -1,0 +1,16 @@
+<!--pages/appointment/modal/service-modal.wxml-->
+<view class='serviceModal modal'>
+  <view>
+    <view class='close' bindtap='close'>
+      <image src='../../images/yundian_yyxx_guanbi.png'></image>
+    </view>
+    <text class='title'>选择服务人员</text>
+    <scroll-view scroll-y="true">
+      <view class='choseBox'>
+        <view wx:for="{{waiterList}}" wx:key="index" class="chose {{cur==index?'active':''}}" bindtap='chose' data-index="{{index}}" data-id="{{item.id}}">{{item.name}}</view>
+      </view>
+    </scroll-view>
+    <button type='primary' class="submit {{active==true?'active':'normal'}}" bindtap='submit'>确认</button>
+  </view>
+  <slot></slot>
+</view>

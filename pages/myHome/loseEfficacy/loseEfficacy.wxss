@@ -1,0 +1,84 @@
+.colorfff{
+  color: #fff;
+}
+.font26{
+  font-size: 26rpx;
+}
+.font28{
+  font-size: 28rpx;
+}
+.font50{
+  font-size: 50rpx !important;
+}
+.color666{
+  color: #666;
+}
+.color999{
+  color: #999;
+}
+.left{
+  float: left;
+}
+.right{
+  float: right;
+}
+.content{
+  width: 100%;
+  background: #f8f8f8;
+}
+.content .common{
+  position: relative;
+  margin-bottom: 20rpx;
+}
+.content .common .bg,.content .common{
+  height: 220rpx;
+  width: 100%;
+}
+.content .common .list,.content .common .list .type{
+  position: absolute;
+  top: 0
+}
+.list image{
+  width: 144rpx;
+  height: 44rpx;
+}
+.list .name{
+  position: absolute;
+  font-size: 26rpx;
+  color: #fff;
+  top: 0;
+  left: 25rpx;
+ line-height: 44rpx;
+}
+.content .common .info{
+  position: absolute;
+  left: 32rpx;
+  right: 32rpx;
+  top: 104rpx;
+  color: #333;
+  font-size: 34rpx;
+}
+.content .common .info view{
+  overflow: hidden;
+}
+.content .common .kaX{
+  top: 94rpx;
+}
+.sxtype{
+  position: absolute;
+  width: 112rpx;
+  height: 112rpx;
+  right:114rpx;
+  top:-8rpx;
+}
+.empty view{
+  font-size: 30rpx;
+  text-align: center;
+  color: #999;
+  margin-top: 20rpx;
+}
+.list-empty-img{
+  width: 326rpx;
+  height: 326rpx;
+  margin: 200rpx 212rpx 0; 
+}

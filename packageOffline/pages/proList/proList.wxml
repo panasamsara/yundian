@@ -1,0 +1,253 @@
+<!--orderdetail.wxml-->
+<view class="">
+
+  <view class="goods" style="height: {{goodsH}}rpx;">
+    <!--左侧产品列表-->
+    <view class="menu-wrapper" style="height: {{goodsHs}}px;">
+    <scroll-view scroll-y style="height: {{goodsH}}px;"  scroll-with-animation="{{animation}}">
+      <view wx:for="{{shopCategory}}" wx:key='index' id="cat_{{index}}_{{item.categoryId}}_{{item.type}}" class="menu-item {{(catHighLightIndex == index) ? 'current':''}}" data-name="{{item.categoryName}}" bindtap="catClickFn">{{item.categoryName}}</view>
+    </scroll-view>
+    <view class='gift' bindtap="getGiftData">留店商品</view>
+    </view>
+
+    <!--右侧产品列表-->
+    <view wx:if="{{ifstore==0}}" class="foods-wrapper" style="height: {{goodsH}}px;">
+      <scroll-view scroll-y style="height: 100%;" scroll-into-view="{{toView}}">
+      <view  class="food-grouping" id="catGood_{{item.id}}">
+        <view wx:for="{{goodsInCategory}}" wx:for-item="good" wx:key='index' class="foods-item" data-id="{{good.id}}" data-status='{{good.goodsType}}' data-stocklist="{{good.stockList.length}}" bindtap='goToDetail'>
+          <image class="icon" src="{{good.pictureUrl}}" ></image>
+          <view  class="content">
+            <text class="title">{{good.goodsName}}</text>
+             <text class="yangjiao">¥</text> <text class="price">{{good.price}}</text>
+          </view>
+          <!--加减器-->
+          <view class="cartcontrol-wrap">
+            <view class="cartcontrol">
+                <text class="cart-count">{{(goodMap[good.id].number >0 ) ? goodMap[good.id].number: ""}}</text>
+               <image wx:if="{{good.stockList.length == 0}}" src="./image/yundian_sygouwuche@2x.png" catchtap="touchOnGoods" id="add_{{good.id}}" class="cart-add icon-add_circle"></image>
+               <text wx:if="{{good.stockList.length > 0}}" catchtap="touchOnGoods" id="add_{{good.id}}" class="select-stock">选规格</text>
+            </view>
+          </view>
+        </view>
+      </view>
+      </scroll-view>
+    </view>
+
+    <!-- 右侧 留店商品列表 -->
+    <view wx:elif="{{ifstore==1}}" class="foods-wrapper" style="height: {{goodsH}}px;">
+      <view class="gift-title">留店商品</view>
+      <view class="gift-list">
+        <scroll-view scroll-y style="height: 100%;">
+          <!-- gift-item -->
+          <view class="gift-item" wx:for="{{purchase}}" wx:for-index="purnx"  wx:key="*this" wx:for-item='pur' data-id="{{pur.goodsId}}">
+            <image class="gift-good" src="{{pur.pictureUrl}}"  bindtap="goToDetail"></image>
+            <view class="gift-content">
+              <view class="gift-top">
+                <!-- <view class="gift-opearbtn" bindtap="changePurchase">
+                  <image wx:if="{{pur.pitch==0}}" src="./image/dnxd_fenlei_weixuanzhong@2x.png" id="reduceShop_{{pur.goodsId}}_{{pur.stockId}}_{{pur.shopNum}}_{{pur.id}}_{{pur.remainNum}}_{{pur.balance}}_{{pur.purchaseNum}}_{{pur.pitch}}"></image>
+                  <image wx:else src="./image/dnxd_fenlei_xuanzhong@2x.png" id="reduceShop_{{pur.goodsId}}_{{pur.stockId}}_{{pur.shopNum}}_{{pur.id}}_{{pur.remainNum}}_{{pur.balance}}_{{pur.purchaseNum}}_{{pur.pitch}}"></image>
+                </view> -->
+                <view class="giftname"><text class="gift-goodname">{{pur.purchaseName}}</text></view>
+              </view>
+              
+              <view class="gift-goodstatus">
+                <text class='giftnum'>剩余数量</text><text class="price">{{pur.remainNum}}</text>
+              </view>
+              <!-- 加减 -->
+              <view class="purchase">
+                <view class="reduce" bindtap="numReduce" id="reduceShop_{{pur.goodsId}}_{{pur.stockId}}_{{pur.shopNum}}_{{pur.id}}_{{pur.remainNum}}_{{pur.purchaseNum}}_{{pur.pitch}}">-</view>
+                <view class="edit">
+                  <view class="snum">{{pur.shopNum}}</view>
+                  <!-- <input type="number" value="{{pur.shopNum}}" focus="{{focus}}" confirm-type="done" bindinput="bindKeyInput" bindconfirm="addShopCart" id="reduceShop_{{pur.goodsId}}_{{pur.shopNum}}_{{pur.remainNum}}_{{pur.id}}" disabled="disabled"></input> -->
+                </view>
+                <view class='add' bindtap="numPlus" id="reduceShop_{{pur.goodsId}}_{{pur.stockId}}_{{pur.shopNum}}_{{pur.id}}_{{pur.remainNum}}_{{pur.balance}}_{{pur.purchaseNum}}_{{pur.pitch}}">+</view>
+              </view>
+            </view>
+          </view>
+        </scroll-view>
+      </view>
+    </view>
+  </view>
+
+
+
+  <!--底部结算 选择商品区域-->
+  <!-- <view wx:if='{{hasGoodMap}}'> -->
+  <view>
+    <view class="shopcart">
+      <view class="content">
+        <view class="content-left" bindtap="showShopCartFn">
+
+          <view class="logo-wrapper">
+
+              <image class="logo" src="./image/cart_gray.png" wx:if='{{cart_length == 0}}'>
+                <i class="icon-shopping_cart"></i>
+              </image>
+
+              <image class="logo" src="./image/cart_active.png" wx:if='{{cart_length > 0}}'>
+                <i class="icon-shopping_cart"></i>
+              </image>
+
+            <view class="num" wx:if="{{totalNum}}">{{totalNum}}</view>
+          </view>
+
+          <view class="price {{(cart_length > 0)? 'highlight':''}}"><text class='jiesuan-yangjiao'>￥</text>{{totalPay}}</view>
+        </view>
+        <view class="content-right">
+          <!-- <view bindtap="goToCart" class="pay payClass" wx:if='{{cart_length > 0}}'>去结算 -->
+          <view bindtap="jiesuan" class="pay payClass" wx:if='{{cart_length > 0}}'>确认下单
+          <!-- <text wx:if='{{totalNum >0}}'>（{{totalNum}}）</text> -->
+          </view>
+          <view class="pay-gray" wx:if='{{cart_length == 0}}'>确认下单
+          <!-- <text wx:if='{{totalNum >0}}'>（{{totalNum}}）</text> -->
+          </view>
+        </view>
+      </view>
+      <view class="order-box  {{showShopCart?'':'hidden'}}"  style="height:{{closeheight}}rpx">
+  <!--已买商品-->
+        <view class="buy-goods" style="height:{{buyheight}}rpx" wx:if="{{isBuy==0}}">
+          <view class="list-header">
+            <view class="title">
+              <text class="title-line">已下单商品</text>
+              <view class="empty" bindtap="open" hidden="{{buyopen}}">
+                <image class='buy_icon' src='../../../images/narrow_up@2x.png'></image>
+                <text>展开</text>
+              </view>
+              <view class="empty" bindtap="buyclose" hidden="{{buyclose}}">
+                <image class='buy_icon' src='../../../images/narrow_down@2x.png'></image>
+                <text>收起</text>
+              </view>
+            </view>
+          </view>
+          <scroll-view scroll-y class="buy-scroll" hidden="{{buyclose}}">
+            <view class="list-content">
+              <!--begin-->
+              <view>
+                <view class="food" wx:for="{{bugGoods}}" wx:for-item="goodd" wx:key='index' >
+                  <view class="name">{{goodd.purchaseName}}</view>
+                  <view class="cart-wrapper">
+                      <view class="cartcontrol" bindtap="addGoodToCartFn" data-stockid='{{goodd.stockId}}' id="add_{{goodd.goodsServiceId}}_{{goodd.stockId}}">
+                          再加一份
+                      </view>
+                    </view>
+                </view>
+              </view>
+              <!--end-->
+            </view>
+          </scroll-view>
+        </view>
+        <!--已选商品-->
+        <view class="shopcart-list">
+          <view class="list-header">
+            <view class="title">
+              <text class="title-line">已选商品</text>
+              <view class="empty" bindtap="clearShopCartFn" >
+                <image class='delete_icon' src='./image/delete.png'></image>
+                <text>清空</text>
+              </view>
+
+            </view>
+          </view>
+          <scroll-view scroll-y >
+          <view class="list-content" >
+
+              <view>
+                <view class="food" wx:for="{{cartGoodsList}}" wx:for-item="good" wx:key='index' >
+                  <view class="name">{{good.goodsName}}</view>
+                  <view class="price">
+                    <view> <text class='list-yangjiao'>￥</text>{{good.stockPrice? good.stockPrice : good.goodsPrice}}</view>
+                  </view>
+
+                  <view class="cartcontrol-wrapper">
+                      <view class="cartcontrol">
+                          <view bindtap="decreaseGoodToCartFn" data-stockid='{{good.stockId}}' class="cart-decrease">
+                              <image id="decrease_{{good.goodsId}}_{{good.stockId}}_{{good.purchaseType}}_{{good.number}}_{{good.accountRecordId}}" class="cart-decrease" src="./image/fenlei_shanjian@2x.png" data-goodsname="{{good.goodsName}}"></image>
+                              <view class="inner icon-remove_circle_outline"></view>
+                          </view>
+                          <text class="cart-count">{{good.number}}</text>
+                          <image src="./image/fenlei_tianjia@2x.png" bindtap="addGoodToCartFn" data-stockid='{{good.stockId}}' id="add_{{good.goodsId}}_{{good.stockId}}" class="cart-add icon-add_circle"></image>
+                      </view>
+                    </view>
+                </view>
+              </view>
+
+          </view>
+          </scroll-view>
+        </view>
+      </view>
+
+
+    </view>
+  </view>
+
+  <!--小球的实现-->
+
+
+  <view class="good_box" hidden="{{hide_good_box}}"  style="left: {{bus_x}}px; top: {{bus_y}}px;">
+  </view>
+
+
+
+  <view style="height:86px;"></view>
+
+</view>
+<view bindtap="showShopCartFn" class="cover  {{(showShopCart && (cart_length > 0))?'':'hidden'}}"></view>
+
+  <!-- 规格弹框 -->
+  <view class='stock-mask' catchtouchmove='preventTouchMove' catchtap='closeMask' wx:if='{{showStock}}'>
+  </view>
+  <view class='stock-box' wx:if='{{showStock}}'>
+    <image class='mask-close-btn' bindtap='closeMask' src='../../../../images/yundian_yyxx_guanbi@2x.png'></image>
+    <view class='stock-box-title'>选购规格</view>
+    <view class='stock-box-content'>
+
+      <scroll-view scroll-y class='stock-scroll-box'>
+        <view class='stock-box-content-content' wx:if='{{hasAttrList}}' wx:for='{{attrList}}' wx:for-item="item" wx:index='{{index}}' wx:key='{{index}}'>
+          <view class='stock-box-content-title'>{{item.pname}}:</view>
+          <view wx:for="{{item.attrIdAndNameList}}" wx:for-item="stock" wx:key='index' data-attrid='{{stock.attrId}}' id="stock_{{stock.pindex}}_{{index}}" class="{{ myStockTrueFalseArr[stock.pindex][index] ? 'stock-list-active':'stock-list'}}"  bindtap="choseStock">{{stock.attrName}}</view>
+
+        </view>
+        <view class='stock-box-content-content' wx:if='{{!hasAttrList}}'>
+          <view class='stock-box-content-title'>规格:</view>
+          <view wx:for='{{stocks}}' wx:key='index' wx:for-item='item' id="stock_{{index}}_{{item.id}}" data-price="{{item.stockPrice}}" class="{{(stockHighLightIndex == index) ? 'stock-list-service-active':'stock-list-service'}}" bindtap='choseDefaultStock'>{{item.stockName}}</view>
+        </view>
+      </scroll-view>
+
+    </view>
+    <view class='stock-box-bottom'>
+      <view class='stock-money' wx:if='{{chosenStockPrice}}'> <text class='stock-yangjiao'>￥</text>{{chosenStockPrice}}</view>
+      <view class='stock-btn' bindtap='choseStockYesBtn'>确认</view>
+      <!-- <view class='stock-btn gray' wx:if='{{!hasChooseStock}}'>确认</view> -->
+    </view>
+  </view>
+ <!--导航-->
+  <view class="nav">
+    <view bindtap='navShow' class="order-icon navshow" hidden='{{isShow}}' >
+      <image class="openicon" src="../../../images/dnxd_fenlei_ksdh@2x.png"></image>
+    </view>
+    <view class="order-lists" hidden='{{isShows}}'>
+      <view class="order-icon" bindtap='navhide'>
+       <image src="../../../images/dnxd_shouqi@2x.png"></image>
+      </view>
+      <view class="oreder-ls">
+        <navigator url="../../../pages/index/index" open-type="switchTab" hover-class="navigator-hover">
+          <image src="../../../images/shouye_hui.png"></image>
+          <text class="order-txt">店铺首页</text>
+        </navigator>
+        <navigator url="proList" hover-class="navigator-hover">
+          <image src="../../../images/fenlei_hui.png"></image>
+          <text class="order-txt">店铺分类</text>
+        </navigator>
+        <navigator url="../../../pages/myHome/shopOrder/shopOrder" hover-class="navigator-hover">
+          <image src="../../../images/fenlei_hui.png"></image>
+          <text class="order-txt">店内订单</text>
+        </navigator>
+      </view>
+    </view>
+  </view>
+
+<view class='mask' catchtouchmove='preventTouchMove' wx:if='{{showLoading}}'>
+  <view class='loading'>努力加载中...</view>
+</view>
+<view class='mask' catchtouchmove='preventTouchMove' wx:if='{{showLoadings}}'>
+</view>

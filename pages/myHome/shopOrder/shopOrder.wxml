@@ -2,8 +2,8 @@
 <view>
   <view class="header">
     <view class="manageTitle">
-      <text bindtap='typeTop' data-index="0"><text class="{{activeIndex==0?'active':''}}">进行中</text></text>
-      <text bindtap='typeTop' data-index="1"><text class="{{activeIndex==1?'active':''}}" >已完成</text></text>
+      <text data-time="{{time}}" bindtap='typeTop' data-index="0"><text class="{{activeIndex==0?'active':''}}">进行中</text></text>
+      <text data-time="{{times}}" bindtap='typeTop' data-index="1"><text class="{{activeIndex==1?'active':''}}" >已完成</text></text>
     </view>
   </view>
 
@@ -16,7 +16,7 @@
       </view>
     </block>
     <view class='content' wx:for="{{orderList}}" wx:key="index" >
-      <view class="list"  bindtap='skip' data-id="{{item.id}}" data-index="{{index}}">
+      <view class="list"  bindtap='skip' data-id="{{item.id}}" data-index="{{index}}" data-shopid="{{item.shopId}}" data-facilityid="{{item.facilityId}}" data-userid="{{item.userId}}">
         <view class='shop'>
           <view class='left'>
             <image class="shopImg mr15" src="../images/shopDefault.png"></image>
@@ -41,14 +41,38 @@
             </view>
           </view>
         </view>
-         <view>
+        <view class="total-price">
             <view class='right'>
-              <text>共{{item.goodsNum}}件商品</text>
+              <!-- <text>共{{item.goodsNum}}件商品</text> -->
               <text>合计：</text>
               <text class='font34 priceColor'><text class='font24'>￥</text>{{item.shouldPay}}</text>
             </view>
-          </view>
+        </view>
       </view>
+       <!--未完成-->
+          <view class="noover" wx:if="{{activeIndex==0}}">
+            <view class="button red-btn" data-no="{{item.id}}"  size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" data-name="{{item.goodsName}}" data-price="{{item.shouldPay}}" data-userid="{{item.userId}}" data-shopid="{{item.shopId}}"data-presaleId="{{item.presaleId}}" disabled="{{disabled}}" data-facilityid="{{item.facilityId}}" bindtap="buyOrder" hover-class="other-button-hover"> 结算 </view>
+            <view class="button white-btn" data-no="{{item.id}}" data-name="{{item.goodsName}}"  size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" disabled="{{disabled}}" data-userid="{{item.userId}}"  bindtap="goOn" data-price="{{item.shouldPay}}" data-shopid="{{item.shopId}}" data-facilityid="{{item.facilityId}}" data-memberid ="{{item.memberId}}" data-subaccountid="{{item.subaccountId}}" data-discount="{{item.discount}}" hover-class="other-button-hover"> 继续添加 </view>
+          </view>
+          <!--已完成-->
+          <!-- <view class="over" wx:if="{{activeIndex==1}}">
+            <view class="button red-btn" data-no="{{item.id}}" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" disabled="{{disabled}}" bindtap="againBuy" hover-class="other-button-hover" data-id="{{item.id}}" data-index="{{index}}" data-shopid="{{item.shopId}}" data-facilityid="{{item.facilityId}}" data-userid="{{item.userId}}" data-userid="{{item.userId}}"> 再来一单 </view>
+          </view> -->
     </view>
   </view>
 </view>
+
+<!--下单成功-->
+  <view class="modal-box order-tip" hidden="{{flagOrder}}" >
+  <view class="modal-body">
+    <image class="order-success" src="../../../../images/success.png"></image>
+    <view class="modal-content">
+      <text>支付成功!</text>
+      <text>选择再来一单或查看此订单</text>
+    </view>
+    <view class="modal-btn">  
+      <!-- <text class="knowBtn" bindtap="goShop">再来一单</text> -->
+      <text class="knowBtn" bindtap="look">查看订单</text>
+    </view>
+  </view>
+  </view>

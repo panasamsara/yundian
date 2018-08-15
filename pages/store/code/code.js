@@ -1,5 +1,6 @@
 // pages/store/code/code.js
 var QR = require("../../../utils/qrcode.js");
+const app=getApp();
 
 Page({
 
@@ -16,18 +17,36 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    var shop = wx.getStorageSync('shop');
-    this.setData({
-      shopName: shop.shopName,
-      url: shop.logoUrl,
-      address:shop.address,
-      phoneService: shop.phoneService,
-      storeUrl: "https://wxapp.izxcs.com/qrcode/shop/index.html?apptype=cityshop&subtype=shophome&fromscan=yes&visitFrom=1&cloud_store&sn=17&yw=shop&cp=1&shopId=" + shop.id
+    var user = wx.getStorageSync('scSysUser');
+    var _this = this
+    app.util.getShop(user.id, options.shopId).then((res) => {
+      if (res.data.code == 1){
+        var shop = res.data.data.shopInfo
+        wx.setStorageSync('shop', res.data.data.shopInfo);
+        var address = shop.address
+        if (address.length > 28) {
+          address = address.substring(0, 28) + '...'
+        }
+        _this.setData({
+          shopName: shop.shopName,
+          url: shop.logoUrl,
+          address: address,
+          phoneService: shop.phoneService,
+          storeUrl: "https://wxapp.izxcs.com/qrcode/shop/index.html?apptype=cityshop&subtype=shophome&fromscan=yes&visitFrom=1&cloud_store&sn=17&yw=shop&cp=1&shopId=" + shop.id,
+          shopId: shop.id
+        })
+        // 页面初始化 options为页面跳转所带来的参数
+        var size = _this.setCanvasSize();//动态设置画布大小
+        var initUrl = _this.data.storeUrl;
+        _this.createQrCode(initUrl, "mycanvas", size.w, size.h);
+
+      }else{
+        wx.showToast({
+          title: '数据错误...',
+        })
+      }
     })
-    // 页面初始化 options为页面跳转所带来的参数
-    var size = this.setCanvasSize();//动态设置画布大小
-    var initUrl = this.data.storeUrl;
-    this.createQrCode(initUrl, "mycanvas", size.w, size.h);
+    
   },
   //适配不同屏幕大小的canvas
   setCanvasSize: function () {
@@ -88,6 +107,10 @@ Page({
           wx.authorize({
             scope: 'scope.writePhotosAlbum',
             success() {//这里是用户同意授权后的回调
+              wx.showToast({
+                title: '保存中...',
+                icon: 'none'
+              })
               that.drawPic()
             },
             fail() {//这里是用户拒绝授权后的回调
@@ -162,7 +185,6 @@ Page({
       context.fillRect(0, 0, 610 * scale, 800 * scale);//给画布添加背景色，无背景色真机会自动变黑
       context.beginPath();
       context.arc(50 * scale, 50 * scale, 25 * scale, 0, 2 * Math.PI);//绘制圆形头像画布
-      // context.setFillStyle('grey');
       context.fill();
       context.clip();
       context.drawImage(_this.data.path, 25 * scale, 25 * scale, 50 * scale, 50 * scale);//绘制店铺头像
@@ -173,7 +195,7 @@ Page({
       //绘制店铺地址
       if (address.length > 14) {//地址超过14字换行
         var address1 = address.substring(0, 14),
-          address2 = address.substring(14);
+            address2 = address.substring(14);
         context.fillText(address1, 90 * scale, 67.5 * scale);
         context.fillText(address2, 90 * scale, 92.5 * scale);
         context.fillText(phoneService, 90 * scale, 117.5 * scale);
@@ -213,6 +235,8 @@ Page({
   * 用户点击右上角分享
   */
   onShareAppMessage: function () {
-
+    return{
+      path:'/pages/store/code/code?shopName='+this.data.shopName+'&address='+this.data.address+'&phoneService='+this.data.phoneService+'&shopLogo='+this.data.url+'&shopId='+this.data.shopId
+    }
   }
 })

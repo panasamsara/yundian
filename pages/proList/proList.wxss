@@ -345,16 +345,26 @@ page{
 }
 
 .list-content .name{
+  position: relative;
+  top: -10rpx;
   line-height: 24px;
   font-size: 14px;
   color: rgb(7, 17, 27);
   width: 300rpx;
+  height: 54rpx;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight:bold;
+  
 }
-
+.list-content .stock-name{
+  position: absolute;
+  top: 32rpx;
+  display: inline-block;
+  font-size: 12px;
+  color: rgb(184, 184, 184);
+}
 .list-content .price{
   position: absolute;
   right: 90px;
@@ -591,3 +601,4 @@ page{
   font-size: 34rpx;
   font-weight: 700;
 }
+

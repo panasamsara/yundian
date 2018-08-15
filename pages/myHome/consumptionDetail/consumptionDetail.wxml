@@ -1,0 +1,69 @@
+<view class='content'>
+  <view class='title'>
+    <image src='{{cardList.shopLogo}}'></image>
+    <text>{{cardList.shopName}}</text>
+  </view>
+  <view class='money font-red' wx:if="{{cardList.orderType==1}}">￥{{cardList.actualPay}}</view>
+    <view class='money' wx:elif="{{cardList.payType==9}}">兑换</view>
+  <view class='money' wx:else>-￥{{cardList.actualPay}}</view>
+  <view class='info_box info'>
+      <view>
+        <text wx:if="{{cardList.payType==9}}">兑换方式</text>
+        <text wx:else>付款方式</text>
+        <!-- 0-本金支付 1-卡项支付 2-现金支付 3-组合支付 4-微信支付 5-支付宝支付 6-信用卡支付 7-储蓄卡支付 9-云店线上支付 -->
+        <text wx:if="{{cardList.payType==0}}">本金支付</text>
+        <text wx:if="{{cardList.payType==1}}">卡项支付</text>
+        <text wx:if="{{cardList.payType==2}}">现金支付</text>
+        <text wx:if="{{cardList.payType==3}}">组合支付</text>
+        <text wx:if="{{cardList.payType==4}}">微信支付</text>
+        <text wx:if="{{cardList.payType==5}}">支付宝支付</text>
+        <text wx:if="{{cardList.payType==6}}">信用卡支付</text>
+        <text wx:if="{{cardList.payType==7}}">储蓄卡支付</text>
+        <text wx:if="{{cardList.payType==9}}">店内兑换</text>
+      </view>
+      <view class="type" wx:if="{{cardList.payType==3&&cardList.principalPay!=0}}">
+       <text>本金</text>
+       <text>{{cardList.principalPay}}</text>
+      </view>
+       <view class="type" wx:if="{{cardList.payType==3&&cardList.cashPay!=0}}">
+       <text>现金</text>
+       <text>{{cardList.cashPay}}</text>
+      </view>
+      <view class="type" wx:if="{{cardList.payType==3&&cardList.principalPay!=0}}">
+       <text>卡项</text>
+       <text>{{cardList.cardPay}}</text>
+      </view>
+      <view>
+        <text>所选账户</text>
+        <text>{{cardList.accountName}}</text>
+      </view>
+      <view>
+        <text wx:if="{{cardList.payType==9}}">兑换时间</text>
+        <text wx:else>购买时间</text>
+        <text>{{cardList.consumeTime}}</text>
+      </view>
+      <view wx:if="{{cardList.orderType==1}}">
+        <text>类型</text>
+        <text>会员账户充值</text>
+      </view>
+      <view wx:if="{{cardList.orderType==3}}">
+        <text>服务项目</text>
+        <text>会员账户充值</text>
+      </view>
+      <view wx:if="{{cardList.orderType==2||cardList.orderType==4}}">
+        <text>商品名称</text>
+        <text></text>
+      </view>
+  </view>
+  
+  <view class='info_box detail' wx:if="{{cardList.orderType==2||cardList.orderType==4||cardList.orderType==3}}">
+      <view wx:if="{{cardList.orderType==3}}" wx:for="{{cardList.serviceList}}" wx:key="{{index}}">
+        <text>{{item.goodsName}}</text>
+        <text>x{{item.purchaseNum}}</text>
+      </view>
+       <view wx:if="{{cardList.orderType==2||cardList.orderType==4}}" wx:for="{{cardList.goodsList}}" wx:key="{{index}}">
+        <text>{{item.goodsName}}</text>
+        <text>x{{item.purchaseNum}}</text>
+      </view>
+  </view>
+</view>

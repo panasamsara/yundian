@@ -3,7 +3,7 @@
     <view class="headerToP">
       <image class="bgimg" src='images/myhome.png'></image>
       <view class='top'>
-        <image class="" src="{{user.userpic}}"></image>
+        <image class="" src="{{user.userpic}}" bindtap='clickCount'></image>
         <text>{{user.username}}</text>
       </view>
     </view>
@@ -32,7 +32,7 @@
           </view>
         </block>
       </view>
-      <image  class="popularize" src='images/wode.png'></image>
+      <image  class="popularize" bindtap='appSkip' src='images/wode.png'></image>
       <button type="warn" plain="{{plain}}" bindtap="warn" bindtap='back'>退出当前店铺</button>
       <view class='versions'>当前版本：0.1.1</view>
     </view> 

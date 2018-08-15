@@ -17,6 +17,10 @@ page,.content{
 .code-img{
   text-align: center;
 }
+.code-img .img-box{
+  width: 100%;
+  height: 100%;
+}
 .code-img image{
   width: 320rpx;
   height: 320rpx;
@@ -340,7 +344,12 @@ page,.content{
 
 /* 拼单 */
 .spell{
-  padding:30rpx 20rpx 0 30rpx;
+  padding:20rpx 20rpx 10rpx 30rpx;
+}
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  color: transparent;
 }
 .spellinfo{
   color: #333;
@@ -421,4 +430,5 @@ page,.content{
   position: absolute;
   bottom: 10rpx;
   left:20rpx;
+  border-radius: 100%;
 }

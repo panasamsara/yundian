@@ -299,12 +299,14 @@ page,.content{
 }
 .list-total{
   width: 100%;
-  height: 70rpx;
+  /* height: 70rpx; */
   text-align: right;
   vertical-align: middle;
   font-family: PingFang-SC-Medium;
   border-bottom: 1rpx solid #e5e5e5;
-  line-height:70rpx;
+  height:80rpx;
+  line-height:80rpx;
+  /* line-height:70rpx; */
 }
 .list-total .total-num,.list-total .total-price{
   display: inline-block;
@@ -381,4 +383,10 @@ page,.content{
   font-size:30rpx;
   color:#aaa;
   margin-top:15rpx;
+}
+.navbox{
+  display: flex;
+}
+.navbox>.tab-item{
+  flex: 1;
 }

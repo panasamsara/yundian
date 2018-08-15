@@ -4,12 +4,12 @@
     <navigator url="../activityInfo/activityInfo?goodsId={{item.id}}&shopId={{item.shopId}}">
       <image src='{{item.pictureUrl}}'></image>
       <view class='act'>
-        <text id='title'>{{item.descTitle}}</text>
+        <text class='title'>{{item.descTitle}}</text>
         <text>活动时间</text>
       </view>
       <view class='actInfo'>
-        <text id='activity'>{{item.goodsName}}</text>
-        <text id='time'>{{item.startTime}}-{{item.endTime}}</text>
+        <text class='activityName'>{{item.goodsName}}</text>
+        <text class='time'>{{item.startTime}}-{{item.endTime}}</text>
       </view>
     </navigator>
   </view>

@@ -19,9 +19,9 @@
         <view class='content'>
            <view class='child' bindtap='toShop' wx:for="{{histories}}" wx:key="{{index}}" data-index='{{index}}'>
           <image class="mybg" src="./images/writebg.png"></image>
-            <image class="logo" src="{{item.bgImage}}"></image>
+            <image class="logo" src="{{item.shopInfo.bgImage}}"></image>
             <view class='left'>
-              <view>{{item.shopName}}</view>
+              <view>{{item.shopInfo.shopName}}</view>
             </view>
             <image class="right" src='../../images/jt.png'></image>
           </view> 

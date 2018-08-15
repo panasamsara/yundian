@@ -6,6 +6,7 @@ Page({
    */
   data: {
     user: {},
+    shop:{},
     items: [
       {
         icon: './images/dianneiorder.png',
@@ -69,12 +70,19 @@ Page({
       //   path: '/pages/myHome/order/order?index=4'
       // },
     ],
-    flag:false //手机系统是否是ios
+    flag:false, //手机系统是否是ios
+    count:0
   },
   onLoad: function (options) {
-    var user = wx.getStorageSync('scSysUser')
     this.setData({
-      user: user
+      count:0
+    })
+    var user = wx.getStorageSync('scSysUser');
+    var shop = wx.getStorageSync('shop')
+    console.log(user)
+    this.setData({
+      user: user,
+      shop: shop
     });
 
     this.getlist();
@@ -98,12 +106,15 @@ Page({
   },
   onShow:function(){
     this.getlist();
+    this.setData({
+      count:0
+    })
   },
   getlist:function(){
     wx.showLoading({
       title: '加载中',
     })
-    app.util.reqAsync('shop/getMyOnlineOrderComponentV2', { "customerId": this.data.user.id }).then((res) => {
+    app.util.reqAsync('shop/getMyOnlineOrderComponentV2', { "customerId": this.data.user.id, "shopId": this.data.shop.id}).then((res) => {
       this.setData({
         "shopList[0].num": res.data.data.waitingOfPayNum,
         "shopList[1].num": res.data.data.waitingOfSendNum,
@@ -135,5 +146,19 @@ Page({
   },
   appSkip:function(e){ //点击跳转到app下载页
       wx.navigateTo({ url: "/pages/myHome/downLoadIos/downLoadIos?flag="+this.data.flag });   
+  },
+  clickCount:function(){
+    let count=this.data.count;
+    count++;
+    if (count == 9) {
+      let _this = this;
+      app.util.appLogin();
+      setTimeout(function(){
+        _this.onLoad();
+      },1500)
+    }
+    this.setData({
+      count:count
+    })
   }
 })

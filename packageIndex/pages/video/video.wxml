@@ -1,0 +1,7 @@
+<!--pages/video/video.wxml-->
+<view class='video-bg' >
+  <video class='video-ctx' id="myVideo" src="{{videoUrl}}" autoplay='true' binderror="videoErrorCallback"></video>
+  
+</view>
+
+<canvas canvas-id="shareCanvas" style='width:720rpx; height:568rpx; position:fixed; top: 99999rpx;' ></canvas>

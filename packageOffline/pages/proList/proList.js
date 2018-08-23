@@ -27,6 +27,7 @@ Page({
     starbg: '../../static/img/drawable-xxdpi/title-bar_collection_normal.png',
     goodsH: 0,
     goodsHs: 0,
+    goodsHL: 0,
     catHighLightIndex: 0,//左侧列表高亮的下标
     scrollToGoodsView: 0,
     toView: '',
@@ -72,6 +73,7 @@ Page({
     discount:'',
     shopName:'',
     buyMoney:0,
+    actualPay:0,
     other: [], //去掉重复后的数组
     ifstore: 0, //是否为留店
     purchase: [], //留店商品数据
@@ -80,228 +82,46 @@ Page({
     rows:5,//留店数据加载每页条数
     hasMoreData:true,//当前数据是否超过每页条数，如果超过，则为true，page加1
     focus: false,
-    shop:''
+    shop:'',
+    hasPurchase: true, // 是否有留店商品
+    isactive:0
   },
   onReady: function () {
     // Do something when page ready.
   },
+
   onLoad: function (e) {
+    console.log('进入线下prolist---------------', e)
+
     let _this = this
     let systemInfo = wx.getStorageSync('systemInfo');
     this.setData({
       // mechine: mechine,
       systemInfo: systemInfo,
-      goodsH: systemInfo.windowHeight - 48,
-      goodsHs: systemInfo.windowHeight -102
+      goodsH: systemInfo.windowHeight - 118,
+      goodsHs: systemInfo.windowHeight -118,
+      goodsHL: systemInfo.windowHeight - 48,
     })
-
     if (e && e.q) {
-      console.log('二维码编译')
-      // debugger
-      util.checkWxLogin('offline').then((res) => {//判断是否已注册
-          _this.setData({
-            userId: res.id,
-            userName: res.username,
-          })
-        // debugger
-        // 返回登录信息
-        if (e.q || e.shopId) {
-          var uri = decodeURIComponent(e.q)
-          var p = util.getParams(uri)
-        }
-        let shopId = p.s || e.shopId;
-        if (shopId&&res.id) {
-          util.getShop(res.id, shopId).then((res) => {
-            if (this.onLaunchCallback)
-              this.onLaunchCallback(res.data.data)
-          })
-        }
-      });
-    }else{
-      // debugger
-      console.log('扫码进')
-      if (!util.hasShop()) {//判断是否有店铺
-        wx.redirectTo({ url: '/pages/scan/scan' });
-        return
-      } else {
-        util.checkWxLogin('offline').then((res) => {//判断是否已注册
-            _this.setData({
-              userId: res.id,
-              userName: res.username,
-            })
-          // debugger
-          // 返回登录信息
-          console.log(res.id)
-          console.log(wx.getStorageSync('shop').id)
-          util.getShop(res.id, wx.getStorageSync('shop').id).then((res) => {
-            console.log(res)
-            let shopInfo=res.data.data.shopInfo;
-            goodsInfos = res.data.data.goodsInfos
-            _this.getShopInfo({ shopInfo: shopInfo, goodsInfos: goodsInfos })
-            _this.getIndexAllInfo(shop.id)
-            _this.checkCoupon()
-            if (this.data.outQrCodeParam && this.data.outQrCodeParam.offline === '1') {
-              wx.switchTab({
-                url: '/pages/proList/proList'
-              })
-            }
-          })
-        });
-      }
-    }
-
-    // util.checkWxLogin().then((res) => {
-    //   _this.setData({
-    //     userId: res.id,
-    //     userName: res.username,
-    //   })
-    //    // 返回登录信息
-    //
-    //    if (e.q || e.shopId) {
-    //      if(e.q){
-    //      var uri = decodeURIComponent(e.q)
-    //      var p = util.getParams(uri)
-    //      }
-    //      shopId = p.s || e.shopId
-    //
-    //      if (res.id && shopId ) {
-    //        util.getShop(res.id, shopId).then((res) => {
-    //          if (this.onLaunchCallback)
-    //            this.onLaunchCallback(res.data.data)
-    //        })
-    //      }
-    //
-    //    }
-    //
-    //  });
-
-
-
-    var user = wx.getStorageSync('scSysUser');
-    var params, shopId, facilityId;
-    // 【扫码进入】，获取店铺ID，存入本地，请求店铺数据
-    if (e && e.q) {
-      var uri = decodeURIComponent(e.q);
-      console.log("通过二维码加载", uri);
-      this.data.outQrCodeParam = util.getParams(uri)
-      shopId = this.data.outQrCodeParam.s;
-      facilityId = this.data.outQrCodeParam.f;
+      var uri = decodeURIComponent(e.q)
+      var p = util.getParams(uri)
+      let shopId = p.s
+      let facilityId = p.f
+      wx.setStorageSync('shopId', shopId);
       wx.setStorageSync("facilityId", facilityId);
       this.setData({
-        facilityId: facilityId,
         shopId: shopId,
+        facilityId: facilityId
       })
-      //util.checkWxLogin().then((res) => {
-    }
-
-      this.onLaunchCallback = (shopp) => {
-        // 无shopId不设置，有shopId修改shop对象
-        // shopId && wx.setStorageSync('shops', { id: shopId, facilityId: facilityId });
-        let shop = shopp.shopInfo
-        console.log('进入回调---------0999999')
-        console.log(shop)
-        _this.setData({
-          merchantId: shop.merchantId || "",
-          // presaleId: presaleId,
-          // memberid: orderInfo.memberId || "",
-          // subaccountid: orderInfo.subaccountId || "",
-          // discount: orderInfo.discount || "",
-          shopName: shop.shopName || ""
-        });
-
-        /*************** */
-        //获取店铺类别列表
-        util.reqAsync('shop/getShopGoodsCategoryList', {
-          merchantId: shop.merchantId,
-          shopId: shop.id
-        }).then((res) => {
-          let shopCategory = res.data.data
-          // 类别中加入 “全部”
-          let allCategory = { sequence: 0, type: 1, categoryName: "全部", categoryId: null }
-          shopCategory.unshift(allCategory)
-          console.log('所有分类')
-          console.log(shopCategory)
-          _this.setData({
-            shopCategory: shopCategory
-          })
-          var goodMap = []
-          var stockMap = []
-          let goodsInCategory = []
-          let goods = []
-
-          // 新的获取所有商品
-          util.reqAsync('shop/getShopGoodsMore', {
-            merchantId: shop.merchantId,
-            shopId: this.data.shopId,
-            customerId: user.id,
-            searchType: 1,
-            categoryId: null
-          }).then((res) => {
-            goods = res.data.data
-            console.log(goods);
-            
-            if (goods.length != 0) {
-              for (let j = 0; j < goods.length; j++) {
-                goodMap[goods[j].id] = goods[j];
-                goodMap[goods[j].id].number = 0
-                goodsInCategory.push(goods[j])
-                if (goods[j].stockList.length != 0) {
-                  for (let k = 0; k < goods[j].stockList.length; k++) {
-                    let goodStock = []
-                    goodStock.goodsName = goods[j].goodsName
-                    goodStock.goodsId = goods[j].id
-                    goodStock.stockId = goods[j].stockList[k].id
-                    goodStock.number = 0
-                    goodStock.goodsPrice = goods[j].price
-                    goodStock.stockPrice = goods[j].stockList[k].stockPrice
-                    goodStock.stockPrice = goods[j].stockList[k].stockPrice
-                    stockMap[goodStock.stockId] = goodStock
-                  }
-                } else {
-                  let goodStock = []
-                  goodStock.goodsName = goods[j].goodsName
-                  goodStock.goodsId = goods[j].id
-                  goodStock.stockId = null
-                  goodStock.number = 0
-                  goodStock.goodsPrice = goods[j].price
-                  goodStock.stockPrice = null
-                  goodStock.stockBalance = goods[j].stockBalance
-                  stockMap[goodStock.goodsId] = goodStock
-                }
-              }
-            }
-            let g = {}
-            for (let j = 0; j < goodMap.length; j++) {
-              if (goodMap[j] && goodMap[j])
-                g[j] = goodMap[j]
-            }
-            let h = {}
-            for (let i = 0; i < stockMap.length; i++) {
-              if (stockMap[i] && stockMap[i])
-                h[i] = stockMap[i]
-            }
-            _this.setData({
-              goodMap: g,
-              stockMap: h,
-              goodsInCategory: goodsInCategory,
-              showLoading: false
-            })
-            _this.shopCartList()
-
-
-          }).catch((err) => {
-            console.log(err)
-          })
-          console.log(goodMap)
-          console.log(this.data.goodMap)
-
-         
-
-
-        }).catch((err) => {
-          console.log(err)
+    } else {
+      if (e && e.shopId) {
+        wx.setStorageSync('shopId', e.shopId);
+        this.setData({
+          shopId: e.shopId
         })
       }
+    }
+
   },
  
   onShow: function () {
@@ -324,22 +144,166 @@ Page({
       subaccountid: orderInfo.subaccountId || "",
       discount: orderInfo.discount || "",
     })
+    util.checkWxLogin('offline').then((loginRes) => {
+      _this.setData({
+        userId: loginRes.id,
+        userName: loginRes.username,
+      })
+      var shopId = this.data.shopId
+      if (!shopId) {
+        shopId = wx.getStorageSync('shopId');
+      }
 
-    var shop = wx.getStorageSync('shop');
-    if (shop && user){
-      this.getData(shop, user)
+/*********************************socket登录 */
+      //获取用户昵称
+      var username = encodeURI(loginRes.username);
+      //获取用户id
+      var userid = loginRes.id;
+      //获取桌号
+      var facilityId = wx.getStorageSync("facilityId");
+      console.log('桌号：' + facilityId)
+      console.log('店铺号：' + shopId)
+      let SOCKET_URL = util.SOCKET_URL
+
+      //开启websocket连接
+      if (!wx.getStorageSync('socketStatus') ){
+        wx.connectSocket({
+          // url: 'wss://wxapp.izxcs.com/live/' + facilityId + '/' + userid + '/' + username
+          // url: 'ws://apptest.izxcs.com:81/live/' + facilityId + '/' + userid + '/' + username
+          url: SOCKET_URL + '/zxcity_restful/ws/payBoot/live/' + shopId + '/' + facilityId + '/' + userid + '/' + username
+        })
+
+        //连接成功回调
+        wx.onSocketOpen(function (res) {
+          console.log('WebSocket连接已打开！')
+          wx.setStorageSync('socketStatus', true)
+        })
+      }
       
-    }
+/*********************************socket登录 */
+
+      var shop = wx.getStorageSync('shop')
+
+      if (!shop) {
+        if (shopId == undefined) {
+          wx.redirectTo({
+            url: '../scan/scan'
+          })
+        } else {
+          util.getShop(loginRes.id, shopId).then(function (res) {
+ 
+            //shop存入storage
+            wx.setStorageSync('shop', res.data.data.shopInfo);
+            //活动
+            wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
+            // 所有信息
+            wx.setStorageSync('shopInformation', res.data.data);
+            _this.setData({
+              merchantId: res.data.data.shopInfo.merchantId || "",
+              shopName: res.data.data.shopInfo.shopName || ""
+            });
+            _this.getData(res.data.data.shopInfo)
+          })
+        }
+      } else {
+        if (shopId == undefined || shopId == '' || shopId == null) {
+          _this.setData({
+            merchantId: shop.merchantId || "",
+            shopName: shop.shopName || ""
+          });
+          _this.getData(shop)
+          
+        } else {
+          if (shopId == shop.id) {
+            _this.setData({
+              merchantId: shop.merchantId || "",
+              shopName: shop.shopName || ""
+            });
+            _this.getData(shop)
+
+          } else {
+            wx.removeStorageSync('shop')
+            wx.removeStorageSync('goodsInfos')
+            wx.removeStorageSync('shopInformation')
+            util.getShop(loginRes.id, shopId).then(function (res) {
+              //shop存入storage
+              wx.setStorageSync('shop', res.data.data.shopInfo);
+              //活动
+              wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
+              // 所有信息
+              wx.setStorageSync('shopInformation', res.data.data);
+              _this.setData({
+                merchantId: res.data.data.shopInfo.merchantId || "",
+                shopName: res.data.data.shopInfo.shopName || ""
+              });
+              _this.getData(res.data.data.shopInfo)
+            })
+          }
+        }
+
+      }
+      wx.removeStorageSync('shopId');
+    })
+/*********************************socket消息 */
+    //消息监听
+    wx.onSocketMessage(function (res) {
+      //if (res && res.data.indexOf("~") != -1){
+      var msg = res.data;
+      if (msg && msg.length > 3 && msg.substring(msg.length - 3) == '_op') {
+        msg = msg.substring(0, msg.length - 3);
+        //获取购物车
+        _this.shopCartList()
+
+        wx.showToast({
+          title: msg,
+          icon: 'none'
+        })
+      }else if(msg && msg.length >= 4 && msg.substring(msg.length - 4) == '_uid'){
+    	  //获取房主id
+        let hostId = msg.substring(0, msg.length - 4);
+       
+        console.log('房主ID-----------------------：',hostId)
+    	  //将房主id保存到本地
+        wx.setStorageSync('hostId', hostId);
+      }else{
+        if (msg && msg.substring(msg.length - 3)=='已下单'){
+          //获取购物车
+          _this.shopCartList()
+        
+        }
+        wx.showToast({
+          title: msg,
+          icon: 'none'
+        })
+      }
+  
+      console.log(msg);
+    })
+
+    //连接关闭回调
+    wx.onSocketClose(function (res) {
+      console.log('WebSocket连接已关闭！')
+      wx.setStorageSync('socketStatus', false)
+      wx.setStorageSync('hostId', wx.getStorageSync('scSysUser').id )
+
+    })
+/*********************************socket消息 */
+    // var shop = wx.getStorageSync('shop');
+    // if (shop ){
+    //   this.getData(shop)
+      
+    // }
 
   },
-  getData: function (shop, user){
+  getData: function (shop){
     let _this = this
     let systemInfo = wx.getStorageSync('systemInfo');
     this.setData({
       // mechine: mechine,
       systemInfo: systemInfo,
-      goodsH: systemInfo.windowHeight - 48,
-      goodsHs: systemInfo.windowHeight - 102
+      goodsH: systemInfo.windowHeight - 118,
+      goodsHs: systemInfo.windowHeight - 118,
+      goodsHL: systemInfo.windowHeight - 48,
     })
     /*************** */
     //获取店铺类别列表
@@ -365,7 +329,7 @@ Page({
       util.reqAsync('shop/getShopGoodsMore', {
         merchantId: shop.merchantId,
         shopId: shop.id,
-        customerId: user.id,
+        // customerId: user.id,
         searchType: 1,
         categoryId: null
       }).then((res) => {
@@ -456,11 +420,11 @@ Page({
     });
 
   },
-
   //左侧列表点击事件
   catClickFn: function (e) {
     this.setData({
-      ifstore: 0
+      ifstore: 0,
+      isactive: 0
     });
 
     let that = this;
@@ -479,12 +443,15 @@ Page({
   },
   //添加商品到购物车
   addGoodToCartFn: function (e) {
-
     let _id = e.target.id.split('_')[1];
     let stockId = e.target.id.split('_')[2];
     var user = wx.getStorageSync('scSysUser');
     var shop = wx.getStorageSync('shop')
     let shoppingCart = this.data.shoppingCart
+    var accountRecordId = e.target.id.split('_')[3] || '';
+    var purchaseType = e.target.id.split('_')[4];
+    var goodsName = e.target.dataset.goodname;
+    var remainNum, purchaseNum, balance;
     // let goods_number = 1
     // let chooseGoodArr = this.data.chooseGoodArr
 
@@ -498,23 +465,86 @@ Page({
 
     // let goodStockMapArr = this.data.goodStockMapArr
     let stockMap = this.data.stockMap
-    console.log(stockMap)
     console.log(_id)
-    if (stockId != 'null' && stockId && stockId != undefined) {
-      console.log(stockMap[stockId])
-      let new_number = stockMap[stockId].number + 1
-      this.updateNewShopCartV2(user.id, _id, shop.id, stockId, stockMap[stockId].goodsName, new_number)
-
-    } else {
-      if (this.data.chosenStockId) {
-        let new_number_a = stockMap[this.data.chosenStockId].number + 1
-        this.updateNewShopCartV2(user.id, _id, shop.id, this.data.chosenStockId, stockMap[this.data.chosenStockId].goodsName, new_number_a)
-      } else {
-        let new_number_b = stockMap[_id].number + 1
-        this.updateNewShopCartV2(user.id, _id, shop.id, this.data.chosenStockId, stockMap[_id].goodsName, new_number_b)
+    // 留店商品
+    if (purchaseType == 6) {
+      // debugger
+      var purchaseData = wx.getStorageSync('purchaseData');
+      if (purchaseData.length != 0) {
+        for (var i = 0; i < purchaseData.length; i++) {
+          if (purchaseData[i].id == accountRecordId) {
+            console.log(purchaseData[i].shopNum);
+            var updateNum = parseInt(purchaseData[i].shopNum) + 1;
+            remainNum = purchaseData[i].remainNum;
+            purchaseNum = purchaseData[i].purchaseNum;
+            balance = purchaseData[i].balance;
+          }
+        }
       }
 
+      // 获取已加入购物车商品数量
+      util.reqAsync('shopOrder/getPresaleByCondition', {
+        shopId: wx.getStorageSync('shop').id,
+        userId: wx.getStorageSync('scSysUser').id,
+        presaleId: "", //订单id
+        facilityId: wx.getStorageSync('facilityId')
+      }).then((res) => {
+        var chartNum, totalcart;
+        if (res.data.data){
+          for (var i in res.data.data.scPresaleInfoList) {
+            if (res.data.data.scPresaleInfoList[i].accountRecordId == accountRecordId) {
+              chartNum = res.data.data.scPresaleInfoList[i].purchaseNum;
+            }
+          }
+        }
 
+        console.log(chartNum)
+        if (chartNum) {
+          totalcart = updateNum + parseInt(chartNum);
+        } else {
+          totalcart = updateNum
+        }
+        console.log(totalcart)
+        if (totalcart > purchaseNum - 1) {
+          wx.showToast({
+            title: '超过留店的购买总数量',
+            icon: 'none'
+          })
+        }
+        else if (totalcart > remainNum) {
+          wx.showToast({
+            title: '超过留店剩余数量',
+            icon: 'none'
+          })
+        }
+        else if (totalcart > balance) {
+          wx.showToast({
+            title: '超过留店商品库存',
+            icon: 'none'
+          })
+        }
+
+        if (totalcart <= remainNum && totalcart <= purchaseNum && totalcart <= balance) {
+          this.updatePurchaseNewShopCartV2(_id, shop.id, stockId, goodsName, updateNum, accountRecordId, 6, 1, 'add');
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+    } else {
+      if (stockId != 'null' && stockId && stockId != undefined) {
+        console.log(stockMap[stockId])
+        let new_number = stockMap[stockId].number + 1
+        this.updateNewShopCartV2(_id, shop.id, stockId, stockMap[stockId].goodsName, new_number, 'add')
+
+      } else {
+        if (this.data.chosenStockId) {
+          let new_number_a = stockMap[this.data.chosenStockId].number + 1
+          this.updateNewShopCartV2(_id, shop.id, this.data.chosenStockId, stockMap[this.data.chosenStockId].goodsName, new_number_a, 'add')
+        } else {
+          let new_number_b = stockMap[_id].number + 1
+          this.updateNewShopCartV2(_id, shop.id, this.data.chosenStockId, stockMap[_id].goodsName, new_number_b, 'add')
+        }
+      }
     }
 
     // this.mathTotal(goodStockMapArr)
@@ -539,34 +569,34 @@ Page({
     console.log(purchaseType);
 
     var user = wx.getStorageSync('scSysUser');
-    var shop = wx.getStorageSync('shop')
+    var shop = wx.getStorageSync('shop');
+
     let shoppingCart = this.data.shoppingCart
     let goods_number = 0
     let chooseGoodArr = this.data.chooseGoodArr;
-    var purchaseName = e.target.dataset.goodsName;
+    var purchaseName = e.target.dataset.goodsname;
     console.log("shoppingCart");
     console.log(shoppingCart);
+    console.log(purchaseName)
     // let goodStockMapArr = this.data.goodStockMapArr
     let stockMap = this.data.stockMap
     let goodMap = this.data.goodMap
 
-    console.log(stockId)
-
     if (stockId != 'null' && stockId && stockId != undefined) {
-      console.log(7777)
       // 判断留店商品
       if (purchaseType==6){
-        console.log(parseInt(purchase_number));
         var new_number = parseInt(purchase_number) - 1
       }else{
         var new_number = stockMap[stockId].number - 1
       }
       console.log(new_number);
       if (new_number <= 0) {
+        // 留店商品删除方法
         if (purchaseType == 6){
-          this.deleteGoods(user.id, shop.id, stockId, _id)     
+          console.log("删除留店2")
+          this.deletePurchaseGoods(shop.id, stockId, _id, purchaseName, purchaseType, accountRecordId);    
         }else{
-          this.deleteGoods(user.id, shop.id, stockId, stockMap[stockId].goodsId)          
+          this.deleteGoods( shop.id, stockId, stockMap[stockId].goodsId)          
         }
         // goodMap[stockMap[stockId].goodsId].number = 0
         // this.setData({
@@ -574,11 +604,13 @@ Page({
         // })
         console.log(goodMap)
       } else {
-        // 如果是留店商品
+        // 留店商品更新
         if (purchaseType == 6) {
-          this.updatePurchaseNewShopCartV2(user.id, _id, shop.id, stockId, purchaseName, new_number, accountRecordId, purchaseType, cartType);
+          console.log("删除留店1")
+          this.updatePurchaseNewShopCartV2(_id, shop.id, stockId, purchaseName, new_number, accountRecordId, purchaseType, cartType, 'decrease');
         } else {
-          this.updateNewShopCartV2(user.id, _id, shop.id, stockId, stockMap[stockId].goodsName, new_number)
+          console.log("默认商品删除")
+          this.updateNewShopCartV2(_id, shop.id, stockId, stockMap[stockId].goodsName, new_number, 'decrease')
         }
       }
 
@@ -588,13 +620,13 @@ Page({
       let new_number = stockMap[_id].number - 1
       if (new_number <= 0) {
         console.log(888889)
-        this.deleteGoods(user.id, shop.id, null, stockMap[_id].goodsId)
+        this.deleteGoods(shop.id, null, stockMap[_id].goodsId)
         // goodMap[stockMap[_id].goodsId].number = 0
         // this.setData({
         //   goodMap: goodMap
         // })
       } else {
-        this.updateNewShopCartV2(user.id, _id, shop.id, null, stockMap[_id].goodsName, new_number)
+        this.updateNewShopCartV2(_id, shop.id, null, stockMap[_id].goodsName, new_number, 'decrease')
       }
 
     }
@@ -765,7 +797,8 @@ Page({
       showStock: false,
       attrList: [],
       stocks: [],
-      stockHighLightIndex: -1
+      stockHighLightIndex: -1,
+      chosenStockPrice: null
     })
     if (this.data.chosenStockId) {
       this.addGoodToCartFn(this.data.chooseGoodEvent)
@@ -829,8 +862,14 @@ Page({
     console.log("cartGoodsList");
     console.log(cartGoodsList);
     for (let i = 0; i < cartGoodsList.length; i++) {
-      this.deleteGoods(user.id, shop.id, cartGoodsList[i].stockId, cartGoodsList[i].goodsId, cartGoodsList[i].purchaseType)
+      this.deleteGoods( shop.id, cartGoodsList[i].stockId, cartGoodsList[i].goodsId, cartGoodsList[i].purchaseType, true)
     }
+
+    wx.sendSocketMessage({
+      data: '清空购物车_op'
+    })
+
+    this.removePurchaseData();
   },
 
   goToCart: function () {
@@ -903,9 +942,9 @@ Page({
 
   },
   //云店接口，添加商品到购物车
-  updateNewShopCartV2: function (customerid, goodsid, shopid, stockid, goodsName, goods_number) {
+  updateNewShopCartV2: function ( goodsid, shopid, stockid, goodsName, goods_number, changeType) {
     util.reqAsync('shop/updateNewShopCartV2', {
-      customerId: customerid,
+      customerId: wx.getStorageSync('hostId'),
       goodsId: goodsid,
       number: goods_number,
       shopId: shopid,
@@ -916,6 +955,15 @@ Page({
     }).then((res) => {
 
       if (res.data.code == 1) {
+        //购物车修改成功时, 通知其他人
+        if (changeType) {
+          var opType = changeType == 'add' ? '加了' : '减了';
+          var message = opType + "1份" + goodsName + "_op";
+          //发送通知
+          wx.sendSocketMessage({
+            data: message
+          })
+        }
         // 获取购物车
         this.shopCartList()
         if (res.data.data.isLowStock == 1) {
@@ -942,11 +990,10 @@ Page({
     })
   },
   //云店接口，移除购物车商品
-  deleteGoods: function (customerId, shopId, stockId, goodsId, purchaseType) {
-    // debugger
+  deleteGoods: function ( shopId, stockId, goodsId, purchaseType, isClear=false) {
     var purchaseType = purchaseType;
     util.reqAsync('shop/delShopCartGoodsByUidAndGid', {
-      customerId: customerId,
+      customerId: wx.getStorageSync('hostId'),
       shopId: shopId,
       goodsId: goodsId,
       stockId: stockId,
@@ -957,6 +1004,7 @@ Page({
       let goodMap = this.data.goodMap
       let stockMap = this.data.stockMap
       console.log(stockMap)
+      var goodsName = ''
       // 留店商品
       if (purchaseType == 6){
         console.log("11");
@@ -965,9 +1013,11 @@ Page({
         if (stockId) {
           goodMap[goodsId].number = 0
           stockMap[stockId].number = 0
+          goodsName = stockMap[stockId].goodsName
         } else {
           goodMap[goodsId].number = 0
           stockMap[goodsId].number = 0
+          goodsName = stockMap[goodsId].goodsName
         }
       }
 
@@ -975,7 +1025,16 @@ Page({
       this.setData({
         goodMap: goodMap
       })
-
+      /** 清空购物车时，不发送socket消息*/
+      if (!isClear){
+        //移除商品后, 通知其他人
+        var message = "从购物车中移除了" + goodsName + "_op";
+        //发送通知
+        wx.sendSocketMessage({
+          data: message
+        })
+      }
+     /** 清空购物车时，不发送socket消息*/
       // 获取购物车
       this.shopCartList()
 
@@ -993,24 +1052,24 @@ Page({
     //   shoppingCart: {},
     //   chooseGoodArr: []
     // })
+    var _this = this
     var user = wx.getStorageSync('scSysUser');
     var shop = wx.getStorageSync('shop');
     var goodMap = this.data.goodMap
     var stockMap = this.data.stockMap
+
     util.reqAsync('shop/shopCartList', {
-      customerId: user.id,
+      customerId: wx.getStorageSync('hostId'),
       shopId: shop.id,
       cartType: 1 //0:店外下单购物车 1:店内和留店购物车
     }).then((res) => {
-
       if (res.data.data.length != 0) {
-
         let cartGoodsList = res.data.data[0].goodsList
         for (let i = 0; i < cartGoodsList.length; i++) {
           // console.log(goodMap[cartGoodsList[i].goodsId])
 
           if (goodMap[cartGoodsList[i].goodsId]) {
-            console.log("留店商品价格置为0");
+
             // 留店商品 价格为0
             if (cartGoodsList[i].purchaseType == 6){
               cartGoodsList[i].stockPrice = 0;
@@ -1040,16 +1099,31 @@ Page({
           stockMap: stockMap,
           cartGoodsList: cartGoodsList
         })
-        console.log('购物车')
-        console.log(cartGoodsList)
         this.mathTotal(cartGoodsList)
       } else {
-        this.setData({
+
+         for (let stockIndex in stockMap) {
+           if (stockMap[stockIndex].stockId){
+             var stockId = stockMap[stockIndex].stockId
+           }else{
+             var stockId = stockMap[stockIndex].goodsId
+           }
+          stockMap[stockId].number = 0
+        }
+
+        for (let stockIndex in stockMap) {
+          let goodsId = stockMap[stockIndex].goodsId
+          goodMap[goodsId].number = 0
+        }
+
+        _this.setData({
           cartGoodsList: 0,
           totalNum: 0,//总数量
           totalPay: 0,
           showShopCart: false,
           cart_length: 0,
+          goodMap: goodMap,
+          stockMap: stockMap
         })
       }
 
@@ -1059,8 +1133,8 @@ Page({
     })
   },
   mathTotal: function (cartGoodsList) {
-    console.log("cartGoodsList")
-    console.log(cartGoodsList)
+    // console.log("cartGoodsList")
+    // console.log(cartGoodsList)
     let totalNum = 0
     let totalPay = 0
     let cart_length = cartGoodsList.length
@@ -1100,30 +1174,36 @@ Page({
 
     var user = wx.getStorageSync('scSysUser')
     var shop = wx.getStorageSync('shop')
-
     let cartGoodsList = this.data.cartGoodsList
 
     if (cartGoodsList.length > 0) {
       for (let i = 0; i < cartGoodsList.length; i++) {
         if (cartGoodsList[i].stockPrice) {
-          cartGoodsList[i].actualPayment = cartGoodsList[i].stockPrice
+          cartGoodsList[i].actualPayment = Number(cartGoodsList[i].stockPrice) * Number(cartGoodsList[i].number)
           cartGoodsList[i].unitPrice = cartGoodsList[i].stockPrice
         } else {
-          cartGoodsList[i].actualPayment = cartGoodsList[i].goodsPrice
+          cartGoodsList[i].actualPayment = Number(cartGoodsList[i].goodsPrice) * Number(cartGoodsList[i].number)
           cartGoodsList[i].unitPrice = cartGoodsList[i].goodsPrice
         }
       }
+/**socket消息 确认下单 */
+      wx.sendSocketMessage({
+        data: 'confirm order'
+      })
+/**socket消息 确认下单 */
 
       wx.setStorageSync('carts', cartGoodsList);
+      this.setData({
+        cart_length: 0
+      })
+
       if (this.data.isBuy == 1) {  //是否下单商品已经结算完毕 0 未结算 1已结算
+        console.log("已结算")
         this.oneBuy();
       }else{ //修改订单
         this.changeOrdr();
       }
-
-
     }
-
   },
   navShow: function (e) {
 
@@ -1142,16 +1222,13 @@ Page({
       showLoadings: false
     })
   },
-  changeOrdr:function(e){
-    this.setData({
-      cart_length: 0
-    })
+  changeOrdr: function (e) {
     var cartMoney = this.data.totalPay; //购物车总费
     var buyMoney = this.data.buyMoney; //已下单商品总费用
-
+    console.log(this.data.bugGoods);
     var arrList = [];
-    for (var a in this.data.bugGoods){ //已下单商品
-      if (this.data.bugGoods[a].stockId){
+    for (var a in this.data.bugGoods) { //已下单商品
+      if (this.data.bugGoods[a].stockId) {
         arrList.push({
           goodsServiceId: this.data.bugGoods[a].goodsServiceId,
           purchaseName: this.data.bugGoods[a].purchaseName,
@@ -1161,7 +1238,7 @@ Page({
           stockId: this.data.bugGoods[a].stockId,
           ids: this.data.bugGoods[a].stockId,
         })
-      }else{
+      } else {
         arrList.push({
           goodsServiceId: this.data.bugGoods[a].goodsServiceId,
           purchaseName: this.data.bugGoods[a].purchaseName,
@@ -1176,8 +1253,8 @@ Page({
     }
     console.log(this.data.cartGoodsList)
 
-    for (var b in this.data.cartGoodsList){
-      if (this.data.cartGoodsList[b].stockId && this.data.cartGoodsList[b].stockId != undefined && this.data.cartGoodsList[b].stockId != 'undefined' && this.data.cartGoodsList[b].stockId != null && this.data.cartGoodsList[b].stockId!="null"){
+    for (var b in this.data.cartGoodsList) {
+      if (this.data.cartGoodsList[b].stockId && this.data.cartGoodsList[b].stockId != undefined && this.data.cartGoodsList[b].stockId != 'undefined' && this.data.cartGoodsList[b].stockId != null && this.data.cartGoodsList[b].stockId != "null") {
         console.log(1)
         console.log("this.data.cartGoodsList[b].purchaseType");
         console.log(this.data.cartGoodsList[b].purchaseType);
@@ -1193,7 +1270,7 @@ Page({
           purchaseType: this.data.cartGoodsList[b].purchaseType,
           accountRecordId: this.data.cartGoodsList[b].accountRecordId ? this.data.cartGoodsList[b].accountRecordId : 0
         })
-      }else{
+      } else {
 
         arrList.push({
           goodsServiceId: this.data.cartGoodsList[b].goodsId,
@@ -1213,12 +1290,12 @@ Page({
     console.log(arrList)
 
     var sumMoney = 0;
-    for (var a in arrList){
+    for (var a in arrList) {
       sumMoney += arrList[a].actualPayment
     }
     console.log(sumMoney.toFixed(2))
     //继续下单
-    console.log("继续西单")
+    console.log("继续下单")
     app.util.reqAsync('shopOrder/uptPresale', {
       id: this.data.presaleId,
       memberId: this.data.memberId, //memberId
@@ -1231,7 +1308,7 @@ Page({
       shopId: this.data.shopId,
       shopName: this.data.shopName,
       merchantId: this.data.merchantId,
-      orderType:1,
+      orderType: 1,
       facilityId: this.data.facilityId,
       scPresaleInfoList: arrList
 
@@ -1248,7 +1325,7 @@ Page({
           cart_length: this.data.cartGoodsList.length
         })
       } else if (data.data.code == 1) { //跳到详情页
-      
+
         wx.setStorageSync("orderNo", data.data.data)
         wx.navigateTo({
           url: '../../../pages/myHome/shopOrder/orderDetail/orderDetail?activeIndex=0&shopId=' + this.data.shopId + '&userId=' + this.data.userId + '&presaleId=' + data.data.data + '&facilityId=' + this.data.facilityId
@@ -1281,10 +1358,7 @@ Page({
     }
     return result;
   },
-  oneBuy:function(e){
-    this.setData({
-      cart_length:0
-    })
+  oneBuy: function (e) {
     //第一次下单
     var faid = this.data.facilityId;
     var user = wx.getStorageSync('scSysUser');
@@ -1349,7 +1423,6 @@ Page({
             purchaseType: goos.purchaseType    //添加purchaseType
           });
         }
-
       }
       console.log(userName)
       app.util.reqAsync('shop/submitShopOrderV2', {
@@ -1376,17 +1449,17 @@ Page({
           })
 
         } else if (data.data.code == 1) { //跳到详情页
-       
+
           console.log(data.data.data.orderId)
           wx.setStorageSync("orderNo", data.data.data.orderId)
           wx.redirectTo({
             url: '../../../pages/myHome/shopOrder/orderDetail/orderDetail?activeIndex=0&shopId=' + this.data.shopId + '&userId=' + this.data.userId + '&presaleId=' + data.data.data.orderId + '&facilityId=' + this.data.facilityId
           })
+          this.clearShopCartFn();
+          this.removePurchaseData();
         }
       })
-
-
-    }else{
+    } else {
       wx.showToast({
         title: "请先添加商品",
         icon: 'none'
@@ -1426,7 +1499,6 @@ Page({
           title: data.data.msg,
           icon: 'none'
         })
-
       } else if (data.data.code == 1) { //跳到详情页
         if (data.data.data){
           if (data.data.data.orderType == 1) { //订单(小程序为1)
@@ -1434,6 +1506,7 @@ Page({
               this.setData({
                 bugGoods: [],
                 buyMoney: 0,
+                actualPay:0,
                 isBuy: 1,
                 facilityId: data.data.data.facilityId,
                 presaleId: data.data.data.scPresaleInfoList[0].presaleId,
@@ -1447,6 +1520,7 @@ Page({
               this.setData({
                 bugGoods: data.data.data.scPresaleInfoList,
                 buyMoney: data.data.data.shouldPay,
+                actualPay: data.data.data.actualPay,
                 isBuy: 0,
                 facilityId: data.data.data.facilityId,
                 presaleId: data.data.data.scPresaleInfoList[0].presaleId,
@@ -1458,7 +1532,6 @@ Page({
               })
             }
           }
-
         }else{
           this.setData({
             bugGoods: [],
@@ -1470,38 +1543,31 @@ Page({
       }
     })
   },
-  // 获取留店商品数据
-  getGiftData: function (message) {
-    var that = this;
+  // 留店商品
+  showPurchase:function(){
     this.setData({
-      ifstore: 1
+      ifstore: 1,
+      isactive: 1
     })
     var shop = wx.getStorageSync('shop');
     var purchaseStorage = wx.getStorageSync('purchaseStorage');
-    console.log("留店商品");
     util.reqAsync('shopOrder/storeRetentionLists', {
       shopId: shop.id,
       userId: wx.getStorageSync('scSysUser').id,
-      merchantId: that.data.merchantId
+      merchantId: this.data.merchantId || shop.merchantId
     }).then((res) => {
       console.log("留店商品列表")
       console.log(res);
-      if (res.data.data.length != 0) {
-        var purchaseData = wx.getStorageSync('purchaseData');
-        if (purchaseData) {
-          console.log("有购物车缓存")
-          // for (var i = 0; i < purchaseData.length; i++){
-          //   for (var j = 0; j < res.data.data.length;j++){
-          //     if (res.data.data[i].id == purchaseData[j].accountRecordId){
-          //       res.data.data[i]["shopNum"] = purchaseData[j].number;
-          //     }
-          //   }
-          // }
-          console.log(purchaseData);
-          that.setData({
-            purchase: purchaseData
-          })
-        } else {
+      var purchaseData = wx.getStorageSync('purchaseData');
+      if (purchaseData.length != 0) {
+        console.log("有购物车缓存")
+        console.log(purchaseData);
+        this.setData({
+          purchase: purchaseData,
+          showLoading: false
+        })
+      } else {
+        if (res.data.data) {
           console.log("无购物车缓存")
           // 数据增加加购数量，重置加购数量
           for (let i = 0; i < res.data.data.length; i++) {
@@ -1510,15 +1576,60 @@ Page({
               res.data.data[i]["pitch"] = 0;
             }
           }
-          that.setData({
-            purchase: res.data.data
+          this.setData({
+            purchase: res.data.data,
+            hasPurchase: true
           })
         }
-      } else {
-        wx.showToast({
-          title: '暂无留店商品',
-          icon: 'none'
+        else {
+          this.setData({
+            hasPurchase: false
+          })
+        }
+      }
+    }).catch((err) => {
+      console.log(err)
+    })
+  },
+  // 获取留店商品数据
+  getGiftData: function (message) {
+    var shop = wx.getStorageSync('shop');
+    var purchaseStorage = wx.getStorageSync('purchaseStorage');
+    util.reqAsync('shopOrder/storeRetentionLists', {
+      shopId: shop.id,
+      userId: wx.getStorageSync('scSysUser').id,
+      merchantId: this.data.merchantId || shop.merchantId
+    }).then((res) => {
+      console.log("留店商品列表")
+      console.log(res);
+      var purchaseData = wx.getStorageSync('purchaseData');
+      if (purchaseData.length != 0) {
+        console.log("有购物车缓存")
+        console.log(purchaseData);
+        this.setData({
+          purchase: purchaseData,
+          showLoading:false
         })
+      } else {
+        if (res.data.data.length != 0) {
+          console.log("无购物车缓存")
+          // 数据增加加购数量，重置加购数量
+          for (let i = 0; i < res.data.data.length; i++) {
+            if (!res.data.data[i]["shopNum"]) {
+              res.data.data[i]["shopNum"] = 0;
+              res.data.data[i]["pitch"] = 0;
+            }
+          }
+          this.setData({
+            purchase: res.data.data,
+            hasPurchase: true
+          })
+        }
+        else {
+          this.setData({
+            hasPurchase: false
+          })
+        }
       }
     }).catch((err) => {
       console.log(err)
@@ -1531,7 +1642,6 @@ Page({
     let remainNum = e.target.id.split('_')[3];
     let id = e.target.id.split('_')[4];
     console.log(id);
-    // debugger
     for (let i = 0; i < this.data.purchase.length; i++) {
       if (this.data.purchase[i].id == id) {
         if (e.detail.value.length < 0) {
@@ -1566,7 +1676,6 @@ Page({
   },
   // 数量 +1
   numPlus: function (e) {
-    // debugger
     var goodsId = e.target.id.split('_')[1];
     var stockId = e.target.id.split('_')[2];
     var shopNum = parseInt(e.target.id.split('_')[3]);
@@ -1576,42 +1685,68 @@ Page({
     var purchaseNum = parseInt(e.target.id.split('_')[7]); //留店的购买总数量
     var pitch = parseInt(e.target.id.split('_')[8]);
     var purchaseName;
-    for (var i = 0; i < this.data.purchase.length; i++) {
-      if (this.data.purchase[i].id == accountRecordId) {
-        purchaseName = this.data.purchase[i].purchaseName;
-        if (shopNum > purchaseNum - 1) {
-          wx.showToast({
-            title: '超过留店的购买总数量',
-            icon: 'none'
-          })
+
+    // 获取已加入购物车商品数量
+    util.reqAsync('shopOrder/getPresaleByCondition', {
+      shopId: wx.getStorageSync('shop').id,
+      userId: wx.getStorageSync('scSysUser').id,
+      presaleId: "", //订单id
+      facilityId: wx.getStorageSync('facilityId')
+    }).then((res) => {
+      var chartNum, totalcart;
+      if (res.data.data){
+        for (var i in res.data.data.scPresaleInfoList) {
+          if (res.data.data.scPresaleInfoList[i].accountRecordId == accountRecordId) {
+            chartNum = res.data.data.scPresaleInfoList[i].purchaseNum;
+          }
         }
-        else if (shopNum > remainNum) {
-          wx.showToast({
-            title: '超过留店剩余数量',
-            icon: 'none'
-          })
-        }
-        else if (shopNum > balance) {
-          wx.showToast({
-            title: '超过留店商品库存',
-            icon: 'none'
-          })
-        }
-        else {
-          shopNum = parseInt(this.data.purchase[i].shopNum) + 1;
-          this.data.purchase[i].shopNum += 1;
-          // debugger
-          this.addShop(goodsId, stockId, shopNum, purchaseName, accountRecordId, remainNum, balance, purchaseNum);
-        }
-        this.setData({
-          purchase: this.data.purchase
-        })
       }
-    }
+      if (chartNum) {
+        totalcart = shopNum + 1 + parseInt(chartNum);
+        console.log("购物车有此留店商品 +chartNum:" + chartNum + "现在加购" + shopNum + "总" + totalcart)
+      } else {
+        totalcart = shopNum
+        console.log("chartNum:" + chartNum + "现在加购" + shopNum + "总" + totalcart)        
+      }
+
+      for (var i = 0; i < this.data.purchase.length; i++) {
+        if (this.data.purchase[i].id == accountRecordId) {
+          purchaseName = this.data.purchase[i].purchaseName;
+          if (totalcart > purchaseNum - 1) {
+            wx.showToast({
+              title: '超过留店的购买总数量',
+              icon: 'none'
+            })
+          }
+          else if (totalcart > remainNum) {
+            wx.showToast({
+              title: '超过留店剩余数量',
+              icon: 'none'
+            })
+          }
+          else if (totalcart > balance) {
+            wx.showToast({
+              title: '超过留店商品库存',
+              icon: 'none'
+            })
+          }
+          else {
+            shopNum = parseInt(this.data.purchase[i].shopNum) + 1;
+            this.data.purchase[i].shopNum += 1;
+            this.addShop(goodsId, stockId, shopNum, purchaseName, accountRecordId, remainNum, balance, purchaseNum);
+          }
+          this.setData({
+            purchase: this.data.purchase
+          })
+          console.log(this.data.purchase)
+        }
+      }
+    }).catch((err) => {
+      console.log(err)
+    })
   },
   // 数量 -1
   numReduce: function (e) {
-    // debugger
     var goodsId = e.target.id.split('_')[1];
     var stockId = e.target.id.split('_')[2];
     var shopNum = parseInt(e.target.id.split('_')[3]);
@@ -1627,20 +1762,19 @@ Page({
           this.data.purchase[i].shopNum = parseInt(this.data.purchase[i].shopNum) - 1;
           this.reduceShop(goodsId, stockId, 1, purchaseName, accountRecordId, remainNum, purchaseNum);
         }
-        // if (shopNum == 1) {
-        //   this.data.purchase[i].shopNum = parseInt(this.data.purchase[i].shopNum) - 1;
-        //   this.reduceShop(goodsId, stockId, 1, purchaseName, accountRecordId, remainNum, purchaseNum);
-        //   this.data.purchase[i].pitch = 0;
-        // }
+        if (shopNum == 1) {
+          this.data.purchase[i].shopNum = parseInt(this.data.purchase[i].shopNum) - 1;
+          this.reduceShop(goodsId, stockId, 1, purchaseName, accountRecordId, remainNum, purchaseNum);
+          this.data.purchase[i].pitch = 0;
+        }
       }
     }
     this.setData({
       purchase: this.data.purchase
     })
   },
-  // 留店商品 - 更改加购状态
+  // 留店商品 - 更改加购状态 - 暂未使用（前加多选入购物车）
   changePurchase: function (e) {
-    // debugger
     var goodsId = e.target.id.split('_')[1];
     var stockId = e.target.id.split('_')[2];
     var shopNum = e.target.id.split('_')[3];
@@ -1681,7 +1815,6 @@ Page({
   },
   // 留店商品加购
   addShop: function (goodsId, stockId, shopNum, purchaseName, accountRecordId, remainNum, balance, purchaseNum) {
-    // debugger
     var goodsId = goodsId;
     var stockId = stockId;
     var purchaseName = purchaseName;
@@ -1703,25 +1836,21 @@ Page({
         icon: 'none'
       })
     }
-    else if (shopNum < remainNum && shopNum < balance && shopNum < purchaseNum) {
-      this.updatePurchaseNewShopCartV2(user.id, goodsId, shop.id, stockId, purchaseName, shopNum, accountRecordId, purchaseType, cartType);
+    else if (shopNum <= remainNum && shopNum <= balance && shopNum <= purchaseNum) {
+      this.updatePurchaseNewShopCartV2(goodsId, shop.id, stockId, purchaseName, shopNum, accountRecordId, purchaseType, cartType, 'add');
     }
     else if (shopNum > remainNum) {
       wx.showToast({
-        title: '超过留店剩余数，剩余数已全部加入购物车',
+        title: '超过留店剩余数',
         icon: 'none'
       })
-
-      this.updatePurchaseNewShopCartV2(user.id, goodsId, shop.id, stockId, purchaseName, remainNum, accountRecordId, purchaseType, cartType);
     }
 
     if (totalShop > balance) {
       wx.showToast({
-        title: '购买数量已超过店内此商品库存，商品库存已全部加入购物车',
+        title: '购买数量已超过店内此商品库存',
         icon: 'none'
       })
-
-      this.updatePurchaseNewShopCartV2(user.id, goodsId, shop.id, stockId, purchaseName, balance, accountRecordId, purchaseType, cartType);
     }
   },
   // 留店商品减购
@@ -1753,7 +1882,8 @@ Page({
           console.log(cartGoodsList)
           for (let i = 0; i < cartGoodsList.length; i++) {
             if (cartGoodsList[i].accountRecordId == accountRecordId) {
-              var purchaseName = cartGoodsList[i].purchaseName;
+              var purchaseName = cartGoodsList[i].goodsName;
+              console.log(purchaseName);
               cartNum = cartGoodsList[i].number;
               if (cartNum == 0) {
                 wx.showToast({
@@ -1762,13 +1892,12 @@ Page({
                 })
               } else {
                 if (shopNum == cartNum) {
-                  console.log(shopNum);
-                  this.deletePurchaseGoods(user.id, shop.id, stockId, goodsId, purchaseType, accountRecordId);
+                  this.deletePurchaseGoods(shop.id, stockId, goodsId, purchaseName, purchaseType, accountRecordId);
                 }
                 else if (shopNum < cartNum) {
                   console.log(cartNum);
                   let updateNum = cartNum - shopNum;
-                  this.updatePurchaseNewShopCartV2(user.id, goodsId, shop.id, stockId, purchaseName, updateNum, accountRecordId, purchaseType, cartType);
+                  this.updatePurchaseNewShopCartV2(goodsId, shop.id, stockId, purchaseName, updateNum, accountRecordId, purchaseType, cartType, 'decrease');
                 } else {
                   wx.showToast({
                     title: '删除数量超过购买数量',
@@ -1790,15 +1919,14 @@ Page({
       })
     }
   },
-  //留店商品 - 添加商品到购物车
-  updatePurchaseNewShopCartV2: function (customerid, goodsid, shopid, stockid, goodsName, goods_number, accountRecordId, purchaseType, cartType) {
-    // debugger
+  //留店商品 - 添加商品到购物车   changeType(添加： 'add'/移除： 'decrease'/无操作： '')
+  updatePurchaseNewShopCartV2: function ( goodsid, shopid, stockid, goodsName, goods_number, accountRecordId, purchaseType, cartType, changeType) {
     var param = {
       goodsId: goodsid,
       number: goods_number
     }
     util.reqAsync('shop/updateNewShopCartV2', {
-      customerId: customerid,
+      customerId: wx.getStorageSync('hostId'),
       goodsId: goodsid,
       number: parseInt(goods_number),
       shopId: shopid,
@@ -1809,8 +1937,18 @@ Page({
       cartType: cartType
     }).then((res) => {
       if (res.data.code == 1) {
+        //购物车修改成功时, 通知其他人
+        if (changeType) {
+          var opType = changeType == 'add' ? '加了' : '减了';
+          var message = opType + "1份" + goodsName + "_op";
+          //发送通知
+          wx.sendSocketMessage({
+            data: message
+          })
+        }
+
         this.shopCartList();
-        this.setPurchase();
+        this.setPurchase(1, accountRecordId);
       }
       if (res.data.code == 9) {
         wx.showToast({
@@ -1824,9 +1962,9 @@ Page({
     })
   },
   //留店商品 - 移除购物车
-  deletePurchaseGoods: function (customerId, shopId, stockId, goodsId, purchaseType, accountRecordId) {
+  deletePurchaseGoods: function (shopId, stockId, goodsId, goodsname, purchaseType, accountRecordId) {
     util.reqAsync('shop/delShopCartGoodsByUidAndGid', {
-      customerId: customerId,
+      customerId: wx.getStorageSync('hostId'),
       shopId: shopId,
       goodsId: goodsId,
       stockId: stockId,
@@ -1836,14 +1974,24 @@ Page({
     }).then((res) => {
       console.log("留店删除")
 
+      //移除商品后, 通知其他人
+      var message = "从购物车中移除了" + goodsname + "_op";
+      //发送通知
+      wx.sendSocketMessage({
+        data: message
+      })
+
       this.shopCartList()
-      this.setPurchase();
+      this.setPurchase(2, accountRecordId);
+
     }).catch((err) => {
       console.log(err)
     })
   },
-  // 设置留店商品缓存
-  setPurchase: function () {
+  // 设置留店商品缓存 handle 传递操作，是否为删除, 1 为加购，2为移除
+  setPurchase: function (handle, nowAccountRecordId) {
+    var handle = handle;
+    var nowAccountRecordId = nowAccountRecordId;
     util.reqAsync('shop/shopCartList', {
       customerId: wx.getStorageSync('scSysUser').id,
       shopId: wx.getStorageSync('shop').id,
@@ -1852,28 +2000,140 @@ Page({
       this.setData({
         purchaseData: this.data.purchase
       })
-      var cartlist = res.data.data;
-      for (var i = 0; i < cartlist.length; i++) {
-        for (var j = 0; j < this.data.purchaseData.length; j++) {
-          if (cartlist[i].accountRecordId == this.data.purchaseData[j].id) {
-            this.data.purchaseData[j].shopNum = cartlist[i].number;
+      var purchaseData = this.data.purchaseData;
+      if (res.data.data.length != 0) {
+        if (res.data.data[0].goodsList) {
+          var goodsListMap = new Map();
+          for (var i = 0; i < res.data.data[0].goodsList.length; i++) {
+            console.log(res.data.data[0].goodsList[i].accountRecordId)
+            goodsListMap.set(res.data.data[0].goodsList[i].accountRecordId, res.data.data[0].goodsList[i].number);
+          }
+
+          if (handle == 1) {
+            for (var j = 0; j < this.data.purchaseData.length; j++) {
+              if (this.data.purchaseData[j].id == nowAccountRecordId) {
+                this.data.purchaseData[j].shopNum = goodsListMap.get(parseInt(nowAccountRecordId + ""));
+              }
+            }
+          } else if (handle == 2) {
+            for (var j = 0; j < this.data.purchaseData.length; j++) {
+              if (this.data.purchaseData[j].id == nowAccountRecordId) {
+                this.data.purchaseData[j].shopNum = 0;
+              }
+            }
           }
         }
       }
+      else {
+        for (var j = 0; j < this.data.purchaseData.length; j++) {
+          this.data.purchaseData[j].shopNum = 0;
+        }
+      }
+      
       this.setData({
-        purchaseData: this.data.purchaseData
+        purchaseData: this.data.purchaseData,
+        purchase: this.data.purchaseData
       })
-      console.log(this.data.purchaseData)
 
-      // 设置留店商品缓存
-      wx.setStorage({
-        key: "purchaseData",
-        data: this.data.purchaseData, //这是一个数组，存有所有访问过的城市的名称
-      })
+      wx.setStorageSync("purchaseData", purchaseData);
     }).catch((err) => {
       console.log(err)
     })
-  }
+  },
+  // 清空留店商品缓存，重新请求获取留店商品数据
+  removePurchaseData:function(){
+    wx.removeStorageSync("purchaseData");
+    this.getGiftData();
+  },
+  getAccount: function () {
+    //获取下单结算方式
+    util.reqAsync('shop/getShopSettingAndProcess', {
+      shopId: wx.getStorageSync('shop').id,
+    }).then((res) => {
+      if (res.data.code == 9) {
+        wx.showToast({
+          title: res.data.msg,
+          icon: 'none'
+        })
+        this.setData({
+          cart_length: this.data.cartGoodsList.length
+        })
+      } else { //调接口成功
+        if (res.data.data.payType == 0) { //0-后支付 1-先支付
 
+          if (this.data.isBuy == 1) {  //是否下单商品已经结算完毕 0 未结算 1已结算
+            this.oneBuy();
+          } else { //修改订单
+            this.changeOrdr();
+          }
+        } else { //先支付
+          var arrList = [];
+          for (var a in this.data.bugGoods) { //已下单商品
+            if (this.data.bugGoods[a].stockId) {
+              arrList.push({
+                goodsServiceId: this.data.bugGoods[a].goodsServiceId,
+                purchaseName: this.data.bugGoods[a].purchaseName,
+                purchaseNum: this.data.bugGoods[a].purchaseNum,
+                unitPrice: this.data.bugGoods[a].unitPrice,
+                actualPayment: Number(this.data.bugGoods[a].purchaseNum) * Number(this.data.bugGoods[a].unitPrice),
+                stockId: this.data.bugGoods[a].stockId,
+                ids: this.data.bugGoods[a].stockId,
+              })
+            } else {
+              arrList.push({
+                goodsServiceId: this.data.bugGoods[a].goodsServiceId,
+                purchaseName: this.data.bugGoods[a].purchaseName,
+                purchaseNum: this.data.bugGoods[a].purchaseNum,
+                unitPrice: this.data.bugGoods[a].unitPrice,
+                actualPayment: Number(this.data.bugGoods[a].purchaseNum) * Number(this.data.bugGoods[a].unitPrice),
+                stockId: this.data.bugGoods[a].stockId,
+                ids: this.data.bugGoods[a].goodsServiceId
+              })
+            }
+
+          }
+          console.log(this.data.cartGoodsList)
+
+          for (var b in this.data.cartGoodsList) {
+            if (this.data.cartGoodsList[b].stockId && this.data.cartGoodsList[b].stockId != undefined && this.data.cartGoodsList[b].stockId != 'undefined' && this.data.cartGoodsList[b].stockId != null && this.data.cartGoodsList[b].stockId != "null") {
+              console.log(1)
+              console.log("this.data.cartGoodsList[b].purchaseType");
+              console.log(this.data.cartGoodsList[b].purchaseType);
+              arrList.push({
+                goodsServiceId: this.data.cartGoodsList[b].goodsId,
+                purchaseName: this.data.cartGoodsList[b].goodsName,
+                purchaseNum: this.data.cartGoodsList[b].number,
+                unitPrice: this.data.cartGoodsList[b].stockPrice,
+                actualPayment: Number(this.data.cartGoodsList[b].number) * Number(this.data.cartGoodsList[b].stockPrice),
+                stockId: this.data.cartGoodsList[b].stockId,
+                ids: this.data.cartGoodsList[b].stockId,
+
+                purchaseType: this.data.cartGoodsList[b].purchaseType,
+                accountRecordId: this.data.cartGoodsList[b].accountRecordId ? this.data.cartGoodsList[b].accountRecordId : 0
+              })
+            } else {
+
+              arrList.push({
+                goodsServiceId: this.data.cartGoodsList[b].goodsId,
+                purchaseName: this.data.cartGoodsList[b].goodsName,
+                purchaseNum: this.data.cartGoodsList[b].number,
+                unitPrice: this.data.cartGoodsList[b].goodsPrice,
+                actualPayment: Number(this.data.cartGoodsList[b].number) * Number(this.data.cartGoodsList[b].goodsPrice),
+                stockId: this.data.cartGoodsList[b].stockId,
+                ids: this.data.cartGoodsList[b].goodsId,
+                purchaseType: this.data.cartGoodsList[b].purchaseType,
+                accountRecordId: this.data.cartGoodsList[b].accountRecordId ? this.data.cartGoodsList[b].accountRecordId : 0
+              })
+            }
+
+          }
+          wx.setStorageSync("firstBuy", arrList);
+          wx.navigateTo({
+            url: '../memberBuy/memberBuy'
+          })
+        }
+      }
+    })
+  }
 })
 

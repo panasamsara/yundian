@@ -13,7 +13,7 @@
 	"compileType": "miniprogram",
 	"libVersion": "2.2.1",
 	"appid": "wxd471bb4262ac7505",
-	"projectname": "zshop_pro",
+	"projectname": "XSW",
 	"svr": "",
 	"client": "",
 	"qcloudRoot": "",
@@ -37,7 +37,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 38,
+			"current": 39,
 			"list": [
 				{
 					"id": -1,
@@ -272,6 +272,11 @@
 					"name": "新活动页",
 					"pathName": "pages/store/posterActivity/posterActivity",
 					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "我的",
+					"pathName": "pages/myHome/myHome"
 				}
 			]
 		}

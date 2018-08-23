@@ -42,7 +42,7 @@ page{
   background: #fff;
   margin: 0 20rpx;
   border-radius: 10rpx;
-  margin-top:48px;
+  margin-top:216rpx;
   padding-top: 4rpx;
 }
 .list .shopIcon{
@@ -128,7 +128,6 @@ page{
 .list .info button{
   float:right;
   /* background:#fb8b33; */
-  color:#fff;
   border-radius:5rpx;
   font-size: 28rpx;
   color: #fff;
@@ -136,7 +135,6 @@ page{
   line-height: 46rpx;
 }
 .serial view{
-  margin: 0 auto;
   width: 100%;
 	border-radius: 4px;
   font-size: 32rpx;
@@ -169,24 +167,28 @@ page{
   left:0;
 }
 .call image:first-child{
-  width: 42rpx;
+  width: 34rpx;
   height: 42rpx;
   vertical-align: middle;
   float: left;
-  margin-right: 24rpx;
+  padding-right: 24rpx;
+  border-right: 2rpx solid #ddd;
+  padding-top: 10rpx;
 }   
 .call text{
   font-size: 26rpx;
-  width: 545rpx;
+  width: 465rpx;
   color: #333;
   display: block;
   float: left;
+  padding-left: 24rpx;
 }
 .call image:last-child{
   width: 32rpx;
   height: 42rpx;
   vertical-align: middle;
   float: right;
+  margin-right: 80rpx;
 }
 .discount .img{
   width: 112rpx;
@@ -260,4 +262,72 @@ canvas#discountCanvas{
   position: fixed;
   top: 9999rpx;
   left: 9999rpx;
+}
+
+#share,#goback{
+  position: fixed;
+  width: 80rpx;
+  height: 80rpx;
+  z-index: 99999;
+}
+
+#share{
+  right: 30rpx;
+  bottom: 280rpx;
+}
+
+#goback{
+  right: 30rpx;
+  bottom: 180rpx;
+}
+.bindGet{
+  width: 500rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  border-radius: 10rpx;
+  margin: 0 auto;
+  background: #f17168;
+  color: #fff;
+  font-size: 32rpx;
+}
+.supernatant{
+  position: absolute;
+  top: 0;
+  width: 710rpx;
+  left: 20rpx;
+  background: rgba(255,255,255,0.3);
+  font-size: 26rpx;
+  color: #fff;
+  height: 60rpx;
+  line-height: 60rpx;
+  border-radius: 30rpx;
+  text-align: center;
+  margin-top: 60rpx;
+
+}
+.supernatant .delete{
+  float: right;
+  color: #fff;
+  border-radius: 50%;
+  display: block;
+  width: 26rpx;
+  height: 26rpx;
+  text-align: center;
+  line-height: 60rpx;
+  padding: 17rpx 30rpx 0 30rpx;
+}
+.location{
+  position:fixed;
+  width:80rpx;
+  height:80rpx;
+  z-index:99999;
+  right:30rpx;
+  bottom:390rpx;
+}
+.marginTop88{
+  margin-top: 88rpx;
+}
+.marginTop216{
+  margin-top: 216rpx;
 }

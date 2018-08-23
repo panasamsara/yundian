@@ -68,7 +68,7 @@
     <image class="order-success" src="../../../../images/success.png"></image>
     <view class="modal-content">
       <text>支付成功!</text>
-      <text>选择再来一单或查看此订单</text>
+      <text>查看此订单</text>
     </view>
     <view class="modal-btn">  
       <!-- <text class="knowBtn" bindtap="goShop">再来一单</text> -->

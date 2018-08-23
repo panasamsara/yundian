@@ -14,9 +14,7 @@
             <text class='oldPrice'>原价格￥{{item.originalPrice}}</text>
           </view>
           <view class='buyBox'>
-            <view class='buy'>
-              <navigator url='../goodsDetial/goodsDetial?shopId={{item.shopId}}&goodsId={{item.itemId}}&cUser={{item.cUser}}&groupBuyingId={{item.id}}&status=1'>去拼团</navigator>
-            </view> 
+            <view class='buy'>去拼团</view> 
           </view>
         </view>
       </view>

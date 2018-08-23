@@ -6,7 +6,8 @@ Page({
     shopId:'',
     shopName:'',
     customerId:'',
-    totalMoney:0
+    totalMoney:0,
+    isSend:0 //配送方式
   },
   onLoad: function (options) {
     var user = wx.getStorageSync('scSysUser');
@@ -17,7 +18,8 @@ Page({
       shopId: options.shopId,
       shopName: options.shopName,
       customerId: options.customerId,
-      totalMoney: options.totalMoney
+      totalMoney: options.totalMoney,
+      isSend: options.isSend //0-快递  1-店内下单 2-自提
     })
   },
   skip:function(e){

@@ -32,11 +32,15 @@
   margin-left: 70rpx;
   padding-bottom: 20rpx;
   margin-bottom: 30rpx;
+  font-weight:bold;
+  font-size:46rpx;
+  color:#ff5c36;
 }
 .sub-title{
   width: 100%;
   text-align: center;
   font-size: 28rpx;
+  color: #666;
 }
 .ac-time{
   width: 100%;
@@ -44,6 +48,7 @@
   font-size: 26rpx;
   margin-top: 20rpx;
   margin-bottom: 20rpx; 
+  color: #999;
 }
 .border1{
   position: relative;
@@ -61,4 +66,20 @@
   padding: 20rpx;
   border: 1rpx solid #000;
   font-size: 30rpx;
+}
+#share,#goback{
+  position: fixed;
+  width: 80rpx;
+  height: 80rpx;
+  z-index: 99999;
+}
+
+#share{
+  right: 30rpx;
+  bottom: 280rpx;
+}
+
+#goback{
+  right: 30rpx;
+  bottom: 180rpx;
 }

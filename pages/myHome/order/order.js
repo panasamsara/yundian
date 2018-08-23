@@ -11,14 +11,16 @@ Page({
     currentTab: 0, //预设当前项的值
     scrollLeft: 0, //tab标题的滚动条位置
     goodlist: [], //"orderStatus" 订单状态（待发货0，配送中1，已收货2， 配送失败3, 取消4，异常订单5）
-    length:0,
-    customerId:'',
-    shopId:''
+    length: 0,
+    customerId: '',
+    shopId: '',
+    userCode: ''
   },
   onLoad: function (options) {
     var user = wx.getStorageSync('scSysUser');
     var userid = wx.getStorageSync('scSysUser').id;
     var shopId = wx.getStorageSync('shop').id;
+    var userCode = wx.getStorageSync('scSysUser').usercode;
     var that = this;
     // 高度自适应
     wx.getSystemInfo({
@@ -26,16 +28,17 @@ Page({
         var clientHeight = res.windowHeight,
           clientWidth = res.windowWidth,
           rpxR = 750 / clientWidth;
-        var calc = (clientHeight-58) * rpxR;
+        var calc = (clientHeight - 58) * rpxR;
         that.setData({
           winHeight: calc
         });
       }
     });
     that.setData({
-      currentTab: options.index ||0,
+      currentTab: options.index || 0,
       customerId: userid,
-      shopId: shopId
+      shopId: shopId,
+      userCode: userCode
     });
     that.getData(); //全部
     console.log(userid)
@@ -57,7 +60,7 @@ Page({
   // 点击标题切换当前页时改变样式
   swichNav: function (e) {
     var cur = parseInt(e.currentTarget.dataset.current);
-    if (this.data.currentTab == cur) { 
+    if (this.data.currentTab == cur) {
       return false;
     } else {
       this.setData({
@@ -81,9 +84,9 @@ Page({
       })
     }
   },
-  getData: function(type){
+  getData: function (type) {
     //调接口
-    if(type==1){
+    if (type == 1) {
       app.util.reqAsync('shop/getShopOrderListNews', {
         customerId: this.data.customerId,
         orderStatusVo: this.data.currentTab,
@@ -93,28 +96,28 @@ Page({
       }).then((res) => {
         console.log(res)
         if (res.data.code == 1) {
-           //下拉加载
-            var oldData = this.data.goodlist;
-            var data = res.data.data;
-            for (var ins in data) {
-              oldData.push(data[ins]);
+          //下拉加载
+          var oldData = this.data.goodlist;
+          var data = res.data.data;
+          for (var ins in data) {
+            oldData.push(data[ins]);
+          }
+          for (var i in oldData) {
+            oldData[i].amount = data[ins].amount.toFixed(2);
+            for (var z in res.data.data[i].orderItemList) {
+              oldData[i].total += data[ins].orderItemList[z].goodsNum;
             }
-            for (var i in oldData) {
-              oldData[i].amount = data[ins].amount.toFixed(2);
-              for (var z in res.data.data[i].orderItemList) {
-                oldData[i].total += data[ins].orderItemList[z].goodsNum;
-              }
-            }
+          }
           console.log(oldData)
-            wx.hideLoading();
+          wx.hideLoading();
 
-            this.data.currentPage = ++this.data.currentPage;
+          this.data.currentPage = ++this.data.currentPage;
           console.log(oldData)
-            this.setData({
-              goodlist: oldData,
-              length: oldData.length
-            })
-          
+          this.setData({
+            goodlist: oldData,
+            length: oldData.length
+          })
+
         } else {
           wx.showToast({
             title: res.data.msg,
@@ -128,7 +131,7 @@ Page({
           icon: 'none'
         })
       })
-    }else{
+    } else {
       app.util.reqAsync('shop/getShopOrderListNews', {
         customerId: this.data.customerId,
         orderStatusVo: this.data.currentTab,
@@ -140,14 +143,14 @@ Page({
           for (var i in res.data.data) {
             res.data.data[i].total = 0;
             res.data.data[i].amount = res.data.data[i].amount.toFixed(2);
-            for (var z in res.data.data[i].orderItemList){
+            for (var z in res.data.data[i].orderItemList) {
               res.data.data[i].total += res.data.data[i].orderItemList[z].goodsNum;
             }
           }
-            this.setData({
-              goodlist: res.data.data,
-              length: res.data.data.length
-            })
+          this.setData({
+            goodlist: res.data.data,
+            length: res.data.data.length
+          })
           console.log(res.data.data)
         } else {
           wx.showToast({
@@ -163,9 +166,9 @@ Page({
         })
       })
     }
-    
+
   },
-  delete: function(e){
+  delete: function (e) {
     var orderNo = e.currentTarget.dataset.no;
     var that = this;
     //删除订单
@@ -185,7 +188,7 @@ Page({
               setTimeout(function () {
                 that.getData();
                 that.setData({
-                  currentPage:1
+                  currentPage: 1
                 })
               }, 2000);
             } else {
@@ -200,12 +203,12 @@ Page({
               icon: 'none'
             })
           })
-         
+
         }
       }
     })
   },
-  cancel: function(e){
+  cancel: function (e) {
     var orderNo = e.currentTarget.dataset.no;
     //取消订单
     var that = this;
@@ -241,16 +244,16 @@ Page({
         }
       }
     })
-   
+
   },
-  audit:function(){
+  audit: function () {
     //退款中、退货中
     wx.showToast({
       title: '等待商家审核',
       icon: 'none'
     })
   },
-  appraise: function(e){
+  appraise: function (e) {
     var shopId = e.currentTarget.dataset.shopid,
       goodId = e.currentTarget.dataset.goodid;
     //评价
@@ -258,7 +261,7 @@ Page({
       url: '../../appraise/appraise?shopId=' + shopId + '&goodsId=' + goodId
     })
   },
-  returnGood: function(e){
+  returnGood: function (e) {
     //申请退货
     var self = this;
     var phone = e.currentTarget.dataset.phone;
@@ -289,7 +292,7 @@ Page({
     //   url: 'applyRefund/applyRefund?orderNo=' + orderNo + '&orderStatus=' + orderStatus + '&returnAmount=' + returnAmount
     // })
   },
-  reimburse: function(e){
+  reimburse: function (e) {
     //申请退款
     // var orderNo = e.currentTarget.dataset.no,
     //   orderStatus = e.currentTarget.dataset.statu,
@@ -320,7 +323,7 @@ Page({
       }
     })
   },
-  take: function(e){
+  take: function (e) {
     //确认收货
     var orderNo = e.currentTarget.dataset.no,
       customerId = e.currentTarget.dataset.customerid;//"fromBarCode":1 //是否扫码确认收货。可不填 ，不填则不是扫码确认收货
@@ -328,15 +331,15 @@ Page({
       orderNo: orderNo,
       customerId: customerId
     }).then((res) => {
-      if (res.data.code==1){
+      if (res.data.code == 1) {
         this.getData();
-      }else{
+      } else {
         wx.showToast({
           title: res.data.msg,
           icon: 'none'
         })
       }
-      
+
     }).catch((err) => {
       wx.showToast({
         title: '失败……',
@@ -344,7 +347,7 @@ Page({
       })
     })
   },
-  shipments : function(e){
+  shipments: function (e) {
     var orderNo = e.currentTarget.dataset.no,
       userId = this.data.customerId;//用户id
     //提醒发货
@@ -352,18 +355,18 @@ Page({
       orderNo: orderNo,
       userId: userId
     }).then((res) => {
-      if (res.data.code==1){
+      if (res.data.code == 1) {
         wx.showToast({
           title: '已提醒卖家发货',
           icon: 'none'
         })
-      }else{
+      } else {
         wx.showToast({
           title: res.data.msg,
           icon: 'none'
         })
       }
-      
+
     }).catch((err) => {
       wx.showToast({
         title: '失败……',
@@ -381,18 +384,18 @@ Page({
   //     url: '../../store/store?shopId=' + shopId + '&currUserId=' + currUserId
   //   })
   // },
-  orderSkip: function(e){
+  orderSkip: function (e) {
     var orderNo = e.currentTarget.dataset.no;
     var isGroupBuying = e.currentTarget.dataset.isgrop;//是否拼单 0不是 1是
     var remark = e.currentTarget.dataset.remark;//是否秒杀活动
 
     //跳转到订单详情
-    if (isGroupBuying==1){ //拼团
+    if (isGroupBuying == 1) { //拼团
       wx.redirectTo({
         url: '../orderDetail/orderDetail?orderNo=' + orderNo + '&isGroupBuying=' + 1
       })
-    }else{
-      if (remark && remark!=null){
+    } else {
+      if (remark && remark != null) {
         if (remark.indexOf("秒杀") == -1) { //普通商品
           console.log("普通")
           wx.redirectTo({
@@ -404,15 +407,15 @@ Page({
             url: '../orderDetail/orderDetail?orderNo=' + orderNo + '&isGroupBuying=' + 0 + '&orderkind=' + 3
           })
         }
-      }else{
+      } else {
         console.log("普通")
         wx.redirectTo({
           url: '../orderDetail/orderDetail?orderNo=' + orderNo + '&isGroupBuying=' + 0
         })
       }
-      
+
     }
-    
+
   },
   onReachBottom: function () {
     //下拉加载
@@ -437,7 +440,7 @@ Page({
   //   //上拉刷新
   //   this.getData();
   // },
-  pay:function(e){
+  pay: function (e) {
     var self = this;
     var dt = e.currentTarget.dataset.no;
     wx.showModal({
@@ -450,7 +453,7 @@ Page({
 
         } else if (res.cancel) {
           //用户点击取消
-          
+
         }
       }
     })
@@ -460,8 +463,8 @@ Page({
       requestBody: {
         body: '云店小程序普通订单',
         out_trade_no: code,
-       // notify_url: 'https://wxappprod.izxcs.com/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
-       // notify_url: app.globalData.notify_url,
+        // notify_url: 'https://wxappprod.izxcs.com/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
+        // notify_url: app.globalData.notify_url,
         trade_type: 'JSAPI',
         openid: wx.getStorageSync('scSysUser').wxOpenId
       }
@@ -504,22 +507,23 @@ Page({
               title: '支付成功',
               icon: 'none'
             })
-            self.getData(); 
-           },
+            self.getMessage(code);
+            self.getData();
+          },
           'fail': function (res) {
-           console.log('失败'+res)
+            console.log('失败' + res)
             //支付失败
             wx.showToast({
               title: '支付失败',
               icon: 'none'
             })
-            self.getData(); 
+            self.getData();
 
 
           },
           'complete': function (res) {
-           
-            self.getData(); 
+
+            self.getData();
           }
         })
 
@@ -536,6 +540,24 @@ Page({
         icon: 'none'
       })
     });
+  },
+  getMessage: function (no) {
+    //支付成功调接口
+    app.util.reqAsync('shop/getRoomIdSendMessage', {
+      orderNo: no, //订单编号
+      shopId: this.data.shopId, //店铺id
+      userCode: this.data.userCode//云信账号
+    }).then((data) => {
+      if (data.data.code == 1) {
+
+      } else {
+        wx.showToast({
+          title: data.data.msg,
+          icon: 'none'
+        })
+      }
+
+    })
   }
   // bindTestCreateOrder: function (code) {
   //   //微信支付
@@ -568,8 +590,8 @@ Page({
   //           title: '支付失败',
   //           icon: 'none'
   //         })
-         
-          
+
+
   //         self.getData(); 
 
   //       },
@@ -578,7 +600,7 @@ Page({
   //           title: '支付成功',
   //           icon: 'none'
   //         })
-        
+
   //         self.getData(); 
   //       }
   //     })

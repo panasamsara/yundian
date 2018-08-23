@@ -120,7 +120,7 @@
       <view class='body'>
         <view class='headline' wx:if="{{data.newCmsArticle[0].articleTitle}}"> 
           <view class='headlineList'>
-            <view class='contentBox'>
+            <view class='contentBox' data-articleId="{{data.newCmsArticle[0].articleId}}" bindtap='ship'>
               <image src='{{data.newCmsArticle[0].scCmsResourcesList[0].resourcesUrl}}'></image>
               <view class='text'>
                 <text class='titles'>{{data.newCmsArticle[0].articleTitle}}</text>

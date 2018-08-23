@@ -56,13 +56,8 @@ Page({
     // Do something when page ready.
   },
   onLoad: function (options) {
-    var shop = wx.getStorageSync('shop')
-    var user = wx.getStorageSync('scSysUser');
-    console.log(user)
-    
     let systemInfo = wx.getStorageSync('systemInfo');
     let mechine = options;//wx.getStorageSync('mechine');
-    let _that = this;
 
     this.busPos = {};
     this.busPos['x'] = 40;//小球进购物车的位置
@@ -73,8 +68,9 @@ Page({
       systemInfo: systemInfo,
       goodsH: systemInfo.windowHeight  - 48
     });
-    // console.log(mechine)
 
+    var shop = wx.getStorageSync('shop')
+    var user = wx.getStorageSync('scSysUser');
     //获取店铺类别列表
     // this.getCategoryList()
     util.reqAsync('shop/getShopGoodsCategoryList', {
@@ -105,142 +101,22 @@ Page({
       }).then((res) => {
          goods = res.data.data
 
-        if (shopCategory[1].type ==3) {
-          util.reqAsync('shop/getShopGoodsMore', {
-            merchantId: shop.merchantId,
-            shopId: shop.id,
-            customerId: user.id,
-            searchType: shopCategory[1].type,
-            categoryId: shopCategory[1].categoryId
-          }).then((res) => {
+        if (shopCategory[1]) {
+          if (shopCategory[1].type == 3){
+            util.reqAsync('shop/getShopGoodsMore', {
+              merchantId: shop.merchantId,
+              shopId: shop.id,
+              customerId: user.id,
+              searchType: shopCategory[1].type,
+              categoryId: shopCategory[1].categoryId
+            }).then((res) => {
 
-            let newData = res.data.data
-            if (newData.length != 0) {
-              for (let i = 0; i < newData.length; i++) {
-                goods.push(newData[i])
-              }
-            }
-            if (goods.length != 0) {
-              for (let j = 0; j < goods.length; j++) {
-                goodMap[goods[j].id] = goods[j];
-                goodMap[goods[j].id].number = 0
-                goodsInCategory.push(goods[j])
-
-                if (goods[j].stockList.length != 0) {
-                  for (let k = 0; k < goods[j].stockList.length; k++) {
-                    let goodStock = []
-                    goodStock.goodsName = goods[j].goodsName
-                    goodStock.goodsId = goods[j].id
-                    goodStock.stockId = goods[j].stockList[k].id
-                    goodStock.number = 0
-                    goodStock.goodsPrice = goods[j].price
-                    goodStock.stockPrice = goods[j].stockList[k].stockPrice
-                    goodStock.stockPrice = goods[j].stockList[k].stockPrice
-                    stockMap[goodStock.stockId] = goodStock
-                  }
-                } else {
-                  let goodStock = []
-                  goodStock.goodsName = goods[j].goodsName
-                  goodStock.goodsId = goods[j].id
-                  goodStock.stockId = null
-                  goodStock.number = 0
-                  goodStock.goodsPrice = goods[j].price
-                  goodStock.stockPrice = null
-                  goodStock.stockBalance = goods[j].stockBalance
-                  stockMap[goodStock.goodsId] = goodStock
+              let newData = res.data.data
+              if (newData.length != 0) {
+                for (let i = 0; i < newData.length; i++) {
+                  goods.push(newData[i])
                 }
               }
-            }
-            let g = {}
-            for (let j = 0; j < goodMap.length; j++) {
-              if (goodMap[j] && goodMap[j])
-                g[j] = goodMap[j]
-            }
-            let h = {}
-            for (let i = 0; i < stockMap.length; i++) {
-              if (stockMap[i] && stockMap[i])
-                h[i] = stockMap[i]
-            }
-            this.setData({
-              goodMap: g,
-              stockMap: h,
-              goodsInCategory: goodsInCategory,
-              showLoading: false
-            })
-
-          }).catch((err) => {
-            console.log(err)
-          })
-        }else{
-          if (goods.length != 0) {
-            for (let j = 0; j < goods.length; j++) {
-              goodMap[goods[j].id] = goods[j];
-              goodMap[goods[j].id].number = 0
-              goodsInCategory.push(goods[j])
-
-              if (goods[j].stockList.length != 0) {
-                for (let k = 0; k < goods[j].stockList.length; k++) {
-                  let goodStock = []
-                  goodStock.goodsName = goods[j].goodsName
-                  goodStock.goodsId = goods[j].id
-                  goodStock.stockId = goods[j].stockList[k].id
-                  goodStock.number = 0
-                  goodStock.goodsPrice = goods[j].price
-                  goodStock.stockPrice = goods[j].stockList[k].stockPrice
-                  goodStock.stockPrice = goods[j].stockList[k].stockPrice
-                  stockMap[goodStock.stockId] = goodStock
-                }
-              } else {
-                let goodStock = []
-                goodStock.goodsName = goods[j].goodsName
-                goodStock.goodsId = goods[j].id
-                goodStock.stockId = null
-                goodStock.number = 0
-                goodStock.goodsPrice = goods[j].price
-                goodStock.stockPrice = null
-                goodStock.stockBalance = goods[j].stockBalance
-                stockMap[goodStock.goodsId] = goodStock
-              }
-            }
-          }
-          let g = {}
-          for (let j = 0; j < goodMap.length; j++) {
-            if (goodMap[j] && goodMap[j])
-              g[j] = goodMap[j]
-          }
-          let h = {}
-          for (let i = 0; i < stockMap.length; i++) {
-            if (stockMap[i] && stockMap[i])
-              h[i] = stockMap[i]
-          }
-          this.setData({
-            goodMap: g,
-            stockMap: h,
-            goodsInCategory: goodsInCategory,
-            showLoading: false
-          })
-
-          this.shopCartList()
-        }
-        
-      }).catch((err) => {
-        console.log(err)
-      })
-   
-
-/*
-      for (let i = 0; i < shopCategory.length; i++){
-        // 根据每个类别 把所有商品查出来
-        if (i != shopCategory.length-1){
-          util.reqAsync('shop/getShopGoodsMore', {
-            merchantId: shop.merchantId,
-            shopId: shop.id,
-            customerId: user.id,
-            searchType: shopCategory[i].type,
-            categoryId: shopCategory[i].categoryId
-          }).then((res) => {
-            let goods = res.data.data
-            if (goods){
               if (goods.length != 0) {
                 for (let j = 0; j < goods.length; j++) {
                   goodMap[goods[j].id] = goods[j];
@@ -271,23 +147,37 @@ Page({
                     stockMap[goodStock.goodsId] = goodStock
                   }
                 }
+              } else { // 没有商品
+                wx.showToast({
+                  title: '暂无商品',
+                  icon: 'none'
+                })
+                this.setData({
+                  showLoading: false
+                })
+                return
               }
-            }
-            
+              let g = {}
+              for (let j = 0; j < goodMap.length; j++) {
+                if (goodMap[j] && goodMap[j])
+                  g[j] = goodMap[j]
+              }
+              let h = {}
+              for (let i = 0; i < stockMap.length; i++) {
+                if (stockMap[i] && stockMap[i])
+                  h[i] = stockMap[i]
+              }
+              this.setData({
+                goodMap: g,
+                stockMap: h,
+                goodsInCategory: goodsInCategory,
+                showLoading: false
+              })
 
-          }).catch((err) => {
-            console.log(err)
-          })
-        }else{
-          util.reqAsync('shop/getShopGoodsMore', {
-            merchantId: shop.merchantId,
-            shopId: shop.id,
-            customerId: user.id,
-            searchType: shopCategory[i].type,
-            categoryId: shopCategory[i].categoryId
-          }).then((res) => {
-            let goods = res.data.data
-
+            }).catch((err) => {
+              console.log(err)
+            })
+          } else {
             if (goods.length != 0) {
               for (let j = 0; j < goods.length; j++) {
                 goodMap[goods[j].id] = goods[j];
@@ -296,7 +186,7 @@ Page({
 
                 if (goods[j].stockList.length != 0) {
                   for (let k = 0; k < goods[j].stockList.length; k++) {
-                    let goodStock = {}
+                    let goodStock = []
                     goodStock.goodsName = goods[j].goodsName
                     goodStock.goodsId = goods[j].id
                     goodStock.stockId = goods[j].stockList[k].id
@@ -307,7 +197,7 @@ Page({
                     stockMap[goodStock.stockId] = goodStock
                   }
                 } else {
-                  let goodStock = {}
+                  let goodStock = []
                   goodStock.goodsName = goods[j].goodsName
                   goodStock.goodsId = goods[j].id
                   goodStock.stockId = null
@@ -317,33 +207,105 @@ Page({
                   goodStock.stockBalance = goods[j].stockBalance
                   stockMap[goodStock.goodsId] = goodStock
                 }
-              }
-            }
 
+              }
+            } else { // 没有商品
+              wx.showToast({
+                title: '暂无商品',
+                icon: 'none'
+              })
+              this.setData({
+                showLoading: false
+              })
+              return
+            }
             let g = {}
             for (let j = 0; j < goodMap.length; j++) {
               if (goodMap[j] && goodMap[j])
                 g[j] = goodMap[j]
             }
-            
+            let h = {}
+            for (let i = 0; i < stockMap.length; i++) {
+              if (stockMap[i] && stockMap[i])
+                h[i] = stockMap[i]
+            }
             this.setData({
               goodMap: g,
-              stockMap: stockMap,
+              stockMap: h,
               goodsInCategory: goodsInCategory,
               showLoading: false
             })
-            // 获取购物车
             this.shopCartList()
+          }
+          
+        }else{
+          if (goods.length != 0) {
+            for (let j = 0; j < goods.length; j++) {
+              goodMap[goods[j].id] = goods[j];
+              goodMap[goods[j].id].number = 0
+              goodsInCategory.push(goods[j])
 
-          }).catch((err) => {
-            console.log(err)
+              if (goods[j].stockList.length != 0) {
+                for (let k = 0; k < goods[j].stockList.length; k++) {
+                  let goodStock = []
+                  goodStock.goodsName = goods[j].goodsName
+                  goodStock.goodsId = goods[j].id
+                  goodStock.stockId = goods[j].stockList[k].id
+                  goodStock.number = 0
+                  goodStock.goodsPrice = goods[j].price
+                  goodStock.stockPrice = goods[j].stockList[k].stockPrice
+                  goodStock.stockPrice = goods[j].stockList[k].stockPrice
+                  stockMap[goodStock.stockId] = goodStock
+                }
+              } else {
+                let goodStock = []
+                goodStock.goodsName = goods[j].goodsName
+                goodStock.goodsId = goods[j].id
+                goodStock.stockId = null
+                goodStock.number = 0
+                goodStock.goodsPrice = goods[j].price
+                goodStock.stockPrice = null
+                goodStock.stockBalance = goods[j].stockBalance
+                stockMap[goodStock.goodsId] = goodStock
+              }
+
+            }
+          } else { // 没有商品
+            wx.showToast({
+              title: '暂无商品',
+              icon: 'none'
+            })
+            this.setData({
+              showLoading: false
+            })
+            return
+          }
+          let g = {}
+          for (let j = 0; j < goodMap.length; j++) {
+            if (goodMap[j] && goodMap[j])
+              g[j] = goodMap[j]
+          }
+          let h = {}
+          for (let i = 0; i < stockMap.length; i++) {
+            if (stockMap[i] && stockMap[i])
+              h[i] = stockMap[i]
+          }
+          this.setData({
+            goodMap: g,
+            stockMap: h,
+            goodsInCategory: goodsInCategory,
+            showLoading: false
           })
+          debugger
+          this.shopCartList()
         }
         
-      }
-   */
+      }).catch((err) => {
+        console.log(err)
+      })
+   
       console.log('goodMap')
-      console.log(goodMap)
+      console.log(this.data.goodMap)
 
     }).catch((err) => {
       console.log(err)
@@ -650,15 +612,23 @@ Page({
   },
   //选择规格的确认按钮
   choseStockYesBtn: function(){
-    this.setData({
-      showStock: false,
-      attrList: [],
-      stocks: [],
-      stockHighLightIndex: -1
-    })
+   
     if (this.data.chosenStockId){
+      this.setData({
+        showStock: false,
+        attrList: [],
+        stocks: [],
+        stockHighLightIndex: -1,
+        chosenStockPrice: null
+      })
+
       this.addGoodToCartFn(this.data.chooseGoodEvent)
       // this.startAnimation(this.data.chooseGoodEvent);
+    }else{
+      wx.showToast({
+        title: '请选择规格',
+        icon: 'none'
+      })
     }
   },
   // 关闭 选择规格弹框
@@ -957,7 +927,7 @@ Page({
 
     var shop = wx.getStorageSync('shop');
     wx.navigateTo({
-      url: '../goodsDetial/goodsDetial?goodsId=' + goods_id + '&shopId=' + shop.id + '&status=' + 3, // 3 普通商品
+      url: '../goodsDetial/goodsDetial?goodsId=' + goods_id + '&shopId=' + shop.id , 
     })
   },
   jiesuan: function () {

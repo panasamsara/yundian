@@ -22,10 +22,37 @@
 
 .activityInfo .banner image{
   width: 100%;
-  height: 750rpx;
 }
 
 .activityInfo .content{
   padding: 25rpx; 
   font-size: 30rpx;
+  color: #666;
+}
+#share,#goback{
+  position: fixed;
+  width: 80rpx;
+  height: 80rpx;
+  z-index: 99999;
+}
+
+#share{
+  right: 30rpx;
+  bottom: 280rpx;
+}
+
+#goback{
+  right: 30rpx;
+  bottom: 180rpx;
+}
+.goods-name{
+  font-weight:bold;
+  font-size:46rpx;
+  color:#ff5c36;
+  position:relative;
+  top:10rpx;
+}
+.ac-time{
+  color: #999;
+  font-weight: bold;
 }

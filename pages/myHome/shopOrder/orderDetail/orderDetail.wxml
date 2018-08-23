@@ -21,6 +21,34 @@
         </view>
       </view>
     </view>
+    <!-- <view class="clubcard" wx:if="{{hascard}}">
+      <view class="ext">会员卡</view>
+      <view class="select" bindtap="opencard">
+        <text>{{card}}</text>
+        <image class="rightIcon" src="../../images/right.png"></image></view>
+    </view>
+    <view class="cardpopbg" wx:if="{{cardpop}}" bindtap="closepop">
+      <view class="cardpop">
+        <view class='poptit'>请选择会员账户</view>
+        <view class="cardList">
+          <scroll-view class="cardscroll" scroll-y>
+            <view class="nocard"  bindtap="closepop">
+              <text>暂不使用会员卡</text>
+            </view>
+            <view class="carditem {{cardlist.ishort==1?short-money:''}}"  bindtap="iuseCard" wx:for="{{cardlist}}" wx:for-index="cardx" wx:for-item="card" wx:key="*this" id="card_{{card.id}}_{{card.principal}}_{{card.principalFormat}}_{{card.discount}}_{{card.discountFormat}}_{{card.ishort}}" data-businessname="{{card.businessName}}">
+              <view class="carddetails">
+                <view class="cardname">{{card.businessName}}</view>
+                <view class="cardamout">(剩余：￥{{card.principalFormat}})</view>
+              </view>
+              <view class="discount" wx:if="{{card.discountFormat!=10}}">
+                <text class="number">{{card.discountFormat}}</text>
+                <text>折</text>
+              </view>
+            </view>
+           </scroll-view>
+        </view>
+      </view>
+    </view> -->
     <view class="list" bindtap='skip' data-id="{{presaleId}}" data-index="{{index}}">
       <view class='shop'>
         <view class='left'>
@@ -34,26 +62,60 @@
         <!-- <view wx-if="{{activeIndex==0}}" class='right rightType'>订单已提交</view>
         <view wx-if="{{activeIndex==1}}" class='right rightType'>订单已完成</view> -->
       </view>
-      <view wx:for="{{scPresaleInfoList}}" wx:key="index" wx:for-item='items'>
+      <view wx:for="{{scPresaleInfoList}}" wx:key="index" wx:for-item='items' wx:key="*this">
         <view class="orderInfo">
           <view class='left'>
             <image src='{{items.pictureUrl}}'></image>
           </view>
-          <view class='right'>
-            <text>{{items.purchaseName}}</text>
-            <text class="size" wx:if="{{items.stockName}}">{{items.stockName}}</text>
-            <text>
-              <text class='left font34 priceColor'><text class='font24'>￥</text>{{items.unitPrice}}</text>
-            <text class='right color999 font28'>X{{items.purchaseNum}}</text>
-            </text>
+          <!-- 未使用会员卡 -->
+          <view class='goodetail right'>
+            <view class='left'>
+              <text class="gname">{{items.purchaseName}}</text>
+              <text class="size" wx:if="{{items.stockName}}">{{items.stockName}}</text>
+              <text class='num color999 font26'>X{{items.purchaseNum}}</text>
+            </view>
+            <text class='right font34 priceColor'><text class='font24'>￥</text>{{items.unitPrice}}</text>
           </view>
+          <!-- 使用会员卡 -->
+          <!-- <view class='goodetail right'  wx:if="{{usecard}}">
+            <view class='left'>
+              <view class="gname">
+               <text>{{items.purchaseName}}</text><text class="disicon">折</text>
+              </view>
+              <text class="size" wx:if="{{items.stockName}}">{{items.stockName}}</text>
+              <text class='num color999 font26'>X{{items.purchaseNum}}</text>
+            </view>
+            <text class='right font34 priceColor gprice'>
+              <text class='font24 color999 aprice'><text class='font24'>￥</text>{{items.unitPrice}}</text>
+              <text class='font34 priceColor account'><text class='font24'>￥</text>{{items.preferentialAmount}}</text>
+            </text>
+          </view> -->
         </view>
       </view>
+
+      <!-- 使用会员卡 -->
+      <!-- <view class="aftercount" wx:if="{{usecard}}">
+        <view class="countitem">
+          <text class="desc">会员折扣优惠（{{discount}}折）</text>
+          <text class="moneytext">-￥<text class="mone">{{discountDerate}}</text></text>
+        </view>
+        <view class="countitem">
+          <text class="desc">指定商品优惠  (不参与折扣)</text>
+          <text class="moneytext">-￥<text class="mone">{{memberDerate}}</text></text>
+        </view>
+      </view> -->
+      <!-- aftercount end -->
       <view>
-        <view class='right'>
+        <view class='linehei right'>
           <!-- <text>共{{total}}件商品</text> -->
-          <text>合计：</text>
-          <text class='font34 priceColor'><text class='font24'>￥</text>{{shouldPay}}</text>
+          <view class='right'>
+            <text>合计：</text>
+            <text class='font34 priceColor'><text class='font24'>￥</text>{{shouldPay}}</text>
+          </view>
+          <!-- <view class='reduced right'  wx:if="{{usecard}}"> 
+            <text>已优惠</text>
+            <text class='font28 priceColor'>￥{{totalAccout}}</text>
+          </view> -->
         </view>
       </view>   
       <view class="appDlond" wx:if="{{activeIndex==1}}">
@@ -77,14 +139,32 @@
     </view>
   </view>
 </view>
-
+<!-- 使用会员卡支付 -->
+<!-- <view class="popbg" wx:if="{{ispayCard}}" bindtap="closePaycard"> 
+  <view class="paycard">
+    <view class="paycardcon">
+      <text class="paytitle font36">会员卡支付</text>
+      <text class="shopname font32">{{shopName}}</text>
+      <text class="summoney"><text class="yang">￥</text>{{actualPayFormat}}</text>
+    </view>
+    <view class="card">
+    <view class="shoplogo"><image class="shopImg mr15" src="../../images/shopDefault.png"></image></view>
+    <view class="cardinfo">
+      <text class="font32">{{shopName}}{{card}}</text>
+      <text class="font22 color999">（剩余：¥{{principalFormat}}）</text>
+    </view>
+    </view>
+    <button class="payforcard  font36" size="{{primarySize}}" loading="{{loading}}" disabled="{{disabled}}" bindtap="payForCard"> 确定支付</button>
+  </view> 
+  
+</view>-->
 <!--下单成功-->
-  <view class="modal-box order-tip" hidden="{{flagOrder}}" >
+  <view class="modal-box order-tip" hidden="{{flagOrder}}" bindtap="closeflag">
   <view class="modal-body">
     <image class="order-success" src="../../../../images/success.png"></image>
     <view class="modal-content">
       <text>支付成功!</text>
-      <text>选择再来一单或查看此订单</text>
+      <text>查看此订单</text>
     </view>
     <view class="modal-btn">  
       <text class="knowBtn" bindtap="look">查看订单</text>

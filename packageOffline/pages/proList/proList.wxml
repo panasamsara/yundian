@@ -7,11 +7,12 @@
     <scroll-view scroll-y style="height: {{goodsH}}px;"  scroll-with-animation="{{animation}}">
       <view wx:for="{{shopCategory}}" wx:key='index' id="cat_{{index}}_{{item.categoryId}}_{{item.type}}" class="menu-item {{(catHighLightIndex == index) ? 'current':''}}" data-name="{{item.categoryName}}" bindtap="catClickFn">{{item.categoryName}}</view>
     </scroll-view>
-    <view class='gift' bindtap="getGiftData">留店商品</view>
+    <view wx:if="{{isactive==0}}" class="gift" bindtap="showPurchase">留店商品</view>
+    <view wx:elif="{{isactive==1}}" class="gift gifton" bindtap="showPurchase">留店商品</view>
     </view>
 
     <!--右侧产品列表-->
-    <view wx:if="{{ifstore==0}}" class="foods-wrapper" style="height: {{goodsH}}px;">
+    <view wx:if="{{ifstore==0}}" class="foods-wrapper" style="height: {{goodsHL}}px;">
       <scroll-view scroll-y style="height: 100%;" scroll-into-view="{{toView}}">
       <view  class="food-grouping" id="catGood_{{item.id}}">
         <view wx:for="{{goodsInCategory}}" wx:for-item="good" wx:key='index' class="foods-item" data-id="{{good.id}}" data-status='{{good.goodsType}}' data-stocklist="{{good.stockList.length}}" bindtap='goToDetail'>
@@ -24,7 +25,7 @@
           <view class="cartcontrol-wrap">
             <view class="cartcontrol">
                 <text class="cart-count">{{(goodMap[good.id].number >0 ) ? goodMap[good.id].number: ""}}</text>
-               <image wx:if="{{good.stockList.length == 0}}" src="./image/yundian_sygouwuche@2x.png" catchtap="touchOnGoods" id="add_{{good.id}}" class="cart-add icon-add_circle"></image>
+               <image wx:if="{{good.stockList.length == 0}}" src="./image/yundian_sygouwuche@2x.png" catchtap="touchOnGoods" id="add_{{good.id}}" class="cart-add icon-add_circle" data-goodName="good.goodsName"></image>
                <text wx:if="{{good.stockList.length > 0}}" catchtap="touchOnGoods" id="add_{{good.id}}" class="select-stock">选规格</text>
             </view>
           </view>
@@ -34,10 +35,10 @@
     </view>
 
     <!-- 右侧 留店商品列表 -->
-    <view wx:elif="{{ifstore==1}}" class="foods-wrapper" style="height: {{goodsH}}px;">
+    <view wx:elif="{{ifstore==1}}" class="foods-wrapper" style="height: {{goodsHL}}px;">
       <view class="gift-title">留店商品</view>
       <view class="gift-list">
-        <scroll-view scroll-y style="height: 100%;">
+        <scroll-view scroll-y style="height: 100%;" wx:if="{{hasPurchase}}">
           <!-- gift-item -->
           <view class="gift-item" wx:for="{{purchase}}" wx:for-index="purnx"  wx:key="*this" wx:for-item='pur' data-id="{{pur.goodsId}}">
             <image class="gift-good" src="{{pur.pictureUrl}}"  bindtap="goToDetail"></image>
@@ -65,6 +66,10 @@
             </view>
           </view>
         </scroll-view>
+
+        <view wx:else class="nopurchase">
+          暂无留店商品
+        </view>
       </view>
     </view>
   </view>
@@ -96,6 +101,7 @@
         <view class="content-right">
           <!-- <view bindtap="goToCart" class="pay payClass" wx:if='{{cart_length > 0}}'>去结算 -->
           <view bindtap="jiesuan" class="pay payClass" wx:if='{{cart_length > 0}}'>确认下单
+          <!-- <view bindtap="getAccount" class="pay payClass" wx:if='{{cart_length > 0}}'>确认下单 -->
           <!-- <text wx:if='{{totalNum >0}}'>（{{totalNum}}）</text> -->
           </view>
           <view class="pay-gray" wx:if='{{cart_length == 0}}'>确认下单
@@ -126,7 +132,7 @@
                 <view class="food" wx:for="{{bugGoods}}" wx:for-item="goodd" wx:key='index' >
                   <view class="name">{{goodd.purchaseName}}</view>
                   <view class="cart-wrapper">
-                      <view class="cartcontrol" bindtap="addGoodToCartFn" data-stockid='{{goodd.stockId}}' id="add_{{goodd.goodsServiceId}}_{{goodd.stockId}}">
+                      <view class="cartcontrol" bindtap="addGoodToCartFn" data-stockid='{{goodd.stockId}}' data-goodname="{{goodd.purchaseName}}" id="add_{{goodd.goodsServiceId}}_{{goodd.stockId}}_{{goodd.accountRecordId}}_{{goodd.purchaseType}}">
                           再加一份
                       </view>
                     </view>
@@ -165,7 +171,7 @@
                               <view class="inner icon-remove_circle_outline"></view>
                           </view>
                           <text class="cart-count">{{good.number}}</text>
-                          <image src="./image/fenlei_tianjia@2x.png" bindtap="addGoodToCartFn" data-stockid='{{good.stockId}}' id="add_{{good.goodsId}}_{{good.stockId}}" class="cart-add icon-add_circle"></image>
+                          <image src="./image/fenlei_tianjia@2x.png" bindtap="addGoodToCartFn" data-stockid='{{good.stockId}}'  data-goodname="{{good.goodsName}}" id="add_{{good.goodsId}}_{{good.stockId}}_{{good.accountRecordId}}_{{good.purchaseType}}" class="cart-add icon-add_circle"></image>
                       </view>
                     </view>
                 </view>
@@ -215,7 +221,7 @@
 
     </view>
     <view class='stock-box-bottom'>
-      <view class='stock-money' wx:if='{{chosenStockPrice}}'> <text class='stock-yangjiao'>￥</text>{{chosenStockPrice}}</view>
+      <view class='stock-money' wx:if='{{chosenStockPrice != null}}'> <text class='stock-yangjiao'>￥</text>{{chosenStockPrice}}</view>
       <view class='stock-btn' bindtap='choseStockYesBtn'>确认</view>
       <!-- <view class='stock-btn gray' wx:if='{{!hasChooseStock}}'>确认</view> -->
     </view>

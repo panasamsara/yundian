@@ -68,7 +68,7 @@
   position: absolute;
   width: 112rpx;
   height: 112rpx;
-  right:114rpx;
+  right:220rpx;
   top:-8rpx;
 }
 .empty view{

@@ -68,7 +68,8 @@
         "pages/appointment/success",
         "pages/appointment/modal/device-modal/device-modal",
         "pages/appointment/modal/service-modal/service-modal",
-        "pages/appointment/modal/serviceName-modal/serviceName-modal"
+        "pages/appointment/modal/serviceName-modal/serviceName-modal",
+        "pages/articleDetail/articleDetail"
       ]
     },
     {
@@ -84,7 +85,7 @@
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "WeChat",
     "navigationBarTextStyle": "black",
-    "onReachBottomDistance":50
+    "onReachBottomDistance": 50
   },
   "tabBar": {
     "color": "#7A7E83",

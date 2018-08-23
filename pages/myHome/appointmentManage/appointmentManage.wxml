@@ -34,6 +34,10 @@
           <text>{{item.bespokeTime}}-{{item.bespokeEndTime}}</text>
         </view>
         <view class="shopList">
+          <text>人数：</text>
+          <text>{{item.bespokeThree || "无"}}</text>
+        </view>
+        <view class="shopList">
           <text>设施/设备：</text>
           <text>{{item.facilityName || "无"}}</text>
         </view>

@@ -86,29 +86,19 @@ swiper-item image{
   padding: 8rpx 4rpx;
   font-size: 26rpx;
 }
-/* .countDown .left>span{
-  font-size: 30rpx;
-  padding-left: 10rpx;
-  position: relative;
-}
-.countDown .left>span::after{
-  content: '';  
-  height: 1rpx;
-  width:126rpx;
-  background-color: #fff;
-  position: absolute;
-  left: 10rpx;
-  top:20rpx;
-} */
+
 .detail{
   padding:25rpx;
 }
+
 .detail text{
   display: block;
 }
+
 .rich-text{
   width: 100%;
 }
+
 .detail .title{
   padding-top: 15rpx;
   font-size: 34rpx;
@@ -116,23 +106,28 @@ swiper-item image{
   text-align: justify;
   word-break:break-all;
 }
+
 .detail .price{
   color:#fa0030;
   font-size: 44rpx;
   font-weight: bold;
   line-height: 90rpx;
 }
+
 .detail span{
   font-size: 28rpx;
   color:#999;
   display: inline-block;
 }
+
 .detail span:first-child{
   margin-right: 120rpx;
 }
+
 .give{
   padding: 30rpx;
 }
+
 .give .left{
   float: left;
   width: 62rpx;
@@ -140,23 +135,28 @@ swiper-item image{
   margin-right: 20rpx;
   margin-top: 25rpx;
 }
+
 .give .middle{
   float:left;
 }
+
 .give .middle>image{
   margin-right: 20rpx;
   float: left;
   width:90rpx;
   height: 90rpx;
 }
+
 .give .middle .rt{
   float: left
 
 }
+
 .give .middle text{
   font-size: 28rpx;
   color:#333333;
 }
+
 .give .middle .bot{
   margin-top: 20rpx;
   width:70rpx;
@@ -168,6 +168,7 @@ swiper-item image{
   line-height: 30rpx;
   text-align: center;
 }
+
 .give .right{
   float: right;
   width: 100rpx;
@@ -332,6 +333,13 @@ swiper-item image{
   left: 97rpx;
   width: 36rpx;
   height: 42rpx;
+}
+
+.stockNameBox{
+  max-width: 510rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .user-info{
@@ -516,9 +524,10 @@ view.normalBuy #buyNow,view.normalBuy #addCart{
   width:100%;
   height: 100%;
   background-color:rgba(0, 0, 0, 0.3);
-  position: absolute;
+  position: fixed;
   top:0;
   left: 0;
+  z-index: 999;
 }
 /* 弹出层 */
 .layer{
@@ -755,7 +764,7 @@ view.normalBuy #buyNow,view.normalBuy #addCart{
   height:700rpx;
 }
 .shade{
-  position: absolute;
+  position: fixed;
   top:0;
   left: 0;
   width:100%;
@@ -1116,4 +1125,28 @@ canvas{
   width: 380rpx;
   height: 320rpx;
   margin: 200rpx 0 20rpx 0;
+}
+
+#share,#goback{
+  position: fixed;
+  width: 80rpx;
+  height: 80rpx;
+  z-index: 888;
+}
+
+#share{
+  right: 30rpx;
+  bottom: 280rpx;
+}
+
+#goback{
+  right: 30rpx;
+  bottom: 180rpx;
+}
+.quan-close-btn{
+  position: absolute;
+  width: 54rpx;
+  height: 55rpx;
+  right: 20rpx;
+  top: -20rpx;
 }

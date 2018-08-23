@@ -2,15 +2,15 @@
 @import "../secKill/secKill.wxss";
 
 .groupBuy .group{
-  width: 90rpx;
-  height: 40rpx;
-  line-height: 38rpx;
+  height: 45rpx;
+  line-height: 41rpx;
   text-align: center;
   border: solid 1rpx #fb452c;
   color: #fb452c;
   font-size: 22rpx;
   border-radius: 6rpx;
   box-sizing: border-box;
+  padding: 0 10rpx;
 }
 
 .groupBuy .infoBox{

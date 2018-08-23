@@ -25,13 +25,134 @@ Page({
 
     this.getAct(options.goodsId, options.shopId)
 
+    if (options && options.q) {
+      var uri = decodeURIComponent(options.q)
+      var p = util.getParams(uri)
+      let shopId = p.shopId
+      wx.setStorageSync('shopId', shopId);
+      this.setData({
+        shopId: shopId
+      })
+    } else {
+      if (options && options.shopId) {
+        wx.setStorageSync('shopId', options.shopId);
+        this.setData({
+          shopId: options.shopId
+        })
+      }
+    }
     // 获取店铺信息
-    var user = wx.getStorageSync('scSysUser');
-    util.getShop(user.id, options.shopId).then((res) => {
-      wx.setStorageSync('shop', res.data.data.shopInfo);
-    })
+    // var user = wx.getStorageSync('scSysUser');
+    // util.getShop(user.id, options.shopId).then((res) => {
+    //   wx.setStorageSync('shop', res.data.data.shopInfo);
+    // })
+    console.log(options.goodsId)
+    console.log(options.shopId)
   },
+  onshow: function () { //缓存店铺信息（分享切店铺）
+    var shopId = this.data.shopId
+    if (!shopId) {
+      shopId = wx.getStorageSync('shopId');
+    }
+    var shop = wx.getStorageSync('shop')
 
+    if (!shop) {
+      if (shopId == undefined) {
+        wx.redirectTo({
+          url: '../scan/scan'
+        })
+      } else {
+        util.getShop(loginRes.id, shopId).then(function (res) {
+          _this.setData({
+            shopInformation: res.data.data
+          })
+          //shop存入storage
+          wx.setStorageSync('shop', res.data.data.shopInfo);
+          //活动
+          wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
+          // 所有信息
+          wx.setStorageSync('shopInformation', res.data.data);
+          if (res.data.data.shopInfo.shopHomeConfig) {
+            if (res.data.data.shopInfo.shopHomeConfig.videoPathList.length != 0) {
+              let videoInfo = {}
+              videoInfo.url = res.data.data.shopInfo.shopHomeConfig.videoPathList[0].filePath
+              videoInfo.cover = res.data.data.shopInfo.shopHomeConfig.videoPathList[0].coverImagePath
+              wx.setStorageSync('videoInfo', videoInfo)
+            }
+          }
+          _this.getShopInfo(res.data.data)
+          _this.getIndexAllInfo(res.data.data.shopInfo.id)
+          _this.checkCoupon()
+        })
+      }
+    } else {
+      if (shopId == undefined || shopId == '' || shopId == null) {
+        if (shop.shopHomeConfig) {
+          if (shop.shopHomeConfig.videoPathList.length != 0) {
+            let videoInfo = {}
+            videoInfo.url = shop.shopHomeConfig.videoPathList[0].filePath
+            videoInfo.cover = shop.shopHomeConfig.videoPathList[0].coverImagePath
+            wx.setStorageSync('videoInfo', videoInfo)
+          }
+        }
+        let shopInformation = wx.getStorageSync('shopInformation')
+        _this.setData({
+          shopInformation: shopInformation
+        })
+        _this.getShopInfo(shopInformation)
+        _this.getIndexAllInfo(shop.id)
+        _this.checkCoupon()
+      } else {
+        if (shopId == shop.id) {
+          if (shop.shopHomeConfig) {
+            if (shop.shopHomeConfig.videoPathList.length != 0) {
+              let videoInfo = {}
+              videoInfo.url = shop.shopHomeConfig.videoPathList[0].filePath
+              videoInfo.cover = shop.shopHomeConfig.videoPathList[0].coverImagePath
+              wx.setStorageSync('videoInfo', videoInfo)
+            }
+          }
+          let shopInformation = wx.getStorageSync('shopInformation')
+          _this.setData({
+            shopInformation: shopInformation
+          })
+          _this.getShopInfo(shopInformation)
+          _this.getIndexAllInfo(shop.id)
+          _this.checkCoupon()
+        } else {
+          wx.removeStorageSync('shop')
+          wx.removeStorageSync('goodsInfos')
+          wx.removeStorageSync('shopInformation')
+          util.getShop(loginRes.id, shopId).then(function (res) {
+            _this.setData({
+              shopInformation: res.data.data
+            })
+            //shop存入storage
+            wx.setStorageSync('shop', res.data.data.shopInfo);
+            //活动
+            wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
+            // 所有信息
+            wx.setStorageSync('shopInformation', res.data.data);
+            if (res.data.data.shopInfo.shopHomeConfig) {
+              if (res.data.data.shopInfo.shopHomeConfig.videoPathList.length != 0) {
+                let videoInfo = {}
+                videoInfo.url = res.data.data.shopInfo.shopHomeConfig.videoPathList[0].filePath
+                videoInfo.cover = res.data.data.shopInfo.shopHomeConfig.videoPathList[0].coverImagePath
+                wx.setStorageSync('videoInfo', videoInfo)
+              }
+            }
+            _this.getShopInfo(res.data.data)
+            _this.getIndexAllInfo(res.data.data.shopInfo.id)
+            _this.checkCoupon()
+
+          })
+        }
+      }
+
+    }
+
+    wx.removeStorageSync('shopId');
+  },
   getAct: function (goodsId, shopId){
     var _this = this
     app.util.reqAsync('shop/goodsDetail', {
@@ -182,5 +303,10 @@ Page({
       }
     }
   },
+  goback: function () {//回到首页按钮
+    wx.switchTab({
+      url: '../../index/index?shopId=' + this.data.shopId
+    })
+  }
   
 })

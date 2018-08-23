@@ -27,10 +27,10 @@ Page({
       customerId: this.data.userId,
     }).then((res) => {
       this.getAddress();
-      wx.showToast({
-        title: "更新默认地址成功",
-        icon: 'none'
-      })
+      // wx.showToast({
+      //   title: "更新默认地址成功",
+      //   icon: 'none'
+      // })
     }).catch((err) => {
       wx.showToast({
         title: '失败……',

@@ -1,4 +1,5 @@
 {
   "navigationBarTitleText": "预约管理",
-  "enablePullDownRefresh": false
+  "enablePullDownRefresh": false,
+    "backgroundColor": "#f8f8f8"
 }

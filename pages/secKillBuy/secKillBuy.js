@@ -2,7 +2,7 @@
 const app = getApp();
 Page({
   data: {
-    array: ['快递配送','自提'],
+    array: ['快递配送', '自提'],
     isService: 0, //0只有商品没有服务 1有服务
     isSend: 0,//0-快递  1-店内下单 2-自提
     shopName: '',
@@ -19,8 +19,9 @@ Page({
     deliveryMoney: 0, //运费
     deliveyArr: [],//运费数组
     isPay: 0,//是否微信支付（0未支付1-成功2-失败）
-    secondskillActivityId:'',//秒杀id
+    secondskillActivityId: '',//秒杀id
     customerId: "",
+    userCode: '',
     objectArray: [
       {
         id: 0,
@@ -37,15 +38,15 @@ Page({
     flagOrder: true,
     userInfo: [],
     goods: [{
-      goodsId:'',
-      goodsType:'',
-      remake:'',
-      stockId:'',
-      goodsName:'',
-      stockName:'',
-      goodsPrice:'',
-      goodsNum:'',
-      pictureUrl:''
+      goodsId: '',
+      goodsType: '',
+      remake: '',
+      stockId: '',
+      goodsName: '',
+      stockName: '',
+      goodsPrice: '',
+      goodsNum: '',
+      pictureUrl: ''
     }],
     contactMobile: '',
     contactName: '',
@@ -59,11 +60,13 @@ Page({
     notInCityPrice: '',  //异城运费相关
     inCityPrice: '', //同城不同区运费
     inCityPriceDetails: '',//同城区列表
-    isSeckill:'', //拼团还是秒杀
+    isSeckill: '', //拼团还是秒杀
     groupId: '',//不拼团就传0  拼团传拼团id
     smallGroupId: '',// 参与拼团要传，秒杀传0就OK
-    orderNo:'',//最后生成的订单号
-    spellingType: ''////拼团订单0：拼主 1：参与拼团
+    orderNo: '',//最后生成的订单号
+    spellingType: '',//拼团订单0：拼主 1：参与拼团
+    sure: false,
+    sures: true
   },
   onLoad: function (options) {
     var user = wx.getStorageSync('scSysUser');
@@ -72,6 +75,7 @@ Page({
     var userid = wx.getStorageSync('scSysUser').id;
     var shopid = wx.getStorageSync('shop').id;
     var username = wx.getStorageSync('scSysUser').username;
+    var userCode = wx.getStorageSync('scSysUser').usercode;
     //获取商品
     var goodsId = options.goodsId;
     var goodsType = options.goodsType; //（0 - 普通商品；1 - 服务；2 - 服务卡；3 - 服务套餐; 6 - 套盒）
@@ -85,19 +89,19 @@ Page({
     var shopProvince = shop.provinceId;
     var shopArea = shop.areaId;
     var shopCity = shop.cityId;
-    if (options.deliveryCalcContent == 'null'){
+    if (options.deliveryCalcContent == 'null') {
       var arr = 0;
-    }else{
+    } else {
       var arr = JSON.parse(options.deliveryCalcContent);
     }
-    
+
     var secondskillActivityId = options.secondskillActivityId || "";//秒杀id
     var shopName = shop.shopName;
-    if (goodsType==0){
+    if (goodsType == 0) {
       var isService = 0
-    }else{
+    } else {
       var isService = 1
-    } 
+    }
     console.log(options)
 
     this.setData({
@@ -105,11 +109,12 @@ Page({
       spellingType: options.spellingType || "",
       isSeckill: options.isSeckill,//1秒杀 0拼团
       groupId: options.groupId || 0,//不拼团就传0  拼团传拼团id
-      smallGroupId: options.SmallGroupId||0,// 参与拼团要传，秒杀传0就OK
+      smallGroupId: options.SmallGroupId || 0,// 参与拼团要传，秒杀传0就OK
       customerId: userid,
       shopName: shopName,
       shopId: shopid,
       username: username,
+      userCode: userCode,
       shopProvince: shopProvince,
       shopArea: shopArea,
       shopCity: shopCity,
@@ -127,8 +132,8 @@ Page({
         pictureUrl: pictureUrl
       }],
     })
-    if (arr!=0) {
-      console.log(typeof(arr))
+    if (arr != 0) {
+      console.log(typeof (arr))
       this.setData({
         notInCityPrice: arr.notInCityPrice,
         inCityPrice: arr.inCityPrice,
@@ -141,7 +146,7 @@ Page({
         inCityPriceDetails: ''
       })
     }
- console.log("134")
+    console.log("134")
     console.log(arr)
 
     //获取地址
@@ -231,7 +236,7 @@ Page({
           ProvinceName: ''
         })
       }
-      
+
       this.setData({
         isSend: this.data.isSend,//0-快递  1-店内下单 2-自提
         shopName: this.data.shopName,
@@ -254,12 +259,12 @@ Page({
         contactMobile: this.data.contactMobile,
         contactName: this.data.contactName
       })
-  //判断是普通商品还是服务
-      if (this.data.isService==0){  //普通商品
+      //判断是普通商品还是服务
+      if (this.data.isService == 0) {  //普通商品
 
         this.deliveryMone();//计算快递费
 
-      }else{
+      } else {
         this.setData({
           isSend: 2,//0-快递  1-店内下单 2-自提
           array: ['自提'],
@@ -274,13 +279,13 @@ Page({
         })
       }
 
-      
+
     })
     console.log(this.data.goods)
   },
   deliveryMone: function () {
     //计算运费
-    if (this.data.isSend==0){
+    if (this.data.isSend == 0) {
       var darr = this.data.deliveyArr;
       console.log(darr)
       if (darr != 0) {
@@ -330,12 +335,12 @@ Page({
       this.setData({
         oldTotal: (summoney).toFixed(2)
       })
-    }else{
+    } else {
       this.setData({
         oldTotal: this.data.totalMoney
       })
     }
-    
+
   },
   addressSkip: function (e) {
     //跳到地址管理
@@ -397,18 +402,18 @@ Page({
         url: '../myHome/shopOrder/shopOrder'
       })
     } else {
-      if (this.data.isSeckill==1){//秒杀
+      if (this.data.isSeckill == 1) {//秒杀
         //跳到线上订单
         wx.redirectTo({
           url: '../myHome/orderDetail/orderDetail?orderNo=' + this.data.orderNo + '&isGroupBuying=' + 0 + '&orderkind=' + 3
         })
-      }else{
+      } else {
         //跳到线上订单
         wx.redirectTo({
           url: '../myHome/orderDetail/orderDetail?orderNo=' + this.data.orderNo + '&isGroupBuying=' + 1
         })
       }
-     
+
     }
 
   },
@@ -437,25 +442,34 @@ Page({
 
 
       }
+      this.setData({
+        sure: true,
+        sures: false
+      })
       this.sumb1(1);
     } else { //自取
+      this.setData({
+        sure: true,
+        sures: false
+      })
       console.log("自取")
       this.sumb1(1);
     }
   },
   sumb1: function (type) {
-    console.log("快递或者字体")
+    console.log("快递或者自提")
+
     //快递或自提
     var goodsList = [];//店内下单商品传参
     var merchantId = this.data.merchantId;//商户主键
     var userName = this.data.username;//用户名
     var bussinessType = 1;
-    if (this.data.isSend==2){
-      var deliveryMoney =0;
-    }else{
+    if (this.data.isSend == 2) {
+      var deliveryMoney = 0;
+    } else {
       var deliveryMoney = this.data.deliveryMoney;//快递金额
     }
-    
+
     console.log("快递金额" + deliveryMoney)
     // debugger
     if (this.data.oldTotal == "0" || this.data.oldTotal == "0.00") {//合计为0专用
@@ -467,7 +481,7 @@ Page({
     }
 
 
-    if (this.data.isSeckill==1){ //秒杀
+    if (this.data.isSeckill == 1) { //秒杀
       for (var i in this.data.goods) {
 
         var goos = this.data.goods[i];
@@ -559,16 +573,15 @@ Page({
             title: res.data.msg,
             icon: 'none'
           })
+          this.setData({
+            sure: false,
+            sures: true
+          })
         }
 
-      }).catch((err) => {
-        wx.showToast({
-          title: '失败……',
-          icon: 'none'
-        })
       })
 
-    }else{ //拼团
+    } else { //拼团
       for (var i in this.data.goods) {
 
         var goos = this.data.goods[i];
@@ -576,15 +589,15 @@ Page({
           goodsName: goos.goodsName,
           stockId: goos.stockId,
           goodsPic: goos.pictureUrl,
-          goodsIndex:0,
-          balance:"",
+          goodsIndex: 0,
+          balance: "",
           remake: goos.stockName,
           unitPrice: goos.goodsPrice,
           goodsId: goos.goodsId,
           goodsType: goos.goodsType,
           num: goos.goodsNum,
           goodsNum: goos.goodsNum,
-          actualPayment:goos.goodsPrice,//实付单价
+          actualPayment: Number(goos.goodsPrice) * Number(goos.goodsNum),//实付单价
           goodsPrice: goos.goodsPrice,
 
         });
@@ -654,7 +667,7 @@ Page({
                     self.setData({
                       isPay: 0
                     })
-                    
+
                     wx.navigateBack({ changed: true });//返回上一页
 
                   }
@@ -668,16 +681,15 @@ Page({
             title: res.data.msg,
             icon: 'none'
           })
+          this.setData({
+            sure: false,
+            sures: true
+          })
         }
 
-      }).catch((err) => {
-        wx.showToast({
-          title: '失败……',
-          icon: 'none'
-        })
       })
     }
-    
+
   },
   // groupBooking:function(no){
   //   app.util.reqAsync('shop/insertSmallGroupYQ', {
@@ -703,9 +715,9 @@ Page({
       requestBody: {
         body: '云店小程序普通订单',
         out_trade_no: code,
-      //  notify_url: 'https://wxappprod.izxcs.com/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
-       // notify_url: 'http://apptest.izxcs.com:81/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
-      //  notify_url: app.globalData.notify_url,
+        //  notify_url: 'https://wxappprod.izxcs.com/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
+        // notify_url: 'http://apptest.izxcs.com:81/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
+        //  notify_url: app.globalData.notify_url,
         trade_type: 'JSAPI',
         openid: wx.getStorageSync('scSysUser').wxOpenId
       }
@@ -746,6 +758,7 @@ Page({
           'paySign': paySign,
           'success': function (res) {
             console.log('支付成功')
+            self.getMessage(code);
             self.setData({
               flagOrder: false,
               isPay: 1
@@ -784,5 +797,23 @@ Page({
         icon: 'none'
       })
     });
+  },
+  getMessage: function (no) {
+    //支付成功调接口
+    app.util.reqAsync('shop/getRoomIdSendMessage', {
+      orderNo: no, //订单编号
+      shopId: this.data.shopId, //店铺id
+      userCode: this.data.userCode//云信账号
+    }).then((data) => {
+      if (data.data.code == 1) {
+
+      } else {
+        wx.showToast({
+          title: data.data.msg,
+          icon: 'none'
+        })
+      }
+
+    })
   }
 })

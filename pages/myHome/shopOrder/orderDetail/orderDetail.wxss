@@ -10,6 +10,9 @@
 .mr15{
   margin-right: 15rpx;
 }
+.font22{
+  font-size: 22rpx;
+}
 .font24{
   font-size: 24rpx;
 }
@@ -18,6 +21,9 @@
 }
 .font30{
   font-size: 30rpx;
+}
+.font32{
+  font-size: 32rpx;
 }
 .font34{
   font-size: 34rpx;
@@ -119,10 +125,12 @@
 .orderInfo>.right{
   width: 480rpx;
 }
-.orderInfo>.right>text{
+.orderInfo>.right>text.gname{
   display: block;
-  font-size: 28rpx;
   color: #333;
+}
+.orderInfo>.right>text{
+  font-size: 28rpx;
   margin-bottom: 30rpx;
 }
 .orderInfo>.right .size{
@@ -193,7 +201,7 @@ height:100%;
 z-index:55;
 background:rgba(0,0,0,0.4);
 overflow:hidden;
-position: absolute;
+position: fixed;
 left:0;
 top: 0;
 }
@@ -267,4 +275,270 @@ top: 0;
 .loading{
   text-align: center;
   margin-top: 400rpx;
+}
+
+.clubcard{
+  width: 100%;
+  height: 120rpx;
+  font-size: 32rpx;
+  color: #333;
+  display: flex;
+  display: -webkit-flex;
+  justify-content: space-between;
+  line-height:120rpx;
+  margin: 20rpx 0;
+  background: #fff;
+  box-sizing: border-box;
+}
+.select{
+  color:#999;  
+}
+.select image{
+  width: 15rpx;
+  height: 29rpx;
+  margin-left: 10rpx;
+}
+.cardpopbg,.popbg{
+  width: 100%;
+  height: 100%;
+  background:rgba(0, 0, 0, 0.5);
+  position:fixed;
+  top:0;
+  left:0;
+  box-sizing: border-box;
+  z-index: 6;
+}
+.cardpop{
+  width: 640rpx;
+  height: 740rpx;
+  background: #fff;
+  border-radius: 10rpx;
+  position:fixed;
+  left:50%;
+  top:50%;
+  transform: translate(-50%,-50%);
+  -webkit-transform: translate(-50%,-50%);
+}
+.poptit{
+  width: 100%;
+  height: 98rpx;
+  font-size: 34rpx;
+  line-height: 98rpx;
+  text-align: center;
+  color: #333;
+  border-bottom: 1px #e5e5e5 solid;
+}
+.cardList{
+  width: 100%;
+  padding: 20rpx;
+  margin-top: 7rpx;
+}
+.nocard{
+  width: 600rpx;
+  height: 140rpx;
+  font-size: 32rpx;
+  line-height: 140rpx;
+  color: #333;
+  border-radius: 10rpx;
+  background: -webkit-linear-gradient( rgb(241, 241, 241) , rgb(241, 238, 238) 50% ,  rgb(228, 227, 226) 100%);
+  background: linear-gradient( rgb(241, 241, 241) , rgb(241, 238, 238) 50% ,  rgb(228, 227, 226) 100%);
+}
+.nocard text{
+  padding: 0 25rpx;
+}
+.carditem{
+  width: 600rpx;
+  height: 140rpx;
+  display: flex;
+  display: -webkit-flex;
+  justify-content:space-between;
+  background: -webkit-linear-gradient(rgb(241, 241, 241) , rgb(241, 238, 238) 50% ,  rgb(228, 227, 226) 100%);
+  background: linear-gradient(rgb(241, 241, 241) , rgb(241, 238, 238) 50% ,  rgb(228, 227, 226) 100%);
+  margin-top: 20rpx;
+
+}
+.carddetails{
+  width: 1;
+  padding: 25rpx;
+  color: #333;
+}
+.carddetails .cardname{
+  font-size: 32rpx;
+}
+.carddetails .cardamout{
+  font-size: 24rpx;
+  margin-top: 10rpx;
+}
+
+.carditem .discount{
+  width: 149rpx;
+  padding: 20rpx;
+  line-height: 100rpx;
+  border-left: 1px #fff dashed;
+  text-align: center;
+  color:#ff0036;
+  font-size: 26rpx;  
+}
+.carditem .discount .number{
+  font-size: 46rpx;
+  margin-left: 10rpx;
+}
+.carditem.short-money .carddetails{
+  color: #999;
+}
+.carditem.short-money .discount{
+  color:#999;
+}
+.cardscroll{
+  height: 590rpx;
+}
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  color: transparent;
+}
+.disicon{
+  width: 30rpx;
+  height: 30rpx;
+  background: #ff6666;
+  font-size: 22rpx;
+  color: #fff; 
+  text-align: center;
+  line-height: 30rpx;
+  margin-left: 10rpx;
+}
+.aprice{
+  text-decoration:line-through;
+}
+.aftercount{
+  box-sizing: border-box;
+}
+.countitem{
+  height: 96rpx;
+  line-height: 96rpx;
+  display: flex;
+  display: -webkit-flex;
+  justify-content:space-between;
+  border: 1px #e5e5e5 solid;
+  border-width: 1px 0 1px 0;
+}
+.countitem:last-child{
+  border-width: 0 0 1px 0;
+}
+.countitem text.desc{
+  font-size: 26rpx;
+  color: #666;
+}
+.countitem text.moneytext{
+  font-size: 22rpx;
+  color: #ff0036;
+  font-weight: bold;
+}
+.countitem text.moneytext text.mone{
+  font-size: 26rpx;
+}
+.goodetail{
+  height: 180rpx;
+  position: relative;
+  margin-left:10rpx;
+}
+.num{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+.gname{
+  display: block;
+  line-height:30rpx;
+}
+.gprice{
+  line-height:30rpx;
+}
+.size{
+  display: block;
+}
+.linehei{
+  line-height: 40rpx;
+  margin:30rpx 0;
+}
+.reduced{
+  margin:2px 20rpx 0 0;
+}
+.account{
+  margin-left: 10rpx;
+}
+.paycard{
+  width: 560rpx;
+  background: #fff;
+  border-radius: 10rpx;
+  position:fixed;
+  left:50%;
+  top:50%;
+  transform: translate(-50%,-50%);
+  -webkit-transform: translate(-50%,-50%);
+  padding-bottom:36rpx;
+}
+.paycardcon>text{
+  display: block;
+}
+.paycardcon>text.paytitle{
+  width: 100%;
+  height: 100rpx;
+  color: #000;
+  font-weight: bold;
+  line-height: 100rpx;
+  border-bottom: 1px #fe732d solid;
+  text-align: center;
+}
+.paycardcon>text.shopname{
+  font-size: 32rpx;
+  color: #000;
+  text-align: center;
+  margin: 36rpx 0 32rpx 0;
+}
+.paycardcon>text.summoney{
+  color: #000;
+  text-align: center;
+  font-size: 78rpx;
+}
+.paycardcon>text.summoney .yang{
+  font-size: 56rpx;
+}
+.card{
+  width: 502rpx;
+  margin: 50rpx auto 40rpx;
+  border: 1px #d6d6d6 solid;
+  border-width: 1px 0;
+  display: flex;
+  display: -webkit-flex;
+  padding:20rpx 0;
+}
+.shoplogo{
+  width: 50rpx;
+  height: 50rpx;
+}
+.shoplogo image{
+  width: 50rpx;
+  height: 50rpx;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+}
+.cardinfo{
+  flex: 1;
+  color: #333;
+  margin-left: 25rpx;
+}
+.cardinfo>text{
+  display: block;
+}
+.payforcard{
+  width: 500rpx;
+  height: 94rpx;
+  background: #fb452c;
+  color: #fff;
+  -webkit-border-radius: 10rpx;
+  border-radius: 10rpx;
+  line-height: 94rpx;
+  text-align: center;
+  margin-bottom: 36rpx;
 }

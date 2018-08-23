@@ -35,12 +35,12 @@
     </view>
     <text class='title'>{{data.goodsName}}</text>
     <view class='price' wx:if="{{status==3}}">￥{{data.price}}</view>
-    <view class='info' wx:if="{{status==2}}"><span>库存 {{listData[0].salesCount}}</span><span>月销量 {{data.payCount}}</span></view>
+    <view class='info' wx:if="{{status==2}}"><span>库存 {{totalBalance}}</span><span>月销量 {{data.payCount}}</span></view>
     <view class='info' wx:if="{{status==3||status==1}}"><span>库存 {{data.stockBalance}}</span><span>月销量 {{data.payCount}}</span></view>
   </view>
   <view class='separate'></view>
   <!-- 赠品部分 -->
-  <view class='give clearfix' wx:if="{{status==3&&data.gift!=null}}">
+  <!-- <view class='give clearfix' wx:if="{{status==3&&data.gift!=null}}">
     <image class='left' src='../../images/give.png'></image>
     <view class='middle clearfix'>
       <image src='{{data.gift.pictureUrl}}'></image>
@@ -52,7 +52,7 @@
     <view class='right' bindtap='toGive'>
       <image src='../../images/yundian_spxq_gengduo.png'></image>
     </view>
-  </view>
+  </view> -->
   <!-- 优惠券部分 -->
   <view class='coupon' wx:if="{{status==3&&(couponType1||couponType2||couponType3)}}">
     <view>
@@ -117,7 +117,7 @@
         </view>
       </view>  
       <view class='user-info clearfix'>
-        <span class='{{item.stockName==null?"hide":"show"}}'>规格: {{item.stockName}}</span>
+        <span class='stockNameBox {{item.stockName==null?"hide":"show"}}'>规格: {{item.stockName}}</span>
         <span>{{item.commentDate}}</span>
       </view>
     </view>
@@ -269,6 +269,7 @@
   <!-- 优惠券弹出层 -->
   <view class='mask' catchtouchmove='preventTouchMove' bindtap='closeQuanBox' wx:if='{{showQuanBox}}'></view> 
   <view  class='quan-box'  wx:if='{{showQuanBox}}' catchtouchmove='preventTouchMove'>
+    <image class='quan-close-btn' bindtap='closeQuanBox' src='../../images/close.png'></image>
     <!-- 优惠券 -->
     <view id='couponType1' wx:if="{{couponType1.name}}">
       <text class='header'>{{couponType1.name}}</text>
@@ -305,6 +306,12 @@
         </view>
       </view>
     </view>
+  </view>
+  <view id='shareBox'>
+    <button open-type='share'>
+      <image src='../../images/shouye_btn@2x.png' id='share'></image>
+    </button>
+    <image src='../../images/fenxinag_btn@2x.png' id='goback' bindtap='goback'></image>
   </view>
 </view>
 <view wx:if="{{tabcur=='info'}}" id='infoBox'>

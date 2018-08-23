@@ -3,31 +3,33 @@ var app = getApp();
 Page({
   data: {
     orderList: [],
-    activeIndex:"",
+    activeIndex: "",
     flag: false, //手机系统是否是ios
     shopId: '',
-    userId:'',
+    userId: '',
     presaleId: '', //订单id
-    facilityId:'', //座位号
-    facilityName:'',
-    shopName:'',
-    scPresaleInfoList:[],
-    shouldPay:'',
-    total:0,
+    facilityId: '', //座位号
+    facilityName: '',
+    shopName: '',
+    scPresaleInfoList: [],
+    shouldPay: '',
+    total: 0,
     flagOrder: true,
-    memberId:'',
-    subaccountId:'',
-    discount:'',
-    orderStatus:''
+    memberId: '',
+    subaccountId: '',
+    discount: '',
+    orderStatus: '',
+    merchantId: ''
   },
   onLoad: function (options) {
     var shop = wx.getStorageSync('shop');
-    this.setData({ 
+    this.setData({
       activeIndex: options.activeIndex,
       shopId: shop.id,
       userId: options.userId,
       presaleId: options.presaleId,
-      facilityId: options.facilityId
+      facilityId: options.facilityId,
+      merchantId: options.merchantId
     })
     console.log(options.activeIndex)
 
@@ -50,13 +52,13 @@ Page({
 
     this.getInfo();//获取数据
   },
-  onShow:function(e){
+  onShow: function (e) {
     this.getInfo();
   },
   appSkip: function (e) { //点击跳转到app下载页
     wx.navigateTo({ url: "/pages/myHome/downLoadIos/downLoadIos?flag=" + this.data.flag });
   },
-  offlineSkip:function(e){ //跳到云店首页
+  offlineSkip: function (e) { //跳到云店首页
     wx.switchTab({ url: "../../../index/index" });
   },
   againBuy: function (e) { //再来一单
@@ -79,7 +81,7 @@ Page({
     var shopid = e.currentTarget.dataset.shopid;
     this.bindTestCreateOrder(code, name, this.data.shouldPay, shopid);
   },
-  bindTestCreateOrder: function (code, name,price,shopid) {
+  bindTestCreateOrder: function (code, name, price, shopid) {
     var data = {
       subject: name, //商品名
       shopId: shopid, //店铺id
@@ -128,19 +130,26 @@ Page({
             console.log("支付成功")
             console.log(that.data.shouldPay)
             that.setData({
-              flagOrder:false
+              flagOrder: false
             })
-           },
+            that.getMessage();
+          },
           'fail': function (res) {
             that.getInfo()
           },
           'complete': function (res) {
-            console.log(res);
+
+            console.log('支付成功回调-------------',res)
+            if (res.errMsg == "requestPayment:ok"){
+              wx.sendSocketMessage({
+                data: '已结算'
+              })
+            }
           }
         })
 
       } else {
-        if(res.data.data=='overdue payment'){
+        if (res.data.data == 'overdue payment') {
           wx.showToast({
             title: res.data.msg,
             icon: 'none'
@@ -148,13 +157,13 @@ Page({
           wx.navigateTo({
             url: "../../../../packageOffline/pages/proList/proList"
           });
-        }else{
+        } else {
           wx.showToast({
             title: res.data.msg,
             icon: 'none'
           })
         }
-        
+
       }
 
     }).catch((err) => {
@@ -164,9 +173,9 @@ Page({
       })
     });
   },
-  getInfo:function(e){
+  getInfo: function (e) {
     this.setData({
-      hidden:false
+      hidden: false
     })
     //获取订单详情
     app.util.reqAsync('shopOrder/getPresaleByCondition', {
@@ -176,7 +185,7 @@ Page({
       facilityId: this.data.facilityId
     }).then((res) => {
       if (res.data.code == 1) {
-       
+
         this.setData({
           orderList: res.data.data,
           facilityName: res.data.data.facilityName,
@@ -206,7 +215,7 @@ Page({
       })
     })
   },
-  goShop:function(e){
+  goShop: function (e) {
     //再来一单
     this.setData({
       flagOrder: true
@@ -215,12 +224,31 @@ Page({
       url: '../../../../packageOffline/pages/proList/proList'
     });
   },
-  look:function(e){
+  look: function (e) {
     //查看详情
     this.setData({
       flagOrder: true
     })
     this.getInfo();
+  },
+  getMessage: function () {
+    //支付成功调接口
+    app.util.reqAsync('shop/getRoomIdSendMessage', {
+      orderNo: this.data.presaleId,
+      shopId: this.data.shopId,
+      userCode: wx.getStorageSync('scSysUser').usercode,
+      type: 1
+    }).then((data) => {
+      if (data.data.code == 1) {
+
+      } else {
+        wx.showToast({
+          title: data.data.msg,
+          icon: 'none'
+        })
+      }
+
+    })
   }
 
 })

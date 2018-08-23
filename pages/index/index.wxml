@@ -2,10 +2,11 @@
 <view class="main">
   <!--模态框  -->
   <view class="mask" catchtouchmove="preventTouchMove" wx:if="{{showModal}}"></view>
-  <view class="modalDlg" wx:if="{{showCouponGetBox}}">
+  <view class="modalDlg" catchtouchmove="preventTouchMove" wx:if="{{showCouponGetBox}}">
     <view class='coupon-box'>
       <image class='new-coupon-img' src="./img/yundian_libaobeijing.png" />
       <view class='coupon-name'>{{couponInfo.coupon.instruction}}</view>
+      <view class='coupon-price'>价值{{couponInfo.coupon.couponValue}}元</view>
       <image class='libao-img' src='./img/libaobeij.png'></image>
       <image class='lingqu-btn' bindtap="getCoupon" src="./img/yundian_libaolingquanniu@2x.png" />
       <image class='close-btn' bindtap="closeModal" src='./img/yundian_lipinguanbi@2x.png'></image>
@@ -56,10 +57,6 @@
       <view bindtap='goTo720' wx:if='{{has720 && showBtnList}}'>
         <image class='btn-img' src='./img/720@2x.png'></image>
         <text class='text-below'>720°全景</text>
-      </view>
-      <view bindtap='goLive' wx:if=''>
-        <image class='btn-img' src='./img/yundian_zhibo@2x.png'></image>
-        <text class='text-below'>直播</text>
       </view>
       <view>
          <image bindtap='hideBtnList' wx:if='{{showBtnList && (shopInformation.shopInfo.shopHomeConfig.openServiceList[0]  || shopInformation.shopInfo.shopHomeConfig.openServiceList[1] || shopInformation.shopInfo.shopHomeConfig.openServiceList[2] || shopInformation.shopInfo.shopHomeConfig.openServiceList[3]) }}' class='btn-img-show' src='./img/hide.png'></image> 
@@ -222,6 +219,7 @@
   <!-- </block>  -->
   <view class='mask' catchtouchmove='preventTouchMove' bindtap='closeQuanBox' wx:if='{{showQuanBox}}'></view> 
   <view  class='quan-box'  wx:if='{{showQuanBox}}' catchtouchmove='preventTouchMove'>
+    <image class='quan-close-btn' bindtap='closeQuanBox' src='../../images/yundian_yyxx_guanbi@2x.png'></image>
     <!-- 优惠券 -->
     <view id='couponType1' wx:if="{{couponType1.name}}">
       <text class='header'>{{couponType1.name}}</text>

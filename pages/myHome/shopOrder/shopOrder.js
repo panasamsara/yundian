@@ -26,12 +26,10 @@ Page({
     var shopIds = "listData.shopId";
     this.setData({
       shopId: shopId,
-       [newId]: userId,
+      [newId]: userId,
       [shopIds]: shopId,
-      facilityId: wx.getStorageSync('facilityId').facilityId
-       }
-
-      );
+      facilityId: wx.getStorageSync('facilityId')
+    });
     this.getList();
   },
   onPullDownRefresh: function () {

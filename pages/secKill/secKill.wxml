@@ -15,9 +15,7 @@
             <text class='start' wx:if="{{item.status==0}}">距开始<text wx:if="{{item.d>0}}">{{item.d}}天</text></text>
             <view class='timeBox'><text>{{item.h?item.h:0}}</text>:<text>{{item.m?item.m:0}}</text>:<text>{{item.s?item.s:0}}</text></view>
           </view>
-          <view class='buy'>
-            <navigator url="../goodsDetial/goodsDetial?shopId={{item.shopId}}&goodsId={{item.goodsId}}&cUser={{item.cUser}}&groupBuyingId={{item.id}}&status=2">马上抢</navigator>
-          </view> 
+          <view class='buy'>马上抢</view> 
         </view>
       </view>
     </navigator>

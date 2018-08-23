@@ -1,17 +1,23 @@
 <!--pages/store/activityInfo/activityInfo.wxml-->
 <view class='container activityInfo'>
   <view class='head'>
-    <text>{{data.goodsName}}</text>
-    <view>
-      <text class='time'>活动时间</text>
+    <text class='goods-name'>{{data.goodsName}}</text>
+    <view class='ac-time'>
+      <text class='time'>活动时间: </text>
       <text class='time'>{{data.startTime}}-{{data.endTime}}</text>
     </view>
   </view>
   <view class='banner'>
-    <image src='{{data.pictureUrl}}'></image>
+    <image src='{{data.pictureUrl}}' mode='aspectFit'></image>
   </view>
   <view class='content'>
     <rich-text nodes="{{data.descContent}}"></rich-text>
   </view>
 </view>
+ <view id='shareBox'>
+    <button open-type='share'>
+      <image src='../../../images/shouye_btn@2x.png' id='share'></image>
+    </button>
+    <image src='../../../images/fenxinag_btn@2x.png' id='goback' bindtap='goback'></image>
+  </view>
 <canvas canvas-id="shareCanvas" style='width:720rpx; height:568rpx; position:fixed; top: 99999rpx;' ></canvas>

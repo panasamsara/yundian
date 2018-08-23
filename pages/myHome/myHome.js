@@ -136,6 +136,8 @@ Page({
   },
   back:function(){
     wx.removeStorageSync('shop');
+    wx.removeStorageSync('shopInformation');
+    wx.removeStorageSync('goodsInfos');
     wx.redirectTo({ url: '/pages/scan/scan' });
   },
   backOrder: function (e) {

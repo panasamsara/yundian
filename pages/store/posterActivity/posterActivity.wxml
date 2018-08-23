@@ -14,4 +14,10 @@
     </view>
   </view>
 </view>
+ <view id='shareBox'>
+    <button open-type='share'>
+      <image src='../../../images/shouye_btn@2x.png' id='share'></image>
+    </button>
+    <image src='../../../images/fenxinag_btn@2x.png' id='goback' bindtap='goback'></image>
+  </view>
 <canvas canvas-id="shareCanvas" style='width:720rpx; height:568rpx; position:fixed; top: 99999rpx;' ></canvas>

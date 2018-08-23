@@ -90,7 +90,10 @@ App({
   
   onLaunch: function(options){
     console.log('app.js onLaunch')
-    
+    if (wx.getStorageSync('socketStatus')){
+      wx.closeSocket()
+    }
+    wx.removeStorageSync('socketStatus')
     
 
     let that = this;

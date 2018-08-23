@@ -15,13 +15,14 @@ const formatTime = date => {
 const URL_QRCODE = 'https://wxapp.izxcs.com/qrcode/shop/';
 
 //测试环境
-
 const URL = 'https://wxappprod.izxcs.com/zxcity_restful/ws/rest';
 const SHARE_URL ='http://share.zxtest.izxcs.com';
+const SOCKET_URL = 'wss://wxappprod.izxcs.com'
 
 //正式环境
 // const URL = 'https://wxapp.izxcs.com/zxcity_restful/ws/rest';
 // const SHARE_URL = 'http://share.izxcs.com';
+// const SOCKET_URL = 'wss://wxapp.izxcs.com'
 
 const formatNumber = n => {
   n = n.toString()
@@ -200,20 +201,17 @@ const boolCheckSession = () => {
   return promi
 }
 const checkWxLogin = (source=null) => {
-  console.log(wx.getStorageSync('shop'))
-  let promi = new Promise((resolve, reject) => {
 
+  let promi = new Promise((resolve, reject) => {
     boolCheckSession().then((res)=>{
-      console.log('boolCheckSession')
-      console.log(res)
       if (res.hasUser){
         var user = wx.getStorageSync('scSysUser');
         resolve(user)
         wx.hideLoading();
-        if(!source)
-        setTimeout(function(){
-          wx.switchTab({ url: '/pages/index/index' });
-        },1000)
+        // if(!source)
+        // setTimeout(function(){
+        //   wx.switchTab({ url: '/pages/index/index' });
+        // },1000)
       }else{
         wx.login({
           success: (res) => {
@@ -268,48 +266,102 @@ const checkWxLogin = (source=null) => {
   })
   return promi
 }
+//判断优惠券详情分享是否登录
+const checkWxLoginShare = (source = null) => {
+  console.log(wx.getStorageSync('shop'))
+  let promi = new Promise((resolve, reject) => {
 
+    boolCheckSession().then((res) => {
+      console.log('boolCheckSession')
+      console.log(res)
+      if (res.hasUser) {
+        var user = wx.getStorageSync('scSysUser');
+        resolve(user)
+        wx.hideLoading();
+      } else {
+        wx.login({
+          success: (res) => {
+            console.log(res)
+            // 后台登陆app账户
+            reqAsync('payBoot/wx/miniapp/login', {
+              code: res.code
+            }).then((res) => {
+              console.log(res)
+              console.log('登录app', res.data.data.scSysUser)
+              wx.setStorageSync('loginToken', res.data.data.loginToken);
+              // 失败则跳到注册页
+              if (res.data.code != 1) {
+                loginFailed()
+                wx.redirectTo({ url: '/pages/reg/reg' });
+                return
+              }
+              // 未注册用户跳转到注册页面
+              if (res.data.data.scSysUser == null) {
+                wx.redirectTo({ url: '/pages/reg/reg' });
+                return
+              }
+              else {
+                wx.setStorageSync('scSysUser', res.data.data.scSysUser);
+                resolve(res.data.data.scSysUser)
+                wx.hideLoading();
+              }
+            })
+          },
+          fail: () => {
+            // reject({
+            //   title: '登陆失败，请稍后再试！',
+            //   icon: 'none',
+            //   duration: 2000
+            // })
+          }
+        })
+      }
+
+    })
+  })
+  return promi
+}
 //登录小程序和app账户
-// const appLogin = () => {
+const appLogin = () => {
  
-//   console.log('登录小程序')
-//   return wx.login({
-//     success: (res) => {
-//       console.log('wx.login:',res)
-//       // 后台登陆app账户
-//       reqAsync('payBoot/wx/miniapp/login', {
-//         code: res.code
-//       }).then((res) => {
-//         console.log('登录app',res.data.data.scSysUser)
-//         wx.setStorageSync('loginToken', res.data.data.loginToken);
-//         // 失败则跳到注册页
-//         if (res.data.code != 1) {
-//           loginFailed()
-//           wx.redirectTo({ url: '/pages/reg/reg' })
-//           return
-//         }
-//         // 未注册用户跳转到注册页面
-//         if (res.data.data.scSysUser == null) {
-//           wx.redirectTo({ url: '/pages/reg/reg' });
-//         }
-//         else{
-//           wx.setStorageSync('scSysUser', res.data.data.scSysUser);
+  console.log('登录小程序')
+  return wx.login({
+    success: (res) => {
+      console.log('wx.login:',res)
+      // 后台登陆app账户
+      reqAsync('payBoot/wx/miniapp/login', {
+        code: res.code
+      }).then((res) => {
+        console.log('登录app',res.data.data.scSysUser)
+        wx.setStorageSync('loginToken', res.data.data.loginToken);
+        // 失败则跳到注册页
+        if (res.data.code != 1) {
+          loginFailed()
+          wx.redirectTo({ url: '/pages/reg/reg' })
+          return
+        }
+        // 未注册用户跳转到注册页面
+        if (res.data.data.scSysUser == null) {
+          wx.redirectTo({ url: '/pages/reg/reg' });
+        }
+        else{
+          wx.setStorageSync('scSysUser', res.data.data.scSysUser);
           
-//           //因index获取店铺信息接口调用时取不到userid，所以在此添加访问记录
-//           // if (hasShop()){
-//           //   reqAsync('shop/addVisitorShopRecord', {
-//           //     customerId: res.data.data.scSysUser.id,
-//           //     visitFrom: 3,
-//           //     shopId: hasShop()
-//           //   })
-//           // }
+          //因index获取店铺信息接口调用时取不到userid，所以在此添加访问记录
+          // if (hasShop()){
+          //   reqAsync('shop/addVisitorShopRecord', {
+          //     customerId: res.data.data.scSysUser.id,
+          //     visitFrom: 3,
+          //     shopId: hasShop()
+          //   })
+          // }
           
-//         }
-//       })
-//     },
-//     fail: loginFailed
-//   })
-// }
+        }
+      })
+    },
+    fail: loginFailed
+  })
+}
 
 // 登陆失败处理
 const loginFailed = () => {
@@ -331,13 +383,8 @@ const isAppUser = () => {
   return scSysUser && scSysUser.id
 }
 // 获取店铺信息 promise
-const getShop = (userId, shopId) => {
+const getShop = (userId,shopId) => {
 
-// console.log('xxxxxxx',shopId)
-//   if (!shopId) {
-//     wx.redirectTo({ url: '/pages/scan/scan' });
-//     return
-//   }
   let promi = new Promise((resolve, reject) => {
     reqAsync('shop/getShopHomePageInfo', {
       customerId: userId,
@@ -347,9 +394,13 @@ const getShop = (userId, shopId) => {
       pageSize: 100
     }).then((res) => {
       //shop存入storage
-      wx.setStorageSync('shop', res.data.data.shopInfo);
+      // wx.setStorageSync('shop', res.data.data.shopInfo);
       //活动
-      wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
+      // wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
+      // 所有信息
+      // wx.setStorageSync('shopInformation', res.data.data);
+      // 所有信息
+      wx.setStorageSync('shopInformation', res.data.data);
       resolve(res)
     }).catch((res) =>{
       reject(res)
@@ -398,6 +449,10 @@ module.exports = {
   URL_QRCODE: URL_QRCODE,
   hexToRGB: hexToRGB,
   getParams: getParams,
-  // appLogin: appLogin,
-  getShop: getShop
+  appLogin: appLogin,
+  getShop: getShop,
+  checkWxLoginShare: checkWxLoginShare,
+  SHARE_URL: SHARE_URL,
+  SOCKET_URL: SOCKET_URL
+  
 }

@@ -34,7 +34,7 @@ Page({
       if (res.data.data.newCmsArticle && res.data.data.newCmsArticle.length){
         if (res.data.data.newCmsArticle[0].articleContent.length > 52) {//头条富文本编辑器处理
           let articleContent = res.data.data.newCmsArticle[0]
-          articleContent.articleContent = articleContent.articleContent.replace(/<(style|script|iframe)[^>]*?>[\s\S]+?<\/\1\s*>/gi, '').replace(/<[^>]+?>/g, '').replace(/\s+/g, ' ').replace(/ /g, ' ').replace(/>/g, ' ').substring(0, 52) + '...';
+          articleContent.articleContent = articleContent.articleContent.replace(/<(style|script|iframe)[^>]*?>[\s\S]+?<\/\1\s*>/gi, '').replace(/<[^>]+?>/g, '').replace(/\s+/g, ' ').replace(/ /g, ' ').replace(/>/g, ' ').replace(/&nbsp;/g, ' ').substring(0, 52) + '...';
         }
       }
       this.setData({
@@ -173,6 +173,13 @@ Page({
           })
         }
       }
+    })
+  },
+  ship:function(e){
+    console.log(e)
+    var articleId = e.currentTarget.dataset.articleid;
+    wx.navigateTo({
+      url: '../../packageIndex/pages/articleDetail/articleDetail?articleId=' + articleId,
     })
   }
 })

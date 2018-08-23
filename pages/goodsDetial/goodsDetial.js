@@ -1,3 +1,4 @@
+import util from '../../utils/util.js';
 //获取应用实例
 const app = getApp();
 Page({
@@ -24,10 +25,11 @@ Page({
     info:''
   },
   onLoad: function(options){
-    var user = wx.getStorageSync('scSysUser');
-    app.util.getShop(user.id, options.shopId).then((res) => {
-      wx.setStorageSync('shop', res.data.data.shopInfo);
-    })
+    // var user = wx.getStorageSync('scSysUser');
+    // app.util.getShop(user.id, options.shopId).then((res) => {
+    //   wx.setStorageSync('shop', res.data.data.shopInfo);
+    // })
+
     console.log(options)
     var parm = {
       shopId: options.shopId,
@@ -36,6 +38,10 @@ Page({
     },
     systeminfo = wx.getSystemInfoSync(),
     scale = systeminfo.windowWidth / 375;
+    if (options && options.shopId) {
+      wx.setStorageSync('shopId', options.shopId);
+    }
+
     this.setData({
       shopId: options.shopId,
       goodsId: options.goodsId,
@@ -52,6 +58,60 @@ Page({
     this.getQuest();
     //获取优惠券数据 
     this.getCouponList();
+  },
+  onShow: function(){ //缓存店铺信息（分享切店铺）
+    console.log('进入商品详情onshow------------------------')
+    var shopId = this.data.shopId
+    if (!shopId) {
+      shopId = wx.getStorageSync('shopId');
+    }
+    var shop = wx.getStorageSync('shop')
+    var user = wx.getStorageSync('scSysUser');
+    if (!shop) {
+      if (shopId == undefined) {
+        wx.redirectTo({
+          url: '../scan/scan'
+        })
+      } else {
+        util.getShop(user.id, shopId).then(function (res) {
+
+          //shop存入storage
+          wx.setStorageSync('shop', res.data.data.shopInfo);
+          //活动
+          wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
+          // 所有信息
+          wx.setStorageSync('shopInformation', res.data.data);
+
+        })
+      }
+    } else {
+      if (shopId == undefined || shopId == '' || shopId == null) {
+
+      } else {
+        if (shopId == shop.id) {
+
+        } else {
+          wx.removeStorageSync('shop')
+          wx.removeStorageSync('goodsInfos')
+          wx.removeStorageSync('shopInformation')
+          util.getShop(user.id, shopId).then(function (res) {
+            _this.setData({
+              shopInformation: res.data.data
+            })
+            //shop存入storage
+            wx.setStorageSync('shop', res.data.data.shopInfo);
+            //活动
+            wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
+            // 所有信息
+            wx.setStorageSync('shopInformation', res.data.data);
+
+          })
+        }
+      }
+
+    }
+
+    wx.removeStorageSync('shopId');
   },
   //获取详情
   getData: function (parm) {
@@ -92,15 +152,15 @@ Page({
         //商品具体分类(普通/拼团/秒杀)
         var data = res.data.data,
             status;
-        if (data.activityStatus) {//接口更新
-          if (data.activityStatus == 0) {//普通商品
-            status = 3;
-          } else if (data.activityStatus == 1) {//拼团商品
-            status = 2;
-          } else if (data.activityStatus == 2) {//秒杀商品
-            status = 1;
-          }
-        } else {//接口未更新
+        // if (data.activityStatus) {//接口更新
+        //   if (data.activityStatus == 0) {//普通商品
+        //     status = 3;
+        //   } else if (data.activityStatus == 1) {//拼团商品
+        //     status = 1;
+        //   } else if (data.activityStatus == 2) {//秒杀商品
+        //     status = 2;
+        //   }
+        // } else {//接口未更新
           status = 3
           if (data.isGroupBuying != 0) {
             status = 1
@@ -108,7 +168,7 @@ Page({
           if (data.secondKillInfo.length > 0) {
             status = 2
           }
-        }
+        // }
         this.setData({
           status: status
         })
@@ -142,6 +202,13 @@ Page({
               listData: list
             })
         } else if (status == 2) {//秒杀
+            let totalBalance=0; 
+            for(let i=0;i<secondKillInfo.length;i++){
+              totalBalance += secondKillInfo[i].salesCount//计算秒杀所有规格库存总数
+            }
+            this.setData({
+              totalBalance:totalBalance
+            })
             if (secondKillInfo.length > 0) {
               for (let i = 0; i < secondKillInfo.length; i++) {
                 secondKillInfo[i].index = i;
@@ -344,7 +411,8 @@ Page({
     this.setData({
       flag:true,
       flag1:false,
-      flag2:true
+      flag2:true,
+      untouch:'untouch'
     });
     var dataset=e.currentTarget.dataset,
         data={
@@ -1098,5 +1166,10 @@ Page({
         // }
       }
     }
+  },
+  goback:function(){//回到首页按钮
+    wx.switchTab({
+      url: '../index/index?shopId='+this.data.shopId
+    })
   }
 })

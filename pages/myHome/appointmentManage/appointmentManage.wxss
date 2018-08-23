@@ -8,6 +8,9 @@
 .mr15{
   margin-right: 15rpx;
 }
+page{
+  background: #f8f8f8;
+}
 .header{
   position: fixed;
   top: 0;
@@ -53,15 +56,16 @@
 .content .list{
   font-size: 28rpx;
   color: #333;
-  padding: 0 30rpx;
-  margin-top: 70rpx;
+  background: #fff;
+  margin-bottom: 20rpx;
+  padding-bottom:30rpx;
 }
 .content .list:first-child{
   margin-top: 0;
 }
 .content .shop{
   overflow: hidden;
-  padding: 30rpx 0;
+  padding: 30rpx;
 }
 .content .shop .shopImg{
   width: 32rpx;
@@ -77,5 +81,9 @@
   color: #fb452c;
 }
 .shopList{
-  margin-top: 30rpx;
+  padding: 30rpx 30rpx 0 30rpx;
+  background:#f8f8f8;
+}
+.list .shopList:last-child{
+  padding-bottom: 30rpx;
 }

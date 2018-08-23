@@ -48,6 +48,8 @@ Page({
     var couponLogId = e.currentTarget.dataset.couponlogid;
     var couponType = e.currentTarget.dataset.coupontype;
     var canLimitGoods = e.currentTarget.dataset.canlimitgoods;
-    wx.navigateTo({ url: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + id + "&couponLogId=" + couponLogId + "&couponType=" + couponType + "&canLimitGoods=" + canLimitGoods});
+    var couponShare = e.currentTarget.dataset.couponshare;
+    console.log(couponShare);
+    wx.navigateTo({ url: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + id + "&couponLogId=" + couponLogId + "&couponType=" + couponType + "&canLimitGoods=" + canLimitGoods + "&couponShare=" + couponShare+"&share=" +"0"});
   }
 })

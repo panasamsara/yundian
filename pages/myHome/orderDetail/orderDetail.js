@@ -20,29 +20,31 @@ Page({
     canvasHidden: false,
     imagePath: '',
     orderkind: '',// orderkind = 3 && isGroupBuying=0 是为秒杀
-    isGroupBuying:'',// 前后端数据传输：是否为拼团，拼团为1，非拼团为0
-    userList:[], // 参与拼团人员
-    spellUser:[], // 保存参与人员头像
+    isGroupBuying: '',// 前后端数据传输：是否为拼团，拼团为1，非拼团为0
+    userList: [], // 参与拼团人员
+    spellUser: [], // 保存参与人员头像
     timeStatus: '', // 状态：0拼单进行中，1成功,2过期 待付款'
-    nowTime:'', // 服务器当前时间
-    groupEndTime:'', // 拼单结束时间
-    spellLeftTime:'',// 拼单剩余时间
-    goodsName:'', // 商品名称
-    stockName:'', // 商品描述
-    groupId:'',//拼单 Id 
+    nowTime: '', // 服务器当前时间
+    groupEndTime: '', // 拼单结束时间
+    spellLeftTime: '',// 拼单剩余时间
+    goodsName: '', // 商品名称
+    stockName: '', // 商品描述
+    groupId: '',//拼单 Id 
     shopId: '', //店铺id
-    ifshare:0, //是否分享
-    population:'', //拼团人数
-    stockId:'', // 是否有商品规格
-    lackUser:'' // 拼团缺少人数
+    ifshare: 0, //是否分享
+    population: '', //拼团人数
+    stockId: '', // 是否有商品规格
+    lackUser: '', // 拼团缺少人数
+    userCode: ''
   },
-  
+
   onLoad: function (options) {
     var user = wx.getStorageSync('scSysUser');
     var userid = wx.getStorageSync('scSysUser').id;
+    var userCode = wx.getStorageSync('scSysUser').usercode;
     var orderNo = options.orderNo;
     var isGroupBuying = options.isGroupBuying;
-    if (options.orderkind ){
+    if (options.orderkind) {
       var orderkind = options.orderkind;
     }
 
@@ -51,10 +53,11 @@ Page({
     this.setData({
       userid: userid,
       orderNo: orderNo,
-      isGroupBuying: isGroupBuying 
+      isGroupBuying: isGroupBuying,
+      userCode: userCode
     })
 
-    if (orderkind ){
+    if (orderkind) {
       this.setData({
         orderkind: orderkind
       })
@@ -88,7 +91,7 @@ Page({
             //待付款
             this.countTime();
           }
-        } 
+        }
 
         if (data.data.data[0].orderInfo.orderStatusVo == 2 && data.data.data[0].orderInfo.deliveryType == 2) { //自提
           // 页面初始化 options为页面跳转所带来的参数
@@ -125,9 +128,9 @@ Page({
         }
       })
     )
-    .then(
-      // 拼单中 倒计时
-      function() {
+      .then(
+        // 拼单中 倒计时
+        function () {
           // 倒计时
           var _ordertimer = null;
           var nowTime = _this.data.nowTime;
@@ -137,17 +140,21 @@ Page({
             _this.count(nowTimeNum);
             nowTimeNum += 1000;
           }, 1000)
-      }
-    )
+        }
+      )
   },
   onShow: function (e) {
+    wx.showLoading({
+      title: '加载中',
+    })
     //调接口
     app.util.reqAsync('shop/orderDetail', {
       orderNo: this.data.orderNo,
       isGroupBuying: this.data.isGroupBuying
     }).then((data) => {
-console.log(data)
+      console.log(data)
       if (data.data.code == 1) {
+        wx.hideLoading();
         var areaName = app.util.area.getAreaNameByCode(data.data.data[0].orderInfo.areaId);
         var cityName = app.util.area.getAreaNameByCode(data.data.data[0].orderInfo.cityId);
         var ProvinceName = app.util.area.getAreaNameByCode(data.data.data[0].orderInfo.provinceId);
@@ -168,13 +175,13 @@ console.log(data)
         // 秒杀
         if (this.data.isGroupBuying == 0 && this.data.orderkind == 3) {
           // 倒计时
-          if (data.data.data[0].orderInfo.orderStatusVo == 1) { 
+          if (data.data.data[0].orderInfo.orderStatusVo == 1) {
             //待付款
             this.countTime();
           }
         }
         // 拼单
-        else if (this.data.isGroupBuying == 1 ){
+        else if (this.data.isGroupBuying == 1) {
           this.setData({
             userList: data.data.data[0].userList ? data.data.data[0].userList : '',
             timeStatus: data.data.data[0].groupDetail.timeStatus,
@@ -182,7 +189,7 @@ console.log(data)
             groupEndTime: data.data.data[0].groupDetail.endTime ? data.data.data[0].groupDetail.endTime : '',
             population: data.data.data[0].groupDetail.population ? data.data.data[0].groupDetail.population : '',
             lackUser: data.data.data[0].groupDetail.population - data.data.data[0].userList.length
-            
+
           })
 
           // 拼接参与拼单用户数组
@@ -200,21 +207,22 @@ console.log(data)
           }
           this.setData({
             spellUser: usersArr
-          })   
+          })
         }
         // 普通订单
-        else{
+        else {
 
         }
         console.log(this.data.userList);
         console.log('orderStatusVo:   ' + data.data.data[0].orderInfo.orderStatusVo);
         console.log('timeStatus:  ' + this.data.timeStatus);
-        console.log('population: ' + this.data.population); 
+        console.log('population: ' + this.data.population);
         // this.setData({
         //   no: this.data.orderNo
         // })
 
       } else {
+        wx.hideLoading();
         wx.showToast({
           title: data.data.msg,
           icon: 'none'
@@ -253,6 +261,7 @@ console.log(data)
   },
   //获取临时缓存照片路径，存入data中
   canvasToTempImage: function () {
+    
     var that = this;
     wx.canvasToTempFilePath({
       canvasId: 'mycanvas',
@@ -260,8 +269,8 @@ console.log(data)
         var tempFilePath = res.tempFilePath;
         console.log(tempFilePath);
         that.setData({
-          canvasHidden: true,
-          imagePath: tempFilePath 
+          imagePath: tempFilePath,
+          canvasHidden: true
         });
       },
       fail: function (res) {
@@ -588,8 +597,8 @@ console.log(data)
       requestBody: {
         body: '云店小程序普通订单',
         out_trade_no: code,
-      //  notify_url: 'https://wxappprod.izxcs.com/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
-     //   notify_url: app.globalData.notify_url,
+        //  notify_url: 'https://wxappprod.izxcs.com/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
+        //   notify_url: app.globalData.notify_url,
         trade_type: 'JSAPI',
         openid: wx.getStorageSync('scSysUser').wxOpenId
       }
@@ -627,6 +636,7 @@ console.log(data)
           'signType': 'MD5',
           'paySign': paySign,
           'success': function (res) {
+            self.getMessage(code);
             wx.showToast({
               title: '支付成功',
               icon: 'none'
@@ -681,7 +691,7 @@ console.log(data)
         icon: 'none'
       })
     })
-    
+
   },
   // 计算拼团剩余时间
   count: function (nowTime) {
@@ -694,7 +704,7 @@ console.log(data)
     var leftTimeSec = endTimeSec - nowTimeSec;
     var leftTime = new Date(leftTimeSec);
     // console.log(leftTimeSec);
-    var day,hour,minute,second;
+    var day, hour, minute, second;
     // 时间未截至
     if (leftTimeSec > 0) {
       day = Math.floor(leftTimeSec / 1000 / 60 / 60 / 24);
@@ -711,7 +721,7 @@ console.log(data)
       })
     }
     // 时间已截至
-    else{
+    else {
       this.setData({
         spellLeftTime: ''
       })
@@ -734,7 +744,7 @@ console.log(data)
     return {
       title: this.data.goodsName,
       desc: this.data.goodsName,
-      path: '/pages/spelldetails/spelldetails?groupId=' + this.data.groupId + '&orderNo=' + this.data.orderNo + '&shopId=' + this.data.shopId + '&cUser=' + this.data.userid + '&population=' + this.data.population + '&orderStatusVo=' + this.data.orderStatusVo + '&stockId=' + this.data.stockId+'&share='+1,
+      path: '/pages/spelldetails/spelldetails?groupId=' + this.data.groupId + '&orderNo=' + this.data.orderNo + '&shopId=' + this.data.shopId + '&cUser=' + this.data.userid + '&population=' + this.data.population + '&orderStatusVo=' + this.data.orderStatusVo + '&stockId=' + this.data.stockId + '&share=' + 1,
       success: (res) => {
         this.setData({
           ifshare: 1
@@ -743,12 +753,30 @@ console.log(data)
     }
   },
   // 查看拼单详情
-  openDetail:function(){
+  openDetail: function () {
     console.log(this.data.population);
     wx.navigateTo({
-      url: '../../spelldetails/spelldetails?groupId=' + this.data.groupId + '&orderNo=' + this.data.orderNo + '&shopId=' + this.data.shopId + '&cUser=' + this.data.userid + '&population=' + this.data.population + '&orderStatusVo=' + this.data.orderStatusVo + '&stockId=' + this.data.stockId 
+      url: '../../spelldetails/spelldetails?groupId=' + this.data.groupId + '&orderNo=' + this.data.orderNo + '&shopId=' + this.data.shopId + '&cUser=' + this.data.userid + '&population=' + this.data.population + '&orderStatusVo=' + this.data.orderStatusVo + '&stockId=' + this.data.stockId
+    })
+  },
+  getMessage: function (no) {
+    //支付成功调接口
+    app.util.reqAsync('shop/getRoomIdSendMessage', {
+      orderNo: no, //订单编号
+      shopId: this.data.shopId, //店铺id
+      userCode: this.data.userCode//云信账号
+    }).then((data) => {
+      if (data.data.code == 1) {
+
+      } else {
+        wx.showToast({
+          title: data.data.msg,
+          icon: 'none'
+        })
+      }
+
     })
   }
 
-  
+
 })

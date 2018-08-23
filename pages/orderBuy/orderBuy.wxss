@@ -444,3 +444,11 @@ page,.content{
   color:#333;
   margin-bottom:20rpx;
 }
+.adress-cont{
+  width: 80%;
+  margin : 0 auto;
+  word-break:break-all;
+}
+.gray{
+  background:#ccc !important;
+}

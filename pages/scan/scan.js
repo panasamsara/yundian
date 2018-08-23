@@ -40,46 +40,82 @@ Page({
         let params = util.getParams(path)
         let shopId = params.shopId
         // var shopId = path.match(/\d+$/g)[0]
-        wx.setStorageSync('shop', { id: shopId });
-        util.setHistories({ id: shopId })
-        //判断是否注册
-        util.checkWxLogin().then((res) => {//判断是否已注册
-          console.log(res)
-          // if(res.username&&res.phone){
-           
-          // }
-          // 返回登录信息
-          // if (e.q || e.shopId) {
-          //   if (e.q) {
-          //     var uri = decodeURIComponent(e.q)
-          //     var p = util.getParams(uri)
-          //   }
-          //   shopId = p.shopId || e.shopId
-          //   if (res.id && shopId) {
-          //     util.getShop(res.id, shopId).then((res) => {
-          //       if (this.onLaunchCallback)
-          //         this.onLaunchCallback(res.data.data)
-          //     })
-          //   }
+        var user = wx.getStorageSync('scSysUser');
+        util.getShop(user.id, shopId).then(function(res){
+          console.log('扫码成功---------------', res)
+          util.setHistories(res.data.data.shopInfo)
+          wx.setStorage({
+            key: "shopInformation",
+            data: res.data.data,
+            success: function () {
 
-          // }
-        });
-        // setTimeout(function(){
-        //   wx.reLaunch({
-        //     url: '/pages/index/index?shopId=' + shopId
-        //   })
-        //   wx.hideLoading()
-        // },1000)
+              wx.setStorage({
+                key: "goodsInfos",
+                data: res.data.data.goodsInfos,
+                success: function () {
+                  
+                  wx.setStorage({
+                    key: "shop",
+                    data: res.data.data.shopInfo,
+                    success: function () {
+                      wx.reLaunch({
+                        url: '/pages/index/index'
+                      })
+                    }
+                  })
+
+                }
+              })
+
+            }
+          })
+        })
+        // wx.setStorageSync('shop', { id: shopId });
+        
+        //判断是否注册
+        // util.checkWxLogin().then((res) => {//判断是否已注册
+        //   console.log(res)
+
+        // });
       }
     })
   },
   // 跳转到对应商铺
   toShop: function (e) {
+    let _this = this
+    var user = wx.getStorageSync('scSysUser');
     var index = e.currentTarget.dataset.index;
-    wx.setStorageSync('shop', this.data.histories[index].shopInfo);
-    wx.setStorageSync('goodsInfos', this.data.histories[index].goodsInfos);
-    wx.reLaunch({
-      url: '/pages/index/index'
+    var shopId = this.data.histories[index].id
+
+    util.getShop(user.id, shopId).then(function (res) {
+      console.log('扫码成功---------------', res)
+      util.setHistories(res.data.data.shopInfo)
+      wx.setStorage({
+        key: "shopInformation",
+        data: res.data.data,
+        success: function () {
+
+          wx.setStorage({
+            key: "goodsInfos",
+            data: res.data.data.goodsInfos,
+            success: function () {
+
+              wx.setStorage({
+                key: "shop",
+                data: res.data.data.shopInfo,
+                success: function () {
+                  wx.reLaunch({
+                    url: '/pages/index/index'
+                  })
+                }
+              })
+
+            }
+          })
+
+        }
+      })
     })
+    
   }
 })

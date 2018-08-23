@@ -86,7 +86,7 @@
       <image class="bg" src="../images/bg2x.png"></image>
       <view class='info'>
         <text class='left'>{{item.purchaseName}}</text>
-        <text class='right color0036'>x{{item.purchaseNum}}</text>
+        <text class='right color0036'>x{{item.purchaseNum-item.consumeNum}}</text>
       </view>
     </view>
   </view>

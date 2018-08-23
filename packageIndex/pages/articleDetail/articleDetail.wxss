@@ -1,0 +1,44 @@
+page{
+  font-family: PingFang-SC-Heavy;
+}
+.title{
+  color: rgb(86,83,111);
+  font-weight: bold;
+  padding: 40rpx 30rpx 60rpx;
+  font-size: 44rpx;
+}
+.content{
+  text-indent: 2em;
+  font-size: 30rpx;
+  color: #666;
+  padding: 0 30rpx;
+  text-align:justify;
+  padding-bottom: 50rpx;
+  line-height: 50rpx;
+}
+.user{
+  overflow: hidden;
+  padding: 0 30rpx 30rpx;
+}
+.user image{
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+}
+.user>view:first-child{
+  float: left;
+}
+.user>view:last-child{
+  float: left;
+  margin-left: 30rpx;
+}
+.user .username{
+  font-size: 34rpx;
+  color: #333;
+  margin-top:14rpx;
+}
+.user .releaseTime{
+  font-size: 24rpx;
+  color: #999;
+  margin-top:14rpx;
+}

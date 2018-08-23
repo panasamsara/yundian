@@ -711,14 +711,19 @@ page{
 /* 留店商品 */
 .gift{
   width: 100px;
+  box-sizing: border-box;
   background: #fff;
-  height: 138rpx;
+  height: 110rpx;
   font-size: 0.8rem;
-  line-height: 110rpx;
-  color: #fb452c;
-  padding-left: 20rpx;
+  line-height: 80rpx;
+  color: #333;
+  padding:0 12px;
   position:fixed;
   bottom: 48px;
+  border-top: 1px #e5e5e5 solid;
+}
+.gifton{
+  color: #fb452c;
 }
 .gift-title{
   font-size: 0.8rem;
@@ -728,7 +733,7 @@ page{
   padding-left: 20rpx;
 }
 .gift-item{
-  margin:0 10rpx 40rpx 10rpx;
+  margin:0 10rpx 20rpx 10rpx;
   display: flex;
   display: -webkit-flex;
   justify-content: flex-start;
@@ -737,8 +742,8 @@ page{
   margin-bottom: 0px;
 }
 .gift-good{
-  width: 240rpx;
-  height: 240rpx;
+  width: 200rpx;
+  height: 200rpx;
   margin-right: 10rpx;
 }
 .gift-content{
@@ -830,4 +835,10 @@ page{
   border-radius: 0rpx 10rpx 10rpx 0rpx;
   -webkit-border-radius: 0rpx 10rpx 10rpx 0rpx;
   background: #f4f4f4;
+}
+.nopurchase{
+  font-size: 0.8rem;
+  color: #999;
+  text-align: center;
+  margin-top: 100rpx;
 }

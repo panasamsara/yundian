@@ -46,7 +46,7 @@ Page({
     this.getData(data)
   },
   onShow:function(){
-    app.util.checkWxLogin();
+    app.util.checkWxLogin('appointment');
   },
   start:function(){//开始时间
     this.change('start');

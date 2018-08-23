@@ -41,7 +41,7 @@
   <view class='separate'></view>
   <!-- 赠品部分 -->
   <view class='give clearfix' wx:if="{{status==3&&data.gift!=null}}">
-    <image class='left' src='../../images/give.png'></image>
+    <image class='left' src='../../../images/give.png'></image>
     <view class='middle clearfix'>
       <image src='{{data.gift.pictureUrl}}'></image>
       <view class='rt'>
@@ -50,17 +50,17 @@
       </view>
     </view>
     <view class='right' bindtap='toGive'>
-      <image src='../../images/yundian_spxq_gengduo.png'></image>
+      <image src='../../../images/yundian_spxq_gengduo.png'></image>
     </view>
   </view>
   <!-- 优惠券部分 -->
   <view class='coupon' wx:if="{{status==3&&(couponType1||couponType2||couponType3)}}">
     <view>
-      <image class='left' src='../../images/give.png'></image>
+      <image class='left' src='../../../images/give.png'></image>
     <text>领取优惠券</text> 
     </view>    
     <view class='right' bindtap='showQuanBox'>
-      <image src='../../images/yundian_spxq_gengduo.png'></image>
+      <image src='../../../images/yundian_spxq_gengduo.png'></image>
     </view> 
   </view>
   <view class='separate'></view>
@@ -69,7 +69,7 @@
     <view class='top'>
       <text>{{data.groupBuyingNum}}人正在拼单, 可直接参与</text>
       <view bindtap='tolayer' class='enter'>
-        <image src='../../images/yundian_spxq_gengduo.png'></image>
+        <image src='../../../images/yundian_spxq_gengduo.png'></image>
       </view>
     </view>
     <view class='item clearfix groupBox' wx:for='{{listData}}' wx:key='key' wx:if="{{data.population-item.totalNum>0}}">
@@ -88,7 +88,7 @@
   <view class='dingwei'>
     <view class='tab clearfix' bindtap='toAppraise'>
       <text class='appraise'>商品评价({{all}})</text>
-      <image src='../../images/yundian_spxq_gengduo.png'  class='{{hideView1?"show":"hide"}}'></image>   
+      <image src='../../../images/yundian_spxq_gengduo.png'  class='{{hideView1?"show":"hide"}}'></image>   
     </view>  
     <view class='user' wx:for="{{userData}}" wx:key="key">
       <view class='user-top'>
@@ -97,10 +97,10 @@
         <view class='right'>
           <view class='star'>
             <block wx:for="{{item.score}}" wx:key="name">
-              <image src='../../images/fullstar.png'></image>
+              <image src='../../../images/fullstar.png'></image>
             </block>
             <block wx:for="{{5-item.score}}" wx:key="key">
-              <image src='../../images/emptystar.png'></image>
+              <image src='../../../images/emptystar.png'></image>
             </block>            
           </view>
         </view> 
@@ -120,7 +120,7 @@
       </view>
     </view>
     <view class='zw-pic {{hideView1?"hide":"show"}}'>
-      <image src='../../images/aparise.png'></image>
+      <image src='../../../images/aparise.png'></image>
       <text>暂无评价哦</text>
     </view>    
   </view>  
@@ -129,21 +129,21 @@
   <view class='dingwei'>
     <view class='tab clearfix' bindtap='toAsk'>
       <text>问大家({{askAcount}})</text>
-      <image src='../../images/yundian_spxq_gengduo.png' class='{{hideView2?"show":"hide"}}'></image>   
+      <image src='../../../images/yundian_spxq_gengduo.png' class='{{hideView2?"show":"hide"}}'></image>   
     </view>
     <view wx:for="{{askData}}" wx:key="key">
       <view class='ask clearfix'>
-        <view class='ask-icon'><image src='../../images/ask11.png'></image></view>
+        <view class='ask-icon'><image src='../../../images/ask11.png'></image></view>
         <text>{{item.content}}</text>
         <span>{{item.answerCount==null?0:item.answerCount}}个回答</span>
       </view> 
       <view class='answer clearfix'>
-        <view class='answer-icon'><image src='../../images/answer11.png'></image></view>
+        <view class='answer-icon'><image src='../../../images/answer11.png'></image></view>
         <text>{{item.answers[0]?item.answers[0].content:'暂无回答'}}</text>
       </view>    
     </view>
     <view class='zw-pic {{hideView2?"hide":"show"}}'>
-      <image style='width:305rpx;height:249rpx' src='../../images/ask.png'></image>
+      <image style='width:305rpx;height:249rpx' src='../../../images/ask.png'></image>
       <text>还没有问题,快去提问吧~</text>
     </view>    
   </view> 
@@ -154,13 +154,13 @@
     <view class='content'>
       <text>{{data.shopName}}</text>
       <block wx:for='{{data.shopScore}}' wx:key='key'>
-        <image src='../../images/fullstar.png'></image>
+        <image src='../../../images/fullstar.png'></image>
       </block>
       <block wx:for='{{5-data.shopScore}}' wx:key='key'>
-        <image src='../../images/emptystar.png'></image>
+        <image src='../../../images/emptystar.png'></image>
       </block>      
     </view>
-    <view class='goShop' bindtap='goShop'><image src='../../images/gotoshop.png'></image></view>
+    <view class='goShop' bindtap='goShop'><image src='../../../images/gotoshop.png'></image></view>
   </view>
   <view class='tips'>
     <text>{{data.shopDesc}}</text>
@@ -198,7 +198,7 @@
   <!-- 弹出层 -->
   <view class='layer {{flag1?"show":"hide"}}'>
     <view class='close' bindtap='closeLayer'>
-      <image src='../../images/yundian_yyxx_guanbi@2x.png'></image>
+      <image src='../../../images/yundian_yyxx_guanbi@2x.png'></image>
     </view>
     <view class='top'>正在拼单</view>
     <scroll-view scroll-y="true" class='listBox'>
@@ -219,7 +219,7 @@
   <!-- 去拼单弹出层 -->
   <view class='layer {{flag2?"show":"hide"}} layer2'>
     <view class='close' bindtap='closeLayer'>
-      <image src='../../images/yundian_yyxx_guanbi@2x.png'></image>
+      <image src='../../../images/yundian_yyxx_guanbi@2x.png'></image>
     </view>  
     <view class='title'>参与{{picData[0].userName}}的拼单</view>
     <view class='cont'>仅剩<span>{{data.population-num}}个</span>名额, {{picData[0].h}}:{{picData[0].m}}:{{picData[0].s}}后结束</view>
@@ -228,7 +228,7 @@
         <image src='{{item.userPic}}'></image>    
       </view>
       <view wx:for="{{data.population-num}}" wx:key="index">
-        <image src='../../images/yundian_pindantouxiang.png'></image>
+        <image src='../../../images/yundian_pindantouxiang.png'></image>
       </view> 
     </scroll-view> 
     <view class='joinBuy' bindtap='joinBuy' id='joinBuy'>参与并拼单</view>    
@@ -270,7 +270,7 @@
     <view id='couponType1' wx:if="{{couponType1.name}}">
       <text class='header'>{{couponType1.name}}</text>
       <view class='quan-box-detail' bindtap='get' data-id="{{couponType1.id}}">
-        <image class='quan-box-bg' src='../../images/yundian_dpzy_youhuiquan@2x.png'></image>
+        <image class='quan-box-bg' src='../../../images/yundian_dpzy_youhuiquan@2x.png'></image>
         <view class='quan-box-content'>
             <view class='quan-price-box'>￥<text class='quan-price'>{{couponType1.amount}}</text></view>
             <view>满{{couponType1.amountMin}}元可使用</view>
@@ -282,7 +282,7 @@
     <view id='couponType2' wx:if="{{couponType2.name}}">
       <text class='header'>{{couponType2.name}}</text>
       <view class='quan-box-detail' bindtap='get' data-id="{{couponType2.id}}">
-        <image class='quan-box-bg' src='../../images/yundian_dpzy_youhuiquan@2x.png'></image>
+        <image class='quan-box-bg' src='../../../images/yundian_dpzy_youhuiquan@2x.png'></image>
         <view class='quan-box-content'>
             <view class='quan-price-box'>￥<text class='quan-price'>{{couponType2.amount}}</text></view>
             <view>{{couponType2.instruction}}</view>
@@ -294,7 +294,7 @@
     <view id='couponType3' wx:if="{{couponType3.name}}">
       <text class='header'>{{couponType3.name}}</text>
       <view class='quan-box-detail' bindtap='get' data-id="{{couponType3.id}}">
-        <image class='quan-box-bg' src='../../images/yundian_dpzy_youhuiquan@2x.png'></image>
+        <image class='quan-box-bg' src='../../../images/yundian_dpzy_youhuiquan@2x.png'></image>
         <view class='quan-box-content'>
             <view class='quan-price-box'>￥<text class='quan-price'>包邮券</text></view>
             <view>满{{couponType3.amountMin}}元可包邮</view>

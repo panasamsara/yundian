@@ -64,5 +64,29 @@ Page({
       console.log(err);
       wx.hideLoading();
     })
+  },
+  goActivityDetail: function(e){
+    console.log(1111)
+
+    let user = wx.getStorageSync('scSysUser');
+    var shop = wx.getStorageSync('shop');
+    var goodsId = e.currentTarget.dataset.activityid;
+    var activityType = e.currentTarget.dataset.type
+
+    if (activityType == 0) {
+      wx.navigateTo({
+        url: '../activityInfo/activityInfo?shopId=' + shop.id + '&goodsId=' + goodsId,
+        success: function (res) {
+          // success
+        }
+      })
+    } else {
+      wx.navigateTo({
+        url: '../posterActivity/posterActivity?shopId=' + shop.id + '&goodsId=' + goodsId + '&customerId=' + user.id,
+        success: function (res) {
+          // success
+        }
+      })
+    }
   }
 })

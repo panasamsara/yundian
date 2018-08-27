@@ -1,0 +1,59 @@
+<view class='content'>
+  <view class='card-box'>
+    <view class='card-bg-box'>
+      <image class='card-bg-img' src='../images/zxcs_cszh_kaxiangbj.png'></image>
+      <view class='card-desc' wx:if="{{show==0||show==1}}">
+        <view class='m-b-10'>办卡店铺：{{shopName}}</view>
+        <view class='m-b-10'>购卡金额：¥{{items.purchasePrice}}</view>
+        <view>购卡时间：{{items.purchaseTime}}</view>
+      </view>
+      <view class='card-desc' wx:if="{{show==2}}">
+        <view class='m-b-10'>赠送店铺：{{shopName}}</view>
+        <view class='m-b-10'  wx:if="{{items.giftTime&&items.giftTime!=''}}">赠送时间：{{items.giftTime}}</view>
+      </view>
+    </view>
+    <!-- 1 次数 2 时长 5终身 -->
+    <view class='card-info-box'wx:if="{{show==0||show==1}}">
+      <image class='card-bg-img' src='../images/zxcs_cszh_fuwuka.png'></image>
+      <view class='card-name'>{{items.cardName}}</view>
+      <view class='left-num' wx:if="{{items.serviceType==1}}">剩余：{{items.totalNum-items.consumeNum}}/{{items.packNumber}}次</view>
+      <view class='left-num' wx:if="{{items.serviceType==2}}">到期时间：{{items.remainNum}}</view>
+      <view class='left-num' wx:if="{{items.serviceType==5}}">{{items.remainNum}}</view>
+      
+      <view class='card-type' wx:if="{{items.serviceType==1}}">次数卡</view>
+      <view class='card-type' wx:if="{{items.serviceType==2}}">时长卡</view>
+      <view class='card-type' wx:if="{{items.serviceType==5}}">终身卡</view>
+      <image wx:if="{{show==1}}" class="sxtype" src='../images/yd_yiguoqi@2x.png'></image>
+    </view>
+    <view class='card-info-box'wx:if="{{show==2}}">
+      <image class='card-bg-img' src='../images/zxcs_cszh_fuwuka.png'></image>
+      <view class='card-name'>{{items.purchaseName}}</view>
+      <view class='left-num'>剩余：{{items.purchaseNum - items.consumeNum}}/{{items.purchaseNum}}
+    </view>
+    </view>
+  </view>
+  <view class='detail-box'>
+    <view class='detail-title'>
+      <image class='detail-title-img' src='../images/zxcs_cszh_xfmx.png'></image>
+    </view>
+    <view class='detail-list-box' wx:for="{{list}}" wx:key="*this">
+      <view class='detail-list'>
+        <view class='list-left'>
+          <view class='list-card-name' wx:if="{{show==2}}">{{item.goodsName}}</view>
+          <view class='list-card-name'>{{items.cardName}}</view>
+          <view class='list-shop-name'>{{item.shopName}}</view>
+        </view>
+        <view class='list-right'>
+          <view class='use-detail'  wx:if="{{items.serviceType==1}}" >-{{item.consumeNum}}</view>
+          <view class='use-detail'  wx:if="{{show==2}}" >-{{item.number}}</view>
+          <view class='use-time'>{{item.consumeTime}}</view>
+          <view class='list-shop-name' wx:if="{{show==2}}">{{item.createTime}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view wx:if="{{list==null||list.length==0}}" class='empty'>
+    <image class='list-empty-img' src='../images/zxcs_cszh_zwmx@3x.png'></image>
+    <view>暂无明细</view>
+  </view>
+</view>

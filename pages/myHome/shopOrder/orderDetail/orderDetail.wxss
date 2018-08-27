@@ -292,6 +292,7 @@ top: 0;
 }
 .select{
   color:#999;  
+  padding-right: 20rpx;
 }
 .select image{
   width: 15rpx;
@@ -318,6 +319,7 @@ top: 0;
   top:50%;
   transform: translate(-50%,-50%);
   -webkit-transform: translate(-50%,-50%);
+  z-index: 13;
 }
 .poptit{
   width: 100%;
@@ -476,7 +478,10 @@ top: 0;
   top:50%;
   transform: translate(-50%,-50%);
   -webkit-transform: translate(-50%,-50%);
-  padding-bottom:36rpx;
+  z-index: 12;
+}
+.paycardcon{
+  margin-bottom: 50rpx;
 }
 .paycardcon>text{
   display: block;
@@ -485,9 +490,9 @@ top: 0;
   width: 100%;
   height: 100rpx;
   color: #000;
-  font-weight: bold;
+  font-weight: 700;
   line-height: 100rpx;
-  border-bottom: 1px #fe732d solid;
+  border-bottom: 1rpx #fe732d solid;
   text-align: center;
 }
 .paycardcon>text.shopname{
@@ -504,14 +509,18 @@ top: 0;
 .paycardcon>text.summoney .yang{
   font-size: 56rpx;
 }
-.card{
+.selpayway{
   width: 502rpx;
-  margin: 50rpx auto 40rpx;
-  border: 1px #d6d6d6 solid;
-  border-width: 1px 0;
+  border-top: 1px #d6d6d6 solid;
+  margin: 0 auto;
   display: flex;
   display: -webkit-flex;
+  align-content: flex-start;
   padding:20rpx 0;
+}
+.selpayway:last-of-type{
+  border-top: 1px #d6d6d6 solid;
+  border-bottom: 1px #d6d6d6 solid;
 }
 .shoplogo{
   width: 50rpx;
@@ -526,11 +535,35 @@ top: 0;
 .cardinfo{
   flex: 1;
   color: #333;
-  margin-left: 25rpx;
+  margin-left: 20rpx;
 }
 .cardinfo>text{
   display: block;
+  text-align: left;
+  line-height: 44rpx;
 }
+.wep{
+  text-align: left;
+}
+.wechat-icon{
+  width: 50rpx;
+  height: 50rpx;
+}
+.wechat-icon image{
+  width: 43rpx;
+  height: 39rpx;
+  margin: 0 auto;
+}
+.selectway{
+  width: 44rpx;
+  height: 44rpx;
+  margin-left: 10rpx;
+}
+.selectway image{
+  width: 44rpx;
+  height: 44rpx;
+}
+
 .payforcard{
   width: 500rpx;
   height: 94rpx;
@@ -540,5 +573,5 @@ top: 0;
   border-radius: 10rpx;
   line-height: 94rpx;
   text-align: center;
-  margin-bottom: 36rpx;
+  margin: 36rpx auto;
 }

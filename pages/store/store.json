@@ -1,6 +1,3 @@
 {
-  "navigationBarTitleText": "云店",
-  "usingComponents": {
-    "dynamic-view": "dynamic/dynamic"
-  }
+  "navigationBarTitleText": "云店"
 }

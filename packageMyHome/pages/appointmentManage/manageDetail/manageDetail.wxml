@@ -1,0 +1,74 @@
+<view class="manageDetail">
+  <view class='header'>
+    <image src="../../images/bgmall.png"></image>
+    <view class='type' wx:if="{{orderList.bespokeStatusVO==0}}">等待商家接受预约</view>
+    <view class='type' wx:if="{{orderList.bespokeStatusVO==1}}">订单已确认</view>
+    <view class='type' wx:if="{{orderList.bespokeStatusVO==2}}">订单已消费</view>
+    <view class='type' wx:if="{{orderList.bespokeStatusVO==3}}">订单已过期</view>
+    <view class='type' wx:if="{{orderList.bespokeStatusVO==4}}">订单已取消</view>
+  </view>
+  <view class="info content">
+    <view class='person'>
+      <view>
+        <text>预约人：</text>
+        <text>{{orderList.customer}}</text>
+      </view>
+      <view>
+        <text>预约电话：</text>
+        <text>{{orderList.mobile}}</text>
+      </view>
+    </view>
+    <view class="list">
+      <view class='shop'>
+        <view class='left'>
+          <image class="shopImg mr15" src="../../images/shopDefault.png"></image>
+          <text class="mr15">{{orderList.shopName}}</text>
+          <image class="rightIcon" src="../../images/right.png"></image>
+        </view>
+      </view>
+      <view class="shopList">
+        <text>预约时间：</text>
+        <text>{{orderList.bespokeTime}}-{{orderList.bespokeEndTime}}</text>
+      </view>
+      <view class="shopList">
+        <text>人数：</text>
+        <text>{{orderList.bespokeThree || "无"}}人</text>
+      </view>
+      <view class="shopList">
+        <text>设施/设备：</text>
+        <text>{{orderList.facilityName || "无"}}</text>
+      </view>
+      <view class="shopList">
+        <text>服务人员：</text>
+        <text>{{orderList.waiter || "无"}}</text>
+      </view>
+      <view class="shopList">
+        <text>服务项目：</text>
+        <text>{{orderList.serviceName || "无"}}</text>
+      </view>
+      <view class="shopList">
+        <text>备注：</text>
+        <text>{{orderList.summary || "无"}}</text>
+      </view>
+    </view>
+    <view class='des' wx:if="{{orderList.bespokeStatusVO==0}}">预计2~10分钟内，会将处理的结果推送给您</view>
+  </view>
+  <view class="offOrder" bindtap="callOff" wx:if="{{orderList.bespokeStatusVO==0}}">取消订单</view>
+  <view class='mask' style="display:{{model==true?'block':'none'}}">
+    <view class='con' >
+      <view class='title'>请选择取消预约原因</view>
+      <radio-group bindchange="radioChange">
+        <label class="weui-cell weui-check__label" wx:for="{{items}}" wx:key="{{item}}">
+          <view class="weui-cell__hd">
+            <radio value="{{item.value}}" data-id="{{item}}" />
+          </view>
+          <view class="weui-cell__bd">{{item.value}}</view>
+        </label>
+      </radio-group>
+      <view>
+        <button bindtap='off'>不取消了</button>
+        <button class='red' bindtap='sure'>我要取消</button>
+      </view>
+    </view>
+  </view>
+</view>

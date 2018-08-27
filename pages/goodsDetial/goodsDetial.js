@@ -29,7 +29,22 @@ Page({
     // app.util.getShop(user.id, options.shopId).then((res) => {
     //   wx.setStorageSync('shop', res.data.data.shopInfo);
     // })
-
+    if (options && options.q) {
+      var uri = decodeURIComponent(options.q)
+      var p = util.getParams(uri)
+      let shopId = p.shopId
+      wx.setStorageSync('shopId', shopId);
+      this.setData({
+        shopId: shopId
+      })
+    } else {
+      if (options && options.shopId) {
+        wx.setStorageSync('shopId', options.shopId);
+        this.setData({
+          shopId: options.shopId
+        })
+      }
+    }
     console.log(options)
     var parm = {
       shopId: options.shopId,
@@ -59,42 +74,81 @@ Page({
     //获取优惠券数据 
     this.getCouponList();
   },
-  onShow: function(){ //缓存店铺信息（分享切店铺）
-    console.log('进入商品详情onshow------------------------')
+  onshow: function(){ //缓存店铺信息（分享切店铺）
     var shopId = this.data.shopId
     if (!shopId) {
       shopId = wx.getStorageSync('shopId');
     }
     var shop = wx.getStorageSync('shop')
-    var user = wx.getStorageSync('scSysUser');
+
     if (!shop) {
       if (shopId == undefined) {
         wx.redirectTo({
           url: '../scan/scan'
         })
       } else {
-        util.getShop(user.id, shopId).then(function (res) {
-
+        util.getShop(loginRes.id, shopId).then(function (res) {
+          _this.setData({
+            shopInformation: res.data.data
+          })
           //shop存入storage
           wx.setStorageSync('shop', res.data.data.shopInfo);
           //活动
           wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
           // 所有信息
           wx.setStorageSync('shopInformation', res.data.data);
-
+          if (res.data.data.shopInfo.shopHomeConfig) {
+            if (res.data.data.shopInfo.shopHomeConfig.videoPathList.length != 0) {
+              let videoInfo = {}
+              videoInfo.url = res.data.data.shopInfo.shopHomeConfig.videoPathList[0].filePath
+              videoInfo.cover = res.data.data.shopInfo.shopHomeConfig.videoPathList[0].coverImagePath
+              wx.setStorageSync('videoInfo', videoInfo)
+            }
+          }
+          _this.getShopInfo(res.data.data)
+          _this.getIndexAllInfo(res.data.data.shopInfo.id)
+          _this.checkCoupon()
         })
       }
     } else {
       if (shopId == undefined || shopId == '' || shopId == null) {
-
+        if (shop.shopHomeConfig) {
+          if (shop.shopHomeConfig.videoPathList.length != 0) {
+            let videoInfo = {}
+            videoInfo.url = shop.shopHomeConfig.videoPathList[0].filePath
+            videoInfo.cover = shop.shopHomeConfig.videoPathList[0].coverImagePath
+            wx.setStorageSync('videoInfo', videoInfo)
+          }
+        }
+        let shopInformation = wx.getStorageSync('shopInformation')
+        _this.setData({
+          shopInformation: shopInformation
+        })
+        _this.getShopInfo(shopInformation)
+        _this.getIndexAllInfo(shop.id)
+        _this.checkCoupon()
       } else {
         if (shopId == shop.id) {
-
+          if (shop.shopHomeConfig) {
+            if (shop.shopHomeConfig.videoPathList.length != 0) {
+              let videoInfo = {}
+              videoInfo.url = shop.shopHomeConfig.videoPathList[0].filePath
+              videoInfo.cover = shop.shopHomeConfig.videoPathList[0].coverImagePath
+              wx.setStorageSync('videoInfo', videoInfo)
+            }
+          }
+          let shopInformation = wx.getStorageSync('shopInformation')
+          _this.setData({
+            shopInformation: shopInformation
+          })
+          _this.getShopInfo(shopInformation)
+          _this.getIndexAllInfo(shop.id)
+          _this.checkCoupon()
         } else {
           wx.removeStorageSync('shop')
           wx.removeStorageSync('goodsInfos')
           wx.removeStorageSync('shopInformation')
-          util.getShop(user.id, shopId).then(function (res) {
+          util.getShop(loginRes.id, shopId).then(function (res) {
             _this.setData({
               shopInformation: res.data.data
             })
@@ -104,6 +158,17 @@ Page({
             wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
             // 所有信息
             wx.setStorageSync('shopInformation', res.data.data);
+            if (res.data.data.shopInfo.shopHomeConfig) {
+              if (res.data.data.shopInfo.shopHomeConfig.videoPathList.length != 0) {
+                let videoInfo = {}
+                videoInfo.url = res.data.data.shopInfo.shopHomeConfig.videoPathList[0].filePath
+                videoInfo.cover = res.data.data.shopInfo.shopHomeConfig.videoPathList[0].coverImagePath
+                wx.setStorageSync('videoInfo', videoInfo)
+              }
+            }
+            _this.getShopInfo(res.data.data)
+            _this.getIndexAllInfo(res.data.data.shopInfo.id)
+            _this.checkCoupon()
 
           })
         }
@@ -922,24 +987,26 @@ Page({
     }
     app.util.reqAsync('shop/getCouponList', datas).then((res) => {
       if (res.data.data) {
-        let list = res.data.data;
+        let list = res.data.data,
+            couponType1=[],
+            couponType2=[],
+            couponType3=[]
         for (let i = 0; i < list.length; i++) {
           list[i].beginTime = app.util.formatActivityDate(list[i].beginTime);
           list[i].endTime = app.util.formatActivityDate(list[i].endTime)
           if (list[i].couponType == '01') {//优惠券
-            this.setData({
-              couponType1: list[i]
-            })
+            couponType1.push(list[i])
           } else if (list[i].couponType == '02') {//代金券
-            this.setData({
-              couponType2: list[i]
-            })
+            couponType2.push(list[i])
           } else if (list[i].couponType == '03') {//包邮
-            this.setData({
-              couponType3: list[i]
-            })
+            couponType3.push(list[i])
           }
         }
+        this.setData({
+          couponType1: couponType1,
+          couponType2: couponType2,
+          couponType3: couponType3
+        })
       }
     }).catch((err) => {
       console.log(err)

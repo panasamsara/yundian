@@ -17,7 +17,8 @@ Page({
       userId: "",
       pageNo: 1,
       shopId:""
-    }
+    },
+    isHid:true
   },
   onLoad: function (options) {
     var userId = wx.getStorageSync('scSysUser').id;
@@ -71,10 +72,11 @@ Page({
       title: '加载中',
     })
     app.util.reqAsync('shop/getShopOrderListNew', this.data.listData).then((res) => {
+      wx.hideLoading();
       var orderListOld = this.data.orderList;
       
       var data = res.data.data;
-      
+ 
       
       console.log(this.data.facilityId)
       // 格式化金额
@@ -110,6 +112,15 @@ Page({
         
       }
       console.log(orderListOld)
+      if (orderListOld[0].payStatus != 4) {
+        this.setData({
+          isHid: false
+        })
+      } else {
+        this.setData({
+          isHid: true
+        })
+      }
       var desc = ++this.data.listData.pageNo;
       var page = "listData.pageNo";
       this.setData({
@@ -192,7 +203,7 @@ Page({
       userId = e.currentTarget.dataset.userid,
       shopId = e.currentTarget.dataset.shopid;
     wx.navigateTo({
-      url: "orderDetail/orderDetail?facilityId=" + facilityId + "&activeIndex=" + this.data.activeIndex + "&presaleId=" + presaleId + "&userId=" + userId + "&shopId=" + shopId
+      url: "orderDetail/orderDetail?facilityId=" + facilityId + "&activeIndex=" + this.data.activeIndex + "&presaleId=" + presaleId + "&userId=" + userId + "&shopId=" + shopId + '&selectMember=1'
     });
   },
   againBuy:function(e){ //再来一单
@@ -222,7 +233,7 @@ Page({
       userId = e.currentTarget.dataset.userid,
       shopId = e.currentTarget.dataset.shopid;
     wx.navigateTo({
-      url: "orderDetail/orderDetail?facilityId=" + facilityId + "&activeIndex=" + 0 + "&presaleId=" + presaleId + "&userId=" + userId + "&shopId=" + shopId
+      url: "orderDetail/orderDetail?facilityId=" + facilityId + "&activeIndex=" + 0 + "&presaleId=" + presaleId + "&userId=" + userId + "&shopId=" + shopId + '&selectMember=1'
     });
   },
   goShop: function (e) {
@@ -241,7 +252,7 @@ Page({
       flagOrder: true
     })
     wx.navigateTo({
-      url: 'orderDetail/orderDetail?presaleId=' + this.data.presaleId,
+      url: 'orderDetail/orderDetail?presaleId=' + this.data.presaleId
     })
   }
 })

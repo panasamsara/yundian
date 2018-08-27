@@ -1,33 +1,33 @@
 <!--pages/store/store.wxml-->
 <view class='container store'>
   <view class='storeInfo'>
-    <image src='{{data.shopInfo.bgImage}}' id='back'></image>
+    <image src='{{bgImage}}' id='back'></image>
     <view class='headBox'>
       <view class='headPic'>
-        <image src="{{data.shopInfo.logoUrl}}"></image>
+        <image src="{{logoUrl}}"></image>
       </view>
       <view class='infoBox'>
-        <text class='storeName'>{{data.shopInfo.shopName}}</text>
+        <text class='storeName'>{{shopName}}</text>
         <view id='fans'>粉丝数:
-          <text class='fansNum'>{{data.fansCounter}}</text>
+          <text class='fansNum'>{{shopMsg.fansCounter}}</text>
         </view>
       </view>
     </view>
     <view class='products'>
       <view class='productsNum'>
       <navigator url="../proList/proList" hover-class='none' open-type='switchTab'>
-        <text class='num'>{{data.goodsNum}}</text>
+        <text class='num'>{{shopMsg.goodsNum}}</text>
         <view>全部商品</view>
       </navigator>
       </view>
       <image src='images/whiteline.png'></image>
       <view class='updateNum'>
-        <text class='num'>{{data.UpNewNum}}</text>
+        <text class='num'>{{shopMsg.UpNewNum}}</text>
         <view>上新</view>
       </view>
       <image src='images/whiteline.png'></image>
       <navigator class='activityNum' url='activity/activity' hover-class='none'>
-        <text class='num'>{{data.activityNum}}</text>
+        <text class='num'>{{shopMsg.activityNum}}</text>
         <view>活动</view>
       </navigator>
     </view>
@@ -50,46 +50,46 @@
       </view>
       <view class='body'>
       <!-- 云店动态 -->
-        <view class='dynamic' wx:if="{{data.resMap.circleName}}">
+        <view class='dynamic' wx:if="{{resMap.circleName}}">
           <view class='dynamicBox'>
             <view class='headBox'>
               <view class='headPic'>
-                <image src='{{data.resMap.circleLogo}}'></image>
+                <image src='{{resMap.circleLogo}}'></image>
               </view>
               <view class='infoBox'>
-                <text class='userName'>{{data.resMap.circleName}}</text>
+                <text class='userName'>{{resMap.circleName}}</text>
                 <view class='store'>
                   <image src='images/yundian_dpzy_dianou.png'></image>
-                  <text class='storeName'>{{data.resMap.shopName!=''?data.resMap.shopName:'暂无店铺'}}</text>
+                  <text class='storeName'>{{resMap.shopName!=''?resMap.shopName:'暂无店铺'}}</text>
                 </view>
               </view>
               <view class='date'>
-                <text>{{data.resMap.videoAlbumTime}}</text>
+                <text>{{resMap.videoAlbumTime}}</text>
               </view>
             </view>
-            <view class='dynamicText' wx:if="{{data.resMap.videoAlbumDescription!=''}}">
-              <text>{{data.resMap.videoAlbumDescription}}</text>
+            <view class='dynamicText' wx:if="{{resMap.videoAlbumDescription!=''}}">
+              <text>{{resMap.videoAlbumDescription}}</text>
             </view>
-            <view class='imageBox' wx:if="{{data.resMap.videoAlbumType==1}}">
-              <image wx:for="{{data.resMap.urls}}" wx:for-item="items" wx:key="index" src="{{items}}" data-src='{{items}}' bindtap='previewImage' data-index="{{data.resMap.index}}" class='type1' wx:if="{{data.resMap.mylength==1}}"></image>
-              <image wx:for="{{data.resMap.urls}}" wx:for-item="items" wx:key="index" src="{{items}}" data-src='{{items}}' bindtap='previewImage' data-index="{{data.resMap.index}}" class='type2' wx:if="{{data.resMap.mylength==2}}"></image>
-              <image wx:for="{{data.resMap.urls}}" wx:for-item="items" wx:key="index" src="{{items}}" data-src='{{items}}' bindtap='previewImage' data-index="{{data.resMap.index}}" class='type3' wx:if="{{data.resMap.mylength>=3}}"></image>
+            <view class='imageBox' wx:if="{{resMap.videoAlbumType==1}}" data-length="{{resMap.mylength}}">
+              <image wx:for="{{resMap.urls}}" wx:for-item="items" wx:key="index" src="{{items}}" data-src='{{items}}' bindtap='previewImage' data-index="{{resMap.index}}" class='type1' wx:if="{{resMap.mylength==1}}"></image>
+              <image wx:for="{{resMap.urls}}" wx:for-item="items" wx:key="index" src="{{items}}" data-src='{{items}}' bindtap='previewImage' data-index="{{resMap.index}}" class='type2' wx:if="{{resMap.mylength==2}}"></image>
+              <image wx:for="{{resMap.urls}}" wx:for-item="items" wx:key="index" src="{{items}}" data-src='{{items}}' bindtap='previewImage' data-index="{{resMap.index}}" class='type3' wx:if="{{resMap.mylength>=3}}"></image>
             </view>
-            <view class='videoBox' wx:if="{{data.resMap.videoAlbumType==2}}">
-              <video src='{{data.resMap.urls[0]}}' id='myVideo' binderror="videoErrorCallback" poster='{{data.resMap.videoAlbumCoverUrl}}'></video>
+            <view class='videoBox' wx:if="{{resMap.videoAlbumType==2}}">
+              <video src='{{resMap.urls[0]}}' id='myVideo' binderror="videoErrorCallback" poster='{{resMap.videoAlbumCoverUrl}}'></video>
             </view>
             <view class='readInfo'>
               <view>
-                <text class='readNum'>{{data.resMap.videoAlbumTimes}}</text> 阅读
+                <text class='readNum'>{{resMap.videoAlbumTimes}}</text> 阅读
               </view>
               <view class='replyInfo'>
                 <view class='reply'>
                   <image src='images/yundian_dpzy_pinglun.png'></image>
-                  <text class='replyNum'>{{data.resMap.totalCount}}</text>
+                  <text class='replyNum'>{{resMap.totalCount}}</text>
                 </view>
                 <view class='like'>
                   <image src='images/yundian_dpzy_dianzan.png'></image>
-                  <text class='likeNum'>{{data.resMap.totalLikeCount}}</text>
+                  <text class='likeNum'>{{resMap.totalLikeCount}}</text>
                 </view>
               </view>
             </view>
@@ -118,20 +118,20 @@
         </view>
       </view>
       <view class='body'>
-        <view class='headline' wx:if="{{data.newCmsArticle[0].articleTitle}}"> 
+        <view class='headline' wx:if="{{data.scCmsArticle[0].articleTitle}}"> 
           <view class='headlineList'>
-            <view class='contentBox' data-articleId="{{data.newCmsArticle[0].articleId}}" bindtap='ship'>
-              <image src='{{data.newCmsArticle[0].scCmsResourcesList[0].resourcesUrl}}'></image>
+            <view class='contentBox' data-articleId="{{data.scCmsArticle[0].articleId}}" bindtap='ship'>
+              <image src='{{data.scCmsArticle[0].scCmsResourcesList[0].resourcesUrl}}'></image>
               <view class='text'>
-                <text class='titles'>{{data.newCmsArticle[0].articleTitle}}</text>
-                <text class='content'>{{data.newCmsArticle[0].articleContent?data.newCmsArticle[0].articleContent:''}}</text>
+                <text class='titles'>{{data.scCmsArticle[0].articleTitle}}</text>
+                <text class='content'>{{data.scCmsArticle[0].articleContent?data.scCmsArticle[0].articleContent:''}}</text>
               </view>
             </view>
             <view class='infoBox'>
-              <text>{{data.newCmsArticle[0].scSysUser.username}}</text>
+              <text>{{data.scCmsArticle[0].scSysUser.username}}</text>
               <view>
-                <text>{{data.newCmsArticle[0].visitorNum==null?0:item.visitorNum}}</text>浏览
-                <text>{{data.newCmsArticle[0].answerNumber}}</text>回复
+                <text>{{data.scCmsArticle[0].visitorNum==null?0:item.visitorNum}}</text>浏览
+                <text>{{data.scCmsArticle[0].answerNumber}}</text>回复
               </view>
             </view>
           </view>
@@ -159,15 +159,15 @@
         </view>
       </view>
       <view class='body'>
-        <view class='player' wx:if="{{data.circleNew.name}}"> 
+        <view class='player' wx:if="{{circleNew.name}}"> 
           <view class='playerList'>
-            <image src='{{data.circleNew.logo}}' class='banner'></image>
+            <image src='{{circleNew.logo}}' class='banner'></image>
             <view class='playerTitle'>
-              <text>{{data.circleNew.name}}</text>
+              <text>{{circleNew.name}}</text>
               <image src='images/yundian_spxq_xuanzhong.png' class='titleBorder'></image>
             </view>
             <view class='text'>
-              <text>{{data.circleNew.title}}</text>
+              <text>{{circleNew.title}}</text>
             </view>
           </view>
         </view>
@@ -194,21 +194,21 @@
         </view>
       </view>
       <view class='body'>
-        <view class='fans' wx:if="{{data.circleFansTeam.circleName}}">
+        <view class='fans' wx:if="{{circleFansTeam.circleName}}">
             <view class='banner'>
-              <image src="{{data.circleFansTeam.bgPic}}" class='bannerPic'></image>
+              <image src="{{circleFansTeam.bgPic}}" class='bannerPic'></image>
               <view class='teamInfo'>
-                <text class='detailName'>{{data.circleFansTeam.circleName}}</text>
+                <text class='detailName'>{{circleFansTeam.circleName}}</text>
                 <view class='sizeBox'>
                   <image src='images/renshu.png' class='sizePic'></image>
-                  <text class='size'>{{data.circleFansTeam.personCount}}人</text>
+                  <text class='size'>{{circleFansTeam.personCount}}人</text>
                 </view>
               </view>
               <image src='images/sanjiao.png' class='triangle'></image>
             </view>
             <scroll-view class="teamBox" scroll-x="true">
-              <view class='team' wx:for="{{data.circleFansTeam.groupList}}" wx:key="index">
-                <image src='{{item.logo}}'></image>
+              <view class='team' wx:for="{{circleFansTeam.groupList}}" wx:key="index">
+                <image src='{{item.detailPic}}'></image>
                 <view class='infoBox'>
                   <text class='teamName'>{{item.detailName}}</text>
                   <text class='total'>{{item.personCount}}</text>
@@ -237,25 +237,25 @@
     </view>
     <view class='list'>
       <text>店铺二维码</text>
-      <navigator url='code/code?shopName={{data.shopInfo.shopName}}&url={{data.shopInfo.logoUrl}}&fans={{data.fansCounter}}&shopId={{data.shopInfo.shopId}}' hover-class='none'>
+      <navigator url='code/code?shopName={{shopInfo.shopName}}&url={{shopInfo.logoUrl}}&fans={{shopMsg.fansCounter}}&shopId={{shopInfo.shopId}}' hover-class='none'>
         <image src='images/yundian_erweima.png' class='enter'></image>
       </navigator>
     </view>
     <view class='list phone'>
       <text>联系电话</text>
-      <text class='phoneNum'>{{data.shopInfo.phoneService!=null?data.shopInfo.phoneService:"暂无"}}</text>
+      <text class='phoneNum'>{{shopInfo.phoneService!=null?shopInfo.phoneService:"暂无"}}</text>
     </view>
     <view class='list'>
       <text>店铺简介</text>
     </view>
     <view class="list desc">
-      <text>{{data.shopInfo.shopDesc?data.shopInfo.shopDesc:"暂无简介"}}</text>
+      <text>{{shopInfo.shopDesc?shopInfo.shopDesc:"暂无简介"}}</text>
     </view>
     <view class='list'>
       <text>店铺地址</text>
     </view>
     <view class='list address'>
-      <text>{{data.shopInfo.address}}</text>
+      <text>{{shopInfo.address}}</text>
       <!-- <navigator url="location/location?longitude={{data.shopInfo.longitude}}&latitude={{data.shopInfo.latitude}}&shopName={{data.shopInfo.shopName}}&address={{data.shopInfo.address}}" hover-class='none'> -->
         <image src='images/yundian_dpzy_ditudaohang.png' class='enter' bindtap='apen_add'></image>
       <!-- </navigator> -->

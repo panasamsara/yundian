@@ -9,21 +9,11 @@
     "pages/proList/proList",
     "pages/car/car",
     "pages/myHome/myHome",
-    "pages/myHome/order/order",
-    "pages/myHome/order/applyRefund/applyRefund",
-    "pages/myHome/orderDetail/orderDetail",
+    
     "pages/myHome/shopOrder/shopOrder",
     "pages/myHome/shopOrder/orderDetail/orderDetail",
-    "pages/myHome/appointmentManage/appointmentManage",
-    "pages/myHome/appointmentManage/manageDetail/manageDetail",
-    "pages/myHome/myAccount/myAccount",
     "pages/myHome/discounts/discounts",
     "pages/myHome/discounts/discountDetail/discountDetail",
-    "pages/myHome/address/index/list",
-    "pages/myHome/myQuestion/myQuestion",
-    "pages/myHome/myQuestion/questionDetail/questionDetail",
-    "pages/myHome/address/add/index",
-    "pages/myHome/address/edit/edit",
     "pages/goodsDetial/goodsDetial",
     "pages/ask/ask",
     "pages/search/search",
@@ -49,12 +39,7 @@
     "pages/spelldetails/spelldetails",
     "pages/myHome/downLoadIos/downLoadIos",
     "pages/myHome/downLoadAndroid/downLoadAndroid",
-    "pages/store/posterActivity/posterActivity",
-    "pages/myHome/loseEfficacy/loseEfficacy",
-    "pages/myHome/cardDetail/cardDetail",
-    "pages/myHome/expenseDetail/expenseDetail",
-    "pages/myHome/forDetail/forDetail",
-    "pages/myHome/consumptionDetail/consumptionDetail"
+    "pages/store/posterActivity/posterActivity"
   ],
   "subPackages": [
     {
@@ -77,6 +62,29 @@
       "pages": [
         "pages/proList/proList",
         "pages/goods/goods"
+      ]
+    },
+    {
+      "root": "packageMyHome",
+      "pages": [
+        "pages/discountCenter/discountCenter",
+        "pages/address/index/list",
+        "pages/address/add/index",
+        "pages/address/edit/edit",
+        "pages/myQuestion/myQuestion",
+        "pages/myQuestion/questionDetail/questionDetail",
+        "pages/appointmentManage/appointmentManage",
+        "pages/order/order",
+        "pages/order/applyRefund/applyRefund",
+        "pages/orderDetail/orderDetail",
+        "pages/appointmentManage/manageDetail/manageDetail",
+        "pages/myAccount/myAccount",
+        "pages/loseEfficacy/loseEfficacy",
+        "pages/cardDetail/cardDetail",
+        "pages/expenseDetail/expenseDetail",
+        "pages/forDetail/forDetail",
+        "pages/consumptionDetail/consumptionDetail"
+
       ]
     }
   ],
@@ -118,5 +126,11 @@
         "text": "我的"
       }
     ]
+  },
+  "plugins": {
+    "wxparserPlugin": {
+      "version": "0.1.0",
+      "provider": "wx9d4d4ffa781ff3ac"
+    }
   }
 }

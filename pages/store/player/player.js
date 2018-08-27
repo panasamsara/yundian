@@ -55,7 +55,7 @@ Component({
     getData:function(data){
       var oldData = this.data.list;
       app.util.reqAsync('circle/getCircleByShopId', data).then((res) => {
-        if(res.data.data){
+        if(res.data.data.length>0){
           var list = res.data.data;
           var newData = oldData.concat(list);
           this.setData({

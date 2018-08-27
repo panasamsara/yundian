@@ -32,15 +32,11 @@
   margin-left: 70rpx;
   padding-bottom: 20rpx;
   margin-bottom: 30rpx;
-  font-weight:bold;
-  font-size:46rpx;
-  color:#ff5c36;
 }
 .sub-title{
   width: 100%;
   text-align: center;
   font-size: 28rpx;
-  color: #666;
 }
 .ac-time{
   width: 100%;
@@ -48,7 +44,6 @@
   font-size: 26rpx;
   margin-top: 20rpx;
   margin-bottom: 20rpx; 
-  color: #999;
 }
 .border1{
   position: relative;

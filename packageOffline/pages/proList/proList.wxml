@@ -35,40 +35,42 @@
     </view>
 
     <!-- 右侧 留店商品列表 -->
-    <view wx:elif="{{ifstore==1}}" class="foods-wrapper" style="height: {{goodsHL}}px;">
-      <view class="gift-title">留店商品</view>
-      <view class="gift-list">
-        <scroll-view scroll-y style="height: 100%;" wx:if="{{hasPurchase}}">
-          <!-- gift-item -->
-          <view class="gift-item" wx:for="{{purchase}}" wx:for-index="purnx"  wx:key="*this" wx:for-item='pur' data-id="{{pur.goodsId}}">
-            <image class="gift-good" src="{{pur.pictureUrl}}"  bindtap="goToDetail"></image>
-            <view class="gift-content">
-              <view class="gift-top">
-                <!-- <view class="gift-opearbtn" bindtap="changePurchase">
-                  <image wx:if="{{pur.pitch==0}}" src="./image/dnxd_fenlei_weixuanzhong@2x.png" id="reduceShop_{{pur.goodsId}}_{{pur.stockId}}_{{pur.shopNum}}_{{pur.id}}_{{pur.remainNum}}_{{pur.balance}}_{{pur.purchaseNum}}_{{pur.pitch}}"></image>
-                  <image wx:else src="./image/dnxd_fenlei_xuanzhong@2x.png" id="reduceShop_{{pur.goodsId}}_{{pur.stockId}}_{{pur.shopNum}}_{{pur.id}}_{{pur.remainNum}}_{{pur.balance}}_{{pur.purchaseNum}}_{{pur.pitch}}"></image>
-                </view> -->
-                <view class="giftname"><text class="gift-goodname">{{pur.purchaseName}}</text></view>
-              </view>
-              
-              <view class="gift-goodstatus">
-                <text class='giftnum'>剩余数量</text><text class="price">{{pur.remainNum}}</text>
-              </view>
-              <!-- 加减 -->
-              <view class="purchase">
-                <view class="reduce" bindtap="numReduce" id="reduceShop_{{pur.goodsId}}_{{pur.stockId}}_{{pur.shopNum}}_{{pur.id}}_{{pur.remainNum}}_{{pur.purchaseNum}}_{{pur.pitch}}">-</view>
-                <view class="edit">
-                  <view class="snum">{{pur.shopNum}}</view>
-                  <!-- <input type="number" value="{{pur.shopNum}}" focus="{{focus}}" confirm-type="done" bindinput="bindKeyInput" bindconfirm="addShopCart" id="reduceShop_{{pur.goodsId}}_{{pur.shopNum}}_{{pur.remainNum}}_{{pur.id}}" disabled="disabled"></input> -->
+    <view wx:elif="{{ifstore==1}}" class="foods-wrapper" style="height: {{pgoodsHL}}px;">
+      <view style="height: 100%;" >
+        <view class="gift-title">留店商品</view>
+        <view class="gift-list" style="height: 100%;">
+          <scroll-view scroll-y wx:if="{{hasPurchase}}"  style="height: 100%;">
+            <!-- gift-item -->
+            <view class="gift-item" wx:for="{{purchaseMap}}" wx:for-index="purnx"  wx:key="*this" wx:for-item='pur' data-id="{{pur.goodsId}}">
+              <image class="gift-good" src="{{pur.pictureUrl}}"  bindtap="goToDetail"></image>
+              <view class="gift-content">
+                <view class="gift-top">
+                  <!-- <view class="gift-opearbtn" bindtap="changePurchase">
+                    <image wx:if="{{pur.pitch==0}}" src="./image/dnxd_fenlei_weixuanzhong@2x.png" id="reduceShop_{{pur.goodsId}}_{{pur.stockId}}_{{pur.shopNum}}_{{pur.id}}_{{pur.remainNum}}_{{pur.balance}}_{{pur.purchaseNum}}_{{pur.pitch}}"></image>
+                    <image wx:else src="./image/dnxd_fenlei_xuanzhong@2x.png" id="reduceShop_{{pur.goodsId}}_{{pur.stockId}}_{{pur.shopNum}}_{{pur.id}}_{{pur.remainNum}}_{{pur.balance}}_{{pur.purchaseNum}}_{{pur.pitch}}"></image>
+                  </view> -->
+                  <view class="giftname"><text class="gift-goodname">{{pur.purchaseName}}</text></view>
                 </view>
-                <view class='add' bindtap="numPlus" id="reduceShop_{{pur.goodsId}}_{{pur.stockId}}_{{pur.shopNum}}_{{pur.id}}_{{pur.remainNum}}_{{pur.balance}}_{{pur.purchaseNum}}_{{pur.pitch}}">+</view>
+                
+                <view class="gift-goodstatus">
+                  <text class='giftnum'>剩余数量</text><text class="price">{{pur.remainNum}}</text>
+                </view>
+                <!-- 加减 -->
+                <view class="purchase">
+                  <view class="reduce" bindtap="numReduce"  id="reduceShop_{{pur.goodsId}}_{{pur.stockId}}_{{pur.shopNum}}_{{pur.id}}_{{pur.remainNum}}_{{pur.purchaseNum}}_{{pur.pitch}}">-</view>
+                  <view class="edit">
+                    <view class="snum">{{pur.shopNum}}</view>
+                    <!-- <input type="number" value="{{pur.shopNum}}" focus="{{focus}}" confirm-type="done" bindinput="bindKeyInput" bindconfirm="addShopCart" id="reduceShop_{{pur.goodsId}}_{{pur.shopNum}}_{{pur.remainNum}}_{{pur.id}}" disabled="disabled"></input> -->
+                  </view>
+                  <view class='add' bindtap="numPlus" data-purchaseName="{{pur.purchaseName}}" id="reduceShop_{{pur.goodsId}}_{{pur.stockId}}_{{pur.shopNum}}_{{pur.id}}_{{pur.remainNum}}_{{pur.balance}}_{{pur.purchaseNum}}_{{pur.pitch}}" disabled="{{iftab}}">+</view>
+                </view>
               </view>
             </view>
-          </view>
-        </scroll-view>
+          </scroll-view>
 
-        <view wx:else class="nopurchase">
-          暂无留店商品
+          <view wx:else class="nopurchase">
+            暂无留店商品
+          </view>
         </view>
       </view>
     </view>
@@ -101,7 +103,6 @@
         <view class="content-right">
           <!-- <view bindtap="goToCart" class="pay payClass" wx:if='{{cart_length > 0}}'>去结算 -->
           <view bindtap="jiesuan" class="pay payClass" wx:if='{{cart_length > 0}}'>确认下单
-          <!-- <view bindtap="getAccount" class="pay payClass" wx:if='{{cart_length > 0}}'>确认下单 -->
           <!-- <text wx:if='{{totalNum >0}}'>（{{totalNum}}）</text> -->
           </view>
           <view class="pay-gray" wx:if='{{cart_length == 0}}'>确认下单
@@ -171,7 +172,7 @@
                               <view class="inner icon-remove_circle_outline"></view>
                           </view>
                           <text class="cart-count">{{good.number}}</text>
-                          <image src="./image/fenlei_tianjia@2x.png" bindtap="addGoodToCartFn" data-stockid='{{good.stockId}}'  data-goodname="{{good.goodsName}}" id="add_{{good.goodsId}}_{{good.stockId}}_{{good.accountRecordId}}_{{good.purchaseType}}" class="cart-add icon-add_circle"></image>
+                          <image src="./image/fenlei_tianjia@2x.png" bindtap="addGoodToCartFn" data-stockid='{{good.stockId}}' data-goodname="{{good.goodsName}}" id="add_{{good.goodsId}}_{{good.stockId}}_{{good.accountRecordId}}_{{good.purchaseType}}" class="cart-add icon-add_circle"></image>
                       </view>
                     </view>
                 </view>
@@ -221,7 +222,7 @@
 
     </view>
     <view class='stock-box-bottom'>
-      <view class='stock-money' wx:if='{{chosenStockPrice != null}}'> <text class='stock-yangjiao'>￥</text>{{chosenStockPrice}}</view>
+      <view class='stock-money' wx:if='{{chosenStockPrice}}'> <text class='stock-yangjiao'>￥</text>{{chosenStockPrice}}</view>
       <view class='stock-btn' bindtap='choseStockYesBtn'>确认</view>
       <!-- <view class='stock-btn gray' wx:if='{{!hasChooseStock}}'>确认</view> -->
     </view>

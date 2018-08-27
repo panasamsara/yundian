@@ -17,7 +17,7 @@
       <text>{{data.bespokeBeginTime}}</text>
       <text>{{data.bespokeEndTime}}</text>
     </view>
-    <text>{{data.receptionNum}}人</text><text wx:if='{{data.facilityName}}'>|{{data.facilityName}}</text>
+    <text>{{data.receptionNum}}|{{data.facilityName}}</text>
   </view>
   <view class='list service' wx:if="{{data.serviceName||data.waiter}}">
     <text>{{data.serviceName}}</text>

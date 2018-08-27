@@ -56,8 +56,13 @@ Page({
     // Do something when page ready.
   },
   onLoad: function (options) {
+    var shop = wx.getStorageSync('shop')
+    var user = wx.getStorageSync('scSysUser');
+    console.log(user)
+    
     let systemInfo = wx.getStorageSync('systemInfo');
     let mechine = options;//wx.getStorageSync('mechine');
+    let _that = this;
 
     this.busPos = {};
     this.busPos['x'] = 40;//小球进购物车的位置
@@ -68,16 +73,15 @@ Page({
       systemInfo: systemInfo,
       goodsH: systemInfo.windowHeight  - 48
     });
+    // console.log(mechine)
 
-    var shop = wx.getStorageSync('shop')
-    var user = wx.getStorageSync('scSysUser');
     //获取店铺类别列表
     // this.getCategoryList()
     util.reqAsync('shop/getShopGoodsCategoryList', {
       merchantId: shop.merchantId,
       shopId: shop.id
-    }).then((res) => {
-      let shopCategory = res.data.data
+    }).then((resCategory) => {
+      let shopCategory = resCategory.data.data
       // 类别中加入 “全部”
       let allCategory = { sequence: 0, type: 1, categoryName: "全部", categoryId: null }
       shopCategory.unshift(allCategory)
@@ -98,8 +102,8 @@ Page({
         customerId: user.id,
         searchType: 1,
         categoryId: null
-      }).then((res) => {
-         goods = res.data.data
+      }).then((resGoods) => {
+        goods = resGoods.data.data
 
         if (shopCategory[1]) {
           if (shopCategory[1].type == 3){
@@ -177,65 +181,6 @@ Page({
             }).catch((err) => {
               console.log(err)
             })
-          } else {
-            if (goods.length != 0) {
-              for (let j = 0; j < goods.length; j++) {
-                goodMap[goods[j].id] = goods[j];
-                goodMap[goods[j].id].number = 0
-                goodsInCategory.push(goods[j])
-
-                if (goods[j].stockList.length != 0) {
-                  for (let k = 0; k < goods[j].stockList.length; k++) {
-                    let goodStock = []
-                    goodStock.goodsName = goods[j].goodsName
-                    goodStock.goodsId = goods[j].id
-                    goodStock.stockId = goods[j].stockList[k].id
-                    goodStock.number = 0
-                    goodStock.goodsPrice = goods[j].price
-                    goodStock.stockPrice = goods[j].stockList[k].stockPrice
-                    goodStock.stockPrice = goods[j].stockList[k].stockPrice
-                    stockMap[goodStock.stockId] = goodStock
-                  }
-                } else {
-                  let goodStock = []
-                  goodStock.goodsName = goods[j].goodsName
-                  goodStock.goodsId = goods[j].id
-                  goodStock.stockId = null
-                  goodStock.number = 0
-                  goodStock.goodsPrice = goods[j].price
-                  goodStock.stockPrice = null
-                  goodStock.stockBalance = goods[j].stockBalance
-                  stockMap[goodStock.goodsId] = goodStock
-                }
-
-              }
-            } else { // 没有商品
-              wx.showToast({
-                title: '暂无商品',
-                icon: 'none'
-              })
-              this.setData({
-                showLoading: false
-              })
-              return
-            }
-            let g = {}
-            for (let j = 0; j < goodMap.length; j++) {
-              if (goodMap[j] && goodMap[j])
-                g[j] = goodMap[j]
-            }
-            let h = {}
-            for (let i = 0; i < stockMap.length; i++) {
-              if (stockMap[i] && stockMap[i])
-                h[i] = stockMap[i]
-            }
-            this.setData({
-              goodMap: g,
-              stockMap: h,
-              goodsInCategory: goodsInCategory,
-              showLoading: false
-            })
-            this.shopCartList()
           }
           
         }else{
@@ -268,7 +213,6 @@ Page({
                 goodStock.stockBalance = goods[j].stockBalance
                 stockMap[goodStock.goodsId] = goodStock
               }
-
             }
           } else { // 没有商品
             wx.showToast({
@@ -296,7 +240,7 @@ Page({
             goodsInCategory: goodsInCategory,
             showLoading: false
           })
-          debugger
+
           this.shopCartList()
         }
         
@@ -305,7 +249,7 @@ Page({
       })
    
       console.log('goodMap')
-      console.log(this.data.goodMap)
+      console.log(goodMap)
 
     }).catch((err) => {
       console.log(err)
@@ -735,6 +679,7 @@ Page({
       showLoading: true
     })
     let _that = this;
+    let shopCategory = this.data.shopCategory
     util.reqAsync('shop/getShopGoodsMore', {
       merchantId: merchantid,
       shopId: shopid,
@@ -742,13 +687,39 @@ Page({
       customerId: wx.getStorageSync('scSysUser').id,
       categoryId: categoryid
     }).then((res) => {
-      
-      if (res.data.data) {
-        _that.setData({
-          goodsInCategory: res.data.data,
-          showLoading: false
+
+      // 类别中有套盒，选择全部商品 ( 再次获取套盒 合并到所有商品中去 )
+      if (categoryid == 'null' && shopCategory[1].type == 3){
+        console.log('全部')
+        let goods = res.data.data
+        util.reqAsync('shop/getShopGoodsMore', {
+          merchantId: merchantid,
+          shopId: shopid,
+          // customerId: user.id,
+          searchType: shopCategory[1].type,
+          categoryId: shopCategory[1].categoryId
+        }).then((newRes) => {
+          let newData = newRes.data.data
+          if (newData.length != 0) {
+            for (let i = 0; i < newData.length; i++) {
+              goods.push(newData[i])
+            }
+          }
+          _that.setData({
+            goodsInCategory: goods,
+            showLoading: false
+          })
+
         })
-      } 
+      }else{
+        if (res.data.data) {
+          _that.setData({
+            goodsInCategory: res.data.data,
+            showLoading: false
+          })
+        } 
+      }
+     
     }).catch((err) => {
       console.log(err)
       // wx.showToast({
@@ -927,7 +898,7 @@ Page({
 
     var shop = wx.getStorageSync('shop');
     wx.navigateTo({
-      url: '../goodsDetial/goodsDetial?goodsId=' + goods_id + '&shopId=' + shop.id , 
+      url: '../goodsDetial/goodsDetial?goodsId=' + goods_id + '&shopId=' + shop.id + '&status=' + 3, // 3 普通商品
     })
   },
   jiesuan: function () {

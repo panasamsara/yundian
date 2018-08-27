@@ -3,7 +3,7 @@
   <image src='../../images/yundian_bangdingdianji_bg.jpg' id='bg'></image>
   <view id='logo'>
     <view><image src='../../images/yundian_bangdingdianji_logo.png'></image></view>
-    <text id='poster'>随时随地 快乐购物 智享生活</text>
+    <text id='poster'>需要使用您的微信昵称和头像</text>
   </view>
   <button open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber" id='login'>微信登录</button>
   <text id='warn'>拒绝授权将无法体验完整功能，建议打开授权</text>

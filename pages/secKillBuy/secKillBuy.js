@@ -345,7 +345,7 @@ Page({
   addressSkip: function (e) {
     //跳到地址管理
     wx.navigateTo({
-      url: '../myHome/address/index/list?id=' + this.data.customerId + '&select=' + 1
+      url: '../../packageMyHome/pages/address/index/list?id=' + this.data.customerId + '&select=' + 1
     })
   },
   bindPickerChange: function (e) {
@@ -405,12 +405,12 @@ Page({
       if (this.data.isSeckill == 1) {//秒杀
         //跳到线上订单
         wx.redirectTo({
-          url: '../myHome/orderDetail/orderDetail?orderNo=' + this.data.orderNo + '&isGroupBuying=' + 0 + '&orderkind=' + 3
+          url: '../../packageMyHome/orderDetail/orderDetail?orderNo=' + this.data.orderNo + '&isGroupBuying=' + 0 + '&orderkind=' + 3
         })
       } else {
         //跳到线上订单
         wx.redirectTo({
-          url: '../myHome/orderDetail/orderDetail?orderNo=' + this.data.orderNo + '&isGroupBuying=' + 1
+          url: '../../packageMyHome/orderDetail/orderDetail?orderNo=' + this.data.orderNo + '&isGroupBuying=' + 1
         })
       }
 
@@ -808,10 +808,7 @@ Page({
       if (data.data.code == 1) {
 
       } else {
-        wx.showToast({
-          title: data.data.msg,
-          icon: 'none'
-        })
+        console.log(data.data.msg);
       }
 
     })

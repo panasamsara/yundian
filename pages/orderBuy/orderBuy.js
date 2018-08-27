@@ -4,7 +4,7 @@ const app = getApp();
 
 Page({
   data: {
-    array: ['快递配送', '店内下单', '自提'],
+    array: ['快递配送', '自提'],
     isShop: 0,//0开通店内下单 1未开通
     isService: 0, //0只有商品没有服务 1有服务
     isSend: 0,//0-快递  1-店内下单 2-自提
@@ -26,16 +26,11 @@ Page({
     oldroom: '-1',//未再次选择之前的index
     roomVal: "",
     oldroomVal: "",//未再次选择之前的房间名
-    customerId: "",
-    userCode:'',
+    userCode: '',
     objectArray: [
       {
         id: 0,
         name: '快递配送'
-      },
-      {
-        id: 1,
-        name: '店内下单'
       },
       {
         id: 2,
@@ -121,16 +116,6 @@ Page({
       goods: goods,
       userCode: userCode
     })
-    console.log(arr)
-    if (this.data.offline == 1) { //扫码进来的
-      this.setData({
-        facilityId: wx.getStorageSync('shop').facilityId || ""
-      })
-    } else {
-      this.setData({
-        facilityId: ''
-      })
-    }
 
     if (arr.length > 0) {
       this.setData({
@@ -156,38 +141,51 @@ Page({
           isSer = 1;
         }
       }
-      console.log("是否扫码进入：" + this.data.offline)
-      if (this.data.offline == 1) { //如果扫码进来遍历房间id取出房间号
-        console.log(1111111)
-        this.setData({
-          isSend: 1,//0-快递  1-店内下单 2-自提
-          array: ['店内下单'],
-          isShop: 0,//0开通店内下单 1未开通
-          isService: 1, //0只有商品没有服务 1有服务
-          objectArray: [
-            {
-              id: 1,
-              name: '店内下单'
-            }
-          ],
-          index: 0
-        })
-        for (var k in data.data.data) {
-          if (this.data.facilityId == data.data.data[k].id) {
-            this.setData({
-              scanRoom: data.data.data[k].title
-            })
 
-          }
+      if (data.data.code == 9) {   //未开通店内下单
+        console.log('未开通店内下单')
+        if (isSer == 0) { //普通商品
+          this.setData({
+            array: ['快递配送', '自提'],
+            isShop: 1,//0开通店内下单 1未开通
+            isService: 0, //0只有商品没有服务 1有服务
+            objectArray: [
+              {
+                id: 0,
+                name: '快递配送'
+              },
+              {
+                id: 2,
+                name: '自提'
+              }
+            ]
+          })
+        } else {
+          this.setData({
+            isSend: 2,//0-快递  1-店内下单 2-自提
+            array: ['自提'],
+            isShop: 1,//0开通店内下单 1未开通
+            isService: 1, //0只有商品没有服务 1有服务
+            index: 0,
+            objectArray: [
+              {
+                id: 2,
+                name: '自提'
+              }
+            ]
+          })
         }
-
-      } else {
-        if (data.data.code == 9) {   //未开通店内下单
-          console.log('未开通店内下单')
+      } else { //开通店内下单线上线下分开所以不要店内下单
+        if (data.data.data.length > 0) {
+          console.log('开通店内下单')
+          this.setData({
+            room: data.data.data,
+            merchantId: data.data.data[0].merchantId
+          })
           if (isSer == 0) { //普通商品
             this.setData({
               array: ['快递配送', '自提'],
-              isShop: 1,//0开通店内下单 1未开通
+              isShop: 0,//0开通店内下单 1未开通
               isService: 0, //0只有商品没有服务 1有服务
               objectArray: [
                 {
@@ -204,7 +202,7 @@ Page({
             this.setData({
               isSend: 2,//0-快递  1-店内下单 2-自提
               array: ['自提'],
-              isShop: 1,//0开通店内下单 1未开通
+              isShop: 0,//0开通店内下单 1未开通
               isService: 1, //0只有商品没有服务 1有服务
               index: 0,
               objectArray: [
@@ -215,53 +213,9 @@ Page({
               ]
             })
           }
-        } else { //开通店内下单线上线下分开所以不要店内下单
-          if (data.data.data.length>0){
-            console.log('开通店内下单')
-            this.setData({
-              room: data.data.data,
-              merchantId: data.data.data[0].merchantId
-            })
-            if (isSer == 0) { //普通商品
-              this.setData({
-                array: ['快递配送', '自提'],
-                isShop: 0,//0开通店内下单 1未开通
-                isService: 0, //0只有商品没有服务 1有服务
-                objectArray: [
-                  {
-                    id: 0,
-                    name: '快递配送'
-                  },
-                  {
-                    id: 2,
-                    name: '自提'
-                  }
-                ]
-              })
-            } else {
-              this.setData({
-                isSend: 2,//0-快递  1-店内下单 2-自提
-                array: ['自提'],
-                isShop: 0,//0开通店内下单 1未开通
-                isService: 1, //0只有商品没有服务 1有服务
-                index: 0,
-                objectArray: [
-                  {
-                    id: 2,
-                    name: '自提'
-                  }
-                ]
-              })
-            }
-         }
-         
         }
 
-
-
       }
-
-
 
       this.setData({
         goods: goods,
@@ -294,37 +248,13 @@ Page({
     console.log(this.data.goods)
   },
   onShow: function (e) {
-    if (this.data.offline == 1) { //如果扫码进来遍历房间id取出房间号
-      this.setData({
-        isSend: 1,//0-快递  1-店内下单 2-自提
-        array: ['店内下单'],
-        isShop: 0,//0开通店内下单 1未开通
-        isService: 1, //0只有商品没有服务 1有服务
-        objectArray: [
-          {
-            id: 1,
-            name: '店内下单'
-          }
-        ],
-        index: 0
-      })
-      for (var k in this.data.room) {
-        if (this.data.facilityId == this.data.room[k].facilityId) {
-          this.setData({
-            scanRoom: this.data.room[k].roomVal
-          })
-          break;
-        }
-      }
-    }
-    console.log(this.data.customerId)
     //获取地址
     app.util.reqAsync('shop/getMyAddressAndCoupon', {
       customerId: this.data.customerId,
       shopId: this.data.shopId
     }).then((data) => {
       console.log(data)
-      if(data.data.code==1){
+      if (data.data.code == 1) {
         this.setData({
           userInfo: data.data.data,
           shopName: this.data.shopName
@@ -395,7 +325,6 @@ Page({
           oldroom: this.data.oldroom,//未再次选择之前的index
           roomVal: this.data.roomVal,
           oldroomVal: this.data.oldroomVal,//未再次选择之前的房间名
-          customerId: this.data.customerId,
           objectArray: this.data.objectArray,
           index: this.data.index,
           total: this.data.total,
@@ -416,13 +345,13 @@ Page({
         console.log("458行" + this.data.limtgood)
         this.deliveryMone();
         this.discounts();
-      }else{
+      } else {
         wx.showToast({
           title: data.data.msg,
           icon: 'none'
         })
       }
-    
+
     })
 
   },
@@ -478,14 +407,17 @@ Page({
         }
 
         if (mony.length > 1) {
-          var bigmon = mony.sort(this.compare);
+          var bigmon = 0;
+          for (var i = 0; i < mony.length; i++) {
+            bigmon += mony[i]
+          }
         } else {
           var bigmon = mony
         }
 
         console.log(bigmon)
         this.setData({
-          deliveyMoney: bigmon[0]
+          deliveyMoney: bigmon
         })
       }
 
@@ -521,7 +453,7 @@ Page({
               if (this.data.goods[a].goodsId == this.data.limtgood[b]) { //是指定商品
                 limtarr.push({
                   goodsId: this.data.goods[a].goodsId,
-                  actualPayment: this.data.goods[a].actualPayment ,
+                  actualPayment: this.data.goods[a].actualPayment,
                   numbers: this.data.goods[a].number,
                   total: Number(this.data.goods[a].actualPayment) * Number(this.data.goods[a].number)
                 })
@@ -677,11 +609,7 @@ Page({
             })
           }
 
-
-
         }
-
-
 
       } else {
         if (Number(newmoney) < Number(this.data.amountMin)) {
@@ -714,7 +642,7 @@ Page({
   addressSkip: function (e) {
     //跳到地址管理
     wx.navigateTo({
-      url: '../myHome/address/index/list?id=' + this.data.customerId + '&select=' + 1
+      url: '../../packageMyHome/pages/address/index/list?id=' + this.data.customerId + '&select=' + 1
     })
   },
   bindPickerChange: function (e) {
@@ -725,18 +653,6 @@ Page({
       this.setData({
         index: e.detail.value,
         isSend: 0,
-        instruction: "",
-        amountMin: 0, //优惠满
-        amounts: 0, //优惠多少
-        instruction: '',
-        couponId: '',
-        name: '',
-        limtgood: ''
-      })
-    } else if (val[inx] == "店内下单") {
-      this.setData({
-        index: e.detail.value,
-        isSend: 1,
         instruction: "",
         amountMin: 0, //优惠满
         amounts: 0, //优惠多少
@@ -902,17 +818,11 @@ Page({
     this.setData({
       flagOrder: true
     })
-    if (this.data.isSend == 1) { //店内下单
-      //跳到店内下单
-      wx.redirectTo({
-        url: '../myHome/shopOrder/shopOrder'
-      })
-    } else {
-      //跳到线上订单
-      wx.redirectTo({
-        url: '../myHome/order/order'
-      })
-    }
+    //跳到线上订单
+    wx.redirectTo({
+      url: '../../../../../packageMyHome/pages/order/order'
+    })
+
 
   },
   selectCounp: function (e) {
@@ -945,118 +855,33 @@ Page({
 
     //判断是店内下单还是其他
     var isSd = this.data.isSend;
-
-    if (isSd == 1) { //店内下单
-      console.log("我是店内下单")
-    //  this.sumb2(1);
-    } else { //自提或快递
-      if (isSd == 0) { //快递
-        console.log("快递")
-        // 地址是否为空
-        var addre = this.data.address;
-        if (addre == "") {
-          wx.showToast({
-            title: '请先添加地址',
-            icon: 'none'
-          })
-          return false;
-
-
-        }
-        this.setData({
-          sures: false,
-          sure: true
+    //自提或快递
+    if (isSd == 0) { //快递
+      console.log("快递")
+      // 地址是否为空
+      var addre = this.data.address;
+      if (addre == "") {
+        wx.showToast({
+          title: '请先添加地址',
+          icon: 'none'
         })
-        this.sumb1(1);
-      } else { //自取
-        console.log("自取")
-        this.setData({
-          sures: false,
-          sure: true
-        })
-        this.sumb1(1);
+        return false;
       }
+      this.setData({
+        sures: false,
+        sure: true
+      })
+      this.sumb1(1);
+    } else { //自取
+      console.log("自取")
+      this.setData({
+        sures: false,
+        sure: true
+      })
+      this.sumb1(1);
     }
+
   },
-  // sumb2: function (type) {
-  //   console.log("店内下单")
-  //   var faid = this.data.facilityId;
-
-  //   //店内下单
-  //   var goodsList = [];//店内下单商品传参
-  //   var merchantId = this.data.merchantId;//商户主键
-  //   var userName = this.data.username;//用户名
-  //   var bussinessType = 1;
-  //   var payStatus = this.data.isPay;//支付状态（未支付0，成功1，失败2）
-  //   console.log(this.data.goods)
-  //   for (var i in this.data.goods) {
-  //     var goos = this.data.goods[i];
-  //     if (goos.stockId) {
-  //       goodsList.push({
-  //         actualPayment: goos.actualPayment,
-  //         goodsId: goos.goodsId,
-  //         goodsName: goos.goodsName,
-  //         goodsNum: goos.number,
-  //         goodsPrice: goos.stockPrice,
-  //         goodsType: goos.goodsType,
-  //         id: goos.id,
-  //         num: goos.number,
-  //         shopId: goos.shopId,
-  //         unitPrice: goos.unitPrice,
-  //         stockId: goos.stockId,
-  //         remake: goos.remake,
-  //         shouldPay: parseInt(goos.number) * Number(goos.stockPrice)
-  //       });
-  //     } else {
-  //       goodsList.push({
-  //         actualPayment: goos.actualPayment,
-  //         goodsId: goos.goodsId,
-  //         goodsName: goos.goodsName,
-  //         goodsNum: goos.number,
-  //         goodsPrice: goos.goodsPrice,
-  //         goodsType: goos.goodsType,
-  //         remake: goos.remake,
-  //         id: goos.id,
-  //         num: goos.number,
-  //         shopId: goos.shopId,
-  //         unitPrice: goos.unitPrice,
-  //         stockId: goos.stockId,
-  //         shouldPay: parseInt(goos.number) * Number(goos.goodsPrice)
-  //       });
-  //     }
-
-  //   }
-  //   app.util.reqAsync('shop/submitShopOrderV2', {
-  //     goodsList: goodsList,
-  //     userId: this.data.customerId,
-  //     shopId: this.data.shopId,
-  //     userName: this.data.username,
-  //     merchantId: merchantId,
-  //     price: this.data.totalMoney,
-  //     facilityId: this.data.facilityId
-  //   }).then((data) => {
-  //     this.setData({
-  //       showLoading: true
-  //     })
-
-  //     if (data.data.code == 9) {
-  //       wx.showToast({
-  //         title: data.data.msg,
-  //         icon: 'none'
-  //       })
-  //       wx.navigateTo({
-  //         url: '../shoppingCart/shoppingCart'
-  //       })
-  //     } else if (data.data.code == 1) { //需要调支付接口就要跳到详情页，再去支付调接口
-  //       this.setData({
-  //         flagOrder: false,
-  //         isPay: 1
-  //       })
-
-  //     }
-  //     wx.setStorageSync('discount', '');
-  //   })
-  // },
   sumb1: function (type) {
     console.log("快递或者字体")
     //快递或自提
@@ -1208,9 +1033,6 @@ Page({
       requestBody: {
         body: '云店小程序普通订单',
         out_trade_no: code,
-        //  notify_url: 'https://wxappprod.izxcs.com/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
-        // notify_url: 'http://apptest.izxcs.com:81/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
-        // notify_url: app.globalData.notify_url,
         trade_type: 'JSAPI',
         openid: wx.getStorageSync('scSysUser').wxOpenId
       }
@@ -1294,20 +1116,17 @@ Page({
       })
     });
   },
-  getMessage:function(no){
+  getMessage: function (no) {
     //支付成功调接口
     app.util.reqAsync('shop/getRoomIdSendMessage', {
-      orderNo:no, //订单编号
+      orderNo: no, //订单编号
       shopId: this.data.shopId, //店铺id
       userCode: this.data.userCode//云信账号
     }).then((data) => {
-      if(data.data.code==1){
-        
-      }else{
-        wx.showToast({
-          title: data.data.msg,
-          icon: 'none'
-        })
+      if (data.data.code == 1) {
+
+      } else {
+        console.log(data.data.msg)
       }
 
     })

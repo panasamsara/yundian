@@ -3,36 +3,63 @@ var app = getApp();
 Page({
   data: {
     orderList: [],
-    activeIndex: "",
+    activeIndex:"",
     flag: false, //手机系统是否是ios
     shopId: '',
-    userId: '',
+    userId:'',
     presaleId: '', //订单id
-    facilityId: '', //座位号
-    facilityName: '',
-    shopName: '',
-    scPresaleInfoList: [],
-    shouldPay: '',
-    total: 0,
+    facilityId:'', //座位号
+    facilityName:'',
+    shopName:'',
+    scPresaleInfoList:[],
+    shouldPay:'',
+    total:0,
     flagOrder: true,
-    memberId: '',
-    subaccountId: '',
-    discount: '',
-    orderStatus: '',
-    merchantId: ''
+    memberId:'',
+    subaccountId:'',
+    discount:'',
+    orderStatus:'',
+    merchantId:'',
+    showCard:false, //是否显示会员选择区
+    cShadeifshow:true, //选择会员卡下方黑色遮罩
+    cardpop:true,
+    cardList:'',
+    selectMember:0, //页面跳转传参判断是否显示会员选择
+    ifSelectCard:true,
+    hasdiscount:true,
+    hasDiscountPrice:false,
+    actualPay:'',
+    card:'请选择会员卡',
+    discountDerate:'',
+    memberDerate:'',
+    totalAccout:'0.00',  //已优惠金额
+    principal:'',
+    principalFormat:'',
+    shadeIfshow:true,
+    ispayCard:true,
+    payway:'',
+    paywayshow:false,
+    limitBalance: 0, //0不限方式消费 1仅限会员卡余额消费
+    userCardPayWay:0, //0 选择会员卡后 ==>使用会员卡余额支付  1 后使用微信支付 
+    payStatus:0,
+    statuHid:true,
+    statuHids:true,
+    shopLogoUrl:'',
+    price:''
   },
   onLoad: function (options) {
+    console.log(options);
     var shop = wx.getStorageSync('shop');
-    this.setData({
+    this.setData({ 
       activeIndex: options.activeIndex,
       shopId: shop.id,
       userId: options.userId,
       presaleId: options.presaleId,
       facilityId: options.facilityId,
-      merchantId: options.merchantId
+      selectMember: options.selectMember
     })
-    console.log(options.activeIndex)
-
+    this.getusercard();
+    this.getInfo();//获取数据
     var that = this; //获取手机系统是否是ios
     wx.getSystemInfo({
       success: function (res) {
@@ -49,16 +76,16 @@ Page({
 
       }
     })
-
-    this.getInfo();//获取数据
+    
   },
-  onShow: function (e) {
+  onShow:function(e){
+    this.getusercard();
     this.getInfo();
   },
   appSkip: function (e) { //点击跳转到app下载页
     wx.navigateTo({ url: "/pages/myHome/downLoadIos/downLoadIos?flag=" + this.data.flag });
   },
-  offlineSkip: function (e) { //跳到云店首页
+  offlineSkip:function(e){ //跳到云店首页
     wx.switchTab({ url: "../../../index/index" });
   },
   againBuy: function (e) { //再来一单
@@ -72,20 +99,29 @@ Page({
       userId = e.currentTarget.dataset.userid,
       shopId = e.currentTarget.dataset.shopid
     wx.navigateTo({
-      url: "../../../../packageOffline/pages/proList/proList"
+      url: "../../../../packageOffline/pages/proList/proList?discount=" + this.data.discount
     });
   },
   buyOrder: function (e) { //结算支付
     var code = e.currentTarget.dataset.no;//订单编号
     var name = e.currentTarget.dataset.name;//商品名
     var shopid = e.currentTarget.dataset.shopid;
-    this.bindTestCreateOrder(code, name, this.data.shouldPay, shopid);
+    // 判断是否有选择会员子账户 subaccountId
+    if (this.data.subaccountId){
+      this.setData({
+        shadeIfshow: false,
+        ispayCard:false
+      })
+      this.getShopsPayway();  
+    }else{
+      this.bindTestCreateOrder(code, name, this.data.actualPay, shopid);      
+    }
   },
-  bindTestCreateOrder: function (code, name, price, shopid) {
+  bindTestCreateOrder: function (code, name,price,shopid) {
     var data = {
       subject: name, //商品名
       shopId: shopid, //店铺id
-      amount: this.data.shouldPay,
+      amount: price,
       requestBody: {
         body: '云店小程序店内下单',
         out_trade_no: code, //订单编号
@@ -127,29 +163,21 @@ Page({
           'signType': 'MD5',
           'paySign': paySign,
           'success': function (res) {
+            this.sendMessage();
             console.log("支付成功")
-            console.log(that.data.shouldPay)
             that.setData({
-              flagOrder: false
+              flagOrder:false
             })
-            that.getMessage();
-          },
+           },
           'fail': function (res) {
             that.getInfo()
           },
           'complete': function (res) {
-
-            console.log('支付成功回调-------------',res)
-            if (res.errMsg == "requestPayment:ok"){
-              wx.sendSocketMessage({
-                data: '已结算'
-              })
-            }
+            console.log(res);
           }
         })
-
       } else {
-        if (res.data.data == 'overdue payment') {
+        if(res.data.data=='overdue payment'){
           wx.showToast({
             title: res.data.msg,
             icon: 'none'
@@ -157,13 +185,13 @@ Page({
           wx.navigateTo({
             url: "../../../../packageOffline/pages/proList/proList"
           });
-        } else {
+        }else{
           wx.showToast({
             title: res.data.msg,
             icon: 'none'
           })
         }
-
+        
       }
 
     }).catch((err) => {
@@ -173,33 +201,144 @@ Page({
       })
     });
   },
-  getInfo: function (e) {
-    this.setData({
-      hidden: false
-    })
+  // 支付成功推送消息
+  sendMessage:function(){
     //获取订单详情
+    app.util.reqAsync('shop/getRoomIdSendMessage', {
+      orderNo: this.data.presaleId,
+      shopId: this.data.shopId,
+      userCode: wx.getStorageSync('scSysUser').usercode,
+      type: 1
+    }).then((res) => {
+
+    }).catch((err) => {
+      wx.showToast({
+        title: '',
+        icon: 'none'
+      })
+    })
+  },
+  getInfo:function(){
+    console.log("getInfo================================>")
+    this.setData({
+      hidden:false
+    })
+    this.getPresale(this.data.presaleId);
+  },
+  // orderid 订单id，actualprice 实际需支付金额
+  getPresale: function (orderid){
+    console.log("getPresale================================>")
     app.util.reqAsync('shopOrder/getPresaleByCondition', {
       shopId: this.data.shopId,
       userId: this.data.userId,
-      presaleId: this.data.presaleId, //订单id
+      presaleId: orderid, //订单id
       facilityId: this.data.facilityId
     }).then((res) => {
       if (res.data.code == 1) {
-
         this.setData({
-          orderList: res.data.data,
           facilityName: res.data.data.facilityName,
           shopName: res.data.data.shopName,
           scPresaleInfoList: res.data.data.scPresaleInfoList,
           shouldPay: res.data.data.shouldPay,
+          actualPay: res.data.data.actualPay.toFixed(2),
           total: res.data.data.scPresaleInfoList.length,
           memberId: res.data.data.memberId,
           subaccountId: res.data.data.subaccountId,
           discount: res.data.data.discount,
           orderStatus: res.data.data.orderStatus,
-          hidden: true
+          hidden: true,
+          discountDerate: res.data.data.discountDerate.toFixed(2),
+          memberDerate: res.data.data.memberDerate.toFixed(2),
+          shopLogoUrl: res.data.data.shopLogoUrl || '',
+          totalAccout: Number(res.data.data.discountDerate.toFixed(2)) + Number(res.data.data.memberDerate.toFixed(2))
         })
-        console.log(this.data.orderList)
+        console.log("shouldPay===============>" + this.data.shouldPay)
+        for (var i in this.data.scPresaleInfoList){
+          // 重置留店商品价格
+          if (this.data.scPresaleInfoList[i].purchaseType == 6) {
+            this.data.scPresaleInfoList[i].unitPrice = 0;
+            this.data.scPresaleInfoList[i].preferentialAmount = 0;
+          }
+          this.data.scPresaleInfoList[i].unitPrice = Number(this.data.scPresaleInfoList[i].unitPrice).toFixed(2);
+          if (this.data.scPresaleInfoList[i].preferentialAmount){
+            this.data.scPresaleInfoList[i].preferentialAmount = Number(this.data.scPresaleInfoList[i].preferentialAmount).toFixed(2);    
+          }
+          // 是否有折扣商品，有则显示指定商品优惠
+          if (this.data.scPresaleInfoList[i].enableType == 1){
+            var enList = [];
+            enList.push(this.data.scPresaleInfoList[i]);
+            console.log(enList)
+            if (enList.length>=1){
+              this.setData({
+                hasDiscountPrice: true
+              })
+            }
+          }
+        }
+        // 判断会员卡余额是否充足
+        if (this.data.cardlist){
+          for (var j in this.data.cardlist) {
+            if (this.data.cardlist[j].principal < this.data.shouldPay) {
+              this.data.cardlist[j].ishort = 0   // 1 会员卡余额充足  0 余额不足
+            }
+          }
+        }
+        this.setData({
+          cardlist: this.data.cardlist || '',
+          scPresaleInfoList: this.data.scPresaleInfoList
+        })
+        // 判断订单当前是否有打折
+        if (this.data.discount == 100) {
+          this.setData({
+            hasdiscount: false
+          })
+        }else{
+          this.setData({
+            hasdiscount: true
+          })
+        }
+        console.log(res.data.data.payStatus ==4)
+        //状态为4按钮变为立即结算
+        if (res.data.data.payStatus == 4){
+          this.setData({
+            statuHid:true,
+            statuHids:false,
+            payStatus: res.data.data.payStatus
+          })    
+        }else{
+          this.setData({
+            statuHid: false,
+            statuHids: true,
+            payStatus: res.data.data.payStatus
+          })
+        }
+
+        // 判断默认是否有选择会员卡
+        var businname = '', discountFormat = '', principalFormat = '';
+        if (res.data.data.subaccountId){
+          console.log("有会员卡====================>" + res.data.data.subaccountId)
+          console.log(this.data.cardlist)
+          if (this.data.cardlist) {
+            for (var i in this.data.cardlist) {
+              if (this.data.cardlist[i].id == res.data.data.subaccountId) {
+                businname = this.data.cardlist[i].businessName,
+                discountFormat = this.data.cardlist[i].discountFormat,
+                principalFormat = this.data.cardlist[i].principalFormat
+              }
+            }
+          }
+          console.log("会员卡名称====================>" + businname)
+          this.setData({
+            card: this.data.shopName + businname,
+            principalFormat: principalFormat
+          })
+        }else{
+          console.log("无会员卡")          
+          this.setData({
+            card: "请选择会员卡",
+            usecard: false
+          })
+        }
         wx.setStorageSync("orderInfo", res.data.data)
       } else {
         wx.showToast({
@@ -210,12 +349,12 @@ Page({
     }).catch((err) => {
       console.log(err)
       wx.showToast({
-        title: '获取服务异常',
+        title: '',
         icon: 'none'
       })
     })
   },
-  goShop: function (e) {
+  goShop:function(e){
     //再来一单
     this.setData({
       flagOrder: true
@@ -224,31 +363,344 @@ Page({
       url: '../../../../packageOffline/pages/proList/proList'
     });
   },
-  look: function (e) {
+  look:function(e){
     //查看详情
     this.setData({
       flagOrder: true
     })
     this.getInfo();
+    this.setData({
+      showCard: false
+    })
   },
-  getMessage: function () {
-    //支付成功调接口
-    app.util.reqAsync('shop/getRoomIdSendMessage', {
-      orderNo: this.data.presaleId,
-      shopId: this.data.shopId,
-      userCode: wx.getStorageSync('scSysUser').usercode,
-      type: 1
-    }).then((data) => {
-      if (data.data.code == 1) {
+  // 店内下单查询用户会员子账户
+  opencard:function(e){
+    if (this.data.orderStatus != 3){
+      this.setData({
+        cShadeifshow: false,
+        cardpop: false
+      })
+    }
+  },
+  // 查询用户会员子账户
+  getusercard:function(){
+    console.log("getusercard================================>")
+    var that = this;
+    var shop = wx.getStorageSync('shop');
+    var user = wx.getStorageSync('scSysUser');
+    app.util.reqAsync('shop/getMemberInfoForOrder', {
+      userId: that.data.userId || user.id,
+      merchantId: that.data.merchantId || shop.merchantId
+    }).then((res) => {
+      if (res.data.code == 1) {
+        if(res.data.data){
+          if (that.data.selectMember == 1){
+            that.setData({
+              showCard: true
+            })
+          }
+          var cardlist = new Array();
+          for (var i = 0;i<res.data.data.length;i++) {
+            res.data.data[i].principalFormat = Number(res.data.data[i].principal).toFixed(2);
+            res.data.data[i].discountFormat = that.discountFormat(res.data.data[i].discount);
+            var obj={
+              id: res.data.data[i].id,
+              discount: res.data.data[i].discount,
+              discountFormat: res.data.data[i].discountFormat,
+              principal: res.data.data[i].principal,
+              principalFormat: res.data.data[i].principalFormat,
+              businessName: res.data.data[i].businessName,
+              ishort: 1   // 1 会员卡余额充足  0 余额不足
+            }
+            cardlist.push(obj);
+          }
 
+          that.setData({
+            cardlist: cardlist
+          })    
+          console.log("会员卡列表==========>" ); 
+          console.log(this.data.cardlist); 
+          // // debugger
+          // // for (var i in this.data.cardlist){
+          // //   if (this.data.cardlist[i].id == this.data.subaccountId){
+          // //     var businessname = this.data.cardlist[i].businessName
+          // //   }
+          // // }
+          // this.setData({
+          //   card: this.data.shopName + businname
+          // })
+        }
       } else {
         wx.showToast({
-          title: data.data.msg,
+          title: res.data.msg,
           icon: 'none'
         })
       }
-
+    }).catch((err) => {
+      console.log(err)
+      wx.showToast({
+        title: '失败',
+        icon: 'none'
+      })
     })
+  },
+  closepop:function(){
+    this.setData({
+      cShadeifshow:true,
+      cardpop:true
+    })
+  },
+  // 金额格式化，保留2位小数
+  getMoneyFormat: function (num){
+    var num = num.toString().replace(/\$|\,/g, '');
+    if (isNaN(num)){
+      wx.showToast({
+        title: '金额传参数有误',
+        icon: 'none'
+      })
+    }
+    var result = Math.round(num * 100) / 100;
+    var xsd = result.toString().split(".");
+    // console.log(xsd.length);
+    if (xsd.length == 0) {
+      var value = result.toString() + ".00";
+      return value;
+    }
+    if (xsd.length == 1) {
+      var value = xsd[0].toString() + ".00";
+      return value;
+    }
+    if (xsd.length > 1) {
+      if (xsd[1].length < 2) {
+        var value = xsd[1].toString() + "0";
+      }
+      if (xsd[1].length == 2) {
+        var value = result;
+      }
+      return value;
+    }
+  },
+  // 折扣格式化
+  discountFormat:function(num){
+    var num = num.toString().replace(/\$|\,/g, '');
+    if (isNaN(num)) {
+      wx.showToast({
+        title: '金额传参数有误',
+        icon: 'none'
+      })
+    }
+    var result = num/10;
+    return result;
+  },
+  // 暂不使用会员卡
+  nouseCard: function () {
+    app.util.reqAsync('shop/updateShopOrderMoney', {
+      subaccountId: 0,  //子账户主键
+      discount: 100,  //会员折扣
+      customerId: wx.getStorageSync('scSysUser').id,  //用户id
+      memberMoney: this.data.actualPay, //应支付总金额
+      shopId: this.data.shopId || wx.getStorageSync('shop').id,  //店铺id
+      presaleId: this.data.presaleId  //店内订单id
+    }).then((res) => {
+      if (res.data.code == 1) {
+        this.closeSelCard()
+        this.setData({
+          shouldPay: res.data.data.price,
+          card: '暂不使用会员卡',
+          hasdiscount:false
+        })
+        console.log(this.data.hasdiscount)
+        this.getPresale(res.data.data.orderId);
+      } else {
+        wx.showToast({
+          title: res.data.msg,
+          icon: 'none'
+        })
+      }
+    }).catch((err) => {
+      wx.showToast({
+        title: '',
+        icon: 'none'
+      })
+    })
+  },  
+  // 选择会员卡
+  iuseCard:function(e){
+    var id = e.currentTarget.id.split('_')[1];
+    var principal = e.currentTarget.id.split('_')[2];
+    var principalFormat = e.currentTarget.id.split('_')[3];
+    var discount = e.currentTarget.id.split('_')[4];
+    var discountFormat = e.currentTarget.id.split('_')[5];
+    var ishort = e.currentTarget.id.split('_')[6];
+    var businessname = e.currentTarget.dataset.businessname;
+    var user = wx.getStorageSync('scSysUser');
+    var shop = wx.getStorageSync('shop');
+    if (ishort==1){
+      app.util.reqAsync('shop/updateShopOrderMoney', {
+        subaccountId: id,  //子账户主键
+        discount: discount,  //会员折扣
+        customerId: user.id,  //用户id
+        memberMoney: this.data.actualPay, //应支付总金额
+        shopId: this.data.shopId || shop.id,  //店铺id
+        presaleId: this.data.presaleId  //店内订单id
+      }).then((res) => {
+        if (res.data.code == 1) {
+          console.log(res.data.data.price)
+          var price = res.data.data.price;
+          var orderId = res.data.data.orderId;
+          this.getPresale(orderId);
+          if (discount!=100){
+            this.setData({
+              hasdiscount: true,
+              price: price
+            })
+          }
+
+          if (price != 0) {
+            var reducedata = (Number(this.data.shouldPay) - Number(price)).toFixed(2);
+            console.log(reducedata)
+            this.setData({
+              totalAccout: reducedata
+            })
+          } else {
+            this.setData({
+              totalAccout: this.data.shouldPay
+            })
+          }
+
+          this.setData({
+            card: this.data.shopName + businessname,
+            actualPay:Number(price).toFixed(2),
+            principal: principal,
+            principalFormat: principalFormat,
+            cShadeifshow:true,
+            cardpop:true,
+            discount: discount
+          })
+          if (discountFormat!=10){
+            this.setData({
+              usecard: true
+            })
+          }
+        } else {
+          wx.showToast({
+            title: res.data.msg,
+            icon: 'none'
+          })
+        }
+      }).catch((err) => {
+        wx.showToast({
+          title: '',
+          icon: 'none'
+        })
+      })
+    }else{
+      wx.showToast({
+        title: "此卡余额不足，暂时无法使用",
+        icon: 'none'
+      })
+      this.closeSelCard();
+    }
+  },
+  // 关闭会员卡列表
+  closeSelCard:function(){
+    this.setData({
+      cShadeifshow: true,
+      cardpop: true
+    })
+  },
+  // 关闭会员卡支付
+  closePaycard:function(){
+    this.setData({
+      shadeIfshow:true,
+      ispayCard:true
+    })
+  },
+  // 判断使用会员卡，商家是否限制消费方式
+  getShopsPayway:function(){
+    console.log("获取商家是否限制消费方式")
+    app.util.reqAsync('shop/getLimitBalanceCheckout', {
+      subaccountId: this.data.subaccountId //int 会员卡id
+    }).then((res) => {
+      console.log(res)
+      if (res.data.code == 1) {
+        this.setData({
+          limitBalance: res.data.data.limitBalance   // 0不限方式消费 1仅限会员卡余额消费 
+        })
+      } else {
+        wx.showToast({
+          title: res.data.msg,
+          icon: 'none'
+        })
+      }
+    }).catch((err) => {
+      wx.showToast({
+        title: '',
+        icon: 'none'
+      })
+    })
+  },
+  // 选用会员卡后更换支付方式
+  UserCardchangePayway:function(e){
+    var userCardPayWay = this.data.userCardPayWay;
+    if (userCardPayWay==0){
+      this.setData({
+        userCardPayWay : 1
+      })
+    }else{
+      this.setData({
+        userCardPayWay: 0
+      })
+    }
+    console.log("userCardPayWay=====>" + this.data.userCardPayWay + "limitBalance=========> " + this.data.limitBalance)
+  },
+  // 确定支付
+  confirmPay:function(){
+    var userCardPayWay = this.data.userCardPayWay;
+    var presaleId = this.data.presaleId;
+    var purchaseName = this.data.scPresaleInfoList[0].purchaseName;
+    var shopId = this.data.shopid || wx.getStorageSync('shop').id;
+                     
+    // 0 会员卡余额支付
+    if (userCardPayWay==0){
+      console.log("会员卡余额支付=======================")
+
+      app.util.reqAsync('shop/checkoutMiniProgram', {
+        presaleId: this.data.presaleId, //int 店内订单主键
+        orderMoney: this.data.actualPay //double 订单实际支付金额
+      }).then((res) => {
+        console.log(res.data.code)
+        if (res.data.code == 1) {
+          this.setData({
+            flagOrder: false,
+            showCard:false,
+            payway: "会员卡",
+            paywayshow:true
+          })
+          this.getusercard();
+          this.closePaycard();
+        } else {
+          wx.showToast({
+            title: res.data.msg,
+            icon: 'none'
+          })
+        }
+      }).catch((err) => {
+        wx.showToast({
+          title: '',
+          icon: 'none'
+        })
+      })
+    } 
+    // 1 微信支付
+    else if(userCardPayWay == 1){
+      console.log("微信支付=======================" + this.data.actualPay)
+      this.bindTestCreateOrder(presaleId, purchaseName, this.data.actualPay, shopId); 
+    }
+  },
+  myCatchTouch:function(){
+    console.log("阻止下方页面滚动");
+    return;
   }
 
 })

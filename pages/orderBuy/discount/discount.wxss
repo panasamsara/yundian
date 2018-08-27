@@ -73,3 +73,7 @@
   color:rgba(254,115,45,1);
   font-size:24rpx !important;
 }
+.jiange{
+  width: 100%;
+  height: 90rpx;
+}

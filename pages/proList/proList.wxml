@@ -112,6 +112,7 @@
           
         </view>
         </scroll-view>
+        <view class='shopcart-bootom'></view>
       </view>
     </view>
   </view>

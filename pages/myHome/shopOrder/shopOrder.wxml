@@ -52,7 +52,7 @@
        <!--未完成-->
           <view class="noover" wx:if="{{activeIndex==0}}">
             <view class="button red-btn" data-no="{{item.id}}"  size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" data-name="{{item.goodsName}}" data-price="{{item.shouldPay}}" data-userid="{{item.userId}}" data-shopid="{{item.shopId}}"data-presaleId="{{item.presaleId}}" disabled="{{disabled}}" data-facilityid="{{item.facilityId}}" bindtap="buyOrder" hover-class="other-button-hover"> 结算 </view>
-            <view class="button white-btn" data-no="{{item.id}}" data-name="{{item.goodsName}}"  size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" disabled="{{disabled}}" data-userid="{{item.userId}}"  bindtap="goOn" data-price="{{item.shouldPay}}" data-shopid="{{item.shopId}}" data-facilityid="{{item.facilityId}}" data-memberid ="{{item.memberId}}" data-subaccountid="{{item.subaccountId}}" data-discount="{{item.discount}}" hover-class="other-button-hover"> 继续添加 </view>
+            <view hidden="{{isHid}}" class="button white-btn" data-no="{{item.id}}" data-name="{{item.goodsName}}"  size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" disabled="{{disabled}}" data-userid="{{item.userId}}"  bindtap="goOn" data-price="{{item.shouldPay}}" data-shopid="{{item.shopId}}" data-facilityid="{{item.facilityId}}" data-memberid ="{{item.memberId}}" data-subaccountid="{{item.subaccountId}}" data-discount="{{item.discount}}" hover-class="other-button-hover"> 继续添加 </view>
           </view>
           <!--已完成-->
           <!-- <view class="over" wx:if="{{activeIndex==1}}">
@@ -68,7 +68,7 @@
     <image class="order-success" src="../../../../images/success.png"></image>
     <view class="modal-content">
       <text>支付成功!</text>
-      <text>查看此订单</text>
+      <text>选择再来一单或查看此订单</text>
     </view>
     <view class="modal-btn">  
       <!-- <text class="knowBtn" bindtap="goShop">再来一单</text> -->

@@ -46,8 +46,6 @@ Page({
     // util.getShop(user.id, options.shopId).then((res) => {
     //   wx.setStorageSync('shop', res.data.data.shopInfo);
     // })
-    console.log(options.goodsId)
-    console.log(options.shopId)
   },
   onshow: function () { //缓存店铺信息（分享切店铺）
     var shopId = this.data.shopId

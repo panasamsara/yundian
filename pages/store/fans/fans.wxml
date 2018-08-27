@@ -14,7 +14,7 @@
     </view>
     <scroll-view class="teamBox" scroll-x="true">
       <view class='team' wx:for="{{datas.groupList}}" wx:key="index" wx:for-item="item">
-        <image src='{{item.logo}}'></image>
+        <image src='{{item.detailPic}}'></image>
         <view class='infoBox'>
           <text class='teamName'>{{item.detailName}}</text>
           <text class='total'>{{item.personCount}}</text>

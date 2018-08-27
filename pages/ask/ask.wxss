@@ -36,13 +36,24 @@
   vertical-align: top;
 }
 .text-top{
-  display: inline-block;
-  padding-bottom: 35rpx;
+  display: -webkit-box;
+  height: 40rpx;
+  margin-bottom: 10rpx;
   word-break:break-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical; 
+  -webkit-line-clamp: 1;
 }
 .text-bot{
+  display: -webkit-box;
   color:#959595;
   line-height: 34rpx;
+   word-break:break-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical; 
+  -webkit-line-clamp: 3;
 }
 .top .text-right{
   width:150rpx;

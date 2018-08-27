@@ -1,5 +1,10 @@
 /**index.wxss**/
-
+.left{
+  float: left;
+}
+.right{
+  float: right;
+}
 page, .main{
     height: 100%;
     background-color: #f8f8f8;
@@ -125,40 +130,40 @@ page, .main{
 }
 #detail{
   background-color: #f8f8f8;
-  /* height:auto;
-  overflow-y:auto; */
 }
 .coupon{
   background-color: #fff;
-  width: 700rpx;
-  height: 100rpx; 
+  height: 70rpx; 
   border-radius: 10rpx;
-  position: relative;
-  top: 30rpx;
-  left: 25rpx;
-  margin-bottom: 60rpx;
+  font-size:24rpx;
+  margin: 30rpx 25rpx;
+  padding-top: 30rpx;
+  color: #666;
 }
+
 .coupon-img{
   width: 190rpx;
   height: 32rpx;
   display: inline-block;
-  position: relative;
-  top: 28rpx;
-  left: 30rpx;
+  vertical-align: middle;
+  margin-left: 30rpx;
+  margin-right: 20rpx;
+  margin-top:2rpx;
 }
 .coupon-txt{
-  position:relative;
-  left: 46rpx;
-  top:22rpx;
+  position:absolute;
+  left: 246rpx;
   font-size:24rpx;
   color:#868686;
 }
 .coupon-icon{
-  position: absolute;
   width: 24rpx;
   height: 24rpx;
   right: 20rpx;
-  top:38rpx;
+  top: 8rpx;
+  vertical-align: middle;
+  margin-right: 30rpx;
+  margin-top:5rpx;
 }
 .tuijian{
   padding:0 30rpx;
@@ -209,8 +214,9 @@ page, .main{
   height: 100%;
 }
 .item-text{
-  height: 18rpx;
-  font-size: 30rpx;
+  height: 24rpx;
+  line-height:38rpx;
+  font-size: 32rpx;
   display: block;
   padding: 20rpx 12rpx;
   overflow: hidden;
@@ -649,13 +655,7 @@ putInCart-img{
   background-color: rgba(255, 255, 255, 1);
   padding: 20rpx 0 0 0;
 }
-.quan-close-btn{
-  position: absolute;
-  width: 54rpx;
-  height: 55rpx;
-  right: 20rpx;
-  top: -20rpx;
-}
+
 .quan-box view:last-of-type .quan-box-detail{
   margin-bottom: 40rpx;
 }

@@ -1,3 +1,4 @@
+
 <view>
   <view class='title'>{{articleDetail.articleTitle}}</view>
   <view class='user'>
@@ -9,5 +10,7 @@
       <view class='releaseTime'>{{articleDetail.releaseTime}}</view>
     </view>
   </view>
-  <view class='content'>{{articleDetail.articleContent}}</view>
+  <view class='content'>
+    <wxparser  rich-text="{{articleDetail.articleContent}}" />
+  </view>
 </view>

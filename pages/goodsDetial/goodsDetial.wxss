@@ -928,18 +928,21 @@ view.normalBuy #buyNow,view.normalBuy #addCart{
 }
 
 /* 优惠券弹出层样式 */
-.quan-box{
+.quanContainer{
   position:fixed;
   left: 0;
   bottom: 0;
   z-index: 9999;
   width: 100%;
-  height: auto;
-  background-color: rgba(255, 255, 255, 1);
-  padding: 20rpx 0 0 0;
+  height: 800rpx;
 }
 
-.quan-box view:last-of-type .quan-box-detail{
+.quan-box{
+  height: 800rpx;
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.quan-box .quan-box-detail{
   margin-bottom: 40rpx;
 }
 
@@ -1146,7 +1149,14 @@ canvas{
 .quan-close-btn{
   position: absolute;
   width: 54rpx;
-  height: 55rpx;
+  height: 54rpx;
   right: 20rpx;
-  top: -20rpx;
+  top: -27rpx;
+  z-index: 99999;
+}
+
+.leftBox{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }

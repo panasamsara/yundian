@@ -1,0 +1,148 @@
+.left{
+  float: left;
+}
+.right{
+  float: right;
+}
+.font20{
+  font-size: 20rpx;
+}
+.font30{
+  font-size: 30rpx;
+  font-weight: bold;
+}
+.font60{
+  font-size: 60rpx;
+  font-weight: bold;
+}
+page{
+  background: #f8f8f8;
+  padding-bottom: 40rpx;
+}
+.banner_bg{
+  width: 100%;
+  height: 332rpx;
+  position: relative;
+}
+.banner_bg image,.bg{
+  width: 100%;
+  height: 332rpx;
+  position: absolute;
+}
+.bg .title{
+	font-size: 46rpx;
+	letter-spacing: 1px;
+	color: #ffffff;
+  text-align: center;
+  margin: 35rpx 0 0rpx;
+}
+.bg .des{
+	font-size: 24rpx;
+	color: #ffffff;
+  text-align: center;
+}
+.bg .getDes{
+  width: 264rpx;
+	height: 70rpx;
+	background-image: linear-gradient(270deg, 
+		#fe1e5d 0%, 
+		#fe4444 80%), 
+	linear-gradient(
+		#fff5f2, 
+		#fff5f2);
+	background-blend-mode: normal, 
+		normal;
+	box-shadow: 0rpx 12rpx 12rpx 0rpx 
+		rgba(254, 42, 85, 0.31);
+	border-radius: 35px;
+  font-size: 28rpx;
+  color: #fff;
+  line-height: 70rpx;
+  text-align: center;
+  margin: 90rpx  auto 0rpx;
+}
+.content{
+  text-align: center;
+  margin-bottom: 20rpx;
+}
+.content .navTitle{
+ padding: 30rpx 0 20rpx;
+ background: #fff;
+}
+.content .navTitle image{
+  width: 124rpx;
+  height: 6rpx
+}
+.content .navTitle text{
+  vertical-align: middle;
+  padding:  0 20rpx;
+  color: #333;
+  font-size: 30rpx;
+}
+.list{
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  clear: both;
+  float: none;
+  height: 230rpx;
+  background: #fff;
+}
+.list image{
+  width:690rpx;
+  height: 215rpx;
+  position: absolute;
+  left: 20rpx;
+}
+.list .con{
+  width: 100%;
+  position: absolute;
+  top: 80rpx;
+}
+.list .con view{
+  color: #fff;
+}
+.list .con .rule{
+  position: absolute;
+  left: 240rpx;
+}
+.price{
+  margin-left: 40rpx;
+}
+.rule view{
+  text-align: left;
+}
+.use{
+  width: 184rpx;
+	height: 64rpx;
+	background-color: rgba(255, 255, 255, 0.95);
+	box-shadow: 0px 4px 8px 0px 
+		rgba(146, 36, 8, 0.26);
+	border-radius: 31px;
+	border: solid 1px rgba(253, 94, 39, 0.95);
+	opacity: 0.95;
+  color: #fe5e26 !important;
+  line-height: 64rpx;
+  text-align: center;
+  font-size: 26rpx;
+  position:absolute;
+  right:14rpx;
+}
+.getDraw{
+	width: 184rpx;
+	height: 64rpx;
+	background-image: linear-gradient(-65deg, 
+		#fbc339 0%, 
+		#fda11b 100%);
+	box-shadow: 0px 4px 8px 0px 
+		rgba(146, 36, 8, 0.28);
+	border-radius: 31px;
+  font-size: 26rpx;
+  line-height: 64rpx;
+  position: absolute;
+  right: 14rpx;
+}

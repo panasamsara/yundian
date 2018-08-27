@@ -11,7 +11,7 @@ Page({
     goodsId:''
   },
   onLoad: function (options) {
-    console.log('1'+options);
+    console.log('111111111111111111111',options);
     shopId = options.shopId,
     goodsId = options.goodsId
   },
@@ -57,17 +57,34 @@ Page({
   onLoad: function (options) {
     var user = wx.getStorageSync('scSysUser')
     console.log(user);
-    //获取商品信息
-    var goodInfo = wx.getStorageSync('goodsInfo');
+
     this.setData({
       goodsId: options.goodsId,
       shopId: options.shopId,
-      goodsName: goodInfo.goodsName,
       userId: user.id,
-      picImg: goodInfo.pictureUrl 
     })
     var shop = wx.getStorageSync('shop');
     this.getData();  
+  },
+  onShow: function(){
+    var _this = this
+    var goodsId = this.data.goodsId
+    var shopId = this.data.shopId
+
+    var parm = {
+      shopId: shopId,
+      goodsId: goodsId,
+      customerId: wx.getStorageSync('scSysUser').id
+    }
+    //获取商品信息
+    app.util.reqAsync('shop/goodsDetailAddGroupBuying', parm).then((res) => {
+      console.log(res.data.data)
+      _this.setData({
+        picImg: res.data.data.pictureUrl,
+        goodsName: res.data.data.goodsName,
+        goodsDesc: res.data.data.descTitle
+      })
+    })
   },
   //下拉刷新
   onPullDownRefresh: function () {

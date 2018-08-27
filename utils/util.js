@@ -253,11 +253,11 @@ const checkWxLogin = (source=null) => {
             })
           },
           fail: () => {
-            reject({
-              title: '登陆失败，请稍后再试！',
-              icon: 'none',
-              duration: 2000
-            })
+            // reject({
+            //   title: '登陆失败，请稍后再试！',
+            //   icon: 'none',
+            //   duration: 2000
+            // })
           }
         })
       }
@@ -308,11 +308,11 @@ const checkWxLoginShare = (source = null) => {
             })
           },
           fail: () => {
-            // reject({
-            //   title: '登陆失败，请稍后再试！',
-            //   icon: 'none',
-            //   duration: 2000
-            // })
+            reject({
+              title: '登陆失败，请稍后再试！',
+              icon: 'none',
+              duration: 2000
+            })
           }
         })
       }

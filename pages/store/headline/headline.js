@@ -54,7 +54,7 @@ Component({
     getData:function(data){
       var oldData = this.data.list;
       app.util.reqAsync('shop/shopHomeArticles', data).then((res) => {
-        if(res.data.data){
+        if(res.data.data.length>0){
           var list = res.data.data;
           var newData = oldData.concat(list);
           for (var i = 0; i < list.length; i++) {
@@ -78,6 +78,12 @@ Component({
       }).catch((err) => {
         console.log(err);
         wx.hideLoading();
+      })
+    },
+    skip:function(e){
+      var articleId = e.currentTarget.dataset.articleid;
+      wx.navigateTo({
+        url: '../../../../../packageIndex/pages/articleDetail/articleDetail?articleId=' + articleId,
       })
     }
   }

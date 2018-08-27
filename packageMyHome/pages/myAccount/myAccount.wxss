@@ -1,0 +1,245 @@
+page{
+  background: #f8f8f8;
+}
+.colorfff{
+  color: #fff;
+}
+.font26{
+  font-size: 26rpx;
+}
+.font28{
+  font-size: 28rpx;
+}
+.font50{
+  font-size: 50rpx !important;
+}
+.color0036{
+  color: #ff0032
+}
+.color666{
+  color: #666;
+}
+.paddingb{
+  padding-bottom: 100rpx;
+}
+.left{
+  float: left;
+}
+.right{
+  float: right;
+}
+.swiper-item{
+  width: 100%;
+  height: 328rpx;
+  position: relative;
+}
+.swiper-item>view{
+  position: absolute;
+}
+.swiper{
+  margin-top: 20rpx;
+  width: 690rpx;
+  margin-left: 30rpx;
+  height: 328rpx;
+}
+.swiper swiper{
+  height: 328rpx;
+}
+.swiper-item image{
+  width: 100%;
+  height: 350rpx;
+}
+.kaType{
+  left: 34rpx;
+  top: 30rpx;
+}
+.kaType image{
+  width: 32rpx;
+  height: 26rpx;
+  vertical-align: middle;
+  margin-right: 10rpx;
+}
+.xfInfo{
+  right: 34rpx;
+  top: 30rpx;
+}
+.xfInfo image{
+  width: 22rpx;
+  height: 26rpx;
+  vertical-align: middle;
+  margin-right: 10rpx;
+}
+.balance,.money{
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  font-size: 28rpx;
+}
+.balance{
+  top: 112rpx;
+}
+.money{
+  top: 150rpx;
+  font-size: 50rpx;
+}
+.expenditure{
+  margin-top: 20rpx;
+  position: relative;
+  height: 226rpx;
+}
+.common .bg{
+  width: 100%;
+  height: 226rpx;
+  position: absolute;
+}
+.expenditure view image{
+  width: 22rpx;
+  height: 26rpx;
+  margin-right: 10rpx;
+  vertical-align: middle;
+}
+.expenditure view{
+  font-size: 28rpx;
+  color: #333;
+}
+.expenditure>view{
+  text-align: center;
+  position: absolute;
+  width: 100%;
+}
+.expenditure .mingx{
+  top: 20rpx;
+  right: 30rpx;
+}
+.expenditure .activity{
+  top: 50rpx;
+}
+.expenditure .font50{
+  top: 88rpx;
+}
+.expenditure .time{
+  top: 152rpx;
+}
+.expenditure>view:first-child{
+  margin-top: 0;
+}
+.myka{
+  padding: 34rpx 0;
+  font-size: 34rpx;
+  color: #999;
+  overflow: hidden;
+  background: #f8f8f8;
+  width: 100%;
+  box-sizing: border-box;
+}
+.myka .img1{
+  width: 30rpx;
+  height: 34rpx;
+  margin-left: 30rpx;
+}
+.myka>view{
+  width: 49%;
+  text-align: center;
+}
+.myka>view:first-child{
+  border-right: 2rpx solid #E5E5E5;
+}
+.content{
+  width: 100%;
+  background: #f8f8f8;
+}
+.content .common{
+  position: relative;
+  margin-bottom: 20rpx;
+}
+.content .common .bg,.content .common{
+  height: 220rpx;
+  width: 100%;
+}
+.content .common .list,.content .common .list .type{
+  position: absolute;
+  top: 0
+}
+.list image{
+  width: 144rpx;
+  height: 44rpx;
+}
+.list .name{
+  position: absolute;
+  font-size: 26rpx;
+  color: #fff;
+  top: 0;
+  left: 25rpx;
+ line-height: 44rpx;
+}
+.content .common .info{
+  position: absolute;
+  left: 32rpx;
+  right: 32rpx;
+  top: 104rpx;
+  color: #333;
+  font-size: 34rpx;
+}
+.content .common .info view{
+  overflow: hidden;
+}
+.content .common .kaX{
+  top: 94rpx;
+}
+.content .common .kaX .left{
+  margin-bottom: 5rpx;
+  width: 400rpx;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.empty view{
+  font-size: 30rpx;
+  text-align: center;
+  color: #999;
+  margin-top: 20rpx;
+  margin-bottom: 20rpx;
+}
+.list-empty-img{
+  width: 326rpx;
+  height: 326rpx;
+  margin: 100rpx 212rpx 0; 
+}
+.lose{
+  height: 100rpx;
+  padding: 0 30rpx;
+  /* margin-top: 20rpx; */
+  background: #fff;
+  border-top: 20rpx solid #f8f8f8;
+}
+.lose text{
+  font-size: 32rpx;
+  height: 100rpx;
+  color: #333;
+  line-height: 100rpx;
+}
+.lose image{
+  width:16rpx;
+  height:24rpx;
+  vertical-align:middle;
+  margin-top:40rpx;
+}
+.leave text:first-child{
+  display: -webkit-box;
+  color:#000000;
+  line-height: 40rpx;
+  word-break: break-all;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp:2;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  width: 400rpx;
+  font-size: 34rpx;
+  color: #333;
+}
+.leave .info{
+  top: 66rpx !important;
+}
+.active{
+  color: #333 !important;
+}

@@ -29,16 +29,6 @@
     </view>
     <image bindtap="addressSkip" class="right-icon" src="../../images/yundian_spxq_gengduo.png"></image>
   </view>
-  <!--房间-->
-  <view class="room" wx:if="{{isSend==1&&offline==1}}">
-    <text>房间</text>
-    <text >{{scanRoom}}</text>
-  </view>
-  <view class="room" wx:if="{{isSend==1&&offline!=1}}" bindtap="show">
-    <text>房间</text>
-    <text wx:if="{{roomInx=='-1'}}" >请选择房间</text>
-    <text wx:if="{{roomInx!='-1'}}" >{{roomVal}}</text>
-  </view>
   <!--商品-->
   <view class="detail">
     <view class='detail-top'>
@@ -106,21 +96,6 @@
          bindtap="sumb" hover-class="other-button-hover"> 确认下单</button>
     <button hidden="{{sures}}" class='account-btn gray' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}"
           hover-class="other-button-hover"> 确认下单</button>
-  </view>
-</view>
-<!--房间弹出窗-->
-<view class="modal-box" hidden="{{flag}}">
-  <view class="modal-body">
-    <image src="../../images/yundian_yyxx_guanbi@2x.png" bindtap="hide"></image>
-    <view class="modal-title">选择房间</view>
-    <view class="modal-content">
-      <view  class="room-list {{roomInx==inx?'acv':''}}" wx:for="{{room}}" wx:for-item='rooms' wx:key="room" wx:for-index="inx" bindtap="selectRoom" data-index="{{inx}}" data-val="{{rooms.title}}" data-merchant="{{rooms.merchantId}}" data-facilityid="{{rooms.id}}">
-        {{rooms.title}}
-      </view>
-    </view>
-    <view class="modal-btn">
-      <button class="knowBtn" bindtap="syre" data-index="{{roomInx}}" data-merchant="{{merchantId}}" data-val="{{roomVal}}" data-facilityid="{{facilityId}}">确认</button>
-    </view>
   </view>
 </view>
 

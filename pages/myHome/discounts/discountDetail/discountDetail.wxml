@@ -10,9 +10,9 @@
      <view class='con'>
       <image class="shopIcon" src='{{discountsNew.shopLogoUrl}}'></image>
       <view class='shopname color666 font28 namecheck'>{{discountsNew.shopName}}</view>
-      <view class='font40 {{discountsNew.expireState!=0||res.data.data.couponUseDate != null?"color999":"colorred"}}' wx:if="{{discountsNew.promGoodsType==0}}">{{discountsNew.couponInstruction}}</view>
-      <view class='font40 {{discountsNew.expireState!=0||res.data.data.couponUseDate != null?"color999":"colorred"}}' wx:if="{{discountsNew.promGoodsType==1}}" wx:for="{{descArr}}" wx:key="{{index}}">{{item}}</view>
-      <view class='font36 text-overflow fontWeight color333' wx:if="{{discountsNew.promGoodsType==0}}" wx:for="{{quanDetail}}">{{item}}</view>
+      <view class='font40 {{discountsNew.expireState!=0||res.data.data.couponUseDate != null?"color999":"colorred"}}' wx:if="{{discountsNew.promGoodsType==0 ||discountsNew.promGoodsType==1}}">{{discountsNew.couponInstruction}}</view>
+      <view class='font36 text-overflow fontWeight color333' wx:if="{{discountsNew.promGoodsType==1}}" wx:for="{{descArr}}" wx:key="{{index}}">{{item}}</view>
+      <view class='font36 text-overflow fontWeight color333' wx:if="{{discountsNew.promGoodsType==0}}" wx:for="{{quanDetail}}" wx:key="key">{{item}}</view>
       <view wx:if="{{discountsNew.userCouponLogCount==1}}" class='color999 font26'>{{discountsNew.userCouponExpireTime}}</view>
       <view wx:if="{{share==1&&discountsNew.userCouponLogCount==0}}" class='bindGet' bindtap='bindGet'>立即领取</view>
       <view wx:if="{{share==1&&discountsNew.userCouponLogCount==1 ||share==4}}" class='getcon'>您已经领取过该礼包</view>

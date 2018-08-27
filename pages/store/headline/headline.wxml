@@ -1,6 +1,6 @@
 <!--pages/store/headline/headline.wxml-->
 <view class='container headline' wx:if="{{list.length!=0}}"> 
-  <view wx:for="{{list}}" wx:key="index" class='list'>
+  <view wx:for="{{list}}" wx:key="index" class='list'  bindtap='skip' data-articleId="{{item.articleId}}">
     <view class='contentBox'>
       <image src='{{item.scCmsResourcesList[0].resourcesUrl}}'></image>
       <view class='text'>

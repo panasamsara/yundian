@@ -45,7 +45,7 @@ Page({
       couponType4:'',
       animationData: {},
       outQrCodeParam:{},
-      timer: ''
+      shopHasCoupon: false
 
    },
    onReady() {
@@ -88,7 +88,7 @@ Page({
        var shop = wx.getStorageSync('shop')
 
        if (!shop) {
-         if (shopId == undefined || shopId == '' || shopId == null) {
+         if (shopId == undefined) {
            wx.redirectTo({
              url: '../scan/scan'
            })
@@ -185,25 +185,7 @@ Page({
        wx.removeStorageSync('shopId');
      })
     
-     // 缓存首页视频地址
-    //  var shop = wx.getStorageSync('shop');
- /*    if (shop) {
-       if (shop.shopHomeConfig) {
-         if (shop.shopHomeConfig.videoPathList.length != 0) {
-           let videoInfo = {}
-           videoInfo.url = shop.shopHomeConfig.videoPathList[0].filePath
-           videoInfo.cover = shop.shopHomeConfig.videoPathList[0].coverImagePath
-           wx.setStorageSync('videoInfo', videoInfo)
-         }
-       }
-       // 查看新人礼包
-       this.checkCoupon()
-     }*/
      
-   },
-   onHide: function(){
-     let _this = this
-     clearInterval(_this.data.timer)
    },
    // 获取店铺信息
   getShopInfo: function (resData) {
@@ -271,7 +253,6 @@ Page({
      } else {
        this.setData({ has720: true });
      }
-
      // 设置当前页面标题
      wx.setNavigationBarTitle({
        title: shop.shopName,
@@ -393,6 +374,14 @@ Page({
        }
      })
    },
+  //  goLive: function(){
+  //    var shop = wx.getStorageSync('shop');
+  //    wx.setStorageSync('videoUrl', shop.shopHomeConfig.livePath)
+  //   // 直播组件要用live-player重写
+  //    wx.navigateTo({
+  //      url: '../video/video',
+  //    })
+  //  },
    goSecKill: function(){
      wx.navigateTo({
        url: '../secKill/secKill',
@@ -450,9 +439,6 @@ Page({
            if (couponGoods[i].length > 8) {
              couponGoods[i] = couponGoods[i].substring(0, 8) + '...'
            }
-         }
-         if (couponGoods.length>=3){
-           couponGoods = couponGoods.slice(0,3)
          }
          this.setData({
            couponInfo: res.data.data,
@@ -623,7 +609,7 @@ Page({
          })
        }
        let _this = this
-       _this.data.timer = setInterval(function () { _this.count() }, 1000)
+       var timer = setInterval(function () { _this.count() }, 1000)
      }).catch((err) => {
        console.log(err)
      })
@@ -717,11 +703,14 @@ Page({
       shopId: wx.getStorageSync('shop').id
      }
      app.util.reqAsync('shop/getCouponList',datas).then((res) => {
+       let typeArr = []
        if (res.data.data) {
+         console.log('优惠券--------------------------',res)
          let list=res.data.data;
          for(let i=0;i<list.length;i++){
            list[i].beginTime = app.util.formatActivityDate(list[i].beginTime);
            list[i].endTime = app.util.formatActivityDate(list[i].endTime)
+           typeArr.push(list[i].couponType)
            if (list[i].couponType=='01'){//优惠券
              this.setData({
                couponType1:list[i]
@@ -732,9 +721,18 @@ Page({
              })
            } else if (list[i].couponType == '03'){//包邮
              this.setData({
-               couponType3: list[i]
+               couponType3: list[i],
              })
            }
+         }
+         if (typeArr.includes('01') || typeArr.includes('02') || typeArr.includes('03')){
+           this.setData({
+             shopHasCoupon: true
+           })
+         }else{
+           this.setData({
+             shopHasCoupon: false
+           })
          }
        }
      }).catch((err) => {
@@ -742,9 +740,13 @@ Page({
      })
    },
    showQuanBox:function(){
-     this.setData({
-       showQuanBox: true
+     // 跳转领券中心
+     wx.navigateTo({
+       url: '../../packageMyHome/pages/discountCenter/discountCenter'
      })
+    //  this.setData({
+    //    showQuanBox: true
+    //  })
    },
    get:function(e){
      let datas={

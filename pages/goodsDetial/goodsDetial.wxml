@@ -55,8 +55,8 @@
   </view> -->
   <!-- 优惠券部分 -->
   <view class='coupon' wx:if="{{status==3&&(couponType1||couponType2||couponType3)}}">
-    <view>
-      <image class='left' src='../../images/give.png'></image>
+    <view class='leftBox'>
+      <image class='left' src='../../images/prefer.png'></image>
     <text>领取优惠券</text> 
     </view>    
     <view class='right' bindtap='showQuanBox'>
@@ -268,44 +268,52 @@
   </view>
   <!-- 优惠券弹出层 -->
   <view class='mask' catchtouchmove='preventTouchMove' bindtap='closeQuanBox' wx:if='{{showQuanBox}}'></view> 
-  <view  class='quan-box'  wx:if='{{showQuanBox}}' catchtouchmove='preventTouchMove'>
+  <view class='quanContainer' wx:if='{{showQuanBox}}'>
     <image class='quan-close-btn' bindtap='closeQuanBox' src='../../images/close.png'></image>
-    <!-- 优惠券 -->
-    <view id='couponType1' wx:if="{{couponType1.name}}">
-      <text class='header'>{{couponType1.name}}</text>
-      <view class='quan-box-detail' bindtap='get' data-id="{{couponType1.id}}">
-        <image class='quan-box-bg' src='../../images/yundian_dpzy_youhuiquan@2x.png'></image>
-        <view class='quan-box-content'>
-            <view class='quan-price-box'>￥<text class='quan-price'>{{couponType1.amount}}</text></view>
-            <view>满{{couponType1.amountMin}}元可使用</view>
-            <view>有效期{{couponType1.beginTime}}-{{couponType1.endTime}}</view>
+    <scroll-view  class='quan-box' catchtouchmove='preventTouchMove' scroll-y="true">
+      <!-- 优惠券 -->
+      <view id='couponType1' wx:if="{{couponType1.length>0}}">
+        <text class='header'>店铺优惠券</text>
+        <view wx:for="{{couponType1}}" wx:key="index">
+          <view class='quan-box-detail' bindtap='get' data-id="{{item.id}}">
+            <image class='quan-box-bg' src='../../images/yundian_dpzy_youhuiquan@2x.png'></image>
+            <view class='quan-box-content'>
+                <view class='quan-price-box'>￥<text class='quan-price'>{{item.amount}}</text></view>
+                <view>满{{item.amountMin}}元可使用</view>
+                <view>有效期{{item.beginTime}}-{{item.endTime}}</view>
+            </view>
+          </view>
         </view>
       </view>
-    </view>
-    <!-- 代金券 -->
-    <view id='couponType2' wx:if="{{couponType2.name}}">
-      <text class='header'>{{couponType2.name}}</text>
-      <view class='quan-box-detail' bindtap='get' data-id="{{couponType2.id}}">
-        <image class='quan-box-bg' src='../../images/yundian_dpzy_youhuiquan@2x.png'></image>
-        <view class='quan-box-content'>
-            <view class='quan-price-box'>￥<text class='quan-price'>{{couponType2.amount}}</text></view>
-            <view>{{couponType2.instruction}}</view>
-            <view>有效期{{couponType2.beginTime}}-{{couponType2.endTime}}</view>
+      <!-- 代金券 -->
+      <view id='couponType2' wx:if="{{couponType2.length>0}}">
+        <text class='header'>店铺代金券</text>
+        <view wx:for="{{couponType2}}" wx:key="index">
+          <view class='quan-box-detail' bindtap='get' data-id="{{item.id}}">
+            <image class='quan-box-bg' src='../../images/yundian_dpzy_youhuiquan@2x.png'></image>
+            <view class='quan-box-content'>
+                <view class='quan-price-box'>￥<text class='quan-price'>{{item.amount}}</text></view>
+                <view>代金券</view>
+                <view>有效期{{item.beginTime}}-{{item.endTime}}</view>
+            </view>
+          </view>
         </view>
       </view>
-    </view>
-    <!-- 包邮 -->
-    <view id='couponType3' wx:if="{{couponType3.name}}">
-      <text class='header'>{{couponType3.name}}</text>
-      <view class='quan-box-detail' bindtap='get' data-id="{{couponType3.id}}">
-        <image class='quan-box-bg' src='../../images/yundian_dpzy_youhuiquan@2x.png'></image>
-        <view class='quan-box-content'>
-            <view class='quan-price-box'>￥<text class='quan-price'>包邮券</text></view>
-            <view>满{{couponType3.amountMin}}元可包邮</view>
-            <view>有效期{{couponType3.beginTime}}-{{couponType3.endTime}}</view>
+      <!-- 包邮 -->
+      <view id='couponType3' wx:if="{{couponType3.length>0}}">
+        <text class='header'>店铺包邮券</text>
+        <view wx:for="{{couponType3}}" wx:key="index">
+          <view class='quan-box-detail' bindtap='get' data-id="{{item.id}}">
+            <image class='quan-box-bg' src='../../images/yundian_dpzy_youhuiquan@2x.png'></image>
+            <view class='quan-box-content'>
+                <view class='quan-price-box'><text class='quan-price'>包邮券</text></view>
+                <view>满{{item.amountMin}}元可包邮</view>
+                <view>有效期{{item.beginTime}}-{{item.endTime}}</view>
+            </view>
+          </view>
         </view>
       </view>
-    </view>
+    </scroll-view>
   </view>
   <view id='shareBox'>
     <button open-type='share'>

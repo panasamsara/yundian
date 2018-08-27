@@ -24,15 +24,9 @@ Page({
     showMa:"0"
     },
   onLoad: function(options) {
-    //新人礼包06，可分享状态才弹出地址
-    if (options.couponType =="06"&&options.couponShare=="1"){
-      // 让用户同意授权地址
-      wx.getLocation({
-        type: 'wgs84',
-        success: function (res) {
-        }
-      })
-    }
+    wx.showLoading({
+      title: '加载中',
+    })
     console.log("share",options.share)
     var that=this;
     //options.share=0 说明从详情页进来 =1 说明是分享进来的
@@ -41,16 +35,25 @@ Page({
     })
  
     var userId=wx.getStorageSync('scSysUser').id;
-    this.setData({
-      id: options.id,
-      couponLogId: options.couponLogId,
-      couponType: options.couponType,
-      canLimitGoods: options.canLimitGoods,
-      userId: userId,
-      share: options.share
-    })
-    
-
+    console.log('options',options)
+    if (options && options.list) { 
+      
+      this.setData({
+        id: options.id,
+        couponLogId: options.couponLogId,
+        couponType: options.couponType,
+        canLimitGoods: options.canLimitGoods,
+        userId: userId,
+        share: options.share
+      })
+    }else{
+      this.setData({
+        couponLogId: options.couponLogId,
+        couponType: options.couponType,
+        userId: userId,
+        share: options.share
+      })
+    }
     this.setCanvasSize()  //适配不同屏幕大小的canvas
 
 
@@ -159,25 +162,28 @@ Page({
     context.fillRect(0, 0, 720 * scale, 568 * scale);//给画布添加背景色，无背景色真机会自动变黑
     context.drawImage('./img/zhuanfa_xinrenlibao_bg@2x.png', 0 * scale, 0 * scale, 325 * scale, 283 * scale);//绘制背景
     context.setFontSize(22 * scale);
-    if (detail.length >10){
-      var string1 = detail.substring(0,10)
-      var string2 = detail.substring(10, detail.length)
+    if (detail){
+      if (detail.length > 10) {
+        var string1 = detail.substring(0, 10)
+        var string2 = detail.substring(10, detail.length)
 
-      let numA1 = context.measureText(string1).width
-      let a1 = (345 * scale - numA1) / 2
-      context.setFillStyle('#fff');
-      context.fillText(string1, a1 , 108 * scale);//绘制详情
-      let numA2 = context.measureText(string2).width
-      let a2 = (345 * scale - numA2) / 2
-      context.setFillStyle('#fff');
-      context.fillText(string2, a2, 132.5 * scale);//绘制详情
+        let numA1 = context.measureText(string1).width
+        let a1 = (345 * scale - numA1) / 2
+        context.setFillStyle('#fff');
+        context.fillText(string1, a1, 108 * scale);//绘制详情
+        let numA2 = context.measureText(string2).width
+        let a2 = (345 * scale - numA2) / 2
+        context.setFillStyle('#fff');
+        context.fillText(string2, a2, 132.5 * scale);//绘制详情
 
-    }else{
-      let numA = context.measureText(detail).width
-      let a = (345 * scale - numA) / 2
-      context.setFillStyle('#fff');
-      context.fillText(detail, a, 122.5 * scale);//绘制详情
+      } else {
+        let numA = context.measureText(detail).width
+        let a = (345 * scale - numA) / 2
+        context.setFillStyle('#fff');
+        context.fillText(detail, a, 122.5 * scale);//绘制详情
+      }
     }
+   
     
     context.setFontSize(30 * scale)
     let numB = context.measureText(name).width
@@ -211,9 +217,6 @@ Page({
   },
   getList: function() {
     let _this = this
-    wx.showLoading({
-      title: '加载中',
-    })
     var person;
     if (this.data.share==0){
       person = this.data.userId;
@@ -242,6 +245,7 @@ Page({
        }
         _this.setData({
           discountsNew: data,
+          discountData: data,
           shopId: data.shopId,
           quanName: data.couponInstruction,
           promGoodsTypeShare: data.promGoodsType,
@@ -278,7 +282,7 @@ Page({
           });
           console.log(this.data.limitGoods);
         }
-        console.log(res.data.data)
+        console.log('优惠券信息---------------',res.data.data)
         this.setData({
           discounts: res.data.data.coupon,
           discountData: res.data.data.coupon
@@ -378,6 +382,7 @@ Page({
     //   console.log()
     // }
     if (this.data.couponType == "06" && this.data.discountsNew.couponShare == 1){
+      console.log('新人大礼包')
       return {
         title: "[新消息]你的好友喊你来白拿钱，点击进入",
         path: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + _this.data.id + "&couponLogId=" + _this.data.couponLogId + "&couponType=" + _this.data.couponType + "&canLimitGoods=" + _this.data.canLimitGoods + "&promGoodsTypeShare=" + _this.data.promGoodsType +"&share=" + "1",
@@ -398,11 +403,12 @@ Page({
         }
       }
     }else{
+      console.log('优惠券')
       return{
         title: '更多好券,尽在' + this.data.discountData.shopName+',数量有限,先到先得',
         desc: this.data.goodsName,
         imageUrl: this.data.discountPath,
-        path: '/pages/index/index?shopId=' + this.data.discountData.shopId,
+        path: '/packageMyHome/pages/discountCenter/discountCenter',
         success: function () {
 
         },
@@ -540,80 +546,15 @@ Page({
     })
   },
   location:function(){
-    var that = this;
-    wx.getSetting({
-      type: 'gcj02',
-      success: (res) => {
-        console.log(res);
-        console.log(res.authSetting['scope.userLocation']);
-        var userLocation = res.authSetting['scope.userLocation'];
-        //点击图标的时候再次验证是否授权
-        if (userLocation == false || userLocation == null || userLocation == undefined) {
-          wx.showModal({
-            title: '是否授权当前位置',
-            content: '需要获取您的地理位置，请确认授权，否则地图定位功能将无法使用',
-            success: function (res) {
-              if (res.cancel) {
-                wx.showToast({
-                  title: '取消获取授权',
-                  icon: 'none',
-                  duration: 1000
-                })
-              } else if (res.confirm) {
-                wx.openSetting({
-                  success: (res) => {
-                    console.log(res);
-                    if (res.authSetting["scope.userLocation"] == true) {
-                      wx.showToast({
-                        title: '授权成功',
-                        icon: 'none',
-                        duration: 1000
-                      })
-                      wx.getLocation({
-                        type: 'wgs84',
-                        success: function (res) {
-                          // 从缓存中拿到店铺的经纬度
-                          var latitude = that.data.discountsNew.latitude;
-                          var longitude = that.data.discountsNew.longitude;
-                          var address = that.data.discountsNew.shopAddress;
-                          wx.openLocation({
-                            latitude: latitude,
-                            longitude: longitude,
-                            name: address,
-                            scale: 28
-                          })
-                        }
-                      })
-                    } else {
-                      wx.showToast({
-                        title: '授权失败',
-                        icon: 'none',
-                        duration: 1000
-                      })
-                    }
-                  }
-                })
-              }
-            }
-          })
-        } else if (userLocation == true) {
-          wx.getLocation({
-            type: 'wgs84',
-            success: function (res) {
-              // 从缓存中拿到店铺的经纬度
-              var latitude = that.data.discountsNew.latitude;
-              var longitude = that.data.discountsNew.longitude;
-              var address = that.data.discountsNew.shopAddress;
-              wx.openLocation({
-                latitude: latitude,
-                longitude: longitude,
-                name: address,
-                scale: 28
-              })
-            }
-          })
-        }
-      }
+    // 从缓存中拿到店铺的经纬度
+    var latitude = this.data.discountsNew.latitude;
+    var longitude = this.data.discountsNew.longitude;
+    var address = this.data.discountsNew.shopAddress;
+    wx.openLocation({
+      latitude: latitude,
+      longitude: longitude,
+      name: address,
+      scale: 28
     })
   },
   hide:function(){

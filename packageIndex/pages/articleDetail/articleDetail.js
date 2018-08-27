@@ -34,7 +34,6 @@ Page({
     app.util.reqAsync('cms_new/queryArticleDetail', data).then((res) => {
       wx.hideLoading();
       if(res.data.code==1){
-        res.data.data.articleContent = res.data.data.articleContent.replace(/<(style|script|iframe)[^>]*?>[\s\S]+?<\/\1\s*>/gi, '').replace(/<[^>]+?>/g, '').replace(/\s+/g, ' ').replace(/ /g, ' ').replace(/>/g, ' ').replace(/&nbsp;/g, ' ');
         this.setData({
           articleDetail: res.data.data
         })

@@ -13,7 +13,7 @@
 	"compileType": "miniprogram",
 	"libVersion": "2.2.1",
 	"appid": "wxd471bb4262ac7505",
-	"projectname": "XSW",
+	"projectname": "zshop_pro",
 	"svr": "",
 	"client": "",
 	"qcloudRoot": "",
@@ -225,12 +225,7 @@
 					"pathName": "pages/myHome/discounts/discounts",
 					"query": ""
 				},
-				{
-					"id": -1,
-					"name": "地址列表",
-					"pathName": "pages/myHome/address/index/list",
-					"query": ""
-				},
+
 				{
 					"id": -1,
 					"name": "拼单详情",
@@ -240,15 +235,10 @@
 				{
 					"id": 34,
 					"name": "订单详情",
-					"pathName": "pages/myHome/orderDetail/orderDetail",
+					"pathName": "packageMyHome/pages/orderDetail/orderDetail",
 					"query": "orderNo=ZXCSSHOP201807180918593180012"
 				},
-				{
-					"id": -1,
-					"name": "在线订单列表",
-					"pathName": "pages/myHome/order/order",
-					"query": ""
-				},
+
 				{
 					"id": -1,
 					"name": "search",

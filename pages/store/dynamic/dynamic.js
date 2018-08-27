@@ -63,7 +63,7 @@ Component({
     getData: function (data) {
       var oldData = this.data.list;
       app.util.reqAsync('circleBack/getVideoList', data).then((res) => {
-        if(res.data.data){
+        if(res.data.data.length>0){
           var list = res.data.data;
           for (var i = 0; i < list.length; i++) {
             list[i].videoAlbumTime = app.util.formatStoreDate(list[i].videoAlbumTime);

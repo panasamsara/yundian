@@ -16,12 +16,12 @@ Page({
       {
         icon: './images/yuyuemanage.png',
         text: '预约管理',
-        path: '/pages/myHome/appointmentManage/appointmentManage'
+        path: '../../packageMyHome/pages/appointmentManage/appointmentManage'
       },
       {
         icon: './images/myaccount.png',
         text: '我的账户',
-        path: '/pages/myHome/myAccount/myAccount'
+        path: '../../packageMyHome/pages/myAccount/myAccount'
       },
       {
         icon: './images/youhuidiscount.png',
@@ -31,37 +31,37 @@ Page({
       {
         icon: './images/dizhimanage.png',
         text: '地址管理',
-        path: '/pages/myHome/address/index/list',
+        path: '../../packageMyHome/pages/address/index/list',
       },
       {
         icon: './images/myquestion.png',
         text: '我的问答',
-        path: '/pages/myHome/myQuestion/myQuestion',
+        path: '../../packageMyHome/pages/myQuestion/myQuestion',
       },
     ],
     shopList:[
       {
         icon: './images/daifukuan.png',
         text: '待付款',
-        path: '/pages/myHome/order/order?index=1',
+        path: '../../packageMyHome/pages/order/order?index=1',
         num: ""
       },
       {
         icon: './images/daifahuo.png',
         text: '待发货',
-        path: '/pages/myHome/order/order?index=2',
+        path: '../../packageMyHome/pages/order/order?index=2',
         num: ""
       },
       {
         icon: './images/daishouhuo.png',
         text: '待收货',
-        path: '/pages/myHome/order/order?index=3',
+        path: '../../packageMyHome/pages/order/order?index=3',
         num: ""
       },
       {
         icon: './images/daipingjia.png',
         text: '待评价',
-        path: '/pages/myHome/order/order?index=4',
+        path: '../../packageMyHome/pages/order/order?index=4',
         num: ""
       },
       // {
@@ -136,12 +136,10 @@ Page({
   },
   back:function(){
     wx.removeStorageSync('shop');
-    wx.removeStorageSync('shopInformation');
-    wx.removeStorageSync('goodsInfos');
     wx.redirectTo({ url: '/pages/scan/scan' });
   },
   backOrder: function (e) {
-    wx.navigateTo({ url: "/pages/myHome/order/order?index=0"});
+    wx.navigateTo({ url: "../../packageMyHome/pages/order/order?index=0"});
   },
   backShop:function (e) {
     wx.navigateTo({ url: e.currentTarget.dataset.path });

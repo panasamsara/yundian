@@ -1,0 +1,55 @@
+<!--pages/myhome/appointmentManage/appointmentManage.wxml-->
+<view>
+  <view class="header">
+    <view class="manageTitle">
+      <text bindtap='typeTop' data-index="0"><text class="{{activeIndex==0?'active':''}}">可使用</text></text>
+      <text bindtap='typeTop' data-index="1"><text class="{{activeIndex==1?'active':''}}" >已完成</text></text>
+    </view>
+  </view>
+
+  <view class="wrap">
+    <!-- 没有可使用的预约默认图 -->
+    <block wx:if="{{orderList.length==0}}">
+      <view class="addessNull">
+        <image src="../images/zwyy.png"></image>
+        <view>暂时没有预约哦~</view>
+      </view>
+    </block>
+    <view class='content'>
+      <view class="list" bindtap='skip' wx:for="{{orderList}}" wx:key="index" data-id="{{item.id}}">
+        <view class='shop'>
+          <view class='left'>
+            <image class="shopImg mr15" src="../images/shopDefault.png"></image>
+            <text class="mr15">{{item.shopName}}</text>
+            <image class="rightIcon" src="../images/right.png"></image>
+          </view>
+          <view class='right rightType' wx:if="{{item.bespokeStatusVO==0}}">待确认</view>
+          <view class='right rightType' wx:if="{{item.bespokeStatusVO==1}}">预约成功</view>
+          <view class='right rightType' wx:if="{{item.bespokeStatusVO==2}}">已消费</view>
+          <view class='right rightType' wx:if="{{item.bespokeStatusVO==3}}">已过期</view>
+          <view class='right rightType' wx:if="{{item.bespokeStatusVO==4}}">已取消</view>
+        </view>
+        <view class="shopList">
+          <text>预约时间：</text>
+          <text>{{item.bespokeTime}}-{{item.bespokeEndTime}}</text>
+        </view>
+        <view class="shopList">
+          <text>人数：</text>
+          <text>{{item.bespokeThree || "无"}}人</text>
+        </view>
+        <view class="shopList">
+          <text>设施/设备：</text>
+          <text>{{item.facilityName || "无"}}</text>
+        </view>
+        <view class="shopList">
+          <text>服务人员：</text>
+          <text>{{item.waiter || "无" }}</text>
+        </view>
+        <view class="shopList">
+          <text>服务项目：</text>
+          <text>{{item.serviceName||"无"}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

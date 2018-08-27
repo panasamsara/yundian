@@ -1,0 +1,89 @@
+<view class='banner_bg'> 
+  <image src='../images/banner_bg@2x.png' wx:if="{{flag==1}}"></image>
+  <image src='../images/liquanzhongxin_wulibao@2x.png' wx:if="{{flag==0}}"></image>
+  <view class='bg' wx:if="{{flag==1}}">
+    <view class='title'>免费领取新手礼包</view>
+    <view class='des'>先领券   再购物   享优惠</view>
+    <view class='getDes' wx:if="{{getdiscount==false}}" bindtap='getCoupon' data-flag="1">立即领券</view>
+    <view class='getDes' wx:if="{{getdiscount==true}}" bindtap='checkDetail'>查看详情</view>
+  </view>
+</view>
+<view class='content' wx:if="{{couponType1.length>0}}">
+  <view class='navTitle'> 
+    <image src="../images/line@2x.png"></image>
+    <text>店铺优惠券</text>
+    <image src="../images/line_right@2x.png"></image>
+  </view>
+  <view class='list' wx:for="{{couponType1}}" wx:key="{{index}}">
+    <image src='../images/quan_bg@2x.png'></image>
+    <view class='con'>
+      <view class='left price'>
+        <text class='font30'>￥</text>
+        <text class='font60'>{{item.amount}}</text>
+      </view>
+      <view class='left rule'>
+        <view class='font30'>满{{item.amountMin}}元可使用</view>
+        <view class='font20'>有效期 {{item.beginTime}}-{{item.endTime}}</view>
+      </view>
+      <view class='left use' wx:if="{{list1[index]==true}}" bindtap='skipTo'>
+        去使用
+      </view>
+      <view class='left getDraw' wx:elif="{{list1[index]==false}}" bindtap='getCoupon' data-index="{{index}}" data-arrIndex="{{1}}" data-flag="0" data-id="{{item.id}}">
+        立即领取
+      </view>
+    </view>
+  </view>
+</view>
+<view class='content' wx:if="{{couponType2.length>0}}">
+  <view class='navTitle'> 
+    <image src="../images/line@2x.png"></image>
+    <text>店铺代金券</text>
+    <image src="../images/line_right@2x.png"></image>
+  </view>
+  <view class='list' wx:for="{{couponType2}}" wx:key="{{index}}">
+    <image src='../images/quan_bg@2x.png'></image>
+    <view class='con'>
+      <view class='left price'>
+        <text class='font30'>￥</text>
+        <text class='font60'>{{item.amount}}</text>
+      </view>
+      <view class='left rule'>
+        <view class='font30'>代金券</view>
+        <view class='font20'>有效期 {{item.beginTime}}-{{item.endTime}}</view>
+      </view>
+      <view class='left use' wx:if="{{list2[index]==true}}" bindtap='skipTo'>
+        去使用
+      </view>
+      <view class='left getDraw' wx:if="{{list2[index]==false}}" bindtap='getCoupon' data-index="{{index}}" data-arrIndex="{{2}}"  data-flag="0" data-id="{{item.id}}">
+        立即领取
+      </view>
+    </view>
+  </view>
+</view>
+<view class='content' wx:if="{{couponType3.length>0}}">
+  <view class='navTitle'> 
+    <image src="../images/line@2x.png"></image>
+    <text>店铺包邮券</text>
+    <image src="../images/line_right@2x.png"></image>
+  </view>
+  <view class='list' wx:for="{{couponType3}}" wx:key="{{index}}">
+    <image src='../images/quan_bg@2x.png'></image>
+    <view class='con'>
+      <view class='left price'>
+        <!-- <text class='font30'>￥</text> -->
+        <text class='font60'>包邮</text>
+      </view>
+      <view class='left rule'>
+        <view class='font30'>满{{item.amountMin}}元可使用</view>
+        <view class='font20'>有效期 {{item.beginTime}}-{{item.endTime}}</view>
+      </view>
+      <view class='left use' wx:if="{{list3[index]==true}}" bindtap='skipTo'>
+        去使用
+      </view>
+      <view class='left getDraw' bindtap='skip' wx:if="{{list3[index]==false}}" bindtap='getCoupon' data-index="{{index}}" data-arrIndex="{{3}}"  data-flag="0" data-id="{{item.id}}">
+        立即领取
+      </view>
+    </view>
+  </view>
+</view>
+

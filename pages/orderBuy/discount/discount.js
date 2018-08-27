@@ -21,7 +21,9 @@ Page({
       totalMoney: options.totalMoney,
       isSend: options.isSend //0-快递  1-店内下单 2-自提
     })
+    console.log(discount)
   },
+
   skip:function(e){
     var name = e.currentTarget.dataset.name;
     var amount = e.currentTarget.dataset.amount;//满

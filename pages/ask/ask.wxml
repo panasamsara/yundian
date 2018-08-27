@@ -3,7 +3,7 @@
   <image src='{{picImg}}'></image>
   <view class='text'>
     <text class='text-top'>{{goodsName}}</text>
-    <text class='text-bot'></text>
+    <text class='text-bot'>{{goodsDesc}}</text>
   </view>
   <view class='text-right'>
     <text class='right-text'>{{askAcount}}个问题</text>
@@ -32,8 +32,8 @@
   </view>   
 </view>
 <view class='temp'></view>
-<view class='bottom'>
+<!-- <view class='bottom'>
   <input type='text' placeholder='{{placeholder}}' bindinput='inputvalue' value='{{myValue}}'></input>
   <button type='submt' bindtap='myAsk'>提问</button>
-</view>
+</view> -->
 

@@ -1,0 +1,58 @@
+.container{
+  width: 100%;
+  height: auto;
+}
+.container .goods{
+  margin:20rpx;
+  border-top:1rpx solid #dfdfdf;
+}
+.container .goods-item{
+  width: 50%;
+  float: left;
+}
+.logo{
+  width: 100%;
+  text-align: center;
+}
+.good-box{
+  width: 320rpx;
+  box-shadow: 0 0 20px #dfdfdf;
+  margin:20rpx auto 20rpx;
+  padding:0 0 20rpx 0;
+}
+.container .goods-item image{
+  width:320rpx;
+  margin:0 auto 10rpx;
+  height:300rpx;
+  border-radius: 10rpx;
+}
+.title{
+  width: 280rpx;
+  font-size: 32rpx;
+  overflow:hidden; /*内容超出宽度时隐藏超出部分的内容 */
+  text-overflow:ellipsis;/* 当对象内文本溢出时显示省略标记(...) ；需与overflow:hidden;一起使用。*/
+  white-space:nowrap; /*不换行 */
+  margin: 0 auto;
+}
+.goods-info{
+  margin:20rpx auto 10rpx;
+  width:280rpx;
+  height:auto;
+  overflow:hidden;
+}
+.goods-info .price{
+  color: #FF0036;
+  font-size: 28rpx;
+  display: inline-block;
+  margin-right: 10rpx;
+  float:left;
+}
+.goods-info .price text{
+  font-size: 25rpx;
+}
+.goods-info .buy-num{
+  display: inline-block;
+  float: right;
+  color:#999999;
+  font-size: 28rpx;
+}

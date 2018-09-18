@@ -14,9 +14,9 @@
 </swiper>
 <!-- 倒计时 -->
   <view class='countDown' wx:if="{{status==2}}">
-    <view class='left'>¥<text id='newPrice'>{{listData[0].goodsPreferentialStockPrice}}</text><text id='oldPrice'>¥{{listData[0].goodsOriginalStockPrice}}</text></view>
+    <view class='left'><span wx:if="{{activityStatus==1}}">¥<text class='newPrice'>{{listData[0].goodsPreferentialStockPrice}}</text><text id='oldPrice'>¥{{listData[0].goodsOriginalStockPrice}}</text></span><span wx:if="{{activityStatus==0}}"><text class='newPrice'>¥{{listData[0].goodsOriginalStockPrice}}</text></span></view>
     <view class='right'>
-      <view id='text'>距结束还剩<span wx:if="{{listData[0].d>0}}">{{listData[0].d}}天</span></view>
+      <view class='text'><span wx:if="{{activityStatus==1}}">距结束还剩</span><span wx:if="{{activityStatus==0}}">距开始还剩</span><span wx:if="{{listData[0].d>0}}">{{listData[0].d}}天</span></view>
       <view id='countBox'>
         <text>{{listData[0].h?listData[0].h:0}}</text>:<text>{{listData[0].m?listData[0].m:0}}</text>:<text>{{listData[0].s?listData[0].s:0}}</text>
       </view>
@@ -54,7 +54,7 @@
     </view>
   </view> -->
   <!-- 优惠券部分 -->
-  <view class='coupon' wx:if="{{status==3&&(couponType1||couponType2||couponType3)}}">
+  <view class='coupon' wx:if="{{status==3&&(couponType1.length>0||couponType2.length>0||couponType3.length>0)}}">
     <view class='leftBox'>
       <image class='left' src='../../images/prefer.png'></image>
     <text>领取优惠券</text> 
@@ -63,7 +63,7 @@
       <image src='../../images/yundian_spxq_gengduo.png'></image>
     </view> 
   </view>
-  <view class='separate'></view>
+  <view class='separate' wx:if="{{status==3&&(couponType1.length>0||couponType2.length>0||couponType3.length>0)}}"></view>
   <!-- 拼单 -->
   <view class='spellList' wx:if="{{status==1&&listData.length>0}}">
     <view class='top'>
@@ -109,7 +109,7 @@
       <view class='uploadBox'>
         <view class='user-pic clearfix' wx:for="{{item.commentUploadList}}" wx:key="index">
           <view class='fileBox'>
-            <image src='{{item.filePath}}' wx:if="{{item.fileType=='image'}}"></image>
+            <image src='{{item.filePath}}' wx:if="{{item.fileType=='image'}}" data-src="{{item.filePath}}" bindtap='previewImage' data-index="{{item.indexs}}"></image>
             <image src='{{item.videoCoverImage}}' wx:if="{{item.fileType=='video'&&item.play==false}}"></image>
             <image src='images/pinglun_bofang@2x.png' class='play' wx:if="{{item.fileType=='video'&&item.play==false}}" bindtap='play' data-flag="{{item.flag}}"></image>
             <video src='{{item.filePath}}' wx:if="{{item.fileType=='video'&&item.play==true}}" id='{{item.flag}}'></video>
@@ -117,7 +117,7 @@
         </view>
       </view>  
       <view class='user-info clearfix'>
-        <span class='stockNameBox {{item.stockName==null?"hide":"show"}}'>规格: {{item.stockName}}</span>
+        <span class='stockNameBox {{item.stockName==null?"hide":"show"}}'>{{item.stockName}}</span>
         <span>{{item.commentDate}}</span>
       </view>
     </view>
@@ -168,35 +168,6 @@
     <text>{{data.shopDesc}}</text>
   </view> 
  <view class='separate mb'></view>
-<!-- 底部悬浮栏 -->
-  <view class='detail-nav'>
-    <view wx:if="{{status==1}}" class='buyBox'>
-      <view class='add' bindtap='tobuy' id='buy'>
-        <text>￥{{data.price}}</text>
-        <text>单独购买</text>
-      </view>
-      <view class='add' bindtap='tobuy' id='groupBuy'>
-        <text>￥{{data.groupBuyingPrice}}</text>
-        <text>发起拼单</text>
-      </view>
-    </view>
-    <view wx:if="{{status==2||status==3}}" class="buyBox {{status==3?'normalBuy':'activityBuy'}}">
-      <navigator id='cartCount' url="../shoppingCart/shoppingCart" hover-class='none' open-type='switchTab' wx:if="{{status==3}}">
-        <view id='cartCountBox' wx:if="{{cartTotal>0}}">
-          <!-- <text>{{cartTotal}}</text> -->
-        </view>
-        <view>
-          <image src='../../images/yundian_sygouwuche@2x.png' wx:if="{{cartTotal<=0}}" class="cartIcon"></image>
-          <image src='../../images/yundian_sygouwuchexz@2x.png' wx:if="{{cartTotal>0}}" class='cartIcon'></image>
-        </view> 
-        <text>购物车</text>
-      </navigator>
-      <view class='add' bindtap='tobuy' id='addCart' wx:if="{{status==3}}">加入购物车</view>
-      <view class='add' bindtap='tobuy' id='buyNow'>立即购买</view>
-    </view>
-  </view>  
-  <!-- 遮罩层 -->
-  <view class='shade {{flag?"show":"hide"}}' bindtap='closeMask' catchtouchmove='preventTouchMove'></view>
   <!-- 弹出层 -->
   <view class='layer {{flag1?"show":"hide"}}'>
     <view class='close' bindtap='closeLayer'>
@@ -234,37 +205,6 @@
       </view> 
     </scroll-view> 
     <view class='joinBuy' bindtap='joinBuy' id='joinBuy'>参与并拼单</view>    
-  </view>
-  <!-- 购买弹出层 -->
-  <view class='main' wx:if="{{showBuy}}" catchtouchmove='preventTouchMove'>
-    <view class='top'>
-      <image src='{{data.pictureUrl}}' ></image>
-      <view class='topBox'>
-        <text class='price'>¥{{total}}</text>
-        <text class='count' wx:if="{{data.goodsType==0}}">库存 {{balance}}</text>
-      </view>
-      <scroll-view class='size clearfix' scroll-y="true" catchtouchmove='preventTouchMove'>
-        <block wx:for='{{data.scShopGoodsStockList}}' wx:key='index' wx:if="{{status==1}}">
-          <span bindtap='chose' class="{{cur==item.index?'active':''}}" data-index="{{index}}">{{item.stockName}}</span>    
-        </block>
-        <block wx:for='{{data.secondKillInfo}}' wx:key='index' wx:if="{{status==2}}">
-          <span bindtap='chose' class="{{cur==item.index?'active':''}}" data-index="{{index}}">{{item.stockName}}</span>    
-        </block>
-        <block wx:for='{{data.stockListDefault}}' wx:key='index' wx:if="{{status==3}}">
-          <span bindtap='chose' class="{{cur==item.index?'active':''}}" data-index="{{index}}">{{item.stockName}}</span>    
-        </block>
-      </scroll-view>
-      <view class='buyCount clearfix'>
-        <view class='left'>购买数量</view>
-        <view class='right clearfix'>
-          <span bindtap="change" class='light bet' id="minus">-</span>
-          <span class='dark middle'>{{number}}</span>
-          <span bindtap="change" class='dark bet' id="add">+</span>
-        </view>
-      </view>    
-    </view>
-    <view class='tot' bindtap='buyNow' wx:if="{{buy=='buyNow'}}">立即购买</view>
-    <view class='tot cart' bindtap='addCart' wx:if="{{buy=='addCart'}}">加入购物车</view>
   </view>
   <!-- 优惠券弹出层 -->
   <view class='mask' catchtouchmove='preventTouchMove' bindtap='closeQuanBox' wx:if='{{showQuanBox}}'></view> 
@@ -329,5 +269,64 @@
     <text>暂无商品详情哦</text>
   </view>
 </view>
+<!-- 遮罩层 -->
+<view class='shade {{flag?"show":"hide"}}' bindtap='closeMask' catchtouchmove='preventTouchMove'></view>
+<!-- 购买弹出层 -->
+<view class='main' wx:if="{{showBuy}}" catchtouchmove='preventTouchMove'>
+  <view class='top'>
+    <image src='{{data.pictureUrl}}' ></image>
+    <view class='topBox'>
+      <text class='price'>¥{{total}}</text>
+      <text class='count' wx:if="{{data.goodsType==0}}">库存 {{balance}}</text>
+    </view>
+    <scroll-view class='size clearfix' scroll-y="true" catchtouchmove='preventTouchMove'>
+      <block wx:for='{{data.scShopGoodsStockList}}' wx:key='index' wx:if="{{status==1}}">
+        <span bindtap='chose' class="{{cur==item.index?'active':''}}" data-index="{{index}}">{{item.stockName}}</span>    
+      </block>
+      <block wx:for='{{data.secondKillInfo}}' wx:key='index' wx:if="{{status==2}}">
+        <span bindtap='chose' class="{{cur==item.index?'active':''}}" data-index="{{index}}">{{item.stockName}}</span>    
+      </block>
+      <block wx:for='{{data.stockListDefault}}' wx:key='index' wx:if="{{status==3}}">
+        <span bindtap='chose' class="{{cur==item.index?'active':''}}" data-index="{{index}}">{{item.stockName}}</span>    
+      </block>
+    </scroll-view>
+    <view class='buyCount clearfix'>
+      <view class='left'>购买数量</view>
+      <view class='right clearfix'>
+        <span bindtap="change" class='light bet' id="minus">-</span>
+        <span class='dark middle'>{{number}}</span>
+        <span bindtap="change" class='dark bet' id="add">+</span>
+      </view>
+    </view>    
+  </view>
+  <view class='tot' bindtap='buyNow' wx:if="{{buy=='buyNow'}}">立即购买</view>
+  <view class='tot cart' bindtap='addCart' wx:if="{{buy=='addCart'}}">加入购物车</view>
+</view>
+<view class='detail-nav'>
+    <view wx:if="{{status==1}}" class='buyBox'>
+      <view class='add' bindtap='tobuy' id='buy'>
+        <text>￥{{data.price}}</text>
+        <text>单独购买</text>
+      </view>
+      <view class='add' bindtap='tobuy' id='groupBuy'>
+        <text>￥{{data.groupBuyingPrice}}</text>
+        <text>发起拼单</text>
+      </view>
+    </view>
+    <view wx:if="{{status==2||status==3}}" class="buyBox {{status==3?'normalBuy':'activityBuy'}}">
+      <navigator id='cartCount' url="../shoppingCart/shoppingCart" hover-class='none' open-type='switchTab' wx:if="{{status==3}}">
+        <view id='cartCountBox' wx:if="{{cartTotal>0}}">
+          <!-- <text>{{cartTotal}}</text> -->
+        </view>
+        <view>
+          <image src='../../images/yundian_sygouwuche@2x.png' wx:if="{{cartTotal<=0}}" class="cartIcon"></image>
+          <image src='../../images/yundian_sygouwuchexz@2x.png' wx:if="{{cartTotal>0}}" class='cartIcon'></image>
+        </view> 
+        <text>购物车</text>
+      </navigator>
+      <view class='add' bindtap='tobuy' id='addCart' wx:if="{{status==3}}">加入购物车</view>
+      <view class='add' bindtap='tobuy' id='buyNow'>立即购买</view>
+    </view>
+  </view> 
 <canvas canvas-id='seckill' style='width:480rpx;height:380rpx;' id='secKillCanvas'></canvas>
 <canvas canvas-id='groupbuy' style='width:480rpx;height:420rpx;' id='gruopBuyCanvas'></canvas>

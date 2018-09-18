@@ -8,6 +8,7 @@
   border-radius: 12rpx;
   box-shadow: 0rpx 0rpx 20rpx 8rpx #e2e2e2;
   margin-bottom: 20rpx;
+  position: relative;
 }
 
 .activity .list image{
@@ -52,4 +53,12 @@
 
 .activity .time{
   color: #868686;
+}
+
+.sign{
+  width: 90rpx!important;
+  height: 44rpx!important;
+  position: absolute;
+  left: 0;
+  top: 0;
 }

@@ -1,0 +1,18 @@
+.list{
+  display: flex;
+  flex-direction:row;
+  padding: 42rpx 26rpx 30rpx;
+  border-bottom: 2rpx solid  #e5e5e5;
+}
+.text{
+  width: 404rpx;
+  margin-right: 26rpx;
+}
+.list image{
+  width: 266rpx;
+  height: 180rpx;
+}
+.text>view:first-child{
+  line-height: 50rpx;
+  margin: 18rpx 0 12rpx;
+}

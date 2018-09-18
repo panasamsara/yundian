@@ -38,17 +38,17 @@
     <text class='left'>失效卡</text>
     <image class="right" src="../images/right_icon.png"></image>
   </view>
-  <view class='myka' wx:if="{{getCardByUser!=null}}">
+  <view class='myka' wx:if="{{getCardByUser.length!=0}}">
     <view class='left {{activeIndex==0?"active":""}}' bindtap='switchover' data-index="0">
-      我的卡项({{getCardByUser.total}})
+      我的卡项({{getCardByUser.length}})
     </view>
     <view class='left {{activeIndex==1?"active":""}}' bindtap='switchover' data-index="1">
       留店商品({{leaveGoods.total}})
     </view>
   </view>
   <!-- 1 次数 2 时长 5终身 -->
-  <view class='content' wx:if="{{getCardByUser!=null}}" hidden="{{hiddenKas}}">
-    <view class='common' wx:if="{{item.serviceType==5}}" wx:for="{{getCardByUser.card}}" wx:key="{{index}}"  data-item="{{item}}" data-purchaseId="{{item.purchaseId}}" data-serviceId="{{item.serviceId}}" bindtap='skip'>
+  <view class='content' wx:if="{{getCardByUser.length!=0}}" hidden="{{hiddenKas}}">
+    <view class='common' wx:if="{{item.serviceType==5}}" wx:for="{{getCardByUser}}" wx:key="{{index}}"  data-item="{{item}}" data-purchaseId="{{item.purchaseId}}" data-serviceId="{{item.serviceId}}" bindtap='skip'>
       <image class="bg" src="../images/bg2x.png"></image>
       <view class='list'>
         <image src='../images/zxcs_cszh_kaxiang@2x.png'></image>
@@ -59,7 +59,7 @@
         <text class='right color0036'>{{item.totalNum}}</text>
       </view>
     </view>
-    <view class='common' wx:if="{{item.serviceType==1||item.serviceType==2}}" data-item="{{item}}" data-purchaseId="{{item.purchaseId}}" data-serviceId="{{item.serviceId}}" wx:for="{{getCardByUser.card}}" wx:key="{{index}}" bindtap='skip' >
+    <view class='common' wx:if="{{item.serviceType==1||item.serviceType==2}}" data-item="{{item}}" data-purchaseId="{{item.purchaseId}}" data-serviceId="{{item.serviceId}}" wx:for="{{getCardByUser}}" wx:key="{{index}}" bindtap='skip' >
       <image class="bg" src="../images/bg2x.png"></image>
       <view class='list'>
         <image src='../images/zxcs_cszh_kaxiang@2x.png'></image>
@@ -90,7 +90,7 @@
       </view>
     </view>
   </view>
-  <view wx:if="{{getCardByUser.card.length==0 && hiddenKas==false}}" class='empty paddingb'>
+  <view wx:if="{{getCardByUser==null && hiddenKas==false}}" class='empty paddingb'>
     <image class='list-empty-img' src='../images/zxcs_cszh_zwmx@3x.png'></image>
     <view>暂无卡项</view>
   </view>

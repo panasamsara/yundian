@@ -51,6 +51,13 @@ Component({
       let data = this.data.datas;
       this.getData(data);
     },
+    onPullDownRefresh: function () {
+      this.setData({
+        list:[]
+      })
+      this.onLoad();
+      wx.stopPullDownRefresh();
+    },
     getData:function(data){
       var oldData = this.data.list;
       app.util.reqAsync('shop/shopHomeArticles', data).then((res) => {
@@ -62,7 +69,7 @@ Component({
               list[i].articleTitle = list[i].articleTitle.substring(0, 22) + '...';
             }
             if (list[i].articleContent != null && list[i].articleContent.length > 52) {
-              list[i].articleContent = list[i].articleContent.replace(/<(style|script|iframe)[^>]*?>[\s\S]+?<\/\1\s*>/gi, '').replace(/<[^>]+?>/g, '').replace(/\s+/g, ' ').replace(/ /g, ' ').replace(/>/g, ' ').substring(0, 52) + '...';
+              list[i].articleContent = list[i].articleContent.replace(/<(style|script|iframe)[^>]*?>[\s\S]+?<\/\1\s*>/gi, '').replace(/<[^>]+?>/g, '').replace(/\s+/g, ' ').replace(/ /g, ' ').replace(/>/g, ' ').replace(/&nbsp;/g, '').substring(0, 52) + '...';
             }
           }
           this.setData({

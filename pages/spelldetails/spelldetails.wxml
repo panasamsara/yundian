@@ -1,5 +1,10 @@
 <!--pages/spelldetails/spelldetails.wxml-->
-<view class='wrap'>
+<!-- <import src="../template/modelTp.wxml"/> -->
+<!-- <template is="loading" wx:if="{{!loading}}"></template> -->
+<view class='wrap' wx:if="{{loading}}">
+  <view class='time' wx:if="{{timeStatus==0}}">
+    离结束还剩   <text wx:if="{{d>0}}">{{d?d:0}}天</text><text>{{h?h:0}}</text> : <text>{{m?m:0}}</text> : <text>{{s?s:0}}</text>
+  </view>
   <view class="main" style="flex-direction:row;">
     <view class="productimg">
       <image src='{{pictureUrl}}' data-src=''></image> 
@@ -40,9 +45,9 @@
   <!-- 0 进行中 -->
   <view wx:if="{{timeStatus==0}}">
     <!-- 1 拼主  -->
-    <view wx:if="{{isMaster==1}}">
+    <view wx:if="{{isMaster}}">
       <view class='status' wx:if="{{count!=0}}">
-        仅剩<span class='redtext'>{{lackUser}}</span>个名额，<text wx:if="{{d>0}}">{{d?d:0}}天</text><text>{{h?h:0}}</text>:<text>{{m?m:0}}</text>:<text>{{s?s:0}}</text>后结束
+        仅剩<span class='redtext'>{{lackUser}}</span>个名额，赶快邀请好友来拼单吧！
       </view>
       <view class='status' wx:else>
         <image class="faileicon" bindtap='closeMask' src='images/yundain_tixing@2x.png'></image>
@@ -53,7 +58,7 @@
       <button wx:else bindtap="againInitiate" class='spellbtn' hover-class='spellbtn-hover'>再次发起拼单</button>
     </view>
     <!-- 0 非拼主 -->
-    <view wx:elif="{{isMaster==0}}">
+    <view wx:elif="{{!isMaster}}">
       <view class='status'  wx:if="{{count!=0}}">
         仅剩<span class='redtext'>{{lackUser}}</span>个名额，<text wx:if="{{d>0}}">{{d?d:0}}天</text><text>{{h}}</text>:<text>{{m}}</text>:<text>{{s}}</text>后结束
       </view>
@@ -102,7 +107,7 @@
           <image class="itemimg" src='{{groupList.pictureUrl}}' data-src='' data-goodsid='{{groupList.itemId}}' data-groupid='{{groupList.groupId}}' data-shopid='{{groupList.shopId}}'   bindtap='goToGroupBuy'></image> 
         </view>
          <view class='itemtext'>
-            <text class='itemtitle'>{{pictureUrl.itemTitle}}</text>
+            <text class='itemtitle'>{{groupList.itemTitle}}</text>
             <view class='intro'>
               <view class='intro-price'><span class='intro-code'>￥</span>{{groupList.discountPrice}}</view>
               <view class='intro-number'>已拼{{groupList.num}}单</view>
@@ -112,7 +117,38 @@
     <!-- 单个推荐 end-->
     </view>
   </view>
-  
+<view class='shade {{flag?"show":"hide"}}'  wx:if="{{flag}}" bindtap='closeMask' catchtouchmove='preventTouchMove'></view>
+<!-- 购买弹出层 -->
+ <view class='dialog' wx:if="{{flag}}"  catchtouchmove='preventTouchMove'>
+  <view class='top'>
+    <image src='{{shopData.pictureUrl}}' ></image>
+    <view class='topBox'>
+      <text class='price'>¥{{total}}</text>
+      <text class='count' >库存 {{balance}}</text>
+    </view> 
+    <scroll-view class='size clearfix' scroll-y="true" catchtouchmove='preventTouchMove'>
+      <block wx:for='{{shopData.scShopGoodsStockList}}' wx:key='index' wx:if="{{shopData.status==1}}">
+        <span bindtap='chose' class="{{select==index?'active':''}}" data-index="{{index}}">{{item.stockName}}</span>    
+      </block>
+      <block wx:for='{{data.secondKillInfo}}' wx:key='index' wx:if="{{status==2}}">
+        <span bindtap='chose' class="{{cur==item.index?'active':''}}" data-index="{{index}}">{{item.stockName}}</span>    
+      </block>
+      <block wx:for='{{data.scShopGoodsStockList}}' wx:key='index' wx:if="{{status==3}}">
+        <span bindtap='chose' class="{{cur==item.index?'active':''}}" data-index="{{index}}">{{item.stockName}}</span>    
+      </block>
+    </scroll-view>
+    <view class='buyCount clearfix'>
+      <view class='left'>购买数量</view>
+      <view class='right clearfix'>
+        <span bindtap="change" class='light bet' id="minus">-</span>
+        <span class='dark middle'>{{number}}</span>
+        <span bindtap="change" class='dark bet' id="add">+</span>
+      </view>
+    </view>    
+  </view>
+  <view class='tot' bindtap='buyNow' >立即购买</view>
+  <view class='tot cart' bindtap='addCart' wx:if="{{buy=='addCart'}}">加入购物车</view>
+</view>
   <!-- 拼单规则 弹窗 -->
   <view class='stock-mask' catchtouchmove='preventTouchMove' catchtap='closeMask' wx:if='{{showStock}}'></view> 
   <view class='stock-box' wx:if='{{showStock}}'>

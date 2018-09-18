@@ -1,23 +1,39 @@
 <!--pages/store/activityInfo/activityInfo.wxml-->
-<view class='container activityInfo'>
+<view class="container activityInfo {{unscroll?'unscroll':''}}">
   <view class='head'>
-    <text>{{data.goodsName}}</text>
+    <text class='title'>{{data.goodsName}}</text>
     <view>
       <text class='time'>活动时间</text>
       <text class='time'>{{data.startTime}}-{{data.endTime}}</text>
     </view>
   </view>
   <view class='banner'>
-    <image src='{{data.pictureUrl}}'></image>
+    <image src='{{data.pictureUrl}}' mode='widthFix'></image>
   </view>
   <view class='content'>
     <rich-text nodes="{{data.descContent}}"></rich-text>
   </view>
+  <view id='box' wx:if="{{userList.length>0}}">
+    <view id='userBox'>
+      <view wx:for="{{userList}}" wx:key='index' class='picBox'><image src="{{item}}" class="userPic"></image></view>
+    </view>
+    <text id='signNum'>{{signNum}}人报名</text>
+  </view>
+  <view id='signModel' wx:if="{{signShow}}">
+    <view id='modelHead'>报名信息<image src='images/team.png' id='modelIcon'></image></view>
+    <input placeholder='请填写真实姓名' id='name' bindblur='inputSet' maxlength='10'></input>
+    <view id='phone'>{{phone}}</view>
+    <textarea placeholder='备注' id='remark' bindblur='textSet' maxlength='200'></textarea>
+    <view id='submit' bindtap='submit'>提交</view>
+  </view>
+  <view id='shade' wx:if="{{signShow}}" bindtap='signHide'><image src='images/guanbi@2x.png' id='close'></image></view>
+  <view id='sign' wx:if="{{signType==1&&signed==false}}" bindtap='sign'>报名</view>
+  <view id='signed' wx:if="{{signed}}">已报名</view>
 </view>
  <view id='shareBox'>
     <button open-type='share'>
-      <image src='../../../../images/shouye_btn@2x.png' id='share'></image>
+      <image src='../../../images/shouye_btn@2x.png' id='share'></image>
     </button>
-    <image src='../../../../images/fenxinag_btn@2x.png' id='goback' bindtap='goback'></image>
+    <image src='../../../images/fenxinag_btn@2x.png' id='goback' bindtap='goback'></image>
   </view>
 <canvas canvas-id="shareCanvas" style='width:720rpx; height:568rpx; position:fixed; top: 99999rpx;' ></canvas>

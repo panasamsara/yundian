@@ -30,6 +30,10 @@ Component({
       };
       this.getData(data);
     },
+    onPullDownRefresh: function () {
+      this.onLoad();
+      wx.stopPullDownRefresh();
+    },
     getData: function (data) {
       app.util.reqAsync('fans/getFansTeamForShop', data).then((res) => {
         if(res.data.data){

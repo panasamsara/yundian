@@ -23,6 +23,9 @@ Component({
    */
   methods: {
     onLoad: function (options) {
+      this.setData({
+        shopName: wx.getStorageSync('shop').shopName
+      })
       wx.showLoading({
         title: '加载中',
       })
@@ -53,7 +56,13 @@ Component({
       let data = this.data.datas;
       this.getData(data);
     },
-
+    onPullDownRefresh: function () {
+      this.setData({
+        list:[]
+      })
+      this.onLoad();
+      wx.stopPullDownRefresh();
+    },
     /**
      * 用户点击右上角分享
      */
@@ -62,13 +71,14 @@ Component({
     },
     getData: function (data) {
       var oldData = this.data.list;
-      app.util.reqAsync('circleBack/getVideoList', data).then((res) => {
+      app.util.reqAsync('shop/getNewDynamic', data).then((res) => {
         if(res.data.data.length>0){
           var list = res.data.data;
-          for (var i = 0; i < list.length; i++) {
-            list[i].videoAlbumTime = app.util.formatStoreDate(list[i].videoAlbumTime);
+          for (var i = 0; i < list.length; i++) {//时间格式处理,发布资源格式处理
+            list[i].gmtCreate = app.util.formatStoreDate(list[i].gmtCreate);
             list[i].index = i;
-            list[i].mylength = list[i].urls.length;
+            list[i].dynamicUrl = list[i].dynamicUrl.split(',');
+            list[i].mylength = list[i].dynamicUrl.length;
           }
           var newData = oldData.concat(list);
           this.setData({
@@ -88,7 +98,7 @@ Component({
     },
     previewImage: function (e) {
       var current = e.target.dataset.src;
-      var imageList = this.data.list[e.target.dataset.index].urls;
+      var imageList = this.data.list[e.target.dataset.index].dynamicUrl;
       wx.previewImage({
         current: current,
         urls: imageList
@@ -97,6 +107,12 @@ Component({
     videoErrorCallback: function (e) {
       console.log('视频错误信息:')
       console.log(e.detail.errMsg)
+    },
+    goDynamic:function(e){//跳转动态详情
+      let dynamicId=e.currentTarget.dataset.dynamicid;
+      wx.navigateTo({
+        url: '../store/dynamicInfo/dynamicInfo?dynamicId='+dynamicId
+      })
     }
   }
 })

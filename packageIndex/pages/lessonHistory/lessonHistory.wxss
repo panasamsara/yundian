@@ -1,0 +1,76 @@
+
+.lesson-time{
+  font-size: 32rpx;
+  color: #333;
+  padding: 40rpx 0 0 30rpx;
+  line-height: 1;
+}
+.lesson-content{
+  display: flex;
+  padding: 30rpx;
+}
+.lesson-content .cover-box{
+  position: relative;
+  display: block;
+  width: 230rpx;
+  height: 160rpx;
+}
+.lesson-content .cover-box .cover{
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 10rpx;
+}
+.lesson-content .cover-box .subscripts{
+  position: absolute;
+  display: inline-block;
+  bottom: 20rpx;
+  left: 22rpx;
+  width: 26rpx;
+  height: 22rpx;
+}
+.lesson-content .cover-box .time{
+  position: absolute;
+  display: inline;
+  bottom: 20rpx;
+  left: 60rpx;
+  font-size: 26rpx;
+  line-height:20rpx;
+  color: #fff;
+}
+
+.lesson-content .text-box{
+  position: relative;
+  display: block;
+  flex: 1;
+  padding-left: 30rpx;
+}
+.lesson-content .text-box .title{
+  max-width: 430rpx;
+  font-size: 30rpx;
+  line-height: 74rpx;
+  color: #333;
+  font-weight: medium;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lesson-content .text-box .teacher{
+  display: block;
+  margin-top: 48rpx;
+  font-size: 26rpx;
+  line-height: 1;
+  color: #AAB2BC;
+}
+.lesson-content .text-box .teacher::before{
+  content: ' ';
+  display: inline-block;
+  margin-right: 14rpx;
+  width: 30rpx;
+  height: 30rpx;
+  background: #FFDAE2;
+  border-radius: 100%;
+  vertical-align: middle;
+  line-height: 1;
+}

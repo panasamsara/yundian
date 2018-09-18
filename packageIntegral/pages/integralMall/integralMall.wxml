@@ -1,0 +1,44 @@
+<view class='nav'>
+  <image class='bg' src="../images/bg@2x.png"></image>
+  <view class="bgview">
+    <view class='integral'>
+      <image src="../images/jinbi@2x.png"></image>
+      {{userCreditsInfo.usablePoint}}
+    </view>
+    <view class='btn'>
+      <view class='float_l' bindtap='integralDetail'>积分明细</view>
+      <view class='float_r' bindtap='integralRule'>积分规则</view>
+    </view>
+  </view> 
+</view>
+<view class='msg' wx:if="{{ordeInfo.length>0}}">
+  <swiper class="swiper_container" vertical="true" autoplay="true" circular="true" interval="2000">
+     <block wx:for="{{ordeInfo}}" wx:key="{{index}}">
+        <swiper-item>
+          <view class="swiper_item over_ellipsis"><image src='../images/tongzhi@2x.png'></image>{{item}}</view>
+        </swiper-item>
+    </block>
+   </swiper>
+</view>
+<view class='content'> 
+  <view class='list' wx:for="{{integralList}}" wx:key="{{index}}" data-goodsId="{{item.goodsId}}" data-goodsType="{{item.goodsType}}"bindtap='goDetail'>
+    <view class='viewBg'>
+      <image src="{{item.pictureUrl}}"></image>
+      <view class='bgTitle'>
+        <view class="title over_ellipsis">{{item.goodsName}}</view>
+        <view class='price'>价值：{{item.memberPrice}}元</view>
+      </view>
+    </view>
+      <view class='jifen'>{{item.point}}<text>积分</text></view>
+      <view class='com deficiency' wx:if="{{item.goodsType==3&&item.balance==0}}">库存不足</view>
+      <view class='com exchange' wx:else catchtap='exchange' data-id="{{item.id}}" >立即兑换</view>
+  </view>
+</view>
+<view class='more' hidden='{{flag}}' bindtap='addLoad'>查看更多商品<image src="../images/01_03.png"></image></view>
+<view class='more end' hidden='{{flag2}}' wx:if="{{integralList.length!=0}}">已经到底了哦~~</view>
+
+<view class='emptyImg' wx:if="{{integralList.length==0}}">
+  <image src='../images/shangping@2x.png'></image>
+  <view>暂无商品兑换</view>
+</view>
+

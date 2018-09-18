@@ -87,7 +87,7 @@
         <scroll-view scroll-y >
         <view class="list-content" >
           
-            <view>
+            <view >
               <view class="food" wx:for="{{cartGoodsList}}" wx:for-item="good" wx:key='index' >
                 <view class="name">{{good.goodsName}}</view>
                 <text class='stock-name'>{{good.stockName}}</text>
@@ -128,7 +128,7 @@
   <view style="height:86px;"></view>
   
 </view>
-<view bindtap="showShopCartFn" class="cover  {{(showShopCart && (cart_length > 0))?'':'hidden'}}"></view>
+<view bindtap="showShopCartFn" catchtouchmove='preventTouchMove' class="cover  {{(showShopCart && (cart_length > 0))?'':'hidden'}}"></view>
 
   <!-- 规格弹框 -->
   <view class='stock-mask' catchtouchmove='preventTouchMove' catchtap='closeMask' wx:if='{{showStock}}'>

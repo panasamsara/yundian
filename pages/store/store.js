@@ -107,29 +107,26 @@ Page({
       shopId: this.data.shopId
     }).then((res) => {
       wx.hideLoading();
-      if (res.data.data.resMap.length>0){
-        if (res.data.data.resMap[0].circleName) {//动态时间格式处理
-          var map = res.data.data.resMap[0];
+      var data=res.data.data;
+      //云店动态处理
+      if (data.resMap.length>0){
+        if (data.resMap[0].videoAlbumTime) {//动态时间格式处理
+          var map = data.resMap[0];
           map.videoAlbumTime = app.util.formatStoreDate(map.videoAlbumTime);
           map.mylength = map.urls.length;
         }
       }
-      
+      //云店头条处理
       if (res.data.data.scCmsArticle && res.data.data.scCmsArticle.length) {
         if (res.data.data.scCmsArticle[0].articleContent.length > 52) {//头条富文本编辑器处理
           let articleContent = res.data.data.scCmsArticle[0]
           articleContent.articleContent = articleContent.articleContent.replace(/<(style|script|iframe)[^>]*?>[\s\S]+?<\/\1\s*>/gi, '').replace(/<[^>]+?>/g, '').replace(/\s+/g, ' ').replace(/ /g, ' ').replace(/>/g, ' ').replace(/&nbsp;/g, ' ').substring(0, 52) + '...';
         }
       }
-
       this.setData({
-        data: res.data.data,
-        resMap: map || [],
-        circleFansTeam: res.data.data.circleFansTeam[0] || [],
-        circleNew: res.data.data.circleNew[0] || []
+        data: data
       })
-
-
+      console.log(this.data.data);
     })
   },
   getIntroduction: function () {
@@ -175,7 +172,7 @@ Page({
   },
   previewImage: function (e) {
     var current = e.target.dataset.src;
-    var imageList = this.data.resMap.urls;
+    var imageList = this.data.data.resMap[0].urls;
     wx.previewImage({
       current: current,
       urls: imageList
@@ -197,6 +194,27 @@ Page({
     var articleId = e.currentTarget.dataset.articleid;
     wx.navigateTo({
       url: '../../packageIndex/pages/articleDetail/articleDetail?articleId=' + articleId,
+    })
+  },
+  // skipDetail:function(e){
+  //   var detailId = e.currentTarget.dataset.detailid;
+  //   var typeId = e.currentTarget.dataset.type;
+  //   wx.navigateTo({
+  //     url: '../../packageIndex/pages/pinkGroup/pinkGroup?detailId=' + detailId + "&typeId=" + typeId,
+  //   })
+  // },
+  phoneCall(){
+    let tel = wx.getStorageSync('shop').phoneService
+    if (tel != null){
+      wx.makePhoneCall({
+        phoneNumber: tel 
+      })
+    }
+  },
+  goDynamic: function (e) {//跳转动态详情
+    let dynamicId = e.currentTarget.dataset.dynamicid;
+    wx.navigateTo({
+      url: 'dynamicInfo/dynamicInfo?dynamicId=' + dynamicId
     })
   }
 })

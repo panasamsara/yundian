@@ -41,27 +41,39 @@ Page({
     })
   },
   submit:function(){
-  let datas=this.data.data,
-      data={
-        summary: datas.summary||'',
-        facilityName: datas.deviceText,
-        customer: datas.customer,
-        bespokeBeginTime: datas.bespokeBeginTime,
-        bespokeEndTime: datas.bespokeEndTime,
-        facilityId: datas.facilityId,
-        receptionNum: datas.receptionNum,
-        serviceName: datas.serviceNameText,
-        customerId: wx.getStorageSync('scSysUser').id,
-        serviceId: datas.serviceId,
-        shopName: wx.getStorageSync('shop').shopName,
-        shopId: wx.getStorageSync('shop').id,
-        merchantId: wx.getStorageSync('shop').merchantId,
-        waiter: datas.serviceText,
-        mobile: datas.mobile,
-        waiterId: datas.waiterId
-      }
+    if(this.data.status=='appointed'){
+      wx.showToast({
+        title: '您已经预约过了',
+        icon:'none'
+      })
+      return
+    }
+    let datas=this.data.data,
+        data={
+          summary: datas.summary||'',
+          facilityName: datas.deviceText,
+          customer: datas.customer,
+          bespokeBeginTime: datas.bespokeBeginTime,
+          bespokeEndTime: datas.bespokeEndTime,
+          facilityId: datas.facilityId,
+          receptionNum: datas.receptionNum,
+          serviceName: datas.serviceNameText,
+          customerId: wx.getStorageSync('scSysUser').id,
+          serviceId: datas.serviceId,
+          shopName: wx.getStorageSync('shop').shopName,
+          shopId: wx.getStorageSync('shop').id,
+          merchantId: wx.getStorageSync('shop').merchantId,
+          waiter: datas.serviceText,
+          mobile: datas.mobile,
+          waiterId: datas.waiterId
+        }
     app.util.reqAsync('shop/addBespokeV2', data).then((res) => {
       if(res.data.code==1){
+        // this.setData({
+        //   status:'appointed'
+        // })
+        console.log('预约成功------------------------回调数据-预约单号', res.data.data)
+        app.util.sendMessage(res.data.data.orderNo, wx.getStorageSync('shop').id, wx.getStorageSync('scSysUser').usercode, 2)
         wx.showToast({
           title: res.data.msg,
           icon:'none'
@@ -81,6 +93,9 @@ Page({
       }  
     }).catch((err) => {
       console.log(err);
+    })
+    this.setData({
+      status: 'appointed'
     })
   }
 })

@@ -6,14 +6,14 @@ const app = getApp();
 
 
 Page({
-  data: {
+  data: { 
     delBtnWidth: 180,//删除按钮宽度单位（rpx）
     isAllSelect: false,
     totalMoney: 0,
     shopk: 0,//k表示有店铺多少被勾选了
     goodlist:[],
     customerId:'',
-    shopid:"",
+    shopid:"", 
     isEdit:0 //0未编辑 1正在编辑
   },
   onLoad: function () {
@@ -284,7 +284,6 @@ Page({
   updateCart: function (goodsId, numbe, stockId){ //加减之后要更新购物车
     
     app.util.reqAsync('shop/updateNewShopCartV2', {
-     
       customerId: this.data.customerId,
       goodsId: goodsId,
       number: numbe,

@@ -276,3 +276,227 @@
   border-radius: 50rpx;
 
 }
+.shade{
+  width:100%;
+  height: 100%;
+  background-color:rgba(0, 0, 0, 0.3);
+  position: fixed;
+  top:0;
+  left: 0;
+  z-index: 999;
+}
+/* 弹出层 */
+.layer{
+  width:680rpx;
+  height: 860rpx;
+  background-color: #fff;
+  position: fixed;
+  top:200rpx;
+  left: 35rpx;
+  border-radius: 8rpx;
+  z-index:999; 
+}
+.shade{
+  position: fixed;
+  top:0;
+  left: 0;
+  width:100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index:999;
+}
+/* 购买样式 */
+.show{
+  opacity: 1;
+}
+.hide{
+  opacity: 0;
+}
+.bgpic{
+  position: relative;
+}
+.bgpic>image{
+  width:100%;
+  height:700rpx;
+}
+.time {
+   text-align: center;
+    color: #fb452c;
+    padding: 20rpx 0;
+     font-size: 28rpx;
+     height: 60rpx;
+     vertical-align: center;
+     line-height: 60rpxx;
+}
+.time text{
+  padding: 10rpx;
+  font-size: 28rpx;
+  background-color: #fb452c;
+     vertical-align: center;
+  
+  color: #fff;
+  border-radius: 10rpx;
+}
+.shade{
+  position: fixed;
+  top:0;
+  left: 0;
+  width:100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index:999;
+}
+.dialog{
+  width:100%;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 9999;
+}
+.dialog .top{
+  height: 740rpx;
+  padding:0 30rpx;
+  position: relative;
+  background-color: #fff;
+  border-top-left-radius: 18rpx;
+  border-top-right-radius: 18rpx;
+}
+.dialog .top>image{
+  position:absolute;
+  width:240rpx;
+  height: 240rpx;
+  top:-50rpx;
+  left:30rpx;
+}
+
+.dialog .top .topBox{
+  width: 100%;
+  height: 140rpx;
+  display: flex;
+  flex-direction: column;
+  line-height: 70rpx;
+  padding: 50rpx 0 0 260rpx;
+}
+
+.dialog .top text{
+  display: block;
+  /* margin-left: 260rpx; */
+  }
+.dialog .top .price{
+  font-size: 48rpx;
+  color:#ff0036;
+  height: 70rpx;
+  /* padding-top: 55rpx; */
+}
+.dialog .top .count{
+  height: 70rpx;
+  font-size: 36rpx;
+  color: #999999;
+  /* margin-top: 20rpx; */
+}
+.dialog .top .size{
+  padding:60rpx 0;
+  border-bottom: 1rpx solid #e5e5e5;
+  max-height: 330rpx;
+}
+
+.dialog .top .size span{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  float: left;
+  /* width: 150rpx; */
+  height: 70rpx;
+  background-color: #e5e5e5;
+  margin-right: 40rpx;
+  margin-top: 20rpx;
+  border-radius: 35rpx;
+  font-size: 30rpx;
+  line-height: 70rpx;
+  text-align: center;
+  color: #666666;
+  padding: 0 20rpx;
+}
+.dialog .top .buyCount{
+  font-size: 34rpx;
+  height: 100rpx;
+  line-height: 100rpx;
+}
+.buyCount .left{
+  float: left;
+}
+.buyCount .right{
+  height: 100rpx;
+  float: right;
+}
+.buyCount .right span{
+  float: left;
+  width:80rpx;
+  height: 80rpx;
+  margin-right: 2rpx;
+  text-align: center;
+  line-height: 80rpx;
+  font-size: 50rpx;
+  margin-top: 10rpx;
+}
+
+.buyCount span.middle{
+  font-size: 30rpx;
+}
+
+.light{
+  background-color: #f8f8f8;
+}
+.dark{
+    background-color: #f4f4f4;
+}
+.middle{
+  color:#333;
+}
+.bet{
+  color: #999;
+}
+.dialog .tot{
+  height: 100rpx;
+  background-color: #fb452c;
+  text-align: center;
+  color:#fff;
+  line-height: 100rpx;
+  font-size: 36rpx;
+}
+
+.dialog .top .size .active{
+  background-color: #fb452c;
+  color:#fff;
+}
+
+.cart{
+  background-color:#fe732e;
+}
+
+.coupon{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 30rpx;
+  font-size: 28rpx;
+  align-items: center;
+}
+
+.coupon image.left{
+  width: 62rpx;
+  height: 28rpx;
+  margin-right: 25rpx;
+}
+
+.coupon .right{
+  width: 100rpx;
+  height: 28rpx;
+  line-height: 28rpx;
+  text-align: right;
+}
+
+.coupon .right image{
+  width: 15rpx;
+  height: 28rpx;
+}

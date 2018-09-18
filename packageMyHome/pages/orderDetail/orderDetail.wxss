@@ -432,3 +432,11 @@ page,.content{
   left:20rpx;
   border-radius: 100%;
 }
+.user-address{
+  width:600rpx;
+  overflow:hidden;
+  display:-webkit-box;
+  text-overflow:ellipsis;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2; 
+}

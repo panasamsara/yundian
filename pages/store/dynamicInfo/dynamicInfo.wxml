@@ -1,0 +1,36 @@
+<!--pages/store/dynamicInfo/dynamicInfo.wxml-->
+<view class='container dynamic'>
+  <view class='dynamicBox'>
+    <view class='headBox'>
+      <view class='headPic'>
+        <image src='{{dynamic.headPortrait}}'></image>
+      </view>
+      <view class='infoBox'>
+        <text class='storeName'>{{dynamic.shopName}}</text>
+        <text class='date'>{{dynamic.gmtCreate}}</text>
+      </view>
+    </view>
+    <view class='dynamicText' wx:if="{{dynamic.dynamicContent!=''}}">
+      <text>{{dynamic.dynamicContent}}</text>
+    </view>
+    <!-- 图文 -->
+    <view class='imageBoxs' wx:if="{{dynamic.contentType==1}}">
+      <image wx:for="{{dynamic.dynamicUrl}}" wx:for-item="dynamics" wx:key="index" src="{{dynamics}}" data-src='{{dynamics}}' bindtap='previewImage' data-index="index"></image>
+    </view>
+    <!-- 视频 -->
+    <view class='videoBox' wx:if="{{dynamic.contentType==2}}">
+      <video src='{{dynamic.dynamicUrl[0]}}' id='myVideo' binderror="videoErrorCallback" poster='{{dynamic.videoAlbumCoverUrl}}'></video>
+    </view>
+    <view class='border'></view>
+    <view class='footBox'>
+      <view class='headPic'>
+        <image src='{{dynamic.headPortrait}}'></image>
+      </view>
+      <view class='storeName'>{{dynamic.shopName}}</view>
+      <view id='optionBox'>
+        <view id='back' bindtap='goBack'><image src='images/yundian_dtxq_zhuye.png'></image></view>
+      </view>
+    </view>
+    <view class='border'></view>
+  </view>
+</view>

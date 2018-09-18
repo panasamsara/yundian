@@ -405,12 +405,12 @@ Page({
       if (this.data.isSeckill == 1) {//秒杀
         //跳到线上订单
         wx.redirectTo({
-          url: '../../packageMyHome/orderDetail/orderDetail?orderNo=' + this.data.orderNo + '&isGroupBuying=' + 0 + '&orderkind=' + 3
+          url: '../../../../../packageMyHome/pages/orderDetail/orderDetail?orderNo=' + this.data.orderNo + '&isGroupBuying=' + 0 + '&orderkind=' + 3
         })
       } else {
         //跳到线上订单
         wx.redirectTo({
-          url: '../../packageMyHome/orderDetail/orderDetail?orderNo=' + this.data.orderNo + '&isGroupBuying=' + 1
+          url: '../../../../../packageMyHome/pages/orderDetail/orderDetail?orderNo=' + this.data.orderNo + '&isGroupBuying=' + 1
         })
       }
 

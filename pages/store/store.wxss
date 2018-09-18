@@ -45,6 +45,8 @@ page {
   color: #fff;
   padding-left: 15rpx;
   line-height: 50rpx;
+  display: flex;
+  flex-direction: column;
 }
 
 .storeName {
@@ -61,6 +63,11 @@ page {
   overflow: hidden;
   display: flex;
   align-items: center;
+}
+
+.date{
+  font-size: 24rpx;
+  color: #989898;
 }
 
 .productsNum, .updateNum, .activityNum {
@@ -191,13 +198,14 @@ page {
   padding-right: 15rpx;
 }
 
-.phone, .briefText {
-  border: none;
+.phone, .desc {
+  border-bottom: solid 20rpx #f8f8f8;
 }
 
 .briefText input, .phoneNum {
-  color: #656565;
+  color: #ff5c46;
   font-size: 30rpx;
+  font-weight: bold;
 }
 
 #dynamic{

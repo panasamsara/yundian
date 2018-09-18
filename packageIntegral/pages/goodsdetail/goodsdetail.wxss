@@ -1,0 +1,98 @@
+/* packageIntegral/pages/goodsdetail/goodsdetail.wxss */
+#goodsdetail{
+  letter-spacing: 1rpx;
+}
+
+#goodsdetail .banner{
+  height: 750rpx;
+}
+
+#goodsdetail .banner image{
+  width: 100%;
+  height: 750rpx;
+}
+
+#goodsdetail #goodsName{
+  font-size: 36rpx;
+  line-height: 85rpx;
+  word-break: break-all;
+}
+
+#goodsdetail .goodsInfo{
+  padding: 0 0 20rpx 25rpx;
+  border-bottom: solid 22rpx #F6F6F6;
+}
+
+.point,.value{
+  font-size: 28rpx;
+}
+
+#goodsdetail .point{
+  color: #FB452C;
+  margin-right: 70rpx;
+}
+
+#goodsdetail #pointAmount{
+  font-size: 45rpx;
+  margin-right: 25rpx;
+}
+
+#goodsdetail .value{
+  color: #666666;
+}
+
+#goodsdetail .goodsDesc{
+  padding: 30rpx 30rpx 110rpx 30rpx;
+}
+
+#goodsdetail #goodsTitle{
+  border-left: solid 6rpx #FB452C;
+  padding-left: 15rpx;
+  font-size: 34rpx;
+  height: 40rpx;
+  line-height: 40rpx;
+}
+
+#goodsdetail .exchange{
+  width: 100%;
+  height: 90rpx;
+  line-height: 90rpx;
+  color: #ffffff;
+  text-align: center;
+  font-size: 34rpx;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 999;
+}
+
+#goodsdetail #exchange{
+  background: -webkit-linear-gradient(left, #FF5B38 , #FF2544); /* Safari 5.1 - 6.0 */
+  background: -o-linear-gradient(right, #FF5B38, #FF2544); /* Opera 11.1 - 12.0 */
+  background: -moz-linear-gradient(right, #FF5B38, #FF2544); /* Firefox 3.6 - 15 */
+  background: linear-gradient(to right, #FF5B38 , #FF2544); /* 标准的语法 */
+}
+
+#goodsdetail #lowstocks{
+  background-color: #DADADA;
+}
+
+#goodsdetail #blank{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 28rpx;
+  color: #666666;
+  text-align: center;
+}
+
+#goodsdetail #blank image{
+  width: 320rpx;
+  height: 380rpx;
+  margin-bottom: 20rpx;
+}
+
+#descBox{
+  padding: 25rpx;
+  font-size: 30rpx;
+}

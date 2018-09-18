@@ -10,5 +10,5 @@
 </view>
 
 <view class='content' wx:if='{{hasData}}'>
-  <image wx:for="{{photoLists}}" wx:for-item="list" wx:index='index' bindtap='imgYuLan' data-list="{{photoLists}}" data-src="{{list.contentUrl}}" src='{{list.contentUrl}}' class='photo-list'></image>
+  <image wx:for="{{photoLists}}" wx:for-item="list" wx:index='index' bindtap='imgYuLan' data-list="{{photoLists}}" data-src="{{list.contentUrl}}" src='{{list.contentUrl}}?x-oss-process=image/resize,w_300' class='photo-list' mode='aspectFill'></image>
 </view>

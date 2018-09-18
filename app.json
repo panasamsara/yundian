@@ -9,7 +9,6 @@
     "pages/proList/proList",
     "pages/car/car",
     "pages/myHome/myHome",
-    
     "pages/myHome/shopOrder/shopOrder",
     "pages/myHome/shopOrder/orderDetail/orderDetail",
     "pages/myHome/discounts/discounts",
@@ -27,6 +26,7 @@
     "pages/orderBuy/orderBuy",
     "pages/orderBuy/discount/discount",
     "pages/store/dynamic/dynamic",
+    "pages/store/newGoods/newGoods",
     "pages/store/headline/headline",
     "pages/store/player/player",
     "pages/store/fans/fans",
@@ -39,7 +39,9 @@
     "pages/spelldetails/spelldetails",
     "pages/myHome/downLoadIos/downLoadIos",
     "pages/myHome/downLoadAndroid/downLoadAndroid",
-    "pages/store/posterActivity/posterActivity"
+    "pages/store/posterActivity/posterActivity",
+    "pages/QrToActivity/QrToActivity",
+    "pages/store/dynamicInfo/dynamicInfo"
   ],
   "subPackages": [
     {
@@ -54,14 +56,36 @@
         "pages/appointment/modal/device-modal/device-modal",
         "pages/appointment/modal/service-modal/service-modal",
         "pages/appointment/modal/serviceName-modal/serviceName-modal",
-        "pages/articleDetail/articleDetail"
+        "pages/articleDetail/articleDetail",
+        "pages/pinkGroup/pinkGroup",
+        "pages/allAlbum/allAlbum",
+        "pages/allPhoto/allPhoto",
+        "pages/activityList/activityList",
+        "pages/lesson/lesson",
+        "pages/lessonDetail/lessonDetail",
+        "pages/lessonHistory/lessonHistory",
+        "pages/lessonOrder/lessonOrder",
+        "pages/fansSearch/fansSearch"
       ]
     },
     {
       "root": "packageOffline",
       "pages": [
         "pages/proList/proList",
-        "pages/goods/goods"
+        "pages/goods/goods",
+        "pages/orderDetail/orderDetail"
+      ]
+    },
+    {
+      "root": "packageIntegral",
+      "pages": [
+        "pages/integralDetail/integralDetail",
+        "pages/integralRule/integralRule",
+        "pages/convertSuccess/convertSuccess",
+        "pages/integralMall/integralMall",
+        "pages/goodsdetail/goodsdetail",
+        "pages/orderdetail/orderdetail",
+        "pages/orderConfirm/orderConfirm"
       ]
     },
     {
@@ -84,7 +108,6 @@
         "pages/expenseDetail/expenseDetail",
         "pages/forDetail/forDetail",
         "pages/consumptionDetail/consumptionDetail"
-
       ]
     }
   ],
@@ -105,7 +128,7 @@
         "pagePath": "pages/index/index",
         "iconPath": "images/shouye_hui.png",
         "selectedIconPath": "images/shouye_ju.png",
-        "text": "首页"
+        "text": "店铺"
       },
       {
         "pagePath": "pages/proList/proList",

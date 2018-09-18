@@ -3,11 +3,11 @@ const app = getApp();
 Page({
   data: {
     discount: [], //status 状态  0 删除，1 可用，2 不可用
-    shopId:'',
-    shopName:'',
-    customerId:'',
-    totalMoney:0,
-    isSend:0 //配送方式
+    shopId: '',
+    shopName: '',
+    customerId: '',
+    totalMoney: 0,
+    isSend: 0 //配送方式
   },
   onLoad: function (options) {
     var user = wx.getStorageSync('scSysUser');
@@ -24,7 +24,7 @@ Page({
     console.log(discount)
   },
 
-  skip:function(e){
+  skip: function (e) {
     var name = e.currentTarget.dataset.name;
     var amount = e.currentTarget.dataset.amount;//满
     var amountMin = e.currentTarget.dataset.amountmin;//减
@@ -33,16 +33,16 @@ Page({
     var limtgood = e.currentTarget.dataset.limit;//指定商品的id
     wx.redirectTo({
       url: '../orderBuy?name=' + name + '&amountMin=' + amountMin + '&amount=' + amount + '&instruction=' + instruction + '&shopId=' + this.data.shopId + '&shopName=' +
-        this.data.shopName + '&customerId=' + this.data.customerId + '&totalMoney=' + this.data.totalMoney + '&counid=' + id + '&limtgood=' + limtgood
+        this.data.shopName + '&customerId=' + this.data.customerId + '&totalMoney=' + this.data.totalMoney + '&counid=' + id + '&limtgood=' + limtgood + '&isSend=' + this.data.isSend
     })
   },
-  noSe:function(e){
+  noSe: function (e) {
     //暂不使用
     wx.redirectTo({
       url: '../orderBuy?name=' + '' + '&amountMin=' + "" + '&amount=' + "" + '&instruction=' + "" + '&shopId=' + this.data.shopId + '&shopName=' +
-      this.data.shopName + '&customerId=' + this.data.customerId + '&totalMoney=' + this.data.totalMoney + '&counid=' + ""
+        this.data.shopName + '&isSend=' + this.data.isSend + '&customerId=' + this.data.customerId + '&totalMoney=' + this.data.totalMoney + '&counid=' + ""
     })
   }
-  
-  
+
+
 })

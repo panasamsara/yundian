@@ -6,6 +6,7 @@ page{
   position: relative;
   letter-spacing: 2rpx;
   padding-top: 88rpx;
+  padding-bottom: 110rpx;
 }
 .clearfix::after{
   content: '.';
@@ -46,7 +47,7 @@ swiper-item image{
   text-indent: 25rpx;
 }
 
-#newPrice{
+.newPrice{
   font-size: 48rpx;
 }
 
@@ -73,7 +74,7 @@ swiper-item image{
   border-radius: 6rpx; 
 }
 
-.right #text{
+.right .text{
   height: 45rpx;
   line-height: 45rpx;
 }
@@ -428,9 +429,7 @@ swiper-item image{
   height: 52rpx;
   margin-top:13rpx; 
 }
-.mb{
-  margin-bottom: 100rpx;
-}
+
 .tips>text{
   padding:25rpx 30rpx;
   font-size: 30rpx;
@@ -538,7 +537,7 @@ view.normalBuy #buyNow,view.normalBuy #addCart{
   top:200rpx;
   left: 35rpx;
   border-radius: 8rpx;
-  z-index:999; 
+  z-index:9999; 
 }
 .layer .close{
   text-align: center;
@@ -934,11 +933,11 @@ view.normalBuy #buyNow,view.normalBuy #addCart{
   bottom: 0;
   z-index: 9999;
   width: 100%;
-  height: 800rpx;
+  height: auto;
 }
 
 .quan-box{
-  height: 800rpx;
+  max-height: 800rpx;
   background-color: rgba(255, 255, 255, 1);
 }
 

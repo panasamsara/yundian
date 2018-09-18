@@ -9,60 +9,82 @@ Page({
     shop:{},
     items: [
       {
-        icon: './images/dianneiorder.png',
+        icon: '../../images/dianneiorder.png',
         text: '店内订单',
-        path: '/pages/myHome/shopOrder/shopOrder'
+        path: '/pages/myHome/shopOrder/shopOrder',
+        style: "width:48rpx;height:44rpx;"
       },
       {
-        icon: './images/yuyuemanage.png',
-        text: '预约管理',
-        path: '../../packageMyHome/pages/appointmentManage/appointmentManage'
+        icon: '../../images/jifenduihuan.png',
+        text: '积分兑换',
+        path: '../../packageIntegral/pages/integralMall/integralMall',
+        style: "width:56rpx;height:46rpx;"
       },
       {
-        icon: './images/myaccount.png',
-        text: '我的账户',
-        path: '../../packageMyHome/pages/myAccount/myAccount'
-      },
-      {
-        icon: './images/youhuidiscount.png',
+        icon: '../../images/youhuidiscount.png',
         text: '优惠券',
         path: '/pages/myHome/discounts/discounts',
+        style: "width:57rpx;height:39rpx;"
       },
       {
-        icon: './images/dizhimanage.png',
-        text: '地址管理',
-        path: '../../packageMyHome/pages/address/index/list',
-      },
-      {
-        icon: './images/myquestion.png',
+        icon: '../../images/myquestion.png',
         text: '我的问答',
         path: '../../packageMyHome/pages/myQuestion/myQuestion',
+        style: "width:47rpx;height:49rpx;"
       },
+      {
+        icon: '../../images/dizhimanage.png',
+        text: '地址管理',
+        path: '../../packageMyHome/pages/address/index/list',
+        style: "width:58rpx;height:52rpx;"
+      },
+      {
+        icon: '../../images/yundian_wode_kcdd.png',
+        text: '课程订单',
+        path: '../../packageIndex/pages/lessonOrder/lessonOrder',
+        style: "width:54rpx;height:50rpx;"
+      },
+      {
+        icon: '../../images/yundian_wode_xxls.png',
+        text: '学习历史',
+        path: '../../packageIndex/pages/lessonHistory/lessonHistory',
+        style: "width:54rpx;height:50rpx;"
+      },
+      // {
+      //   icon: './images/gengduo.png',
+      //   text: '更多',
+      //   path: '',
+      //    style: "width:44rpx;height:44rpx;"
+      // },
     ],
     shopList:[
       {
-        icon: './images/daifukuan.png',
+        icon: '../../images/daifukuan.png',
         text: '待付款',
         path: '../../packageMyHome/pages/order/order?index=1',
-        num: ""
+        num: "",
+        style:"width:47rpx;height:40rpx;"
       },
       {
-        icon: './images/daifahuo.png',
+        icon: '../../images/daifahuo.png',
         text: '待发货',
         path: '../../packageMyHome/pages/order/order?index=2',
-        num: ""
+        num: "",
+        style: "width:42rpx;height:40rpx;"
       },
       {
-        icon: './images/daishouhuo.png',
+        icon: '../../images/daishouhuo.png',
         text: '待收货',
         path: '../../packageMyHome/pages/order/order?index=3',
-        num: ""
+        num: "",
+        style: "width:43rpx;height:40rpx;"
       },
       {
-        icon: './images/daipingjia.png',
+        icon: '../../images/daipingjia.png',
         text: '待评价',
         path: '../../packageMyHome/pages/order/order?index=4',
-        num: ""
+        num: "",
+        style: "width:45rpx;height:40rpx;"
       },
       // {
       //   icon: './images/shouhou.png',
@@ -71,11 +93,12 @@ Page({
       // },
     ],
     flag:false, //手机系统是否是ios
-    count:0
+    count:0,
+    animate:""
   },
   onLoad: function (options) {
     this.setData({
-      count:0
+      count:0,
     })
     var user = wx.getStorageSync('scSysUser');
     var shop = wx.getStorageSync('shop')
@@ -105,10 +128,17 @@ Page({
     })
   },
   onShow:function(){
+    var that = this;
     this.getlist();
     this.setData({
-      count:0
+      count:0,
+      animate: true
     })
+    setTimeout(function () {
+      that.setData({
+        animate: false
+      })
+    }, 8000)
   },
   getlist:function(){
     wx.showLoading({
@@ -159,6 +189,16 @@ Page({
     }
     this.setData({
       count:count
+    })
+  },
+  skipAppoint:function(){
+    wx.navigateTo({
+      url: '../../packageMyHome/pages/appointmentManage/appointmentManage',
+    })
+  },
+  shipAccount:function(){
+    wx.navigateTo({
+      url: '../../packageMyHome/pages/myAccount/myAccount',
     })
   }
 })

@@ -181,6 +181,65 @@ Page({
             }).catch((err) => {
               console.log(err)
             })
+          } else {
+            if (goods.length != 0) {
+              for (let j = 0; j < goods.length; j++) {
+                goodMap[goods[j].id] = goods[j];
+                goodMap[goods[j].id].number = 0
+                goodsInCategory.push(goods[j])
+
+                if (goods[j].stockList.length != 0) {
+                  for (let k = 0; k < goods[j].stockList.length; k++) {
+                    let goodStock = []
+                    goodStock.goodsName = goods[j].goodsName
+                    goodStock.goodsId = goods[j].id
+                    goodStock.stockId = goods[j].stockList[k].id
+                    goodStock.number = 0
+                    goodStock.goodsPrice = goods[j].price
+                    goodStock.stockPrice = goods[j].stockList[k].stockPrice
+                    goodStock.stockPrice = goods[j].stockList[k].stockPrice
+                    stockMap[goodStock.stockId] = goodStock
+                  }
+                } else {
+                  let goodStock = []
+                  goodStock.goodsName = goods[j].goodsName
+                  goodStock.goodsId = goods[j].id
+                  goodStock.stockId = null
+                  goodStock.number = 0
+                  goodStock.goodsPrice = goods[j].price
+                  goodStock.stockPrice = null
+                  goodStock.stockBalance = goods[j].stockBalance
+                  stockMap[goodStock.goodsId] = goodStock
+                }
+
+              }
+            } else { // 没有商品
+              wx.showToast({
+                title: '暂无商品',
+                icon: 'none'
+              })
+              this.setData({
+                showLoading: false
+              })
+              return
+            }
+            let g = {}
+            for (let j = 0; j < goodMap.length; j++) {
+              if (goodMap[j] && goodMap[j])
+                g[j] = goodMap[j]
+            }
+            let h = {}
+            for (let i = 0; i < stockMap.length; i++) {
+              if (stockMap[i] && stockMap[i])
+                h[i] = stockMap[i]
+            }
+            this.setData({
+              goodMap: g,
+              stockMap: h,
+              goodsInCategory: goodsInCategory,
+              showLoading: false
+            })
+            this.shopCartList()
           }
           
         }else{
@@ -469,6 +528,7 @@ Page({
   },
   //选择规格(有规格)
   choseStock: function(e){
+    var _this = this
     let p_index = e.target.id.split('_')[1];
     let _index = e.target.id.split('_')[2];
     // let _id = e.target.id.split('_')[2];
@@ -528,6 +588,11 @@ Page({
             success: function (res) {
               if (res.confirm) {
                 // console.log('用户点击确定')
+                _this.setData({
+                  chosenStockId: null,
+                  chosenStockPrice: null,
+                  hasChooseStock: false
+                })
               } 
             }
           })
@@ -583,6 +648,7 @@ Page({
       // hasChooseStock: false,
       attrList: [],
       stocks: [],
+      stockHighLightIndex: -1,
       chosenStockPrice: null
     })
   },

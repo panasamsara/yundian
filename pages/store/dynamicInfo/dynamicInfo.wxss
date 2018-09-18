@@ -1,0 +1,56 @@
+/* pages/store/dynamicInfo/dynamicInfo.wxss */
+@import "../dynamic/dynamic.wxss";
+
+.dynamic{
+  padding-bottom: 0;
+}
+
+.dynamic .imageBoxs{
+  padding-bottom: 20rpx;
+}
+
+.dynamic .imageBoxs image{
+  width: 100%;
+}
+.dynamic .dynamicBox{
+  margin-bottom: 0;
+}
+
+.dynamic .border{
+  border-bottom: solid 20rpx #f8f8f8;
+  margin: 0 -30rpx;
+}
+
+.dynamic .footBox{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30rpx 0;
+}
+
+.footBox .headPic{
+  width: 150rpx;
+  height: 150rpx;
+}
+
+.footBox .headPic image{
+  width: 159rpx;
+  height: 150rpx;
+}
+
+.footBox #optionBox{
+  display: flex;
+  flex-direction: row;
+}
+
+#optionBox #back image{
+  width: 110rpx;
+  height: 44rpx;
+}
+
+.footBox .storeName{
+  line-height: 80rpx;
+  text-align: center;
+  word-break: break-all;
+}

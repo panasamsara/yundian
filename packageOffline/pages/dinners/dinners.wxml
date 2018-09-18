@@ -1,0 +1,19 @@
+<view class="head">
+  <image src="img/jcrs_banner_bg@2x.png" class="banner"></image>
+  <view class="imoe">
+    <image src='img/con5.jpg'></image>
+  </view>
+  <view class="naoe">海底捞（光谷店）</view>
+</view>
+<view class='order'>
+  <text class="number">选择就餐人数</text>
+  <view class='options'>
+    <view class="bright789_view_hide{{showView?'bright789_view_show':''}}">
+      <view class="ions" wx:for="{{list}}" wx:key="list">
+        <view class="{{index==idx?'_left':'left'}}" bindtap='goIndex' data-index="{{index}}">{{item.num}}</view>
+      </view>
+    </view>
+    <view class='ions'bindtap="onChangeShowState">...</view>
+  </view>
+  <button class="confirm" bindtap='confirmd'>确定</button>
+</view>

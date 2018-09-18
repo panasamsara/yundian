@@ -37,19 +37,15 @@ page{
     /* padding-bottom: 50px; */
 }
 .menu-item{
-  display:flex;
-  height:54px;
+  height:42px;
   width:80px;
-  padding:0 12px;
-  line-height:18px;
+  line-height:33px;
+  padding:12px 12px 0;
   color:#999;
   font-size:0.8rem;
   text-align:center;
   overflow:hidden;
   vertical-align:middle;
-  flex-direction:row;
-  align-items:center;
-
 }
 .menu-item.current{
   color:#333;
@@ -93,7 +89,6 @@ page{
   position: relative;
   width: 270rpx;
   margin-bottom:-5rpx;
-
 }
 .foods-item .price{
   font-size: 34rpx;
@@ -111,7 +106,7 @@ page{
 .cartcontrol-wrap{
   position: absolute;
   right: 0;
-  bottom: 15px;
+  bottom: 18px;
 }
 .cartcontrol{
   font-size: 0;
@@ -121,8 +116,8 @@ page{
   padding:6px;
   opacity:1;
   transform:translate3d(0, 0, 0);
-  width:22px;
-  height:22px;
+  width:28px;
+  height:28px;
   background-repeat:no-repeat;
   background-size: contain;
   background-position:center;
@@ -130,8 +125,8 @@ page{
   float: left;
 }
 .cart-add{
-  width:22px;
-  height:22px;
+  width:28px;
+  height:28px;
   display: inline-block;
   padding: 6px;
   padding:0;
@@ -381,7 +376,7 @@ page{
  .list-content .cartcontrol-wrapper{
   position: absolute;
   right: 0;
-  bottom: -8px;
+  bottom: -12px;
 }
  
 .content-right .pay.payClass{

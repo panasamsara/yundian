@@ -1,46 +1,41 @@
 <!--pages/store/dynamic/dynamic.wxml-->
+<view>
 <view class='container dynamic' wx:if="{{list.length!=0}}">
   <view wx:for="{{list}}" wx:key="{{item.index}}" class='dynamicBox' wx:for-item="item">
-    <view class='headBox'>
+    <view class='headBox' bindtap='goDynamic' data-dynamicid="{{item.id}}">
       <view class='headPic'>
-        <image src='{{item.circleLogo}}'></image>
+        <image src='{{item.headPortrait}}'></image>
       </view>
       <view class='infoBox'>
-        <text class='userName'>{{item.circleName}}</text>
-        <view class='store'>
-          <image src='images/yundian_dpzy_dianou.png'></image>
-          <text class='storeName'>{{item.shopName?item.shopName:'暂无店铺'}}</text>
-        </view>
-      </view>
-      <view class='date'>
-        <text>{{item.videoAlbumTime}}</text>
+        <text class='storeName'>{{item.shopName?item.shopName:'暂无店铺'}}</text>
+        <text class='date'>{{item.gmtCreate}}</text>
       </view>
     </view>
-    <view class='dynamicText' wx:if="{{item.videoAlbumDescription!=''}}">
-      <text>{{item.videoAlbumDescription}}</text>
+    <view class='dynamicText' wx:if="{{item.dynamicContent!=''}}" bindtap='goDynamic' data-dynamicid="{{item.id}}">
+      <text>{{item.dynamicContent}}</text>
     </view>
     <!-- 图文 -->
-    <view class='imageBox' wx:if="{{item.videoAlbumType==1}}">
-      <image wx:for="{{item.urls}}" wx:for-item="items" wx:key="index" src="{{items}}" data-src='{{items}}' bindtap='previewImage' class='type1' wx:if="{{item.mylength==1}}" data-index="{{item.index}}"></image>
-      <image wx:for="{{item.urls}}" wx:for-item="items" wx:key="index" src="{{items}}" data-src='{{items}}' bindtap='previewImage' class='type2' wx:if="{{item.mylength==2}}" data-index="{{item.index}}"></image>
-      <image wx:for="{{item.urls}}" wx:for-item="items" wx:key="index" src="{{items}}" data-src='{{items}}' bindtap='previewImage' class='type3' wx:if="{{item.mylength>=3}}" data-index="{{item.index}}"></image>
+    <view class='imageBox' wx:if="{{item.contentType==1}}">
+      <image wx:for="{{item.dynamicUrl}}" wx:for-item="items" wx:key="index" src="{{items}}" data-src='{{items}}' bindtap='previewImage' class='type1' wx:if="{{item.mylength==1}}" data-index="{{item.index}}"></image>
+      <image wx:for="{{item.dynamicUrl}}" wx:for-item="items" wx:key="index" src="{{items}}" data-src='{{items}}' bindtap='previewImage' class='type2' wx:if="{{item.mylength==2}}" data-index="{{item.index}}"></image>
+      <image wx:for="{{item.dynamicUrl}}" wx:for-item="items" wx:key="index" src="{{items}}" data-src='{{items}}' bindtap='previewImage' class='type3' wx:if="{{item.mylength>=3}}" data-index="{{item.index}}"></image>
     </view>
     <!-- 视频 -->
-    <view class='videoBox' wx:if="{{item.videoAlbumType==2}}">
-      <video src='{{item.urls[0]}}' id='myVideo' binderror="videoErrorCallback" poster='{{item.videoAlbumCoverUrl}}'></video>
+    <view class='videoBox' wx:if="{{item.contentType==2}}">
+      <video src='{{item.dynamicUrl[0]}}' id='myVideo' binderror="videoErrorCallback" poster='{{item.videoAlbumCoverUrl}}'></video>
     </view>
     <view class='readInfo'>
       <view>
-        <text class='readNum'>{{item.videoAlbumTimes}}</text> 阅读
+        <text class='readNum'>{{item.dynamicBrowse}}</text> 阅读
       </view>
       <view class='replyInfo'>
         <view class='reply'>
           <image src='images/yundian_dpzy_pinglun.png'></image>
-          <text class='replyNum'>{{item.totalCount}}</text>
+          <text class='replyNum'>{{item.dynamicComment}}</text>
         </view>
         <view class='like'>
           <image src='images/yundian_dpzy_dianzan.png'></image>
-          <text class='likeNum'>{{item.totalLikeCount}}</text>
+          <text class='likeNum'>{{item.dynamicLike}}</text>
         </view>
       </view>
     </view>
@@ -51,3 +46,4 @@
   <image src='../images/yundian_zjy_yddt.png'></image>
   <text>暂时没有动态更新哦</text>
 </view> 
+</view>

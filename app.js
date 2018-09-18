@@ -90,9 +90,12 @@ App({
   
   onLaunch: function(options){
     console.log('app.js onLaunch')
+    wx.removeStorageSync('hostId')
+    if (wx.getStorageSync('socketStatus')) {
+      wx.closeSocket()
+    }
+    wx.removeStorageSync('socketStatus')
     
-    
-
     let that = this;
     //  获取页面的有关信息,贝塞尔曲线会用到
     wx.getSystemInfo({

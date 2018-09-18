@@ -1,7 +1,21 @@
 /* pages/store/activityInfo/activityInfo.wxss */
+page{
+  width: 100%;
+  height: 100%;
+}
+
+.unscroll{
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
 .container{
-  padding: 30rpx 0;
+  padding: 30rpx 0 130rpx 0;
   letter-spacing: 2rpx;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
 }
 
 .activityInfo .head{
@@ -9,31 +23,45 @@
   margin-bottom: 20rpx;
   color: #333333;
   border-top: solid 1rpx #ebebeb;
-  border-bottom: solid 1rpx #ebebeb;
+  box-shadow: 0 4rpx 3rpx 3rpx rgba(0,0,0,0.1)
 }
 
 .activityInfo .head text{
   line-height: 80rpx;
 }
-
+.title{
+  font-size: 44rpx;
+  font-weight: bold;
+  color: #ff5c46;
+  margin-top: 10rpx;
+  word-break: break-all;
+}
 .activityInfo .time{
   font-size: 30rpx;
+  color: #999;
 }
 
 .activityInfo .banner image{
   width: 100%;
-  height: 750rpx;
 }
 
 .activityInfo .content{
   padding: 25rpx; 
   font-size: 30rpx;
+  word-break: break-all;
+  width: calc(100% - 50rpx);
+  overflow: hidden;
 }
+ 
+.activityInfo .content rich-text{
+  word-break: break-all;
+}
+
 #share,#goback{
   position: fixed;
   width: 80rpx;
   height: 80rpx;
-  z-index: 99999;
+  z-index: 7777;
 }
 
 #share{
@@ -45,3 +73,173 @@
   right: 30rpx;
   bottom: 180rpx;
 }
+
+#sign,#submit{  
+  width: 100%;
+  height:100rpx;
+  line-height: 100rpx;
+  text-align: center;
+  background: -webkit-linear-gradient(left, #ff894f , #fe5c45); /* Safari 5.1 - 6.0 */
+  background: -o-linear-gradient(right, #ff894f, #fe5c45); /* Opera 11.1 - 12.0 */
+  background: -moz-linear-gradient(right, #ff894f, #fe5c45); /* Firefox 3.6 - 15 */
+  background: linear-gradient(to right, #ff894f , #fe5c45); /* 标准的语法 */
+  color: #ffffff;
+}
+
+#sign,#signed{
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 7777;
+}
+
+#signed{
+  width: 100%;
+  height:100rpx;
+  line-height: 100rpx;
+  text-align: center;
+  background-color: #999999;
+  color: #ffffff;
+}
+
+#submit{
+  width: 94%;
+  border-radius: 10rpx;
+  margin-left: 3%;
+}
+
+#signModel{
+  width: 600rpx;
+  height: 870rpx;
+  position: fixed;
+  top: 100rpx;
+  left: 75rpx;
+  border-radius: 10rpx;
+  z-index: 9999;
+  background-color: #ffffff;
+}
+
+#signModel #modelHead{
+  color: #ffffff;
+  height:200rpx;
+  background: -webkit-linear-gradient(left, #ff894f , #fe5c45); /* Safari 5.1 - 6.0 */
+  background: -o-linear-gradient(right, #ff894f, #fe5c45); /* Opera 11.1 - 12.0 */
+  background: -moz-linear-gradient(right, #ff894f, #fe5c45); /* Firefox 3.6 - 15 */
+  background: linear-gradient(to right, #ff894f , #fe5c45); /* 标准的语法 */
+  text-align: center;
+  line-height: 90rpx;
+  position: relative;
+  border-top-left-radius: 10rpx;
+  border-top-right-radius: 10rpx;
+  font-size: 36rpx;
+}
+
+#signModel #modelIcon{
+  width: 150rpx;
+  height: 142rpx;
+  position: absolute;
+  bottom: -24rpx;
+  left: 225rpx;
+}
+
+#shade{
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 8888;
+}
+
+#name,#remark,#phone{
+  width: 550rpx;
+  margin-left: 20rpx;
+  border: solid 1rpx #DEDEDE;
+  border-radius: 10rpx;
+  padding-left: 10rpx;
+  font-size: 32rpx;
+}
+
+#phone{ 
+  height: 100rpx;
+  line-height: 100rpx;
+  margin-bottom: 30rpx;
+}
+
+#name{
+  height: 100rpx;
+  margin-top: 40rpx;
+  margin-bottom: 30rpx;
+}
+
+textarea{
+  padding-top: 10rpx;
+  height: 200rpx;
+  margin-bottom: 30rpx;
+}
+
+.userPic{
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 35rpx;
+}
+
+
+
+#box,#userBox{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#box{
+  padding-left: 20rpx;  
+}
+
+#userBox{
+  max-width: 400rpx;
+  height: 60rpx;
+  white-space: nowrap;
+  width: auto;
+  overflow: hidden;
+  margin-left: 20rpx;
+}
+
+::-webkit-scrollbar{
+  display: none;
+}
+
+#signNum{
+  height: 60rpx;
+  line-height: 60rpx;
+  color: #999999;
+  font-size: 28rpx;
+  margin-left: 15rpx;
+}
+
+.picBox{
+  width: 47rpx;
+  height: 60rpx;
+  display: inline-block;
+}
+
+.picBox:last-of-type{
+  width: 60rpx;
+}
+
+#box{
+  border-top: solid 1rpx #E4E4E4;
+  border-bottom: solid 1rpx #E4E4E4;
+  padding: 20rpx 0;
+}
+
+#close{
+  width: 50rpx;
+  height: 50rpx;
+  position: absolute;
+  left: 350rpx;
+  top: 1050rpx;
+  z-index: 7777;
+}
+

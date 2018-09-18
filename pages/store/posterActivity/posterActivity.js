@@ -10,7 +10,8 @@ Page({
     shopId: null,
     activityData: null,
     scale: null,
-    temp: null
+    temp: null,
+    signed: false
   },
   // 生命周期函数--监听页面加载
   onLoad: function (options) {
@@ -19,7 +20,10 @@ Page({
     this.setData({
       url: url,
       goodsId: options.goodsId,
-      shopId: options.shopId
+      shopId: options.shopId,
+      // phone: wx.getStorageSync('scSysUser').phone,
+      signType: options.signType,
+      actionId: options.actionId
     });
     this.setCanvasSize()
 
@@ -46,110 +50,139 @@ Page({
     // util.getShop(user.id, options.shopId).then((res) => {
     //   wx.setStorageSync('shop', res.data.data.shopInfo);
     // })
+    //获取报名信息
+    let params = {
+      actionId: options.actionId,
+      userId: wx.getStorageSync('scSysUser').id
+    }
+    this.setData({
+      params: params
+    })
+    // this.getSignList(params);
   },
-  onshow: function () { //缓存店铺信息（分享切店铺）
-    var shopId = this.data.shopId
-    if (!shopId) {
-      shopId = wx.getStorageSync('shopId');
-    }
-    var shop = wx.getStorageSync('shop')
-
-    if (!shop) {
-      if (shopId == undefined) {
-        wx.redirectTo({
-          url: '../scan/scan'
+  //报名
+  sign: function () {
+    this.setData({
+      signShow: true,
+      unscroll: true
+    })
+  },
+  signHide: function () {
+    this.setData({
+      signShow: false,
+      unscroll: false
+    })
+  },
+  inputSet: function (e) {
+    this.setData({
+      userName: e.detail.value
+    })
+    console.log(this.data.userName);
+  },
+  textSet: function (e) {
+    console.log(e.detail.value)
+    this.setData({
+      remark: e.detail.value
+    })
+  },
+  //提交
+  submit: function () {
+    let _this = this;
+    setTimeout(function () {
+      if (userName == undefined || userName == '') {
+        wx.showToast({
+          title: '请完善信息',
+          icon: 'none'
         })
-      } else {
-        util.getShop(loginRes.id, shopId).then(function (res) {
-          _this.setData({
-            shopInformation: res.data.data
-          })
-          //shop存入storage
-          wx.setStorageSync('shop', res.data.data.shopInfo);
-          //活动
-          wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
-          // 所有信息
-          wx.setStorageSync('shopInformation', res.data.data);
-          if (res.data.data.shopInfo.shopHomeConfig) {
-            if (res.data.data.shopInfo.shopHomeConfig.videoPathList.length != 0) {
-              let videoInfo = {}
-              videoInfo.url = res.data.data.shopInfo.shopHomeConfig.videoPathList[0].filePath
-              videoInfo.cover = res.data.data.shopInfo.shopHomeConfig.videoPathList[0].coverImagePath
-              wx.setStorageSync('videoInfo', videoInfo)
-            }
-          }
-          _this.getShopInfo(res.data.data)
-          _this.getIndexAllInfo(res.data.data.shopInfo.id)
-          _this.checkCoupon()
-        })
+        return
       }
-    } else {
-      if (shopId == undefined || shopId == '' || shopId == null) {
-        if (shop.shopHomeConfig) {
-          if (shop.shopHomeConfig.videoPathList.length != 0) {
-            let videoInfo = {}
-            videoInfo.url = shop.shopHomeConfig.videoPathList[0].filePath
-            videoInfo.cover = shop.shopHomeConfig.videoPathList[0].coverImagePath
-            wx.setStorageSync('videoInfo', videoInfo)
-          }
+      if (_this.data.userName) {//用户名校验
+        let userFormatExp = new RegExp("^[\u0391-\uFFE5A-Za-z]+$");
+        if (!userFormatExp.test(_this.data.userName)) {
+          wx.showToast({
+            title: '用户名只能输入中英文',
+            icon: 'none'
+          });
+          return
         }
-        let shopInformation = wx.getStorageSync('shopInformation')
-        _this.setData({
-          shopInformation: shopInformation
+        var userName = _this.data.userName.replace(/\s+/g, '');
+      }
+      if (_this.data.remark) {//备注校验
+        let remarkFormatExp = new RegExp("^[a-zA-Z\d\u4E00-\u9FA5]+$");
+        if (!remarkFormatExp.test(_this.data.remark)) {
+          wx.showToast({
+            title: '备注只能输入中英文和数字',
+            icon: 'none'
+          });
+          return
+        }
+        var remark = _this.data.remark;
+      }
+     
+      let params = {
+        phone: _this.data.phone,
+        remark: _this.data.remark,
+        userId: wx.getStorageSync('scSysUser').id,
+        userName: userName,
+        actionId: _this.data.actionId
+      }
+      app.util.reqAsync('shop/addActionUserInfo', params).then((res) => {
+        wx.showToast({
+          title: res.data.msg,
+          icon: 'none'
         })
-        _this.getShopInfo(shopInformation)
-        _this.getIndexAllInfo(shop.id)
-        _this.checkCoupon()
-      } else {
-        if (shopId == shop.id) {
-          if (shop.shopHomeConfig) {
-            if (shop.shopHomeConfig.videoPathList.length != 0) {
-              let videoInfo = {}
-              videoInfo.url = shop.shopHomeConfig.videoPathList[0].filePath
-              videoInfo.cover = shop.shopHomeConfig.videoPathList[0].coverImagePath
-              wx.setStorageSync('videoInfo', videoInfo)
-            }
-          }
-          let shopInformation = wx.getStorageSync('shopInformation')
+        if (res.data.code == 1 || res.data.code == 8) {//报名成功||已报名
           _this.setData({
-            shopInformation: shopInformation
+            signed: true,
+            signShow: false,
+            unscroll: false
           })
-          _this.getShopInfo(shopInformation)
-          _this.getIndexAllInfo(shop.id)
-          _this.checkCoupon()
-        } else {
-          wx.removeStorageSync('shop')
-          wx.removeStorageSync('goodsInfos')
-          wx.removeStorageSync('shopInformation')
-          util.getShop(loginRes.id, shopId).then(function (res) {
-            _this.setData({
-              shopInformation: res.data.data
-            })
-            //shop存入storage
-            wx.setStorageSync('shop', res.data.data.shopInfo);
-            //活动
-            wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
-            // 所有信息
-            wx.setStorageSync('shopInformation', res.data.data);
-            if (res.data.data.shopInfo.shopHomeConfig) {
-              if (res.data.data.shopInfo.shopHomeConfig.videoPathList.length != 0) {
-                let videoInfo = {}
-                videoInfo.url = res.data.data.shopInfo.shopHomeConfig.videoPathList[0].filePath
-                videoInfo.cover = res.data.data.shopInfo.shopHomeConfig.videoPathList[0].coverImagePath
-                wx.setStorageSync('videoInfo', videoInfo)
-              }
-            }
-            _this.getShopInfo(res.data.data)
-            _this.getIndexAllInfo(res.data.data.shopInfo.id)
-            _this.checkCoupon()
-
+          _this.getSignList(_this.data.params);
+        }
+      }).catch((err) => {
+        console.log(err);
+      })
+    }, 500)
+  },
+  //获取报名信息
+  getSignList: function (params) {
+    app.util.reqAsync('shop/getActionUserInfo', params).then((res) => {
+      if (res.data.data) {
+        if (res.data.data.isSignUp == 1) {
+          this.setData({
+            signed: true
           })
         }
+        if (res.data.data.userList.length > 0) {
+          this.setData({
+            userList: res.data.data.userList,
+            signNum: res.data.data.signNum,
+          })
+          console.log(this.data.signNum)
+        }
       }
+    }).catch((err) => {
+      console.log(err);
+    })
+  },
+  onShow: function () { //缓存店铺信息（分享切店铺）
+    var _this = this
+    this.getSignList(_this.data.params);
+    util.checkWxLogin('share').then((loginRes) => {
+      _this.setData({
+        phone: loginRes.phone
+      })
+      var shopId = this.data.shopId
+      if (!shopId) {
+        shopId = wx.getStorageSync('shopId');
+      }
+      var shop = wx.getStorageSync('shop')
 
-    }
-
-    wx.removeStorageSync('shopId');
+      // 判断是否有缓存店铺，没有就缓存，有就看是否需要替换
+      util.cacheShop(shopId, shop, _this)
+      
+      wx.removeStorageSync('shopId');
+    })
   },
   getAct: function (goodsId, shopId){
     var _this = this
@@ -221,10 +254,10 @@ Page({
     context.setFillStyle('#000');
     context.setFontSize(17 * scale);
     context.fillText(this.data.activityData.goodsName, 25 * scale, 172 * scale);//绘制活动名
-    context.drawImage('./img/zhuanfa_hdhb_right@2x.png', 305 * scale, 160 * scale, 9 * scale, 15 * scale);//绘制小图标
+    // context.drawImage('./img/zhuanfa_hdhb_right@2x.png', 305 * scale, 160 * scale, 9 * scale, 15 * scale);//绘制小图标
 
-    context.setFillStyle('#f2f2f2');
-    context.fillRect(25, 185, 290 * scale, 1 * scale)
+    // context.setFillStyle('#f2f2f2');
+    // context.fillRect(25, 185, 290 * scale, 1 * scale)
 
     if (this.data.activityData.descTitle.length > 16) {
       var string2 = this.data.activityData.descTitle.substring(0, 16)
@@ -294,16 +327,25 @@ Page({
 
     return {
       title: '[' + this.data.activityData.shopName + ']'  + this.data.activityData.descTitle,
-      path: "pages/store/posterActivity/posterActivity?shopId=" + this.data.shopId + '&goodsId=' + this.data.goodsId,
+      path: "pages/store/posterActivity/posterActivity?shopId=" + this.data.shopId + '&goodsId=' + this.data.goodsId + '&actionId=' + this.data.actionId + '&signType=' + this.data.signType,
       imageUrl: this.data.temp,
       success: function (res) {
-
+        _this.updateforwardingAmount(_this.data.goodsId) // 用户转发点击量统计
       }
     }
   },
   goback: function () {//回到首页按钮
     wx.switchTab({
       url: '../../index/index?shopId=' + this.data.shopId
+    })
+  },
+  // 用户转发点击量统计
+  updateforwardingAmount(goodsId){
+    app.util.reqAsync('shop/updateforwardingAmount', {
+      goodsId: goodsId,
+      type: 0     // 0:增加    1:减少
+    }).then((res) => {
+
     })
   }
   

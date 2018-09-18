@@ -18,7 +18,8 @@ Page({
       pageNo: 1,
       shopId:""
     },
-    isHid:true
+    isHid:true,
+    isOffline:0 //0-非餐饮 1-餐饮
   },
   onLoad: function (options) {
     var userId = wx.getStorageSync('scSysUser').id;
@@ -80,21 +81,28 @@ Page({
       
       console.log(this.data.facilityId)
       // 格式化金额
-      if (this.data.facilityId == undefined || this.data.facilityId =="undefined"){
+      if (this.data.facilityId == undefined || this.data.facilityId == "undefined" || this.data.facilityId ==""){
 
-        for (var i = 0; i < data.length; i++) {
-          if (data[i].shopId == this.data.shopId) {
+        // for (var i = 0; i < data.length; i++) {
+        //   if (data[i].shopId == this.data.shopId) {
             
-              data[i].shouldPay = app.util.formatMoney(data[i].shouldPay, 2);
-              for (var j = 0; j < data[i].shopOrderInfo.length; j++) {
-                data[i].shopOrderInfo[j].goodsPrice = app.util.formatMoney(data[i].shopOrderInfo[j].goodsPrice, 2);
-              }
-              orderListOld.push(data[i]);
+        //       data[i].shouldPay = app.util.formatMoney(data[i].shouldPay, 2);
+        //       for (var j = 0; j < data[i].shopOrderInfo.length; j++) {
+        //         data[i].shopOrderInfo[j].goodsPrice = app.util.formatMoney(data[i].shopOrderInfo[j].goodsPrice, 2);
+        //       }
+        //       orderListOld.push(data[i]);
 
-          } 
-        }
+        //   } 
+        // }
+        orderListOld=[];
+        this.setData({
+          isOffline:0
+        })
       }else{
         console.log("进入对应作为")
+        this.setData({
+          isOffline: 1
+        })
         for (var i = 0; i < data.length; i++) {
           if (data[i].shopId == this.data.shopId) {
             if (data[i].facilityId == this.data.facilityId) {
@@ -112,15 +120,18 @@ Page({
         
       }
       console.log(orderListOld)
-      if (orderListOld[0].payStatus != 4) {
-        this.setData({
-          isHid: false
-        })
-      } else {
-        this.setData({
-          isHid: true
-        })
+      if (orderListOld.length>0){
+        if (orderListOld[0].payStatus != 5) {
+          this.setData({
+            isHid: false
+          })
+        } else {
+          this.setData({
+            isHid: true
+          })
+        }
       }
+      
       var desc = ++this.data.listData.pageNo;
       var page = "listData.pageNo";
       this.setData({

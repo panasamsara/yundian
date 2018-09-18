@@ -40,6 +40,9 @@ Page({
   onReachBottom:function (){
     this.selectComponent('#' + this.data.show).onReachBottom();
   },
+  onPullDownRefresh: function () {
+    this.selectComponent('#' + this.data.show).onPullDownRefresh();
+  },
   switchNav(event) {
     var cur = event.currentTarget.dataset.current,
         flag = event.currentTarget.id;

@@ -1,0 +1,77 @@
+.rule,.rule image,page{
+  width: 100%;
+   height: 100%;
+}
+.rule image{
+  position: fixed;
+}
+.rule{
+  position: relative;
+}
+.bgGrew{
+  position: fixed;
+  width: 100%;                          
+  max-height: 530rpx;
+  height: auto;
+  top: 688rpx;
+  background: rgba(0,0,0,0.2);
+  padding-bottom: 25rpx;   
+}                                   
+.com{
+  display: -webkit-box;                
+  -webkit-box-orient: horizontal;
+  padding: 24rpx 25rpx 20rpx;
+}
+.com view{
+  -webkit-box-flex: 1.0;
+}
+.title view{
+  font-size: 33rpx;                             
+  border-right: 2rpx solid #fff;           
+  color: #fff;
+}                        
+.com view:last-child{                                                        
+  border: none;
+  text-align: right;
+  margin-right: 20rpx;
+}
+.com view:first-child{
+  text-align: left;
+  margin-left: 20rpx;
+}
+.com view:nth-child(2){
+  text-align: center;
+}
+.white view{
+  font-size: 31rpx;
+  color: #fb452c;
+  float: left;
+  padding: 25rpx 0;
+}
+.wrap{
+  background:#fff;
+  width: 702rpx;
+  margin-left: 22rpx;
+  overflow: hidden;
+}
+.white{
+  width: 100%;
+}
+.white view:first-child{
+  text-align: left;
+  margin-left: 20rpx;
+  width: 160rpx;
+}
+.white view:nth-child(2){
+ width: 260rpx;
+ text-align: center;
+}
+.white view:last-child{
+  text-align: right;
+  width: 240rpx;
+  margin-right: 20rpx;
+}
+.scroll{
+  height: auto;
+  max-height:416rpx 
+}

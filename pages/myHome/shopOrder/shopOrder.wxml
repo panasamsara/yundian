@@ -19,7 +19,7 @@
       <view class="list"  bindtap='skip' data-id="{{item.id}}" data-index="{{index}}" data-shopid="{{item.shopId}}" data-facilityid="{{item.facilityId}}" data-userid="{{item.userId}}">
         <view class='shop'>
           <view class='left'>
-            <image class="shopImg mr15" src="../images/shopDefault.png"></image>
+            <image class="shopImg mr15" src="{{item.shopLogoUrl?item.shopLogoUrl:'../images/shopDefault.png'}}"></image>
             <text class="mr15">{{item.shopName}}</text>
             <image class="rightIcon" src="../images/right.png"></image>
           </view>
@@ -50,7 +50,7 @@
         </view>
       </view>
        <!--未完成-->
-          <view class="noover" wx:if="{{activeIndex==0}}">
+          <view class="noover" wx:if="{{activeIndex==0 && isOffline == 1}}">
             <view class="button red-btn" data-no="{{item.id}}"  size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" data-name="{{item.goodsName}}" data-price="{{item.shouldPay}}" data-userid="{{item.userId}}" data-shopid="{{item.shopId}}"data-presaleId="{{item.presaleId}}" disabled="{{disabled}}" data-facilityid="{{item.facilityId}}" bindtap="buyOrder" hover-class="other-button-hover"> 结算 </view>
             <view hidden="{{isHid}}" class="button white-btn" data-no="{{item.id}}" data-name="{{item.goodsName}}"  size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" disabled="{{disabled}}" data-userid="{{item.userId}}"  bindtap="goOn" data-price="{{item.shouldPay}}" data-shopid="{{item.shopId}}" data-facilityid="{{item.facilityId}}" data-memberid ="{{item.memberId}}" data-subaccountid="{{item.subaccountId}}" data-discount="{{item.discount}}" hover-class="other-button-hover"> 继续添加 </view>
           </view>

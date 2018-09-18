@@ -1,0 +1,19 @@
+<view class='rule'>
+  <image src='../images/-s-bg@2x.png'></image>
+  <view class='bgGrew'>
+    <view class='title com'>
+      <view>类型</view>
+      <view>消费门槛</view>
+      <view>获得积分值</view>
+    </view>
+    <view class='wrap'>
+      <scroll-view scroll-y="true" class='scroll'>
+        <view class='white' wx:for="{{list}}" wx:key="{{index}}">
+          <view>{{item.ruleName}}</view>
+          <view>{{item.benchmark}}元</view>
+          <view>{{item.creditValue}}积分</view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+</view>

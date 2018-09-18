@@ -1,14 +1,15 @@
 <!--pages/store/activity/activity.wxml-->
 <view class='container activity'>
   <view wx:for="{{list}}" class='list' wx:key="index">
-    <view bindtap='goActivityDetail' data-type='{{item.activityType}}' data-activityid='{{item.id}}'>
+    <view bindtap='goActivityDetail' data-type='{{item.activityType}}' data-activityid='{{item.id}}' data-signtype="{{item.signType}}">
+      <image src='images/sign.png' class='sign' wx:if="{{item.signType==1}}"></image>
       <image src='{{item.pictureUrl}}'></image>
         <view class='act'>
-          <text class='title'>{{item.descTitle}}</text>
+          <text class='title'>{{item.goodsName}}</text>
           <text>活动时间</text>
         </view>
         <view class='actInfo'>
-          <text class='activityName'>{{item.goodsName}}</text>
+          <text class='activityName'>{{item.descTitle}}</text>
           <text class='time'>{{item.startTime}}-{{item.endTime}}</text>
         </view>
     </view>

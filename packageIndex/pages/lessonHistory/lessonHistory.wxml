@@ -1,0 +1,14 @@
+<block wx:for="{{arr}}" wx:key="{{index}}">
+  <view class='lesson-time'>今天</view>
+  <view class='lesson-content' data-id="" bindtap='toDetail'>
+    <view class='cover-box'>
+      <image class='cover' mode='aspectFill' src='http://tsnrhapp.oss-cn-hangzhou.aliyuncs.com/itemreport/default/morenfuwuka_pic.jpg'></image>
+      <image class='subscripts' mode='aspectFit' src='../../img/icon_zxkt_st@2x.png'></image>
+      <text class='time'>13:14</text>
+    </view>
+    <view class='text-box'>
+      <view class='title'>做店就是这么简单！</view>
+      <view class='teacher'>林老妮</view>
+    </view>
+  </view>
+</block>

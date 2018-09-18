@@ -1,0 +1,224 @@
+/* packageIntegral/pages/orderdetail/orderdetail.wxss */
+#orderdetail{
+  position: relative;
+  color: #333333;
+  background-color: #f8f8f8;
+  font-size: 32rpx;
+  letter-spacing: 1rpx;
+}
+
+#orderdetail .title{
+  color: #ffffff;
+  font-size: 34rpx;
+  position: absolute;
+  z-index: 111;
+  top: 58rpx;
+  left: 30rpx;
+}
+
+#orderdetail #bgimg{
+  width: 100%;
+  height: 250rpx;
+}
+
+#orderInfo{
+  position: absolute;
+  top: 150rpx;
+  width: 100%;
+}
+
+#orderInfoBox{
+  width: 630rpx;
+  box-shadow: 0 2rpx 4rpx 3rpx rgba(0,0,0,0.1);
+  border-radius: 20rpx;
+  margin-left: 30rpx;
+  background-color: #ffffff;
+  padding: 30rpx;
+}
+
+#orderdetail #company{
+  display: flex;
+  align-items: center;
+}
+
+#deliveryBox #deliveryIcon{
+  width: 34rpx;
+  height: 32rpx;
+  margin-right: 20rpx;
+}
+
+#orderInfoBox #deliveryBox{
+  height: 130rpx;
+  line-height: 65rpx;
+  border-bottom: solid 1rpx #E5E5E5;
+}
+
+#orderInfoBox #orderNumBox{
+  font-size: 28rpx;
+  color: #666666;
+}
+
+#userBox #box{
+  display: flex;
+  align-items: center;
+}
+
+#userBox #phone{
+  font-size: 30rpx;
+  margin-left: 60rpx;
+}
+
+#userName,#phone{
+  line-height: 90rpx;
+}
+
+#userBox #address{
+  color: #666666;
+  font-size: 30rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp:3;
+  word-break: break-all;
+}
+
+#userBox #locationIcon{
+  width: 32rpx;
+  height: 36rpx;
+  margin-right: 15rpx;
+}
+
+#timeBox{
+  background-color: #ffffff;
+  padding: 25rpx 30rpx;
+  margin-top: 20rpx;
+}
+
+#order,#time{
+  font-size: 26rpx;
+  color: #999999;
+  line-height: 55rpx;
+}
+
+#storeBox{
+  padding: 30rpx;
+  background-color: #ffffff;
+  font-size: 28rpx;
+  display: flex;
+  align-items: center;
+}
+
+#storeBox #shopIcon{
+  width: 34rpx;
+  height: 30rpx;
+  margin-right: 15rpx;
+}
+
+#storeBox #enterShop{
+  width: 16rpx;
+  height: 26rpx;
+  margin-left: 40rpx;
+}
+
+.goodsBox{
+  display: flex;
+  align-items: center;
+  padding: 35rpx 30rpx;
+  background-color: #f8f8f8;
+}
+
+.goodsBox .goodsImg{
+  width: 180rpx;
+  height: 180rpx;
+}
+
+.goodsImg image{
+  width: 180rpx;
+  height: 180rpx;
+}
+
+.infoBox{
+  display: flex;
+  flex-direction: column;
+  width: 490rpx;
+  padding-left: 20rpx;
+}
+
+.goodsName,.price{
+  line-height: 60rpx
+}
+
+.price,.amount{
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.price{
+  text-decoration: line-through;
+}
+
+.infoBox .point{
+  font-size: 32rpx;
+  color: #FF0036;
+}
+
+.infoBox .amountBox{
+  width: 490rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#payBox{
+  background-color: #ffffff;
+}
+
+#payBox view{
+  display: flex;
+  justify-content: space-between;
+  line-height: 100rpx;
+  padding: 0 30rpx;
+  border-bottom: solid 1rpx #e5e5e5;
+}
+
+#pointChange,#delivery{
+  font-size: 30rpx;
+  color: #999999;
+}
+
+#contactBox{
+  line-height: 120rpx;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+}
+
+#timeBox,#contactBox{
+  border-bottom: solid 20rpx #f8f8f8;
+}
+
+#contactBox #call{
+  width: 38rpx;
+  height: 38rpx;
+  margin-right: 12rpx;
+}
+
+#checkBox{
+  overflow: hidden;
+  background-color: #ffffff;
+}
+
+#checkBox .check{
+  width: 180rpx;
+  height: 70rpx;
+  line-height: 70rpx;
+  text-align: center;
+  background-color: #FB452C;
+  color: #ffffff;
+  border-radius: 10rpx;
+  float: right;
+  margin: 16rpx 30rpx;
+}

@@ -1,0 +1,29 @@
+<view class='content'>
+  <view class='list'>
+    <view class='text'>
+      <view class='font_333 font34 over_ellipsis2'>快来跟我们一起参加泰国七日游，海外沙滩等着你快来跟我们一起参加泰国七日游，海外沙滩等着你</view>
+      <view class='font_666 font26'>户外协会粉团队</view>
+    </view>
+    <view class='image'>
+      <image src='../images/pinkTeam.png'></image>
+    </view>
+  </view>
+  <view class='list'>
+    <view class='text'>
+      <view class='font_333 font34 over_ellipsis2'>快来跟我们一起参加泰国七日游，海外沙滩等着你快来跟我们一起参加泰国七日游，海外沙滩等着你</view>
+      <view class='font_666 font26'>户外协会粉团队</view>
+    </view>
+    <view class='image'>
+      <image src='../images/pinkTeam.png'></image>
+    </view>
+  </view>
+  <view class='list'>
+    <view class='text'>
+      <view class='font_333 font34 over_ellipsis2'>快来跟我们一起参加泰国七日游，海外沙滩等着你快来跟我们一起参加泰国七日游，海外沙滩等着你</view>
+      <view class='font_666 font26'>户外协会粉团队</view>
+    </view>
+    <view class='image'>
+      <image src='../images/pinkTeam.png'></image>
+    </view>
+  </view>
+</view>

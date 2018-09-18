@@ -1,0 +1,27 @@
+<view class='successTop'>
+  <view class='icon'> 
+    <image src='../images/chenggong@2x.png'></image>兑换成功
+  </view>
+  <view class='skip'>
+    <text bindtap='checkAccount' wx:if="{{orderNo==''}}">查看账户</text>
+    <text bindtap='checkOrder' wx:else >查看订单</text>
+    <text bindtap='goIndex'>前往首页</text>
+  </view>
+</view>
+<view class='recommend'>礼品推荐</view>
+<view class='content'> 
+  <view class='list' wx:for="{{integralList}}" wx:key="{{index}}"  data-goodsId="{{item.goodsId}}" data-goodsType="{{item.goodsType}}" bindtap='goDetail'>
+    <view class='viewBg'>
+      <image src="{{item.pictureUrl}}"></image>
+      <view class='bgTitle'>
+        <view class="title over_ellipsis">{{item.goodsName}}</view>
+        <view class='price'>价值：{{item.memberPrice}}元</view>
+      </view>
+    </view>
+    <view class='jifen'>{{item.point}}<text>积分</text></view>
+      <view class='com deficiency' wx:if="{{item.goodsType==3&&item.balance==0}}">库存不足</view>
+      <view class='com exchange' wx:else catchtap='exchange' data-id="{{item.id}}" >立即兑换</view>
+  </view>
+</view>
+<view class='more' hidden='{{flag}}' bindtap='addLoad'>查看更多商品<image src="../images/01_03.png"></image></view>
+<view class='more end' hidden='{{flag2}}'>已经到底了哦~~</view>

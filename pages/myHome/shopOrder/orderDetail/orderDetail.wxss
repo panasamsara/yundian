@@ -59,6 +59,7 @@
   width: 690rpx;
   font-size: 32rpx;
   color: #333;
+  margin: 0 auto;
 }
 .person{
   margin-top: 20rpx;
@@ -76,15 +77,15 @@
 
 }
 .content{
+  width:100%;
   position: absolute;
   top: 126rpx;
-  margin-left:30rpx;
-
+  /* margin-left:30rpx; */
 }
 .content .list{
   font-size: 28rpx;
   color: #333;
-  padding-right: 30rpx;
+  padding:0 30rpx;
 }
 .list>view{
   overflow: hidden;
@@ -95,6 +96,7 @@
 .content .shop{
   overflow: hidden;
   padding: 30rpx 0;
+  border-bottom: 1px #e5e5e5 solid;
 }
 .content .shop .shopImg{
   width: 32rpx;
@@ -276,23 +278,27 @@ top: 0;
   text-align: center;
   margin-top: 400rpx;
 }
-
+.clubcardbg{
+  width: 100%;
+  background: #f8f8f8;
+  padding:20rpx 0;
+}
 .clubcard{
   width: 100%;
   height: 120rpx;
+  padding: 0 30rpx;
+  margin:0 auto;
   font-size: 32rpx;
   color: #333;
   display: flex;
   display: -webkit-flex;
   justify-content: space-between;
   line-height:120rpx;
-  margin: 20rpx 0;
   background: #fff;
   box-sizing: border-box;
 }
 .select{
   color:#999;  
-  padding-right: 20rpx;
 }
 .select image{
   width: 15rpx;
@@ -574,4 +580,11 @@ top: 0;
   line-height: 94rpx;
   text-align: center;
   margin: 36rpx auto;
+}
+.mask-close-btn{
+  position: absolute;
+  width: 54rpx;
+  height: 55rpx;
+  top: -20rpx;
+  right: -20rpx;
 }

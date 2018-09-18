@@ -1,13 +1,13 @@
 <!--pages/store/player/player.wxml-->
 <view class='container player' wx:if="{{list.length!=0}}"> 
   <view wx:for="{{list}}" wx:key="index" class='playerList'>
-    <image src='{{item.logo}}' class='banner'></image>
+    <image src='{{item.circlePortrait}}' class='banner'></image>
     <view class='playerTitle'>
-      <text>{{item.name}}</text>
+      <text>{{item.circleName}}</text>
       <image src='../images/yundian_spxq_xuanzhong.png' class='titleBorder'></image>
     </view>
     <view class='text'>
-      <text>{{item.title}}</text>
+      <text>{{item.circleIntroduce?item.circleIntroduce:''}}</text>
     </view>
   </view>
 </view>

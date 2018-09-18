@@ -54,5 +54,10 @@
 
 .success .timeBox{
   display: flex;
+  width: 360rpx;
   flex-direction: column;
+}
+
+.success #facilityBox{
+  max-width: 300rpx;
 }

@@ -1,0 +1,27 @@
+<!--packageIntegral/pages/goodsdetail/goodsdetail.wxml-->
+<view class='container' id='goodsdetail'>
+  <swiper class='banner' indicator-dots>
+    <swiper-item  wx:for='{{data.imageList}}' wx:key='index' class='picBox'>
+      <image src='{{item.smallFilePath}}'></image>
+    </swiper-item>
+  </swiper>
+  <view class='goodsInfo'>
+    <text id='goodsName'>{{data.goodsName}}</text>
+    <view class='pointBox'>
+      <text class='point'><text id='pointAmount'>{{data.point}}</text>积分</text>
+      <text class='value'>价值{{data.memberPrice}}元</text>
+    </view>
+  </view>
+  <view class='goodsDesc'>
+    <text id='goodsTitle'>商品描述</text>
+    <view id='descBox'>
+      <rich-text nodes="{{data.descContent}}" wx:if="{{data.descContent!=null&&data.descContent!=''}}"></rich-text>
+      <view wx:else id='blank'>
+        <view><image  src='images/zanwuxiangqing_zanweitu@2x.png'></image></view>
+        <text>暂无商品详情哦</text>
+      </view>
+    </view>
+  </view>
+  <view id='lowstocks' class='exchange' wx:if="{{data.goodsType==3&&data.balance<=0}}">库存不足</view>
+  <view id='exchange' bindtap='exchange' class="exchange" wx:else>立即兑换</view>
+</view>

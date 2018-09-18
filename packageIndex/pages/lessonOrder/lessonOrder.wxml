@@ -1,0 +1,18 @@
+<block wx:for="{{arr}}">
+  <view class='lesson-content' data-id="" bindtap='toDetail'>
+    <view class='cover-box'>
+      <image class='cover' mode='aspectFill' src='http://tsnrhapp.oss-cn-hangzhou.aliyuncs.com/itemreport/default/morenfuwuka_pic.jpg'></image>
+      <image class='subscripts' mode='aspectFit' src='../../img/icon_zxkt_st@2x.png'></image>
+      <text class='time'>13:14</text>
+    </view>
+    <view class='text-box'>
+      <view class='title'>做店就是这么简单！</view>
+      <view class='column'>专栏：<text>花活</text></view>
+      <view class='teacher'>林老妮 <view class='price'>¥98</view></view>
+      <view class='time'>于 2018年7月26日 15:30 支付成功</view>
+      <view class='text-right'>
+        <view class='btn-learn'>去学习</view>
+      </view>
+    </view>
+  </view>
+</block>

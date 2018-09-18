@@ -1,0 +1,17 @@
+<view class='content'>
+  <view class='list'>
+    <image src='../images/pinkTeam.png'></image>
+    <view class='over_ellipsis font28 color_333'>最美女人花</view>
+    <view class='over_ellipsis font24 color_999'>123张</view>
+  </view>
+  <view class='list'>
+    <image src='../images/pinkTeam.png'></image>
+    <view class='over_ellipsis font28 color_333'>最美女人花</view>
+    <view class='over_ellipsis font24 color_999'>123张</view>
+  </view>
+  <view class='list'>
+    <image src='../images/pinkTeam.png'></image>
+    <view class='over_ellipsis font28 color_333'>最美女人花</view>
+    <view class='over_ellipsis font24 color_999'>123张</view>
+  </view>
+</view>

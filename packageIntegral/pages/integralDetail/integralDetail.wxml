@@ -1,0 +1,31 @@
+<view class='nav'>
+  <image class='bg' src="../images/bg@2x.png"></image>
+  <view class="bgview">
+    <view class='integral'>
+      <image src="../images/jinbi@2x.png"></image>
+      {{userInfo.usablePoint}}
+    </view>
+  </view> 
+</view>
+<view class='content'>
+  <scroll-view scroll-y class='scroll-view_H'>
+    <view class='detail-list-box' wx:for="{{list}}" wx:key="{{index}}">
+      <view class='detail-list'>
+        <view class='list-left'>
+          <view class='list-card-name' wx:if="{{item.pointValue>0}}">积分加赠</view>
+           <view class='list-card-name' wx:else>礼品兑换</view>
+          <view class='list-shop-name over_ellipsis'>{{item.remarks}}</view>
+        </view>
+        <view class='list-right'>
+          <view class='use-detail'>{{item.logTime}}</view>
+          <view class='use-time'>{{item.pointValue}}积分</view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+</view>
+
+<view class='emptyImg' wx:if="{{list.length==0}}">
+  <image src='../images/mingxi@2x.png'></image>
+  <view>暂无积分明细，前往积分规则了解更多~~</view>
+</view>

@@ -1,0 +1,30 @@
+<!--packageIndex/pages/fansSearch/fansSearch.wxml-->
+<view class='container' id='fansSearch'>
+  <view id='head'>
+    <view id='searchBox' class="{{search?'normalBox':'fullBox'}}">
+      <!-- <view id='searchIconBox'> -->
+        <image src='../images/sousuo@2x.png' id='searchIcon' class='icon'></image>
+      <!-- </view> -->
+      <input placeholder='搜索粉小组' confirm-type='search' bindinput='setKey' bindfocus='change' value='{{key}}' bindblur='changeBack'></input>
+      <!-- <view id='clearIconBox'>  -->
+        <image src='../images/cha@2x.png' id='clearIcon' class='icon' wx:if="{{key}}" bindtap='clear'></image>
+      <!-- </view>   -->
+    </view>
+    <view id='search' bindtap='search' wx:if="{{search}}">搜索</view>
+  </view>
+  <view id='fansList'>
+    <view class='list' wx:for="{{list}}" wx:key="index" wx:if="{{list.length>0}}">
+      <view class='listBox'>
+        <view class='box'>
+          <image src='{{item.logo}}' class='logo'></image>
+          <view class='infoBox'>
+            <text class='detailName'>{{item.detailName}}</text>
+            <text class='joinAmount'>{{item.personCount}}人参与</text>
+          </view>
+        </view>
+        <text wx:if="{{item.isJoin==1}}" class='join'>已加入</text>
+      </view>
+    </view>
+    <view wx:if="{{list.length<=0}}" id="blank">暂无数据</view>
+  </view>
+</view>

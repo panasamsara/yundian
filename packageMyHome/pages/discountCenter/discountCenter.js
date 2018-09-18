@@ -145,11 +145,7 @@ Page({
   getCoupon:function(e){
     var _this = this;
     var flag = e.currentTarget.dataset.flag;
-    console.log(e)
-    console.log(id)
-    wx.showLoading({
-      title: '加载中',
-    })
+    //flag为1是礼包领取其他的是列表领取
     if (flag==1){
       var data = {
         "customerId": this.data.userId,
@@ -181,14 +177,24 @@ Page({
       }
     }
     app.util.reqAsync('shop/takeCoupon', data).then((res) => {
-      if (flag==1){
-        this.setData({ getdiscount: true })
+      if (res.data.code==1){
+        if (flag == 1) {
+          this.setData({
+            getdiscount: true,
+            couponLogId: res.data.data.couponLogId
+          })
+        }
+        wx.showToast({
+          title: '领取成功',
+          icon: 'none'
+        })
+      }else{
+        wx.showToast({
+          title: '领取失败',
+          icon: 'none'
+        })
+        _this.newGift();
       }
-      wx.showToast({
-        title: '领取成功',
-        icon: 'none'
-      })
-      wx.hideLoading();
     }).catch((err) => {
       wx.hideLoading();
       wx.showToast({

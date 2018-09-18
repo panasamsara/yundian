@@ -236,7 +236,13 @@ Page({
   */
   onShareAppMessage: function () {
     return{
+      title: this.data.shopName,
       path:'/pages/store/code/code?shopName='+this.data.shopName+'&address='+this.data.address+'&phoneService='+this.data.phoneService+'&shopLogo='+this.data.url+'&shopId='+this.data.shopId
     }
+  },
+  goback: function () {//回到首页按钮
+    wx.switchTab({
+      url: '../../index/index?shopId=' + this.data.shopId
+    })
   }
 })

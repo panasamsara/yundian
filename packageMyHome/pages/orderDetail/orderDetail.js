@@ -39,6 +39,24 @@ Page({
   },
 
   onLoad: function (options) {
+    console.log(options)
+    if (options && options.q) {
+      var uri = decodeURIComponent(options.q)
+      var p = util.getParams(uri)
+      let shopId = p.shopId
+      wx.setStorageSync('shopId', shopId);
+      this.setData({
+        shopId: shopId
+      })
+    } else {
+      if (options && options.shopId) {
+        wx.setStorageSync('shopId', options.shopId);
+        this.setData({
+          shopId: options.shopId
+        })
+      }
+    }
+
     var user = wx.getStorageSync('scSysUser');
     var userid = wx.getStorageSync('scSysUser').id;
     var userCode = wx.getStorageSync('scSysUser').usercode;
@@ -144,6 +162,19 @@ Page({
       )
   },
   onShow: function (e) {
+    var _this = this
+    app.util.checkWxLogin('share').then((loginRes) => {
+      var shopId = this.data.shopId
+      if (!shopId) {
+        shopId = wx.getStorageSync('shopId');
+      }
+      var shop = wx.getStorageSync('shop')
+      // 判断是否有缓存店铺，没有就缓存，有就看是否需要替换
+      util.cacheShop(shopId, shop, _this)
+
+      wx.removeStorageSync('shopId');
+    })
+
     wx.showLoading({
       title: '加载中',
     })
@@ -312,7 +343,7 @@ Page({
       if (data.data.code == 1) {
         if (data.data.data.status == 1 && data.data.data.goodsStatus == 1) {
           wx.navigateTo({
-            url: '../../goodsDetial/goodsDetial?shopId=' + shopId + '&goodsId=' + goodsId
+            url: '../../../pages/goodsDetial/goodsDetial?shopId=' + shopId + '&goodsId=' + goodsId
           })
         } else {
           wx.showToast({
@@ -354,7 +385,7 @@ Page({
               })
               setTimeout(function () {
                 console.log(1)
-                wx.redirectTo({
+                wx.navigateTo({
                   url: '../order/order?customerId=' + customerId + '&=index' + 0
                 })
               }, 2000);
@@ -381,7 +412,7 @@ Page({
       goodId = e.currentTarget.dataset.goodid;
     //评价
     wx.navigateTo({
-      url: '../../appraise/appraise?shopId=' + shopId + '&goodsId=' + goodId
+      url: '../../pages/appraise/appraise?shopId=' + shopId + '&goodsId=' + goodId
     })
   },
   cancel: function (e) {
@@ -479,26 +510,33 @@ Page({
     //确认收货
     var orderNo = this.data.orderNo,
       customerId = this.data.userid;//"fromBarCode":1 //是否扫码确认收货。可不填 ，不填则不是扫码确认收货
-    app.util.reqAsync('shop/confirmRecv', {
-      orderNo: orderNo,
-      customerId: customerId
-    }).then((res) => {
-      console.log(res)
-      if (res.data.code == 1) {
-        this.onShow();
-      } else {
-        wx.showToast({
-          title: res.data.msg,
-          icon: 'none'
-        })
-      }
+    var that = this;
+    wx.showModal({
+      title: '提示',
+      content: '确定收货？',
+      success: function (res) {
+        if (res.confirm) {
+          app.util.reqAsync('shop/confirmRecv', {
+            orderNo: orderNo,
+            customerId: customerId
+          }).then((res) => {
+            console.log(res)
+            if (res.data.code == 1) {
+              that.onShow();
+            } else {
+              wx.showToast({
+                title: res.data.msg,
+                icon: 'none'
+              })
+            }
 
-    }).catch((err) => {
-      wx.showToast({
-        title: '失败……',
-        icon: 'none'
-      })
+          })
+
+        }
+      }
     })
+
+
   },
   shipments: function (e) {
     var orderNo = this.data.orderNo,
@@ -756,7 +794,7 @@ Page({
   openDetail: function () {
     console.log(this.data.population);
     wx.navigateTo({
-      url: '../../spelldetails/spelldetails?groupId=' + this.data.groupId + '&orderNo=' + this.data.orderNo + '&shopId=' + this.data.shopId + '&cUser=' + this.data.userid + '&population=' + this.data.population + '&orderStatusVo=' + this.data.orderStatusVo + '&stockId=' + this.data.stockId
+      url: '../../../pages/spelldetails/spelldetails?groupId=' + this.data.groupId + '&orderNo=' + this.data.orderNo + '&shopId=' + this.data.shopId + '&cUser=' + this.data.userid + '&population=' + this.data.population + '&orderStatusVo=' + this.data.orderStatusVo + '&stockId=' + this.data.stockId
     })
   },
   getMessage: function (no) {

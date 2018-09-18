@@ -52,7 +52,8 @@ Page({
     this.change('start');
     this.setData({
       endTime:'结束时间',
-      change:'text'
+      change:'text',
+      pickerFlag:'start'
     })
   },
   end:function(){//结束时间
@@ -64,7 +65,8 @@ Page({
       return
     }
     this.setData({
-      change:'text'
+      change:'text',
+      pickerFlag:'end'
     })
     this.change('end')
   },
@@ -161,6 +163,9 @@ Page({
           //选择的的开始时间完整格式
           chose = date1.getFullYear() + '/' + date.split('月')[0] + '/' + date.split('月')[1].split('日')[0] + ' ' + time, 
           intervalTime = this.data.data.intervalTime;
+      this.setData({
+        chose:chose
+      })
       if(this.data.endTime!='结束时间'){//结束时间选择数据
         let endTime=this.data.endTime,
             dates = endTime.split(' ')[0],
@@ -211,12 +216,14 @@ Page({
           }
         }
       }
-      if (Date.parse(chose) - Date.parse(new Date()) <= 0) {
-        wx.showToast({
-          title: '开始时间不能小于或等于当前时间',
-          icon: 'none'
-        })
-        return
+      if(this.data.pickerFlag=='start'){
+        if (Date.parse(chose) - Date.parse(new Date()) <= 0) {
+          wx.showToast({
+            title: '开始时间不能小于或等于当前时间',
+            icon: 'none'
+          })
+          return
+        }
       }
     }
     this.setData({
@@ -255,6 +262,15 @@ Page({
     })
   },
   submit:function(){//立即预约
+    if(this.data.pickerFlag=='end'){
+      if (Date.parse(this.data.chose) - Date.parse(new Date()) <= 0) {
+        wx.showToast({
+          title: '开始时间不能小于或等于当前时间',
+          icon: 'none'
+        })
+        return
+      }
+    }
     let endTime=this.data.endTime,
         num=this.data.num||'',
         facilityId = this.data.facilityId||'',

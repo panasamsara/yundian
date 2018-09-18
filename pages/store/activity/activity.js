@@ -29,7 +29,7 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-    var totalPage = Math.ceil(this.data.total / 10 - 1);
+    var totalPage = Math.ceil(this.data.total / 10 );
     wx.showLoading({
       title: '加载中',
     })
@@ -49,6 +49,7 @@ Page({
     app.util.reqAsync('shop/getShopHomePageInfo', data).then((res) => {
       if (res.data.data.goodsInfos) {
         let list = res.data.data.goodsInfos;
+        console.log(list)
         for(let i=0;i<list.length;i++){
           list[i].startTime = app.util.formatActivityDate(list[i].startTime);
           list[i].endTime = app.util.formatActivityDate(list[i].endTime);
@@ -66,16 +67,17 @@ Page({
     })
   },
   goActivityDetail: function(e){
-    console.log(1111)
 
     let user = wx.getStorageSync('scSysUser');
-    var shop = wx.getStorageSync('shop');
-    var goodsId = e.currentTarget.dataset.activityid;
-    var activityType = e.currentTarget.dataset.type
-
+    var shop = wx.getStorageSync('shop'),
+        goodsId = e.currentTarget.dataset.activityid,
+        activityType = e.currentTarget.dataset.type,
+        actionId = e.currentTarget.dataset.activityid,
+        signType = e.currentTarget.dataset.signtype;
+      
     if (activityType == 0) {
       wx.navigateTo({
-        url: '../activityInfo/activityInfo?shopId=' + shop.id + '&goodsId=' + goodsId,
+        url: '../activityInfo/activityInfo?shopId=' + shop.id + '&goodsId=' + goodsId + '&actionId=' + actionId + '&signType=' + signType,
         success: function (res) {
           // success
         }

@@ -26,10 +26,9 @@ Component({
         title: '加载中',
       })
       let data = {
-        sStartpage: 1,
-        currUserId: wx.getStorageSync('scSysUser').id,
+        page: 0,
         shopId: wx.getStorageSync('shop').id,
-        sPagerows: 10
+        row: 10
       };
       this.setData({
         datas:data
@@ -37,12 +36,12 @@ Component({
       this.getData(data);
     },
     onReachBottom: function () {
-      var totalPage = Math.ceil(this.data.total / 10);
+      var totalPage = Math.ceil(this.data.total / 10 - 1);
       wx.showLoading({
         title: '加载中',
       })
-      this.data.datas.sStartpage += 1;
-      if (this.data.datas.sStartpage > totalPage) {
+      this.data.datas.page += 1;
+      if (this.data.datas.page > totalPage) {
         wx.showToast({
           title: '已经到底了',
           icon: 'none'
@@ -52,9 +51,17 @@ Component({
       let data = this.data.datas;
       this.getData(data);
     },
-    getData:function(data){
+    onPullDownRefresh: function () {
+      this.setData({
+        list: []
+      })
+      this.onLoad();
+      wx.stopPullDownRefresh();
+    },
+    getData:function(data){//获取云店玩家圈动态
       var oldData = this.data.list;
-      app.util.reqAsync('circle/getCircleByShopId', data).then((res) => {
+      app.util.reqAsync('circle/listAllCircleInfo', data).then((res) => {
+        console.log(res.data.data)
         if(res.data.data.length>0){
           var list = res.data.data;
           var newData = oldData.concat(list);

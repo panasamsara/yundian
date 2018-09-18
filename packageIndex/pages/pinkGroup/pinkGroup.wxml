@@ -1,0 +1,114 @@
+<view class='header'>
+  <image class="bg" src="../images/pinkTeam.png"></image>
+  <view class="title">
+    <image src='../images/pinkTeam.png'></image>
+    <view class='font32 font_fff'>户外协会粉团队</view>
+  </view>
+</view>
+<view class='photo_album bg_fff'>
+  <view class='navTitle'>
+    <view class='float_l'>粉活动</view>
+    <view class='float_r'>
+      更多活动
+      <image src='../images/fentaundui_gengduo_jiantou@2x.png'></image>
+    </view>
+  </view>
+  <view class='content'>
+    <scroll-view scroll-x class='scroll-view_H'>
+      <view class='list acvitity'>
+        <image src='../images/pinkTeam.png'></image>
+        <view class='over_ellipsis font32 font_333 margin_b20'>快来跟我们一起参加泰国七日游快来跟我们一起参加泰国七日游</view>
+        <view class='over_ellipsis2 font24 font_666 margin_b30'>12如果你无法用简洁的语言表达你的想法，那只说明你还不够了解它,想表达法，那说明你还不3组如果你无法用简洁的语言表达你的想法，那只说明你还不够了解它,想表达法，那说明你还不
+        </view>
+        <view class='acvitity_img'>
+          <view class='float_l margin_r25'>
+            <image class="margin_r5" src='../images/fentuandui_huodong_dianzan@2x.png'></image>100</view>
+          <view class='float_l'>
+            <image class="margin_r5" src='../images/fentuandui_huodong_pinglun@2x.png'></image>100</view>
+          <view class='float_r'>2018-02-01</view>
+        </view>
+      </view>
+      <view class='list acvitity'>
+        <image src='../images/pinkTeam.png'></image>
+        <view class='over_ellipsis font32 font_333 margin_b20'>快来跟我们一起参加泰国七日游快来跟我们一起参加泰国七日游</view>
+        <view class='over_ellipsis2 font24 font_666 margin_b30'>12如果你无法用简洁的语言表达你的想法，那只说明你还不够了解它,想表达法，那说明你还不3组如果你无法用简洁的语言表达你的想法，那只说明你还不够了解它,想表达法，那说明你还不
+        </view>
+        <view class='acvitity_img'>
+          <view class='float_l margin_r25'>
+            <image class="margin_r5" src='../images/fentuandui_huodong_dianzan@2x.png'></image>100
+          </view>
+          <view class='float_l'>
+            <image class="margin_r5" src='../images/fentuandui_huodong_pinglun@2x.png'></image>100
+          </view>
+          <view class='float_r'>2018-02-01</view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+</view>
+<view class='photo_album bg_fff'>
+  <view class='navTitle'>
+    <view class='float_l'>相册</view>
+    <view class='float_r'>
+      更多活动
+      <image src='../images/fentaundui_gengduo_jiantou@2x.png'></image>
+    </view>
+  </view>
+  <view class='content'>
+    <!-- <scroll-view scroll-x class='scroll-view_H'> -->
+      <view class='first position_r'>
+        <image src='../images/pinkTeam.png'></image>
+        <view class='over_ellipsis font24 font_999 position_a name2'>123组</view>
+        <view class='over_ellipsis font28 font_333 margin_b15 position_a name1'>最美女人花小组</view>
+      </view>
+      <view class='second'>
+        <view class='list list_photo' >
+          <image src='../images/pinkTeam.png'></image>
+          <view class='over_ellipsis font28 font_333 margin_b15'>最美女人花小组</view>
+          <view class='over_ellipsis font24 font_999'>123组</view>
+        </view>
+        <view class='list list_photo'>
+          <image src='../images/pinkTeam.png'></image>
+          <view class='over_ellipsis font28 font_333 margin_b15'>最美女人花小组</view>
+          <view class='over_ellipsis font24 font_999'>123组</view>
+        </view>
+      </view>
+      <view class='three'>
+        <view class='list list_photo' >
+          <image src='../images/pinkTeam.png'></image>
+          <view class='over_ellipsis font28 font_333 margin_b15'>最美女人花小组</view>
+          <view class='over_ellipsis font24 font_999'>123组</view>
+        </view>
+        <view class='list list_photo'>
+          <image src='../images/pinkTeam.png'></image>
+          <view class='over_ellipsis font28 font_333 margin_b15'>最美女人花小组</view>
+          <view class='over_ellipsis font24 font_999'>123组</view>
+        </view>
+        <view class='list list_photo'>
+          <image src='../images/pinkTeam.png'></image>
+          <view class='over_ellipsis font28 font_333 margin_b15'>最美女人花小组</view>
+          <view class='over_ellipsis font24 font_999'>123组</view>
+        </view>
+      </view>
+    <!-- </scroll-view> -->
+  </view>
+</view>
+
+<view class='photo_album bg_fff'>
+  <view class='navTitle'>
+    <view class='float_l'>粉小组</view>
+    <view class='float_r'>
+      更多活动
+      <image src='../images/fentaundui_gengduo_jiantou@2x.png'></image>
+    </view>
+  </view>
+  <view class='content'>
+    <scroll-view scroll-x class='scroll-view_H'>
+      <view class='list team'>
+        <image src='../images/pinkTeam.png'></image>
+        <view class='over_ellipsis font28 font_333 margin_b15'>最美女人花小组</view>
+        <view class='over_ellipsis font24 font_999'>123组</view>
+      </view>
+    </scroll-view>
+  </view>
+</view>

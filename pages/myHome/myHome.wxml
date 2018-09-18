@@ -1,40 +1,59 @@
 <view>
   <view class="header">
     <view class="headerToP">
-      <image class="bgimg" src='images/myhome.png'></image>
+      <image class="bgimg" src='../../images/banner.bg@2x.png'></image>
+      <image class="write" src='../../images/white@2x.png'></image>
       <view class='top'>
-        <image class="" src="{{user.userpic}}" bindtap='clickCount'></image>
-        <text>{{user.username}}</text>
+        <view class='wrap float_l'>
+          <image class="" src="{{user.userpic}}" bindtap='clickCount'></image>
+        </view>
+        <text class='float_l'>{{user.username}}</text>
+      </view>
+      <image class="recommend {{animate?'shake-vertical':''}}" src='../../images/tuiajinhaoyou@2x.png'></image>
+    </view>
+  </view>
+  <view class='orderTop'>
+    <view class='float_l' bindtap='skipAppoint'>
+      <image src='../../images/yuyuemanage.png'></image>
+      <view>
+        <view class='font_333 font28'>预约管理</view>
+        <view class='font_999 font20'>查看所有预约信息</view>
+      </view>
+    </view>
+    <view class='float_l' bindtap='shipAccount'>
+      <image src='../../images/myaccount.png'></image>
+      <view>
+        <view class='font_333 font28'>我的账户</view>
+        <view class='font_999 font20'>查看所有账户信息</view>
       </view>
     </view>
   </view>
   <!--线上订单  -->
   <view class="order">
-     <view class="onlineOrder">
+    <view class="onlineOrder">
       <view class="title" bindtap='backOrder'>
-        <text class="left">线上订单</text>
-        <image class="right" src="images/right_icon.png"></image>
+        <text class="left font_333">线上订单</text>
+        <image class="right" src="../../images/right_icon.png"></image>
       </view>
       <view class="orderList">
         <view wx:for="{{shopList}}" wx:key="index" bindtap='backShop' data-path='{{item.path}}'>
-
-           <image class="msg" wx:if="{{item.num>0}}" src="images/msg.png"></image>
-           <text class="msgtitle" wx:if="{{item.num>0}}">{{item.num}}</text>
-          <image src="{{item.icon}}"></image>
+          <image class="msg" wx:if="{{item.num>0}}" src="../../images/msg.png"></image>
+          <text class="msgtitle" wx:if="{{item.num>0}}">{{item.num}}</text>
+          <image src="{{item.icon}}" style="{{item.style}}"></image>
           <text>{{item.text}}</text>
         </view>
       </view>
+      <view class='application'>功能应用</view>
       <view class="shoporder">
         <block wx:for="{{items}}" wx:key="{{item.id}}">
           <view data-path="{{ item.path }}" data-index="{{ index }}" bindtap="navigateTo">
-            <image src="{{item.icon}}"></image>
+            <image src="{{item.icon}}" style="{{item.style}}"></image>
             <text>{{item.text}}</text>
           </view>
         </block>
       </view>
-      <image  class="popularize" bindtap='appSkip' src='images/wode.png'></image>
+      <image class="popularize" bindtap='appSkip' src='../../images/wode.png'></image>
       <button type="warn" plain="{{plain}}" bindtap="warn" bindtap='back'>退出当前店铺</button>
-      <view class='versions'>当前版本：0.1.1</view>
-    </view> 
+    </view>
   </view>
 </view>

@@ -97,14 +97,41 @@ Page({
     })
     // 1 次数 2 时长 5终身
     app.util.reqAsync('member/getCardByUser', { "userId": this.data.user.id, "shopId": this.data.shop.id }).then((res) => {
-      var data = res.data.data;
-      // 去除后台返回值的截止
-      for (var i = 0; i < data.card.length;i++){
-        if (data.card[i].remainNum.indexOf("截止")!=-1){
-          data.card[i].remainNum = data.card[i].remainNum.replace("截止","");
+      if(res.data.code==1){
+        var data = res.data.data;
+        // 去除后台返回值的截止
+        if (data && data.card.length!=0){
+          for (var i = 0; i < data.card.length; i++) {
+            if (data.card[i].remainNum.indexOf("截止") != -1) {
+              data.card[i].remainNum = data.card[i].remainNum.replace("截止", "");
+            }
+          }
+        }
+        if (data && data.package.length != 0) {
+          for (var i = 0; i < data.package.length; i++) {
+            if (data.package[i].remainNum.indexOf("截止") != -1) {
+              data.package[i].remainNum = data.package[i].remainNum.replace("截止", "");
+            }
+          }
+        }
+        
+        var totalCard = [];
+        if (data.card.length != 0 && data.package.length == 0) {
+          var totalCard1 = totalCard.concat(res.data.data.card);
+          this.setData({ getCardByUser: totalCard1 });
+        } else if (data.card.length == 0 && data.package.length != 0) {
+          var totalCard1 = totalCard.concat(res.data.data.package);
+          this.setData({ getCardByUser: totalCard });
+        } else if (data.card.length != 0 && data.package.length != 0) {
+          var totalCard1 = totalCard.concat(res.data.data.card);
+          var totalCardTotal = totalCard1.concat(res.data.data.package)
+          this.setData({ getCardByUser: totalCardTotal });
+          console.log("getCardByUser", this.data.getCardByUser);
+        } else if (data==null){
+          this.setData({ getCardByUser: null });
         }
       }
-      this.setData({ getCardByUser: res.data.data });
+      
       wx.hideLoading();
     }).catch((err) => {
       wx.hideLoading()
@@ -118,7 +145,6 @@ Page({
     app.util.reqAsync('member/accRecordList', { "memberId": wx.getStorageSync("shopMemberId") }).then((res) => {
       this.setData({ leaveGoods: res.data });
       wx.hideLoading();
-      console.log("3333")
     }).catch((err) => {
       wx.hideLoading()
     })

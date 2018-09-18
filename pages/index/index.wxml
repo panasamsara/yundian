@@ -97,6 +97,11 @@
       <!-- <navigator url='../store/code/code'><image class='qrcode' src='../../images/yundian_erweima@2x.png'></image></navigator> -->
     </view>
 
+  
+  <navigator url='/packageIndex/pages/lesson/lesson'>
+    <image mode='aspectFit' class='banner-lesson' src='./img/zxkt_ydsy_rk@2x.png'></image>
+  </navigator>
+
     <!-- <view class='coupon' bindtap='showQuanBox' wx:if="{{couponType1||couponType2||couponType3}}"> -->
     <view class='coupon' bindtap='showQuanBox' wx:if="{{shopHasCoupon}}">
       <!-- <view class='coupon-inline'> -->
@@ -111,12 +116,12 @@
       <image src='./img/yuyue.png'></image>
     </view>
 
-    <view wx:if="{{shopInformation.goodsInfos.length<=0&&list.length<=0&&groupBuyList.length<=0&&hotCommoditiesList.hotCommoditiesList==undefined}}" class="activityBlank">
+    <view wx:if="{{goodsInfos.length<=0&&list.length<=0&&groupBuyList.length<=0&&hotCommoditiesList.hotCommoditiesList==undefined}}" class="activityBlank">
       <view><image src='img/yundian_kby_meiyoudianpu.png'></image></view>
       <text>暂时没有数据哦</text>
     </view>
     
-    <view wx:if="{{shopInformation.goodsInfos.length>0}}">
+    <view wx:if="{{goodsInfos.length>0}}">
       <view class='main-top m-t-b-10'>
         <view class='left-line'></view>
         <view class='tips'>店铺活动</view>
@@ -124,11 +129,13 @@
       </view>
       <view class="activity-swiper">
         <!-- <swiper class='activity-swiper-box' indicator-dots="{{shopInformation.goodsInfos.length>1}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}"> -->
-          <view class='active-block' wx:for="{{shopInformation.goodsInfos}}" wx:key="index">
+          <view class='active-block' wx:for="{{goodsInfos}}" wx:key="index">
             <!-- <swiper-item> -->
               <!-- <view class="swiper-item"> -->
                 <view class='activity-img'>
-                  <image src='{{item.pictureUrl}}' bindtap='goToActivityDetail' data-activityid='{{item.id}}' data-type='{{item.activityType}}'></image>
+                  <image class='sign-img' src='../store/activity/images/sign.png' wx:if="{{item.signType==1}}"></image>
+                  <image class='ac-img' src='{{item.pictureUrl}}' bindtap='goToActivityDetail' data-activityid='{{item.id}}' data-signtype="{{item.signType}}" data-type='{{item.activityType}}'></image>
+                  
                 </view>
 
                 <view class='activity-desc-box'>

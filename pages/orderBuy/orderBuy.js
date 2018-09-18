@@ -88,16 +88,31 @@ Page({
     var shopArea = shop.areaId;
     var shopCity = shop.cityId;
     var goodsDev = [];
+    //排序方法
+    let hash = {};
+    var goodNew = goods.reduce((preVal, curVal) => {
+      hash[curVal.goodsId] ? '' : hash[curVal.goodsId] = true && preVal.push(curVal);
+      return preVal
+    }, [])
+    
 
-    for (var k in goods) {
-      if (typeof (goods[k].deliveryCalcContent) == 'string') {
-        if (goods[k].deliveryCalcContent != "" && JSON.parse(goods[k].deliveryCalcContent) != null) {
-          goodsDev.push(JSON.parse(goods[k].deliveryCalcContent))
+    console.log(goodNew)
+
+    for (var k in goodNew) {
+      if (typeof (goodNew[k].deliveryCalcContent) == 'string') {
+        if (goodNew[k].deliveryCalcContent != "" && JSON.parse(goodNew[k].deliveryCalcContent) != null) {
+          goodsDev.push(JSON.parse(goodNew[k].deliveryCalcContent))
         } else {
           goodsDev.push(0);
         }
       }
-      goods[k].actualPayment = Number(goods[k].actualPayment) * Number(goods[k].number);
+      
+    }
+
+    for (var d in goods){
+      if (typeof (goods[d].deliveryCalcContent) == 'string') {}else{
+        goods[d].actualPayment = Number(goods[d].actualPayment) * Number(goods[d].number);
+      }
     }
 
     var arr = goodsDev;
@@ -114,116 +129,24 @@ Page({
       offline: offline,
       shopName: shopName,
       goods: goods,
-      userCode: userCode
+      userCode: userCode,
+      ispay: ispay
     })
 
-    if (arr.length > 0) {
-      this.setData({
-        notInCityPrice: arr.notInCityPrice,
-        inCityPrice: arr.inCityPrice,
-        inCityPriceDetails: arr.inCityPriceDetails
-      })
-    } else {
-      this.setData({
-        notInCityPrice: '',
-        inCityPrice: '',
-        inCityPriceDetails: ''
-      })
-    }
-    //是否可以店内下单并获得房间或者桌号
-    app.util.reqAsync('shop/getShopTableNos', {
-      shopId: this.data.shopId
-    }).then((data) => {
-
-      var isSer = 0;
-      for (var ins in goods) {
-        if (goods[ins].goodsType != 0) {  //（0-普通商品；1-服务；2-服务卡；3-服务套餐;6-套盒）
-          isSer = 1;
-        }
-      }
-
-      if (data.data.code == 9) {   //未开通店内下单
-        console.log('未开通店内下单')
-        if (isSer == 0) { //普通商品
-          this.setData({
-            array: ['快递配送', '自提'],
-            isShop: 1,//0开通店内下单 1未开通
-            isService: 0, //0只有商品没有服务 1有服务
-            objectArray: [
-              {
-                id: 0,
-                name: '快递配送'
-              },
-              {
-                id: 2,
-                name: '自提'
-              }
-            ]
-          })
-        } else {
-          this.setData({
-            isSend: 2,//0-快递  1-店内下单 2-自提
-            array: ['自提'],
-            isShop: 1,//0开通店内下单 1未开通
-            isService: 1, //0只有商品没有服务 1有服务
-            index: 0,
-            objectArray: [
-              {
-                id: 2,
-                name: '自提'
-              }
-            ]
-          })
-        }
-      } else { //开通店内下单线上线下分开所以不要店内下单
-        if (data.data.data.length > 0) {
-          console.log('开通店内下单')
-          this.setData({
-            room: data.data.data,
-            merchantId: data.data.data[0].merchantId
-          })
-          if (isSer == 0) { //普通商品
-            this.setData({
-              array: ['快递配送', '自提'],
-              isShop: 0,//0开通店内下单 1未开通
-              isService: 0, //0只有商品没有服务 1有服务
-              objectArray: [
-                {
-                  id: 0,
-                  name: '快递配送'
-                },
-                {
-                  id: 2,
-                  name: '自提'
-                }
-              ]
-            })
-          } else {
-            this.setData({
-              isSend: 2,//0-快递  1-店内下单 2-自提
-              array: ['自提'],
-              isShop: 0,//0开通店内下单 1未开通
-              isService: 1, //0只有商品没有服务 1有服务
-              index: 0,
-              objectArray: [
-                {
-                  id: 2,
-                  name: '自提'
-                }
-              ]
-            })
-          }
-        }
-
-      }
-
-      this.setData({
-        goods: goods,
-        total: goods.length,
-        isService: isSer,
-        isPay: ispay
-      })
-    })
+    // if (arr.length > 0) {
+    //   this.setData({
+    //     notInCityPrice: arr.notInCityPrice,
+    //     inCityPrice: arr.inCityPrice,
+    //     inCityPriceDetails: arr.inCityPriceDetails
+    //   })
+    // } else {
+    //   this.setData({
+    //     notInCityPrice: '',
+    //     inCityPrice: '',
+    //     inCityPriceDetails: ''
+    //   })
+    // }
+    
 
     this.setData({
       totalMoney: options.totalMoney,
@@ -246,8 +169,256 @@ Page({
     }
     console.log("limtgood" + this.data.limtgood)
     console.log(this.data.goods)
+    //是否可以店内下单并获得房间或者桌号
+    app.util.reqAsync('shop/getShopTableNos', {
+      shopId: this.data.shopId
+    }).then((data) => {
+      var goods = this.data.goods;
+      var isSer = 0;
+      for (var ins in goods) {
+        if (goods[ins].goodsType != 0) {  //（0-普通商品；1-服务；2-服务卡；3-服务套餐;6-套盒）
+          isSer = 1;
+        }
+      }
+
+      if (data.data.code == 9) {   //未开通店内下单
+        console.log('未开通店内下单')
+        if (options.isSend) {
+          if (options.isSend == 0) { //快递
+            if (isSer == 0) { //普通商品
+              this.setData({
+                array: ['快递配送', '自提'],
+                index: 0,
+                isShop: 1,//0开通店内下单 1未开通
+                isService: 0, //0只有商品没有服务 1有服务
+                objectArray: [
+                  {
+                    id: 0,
+                    name: '快递配送'
+                  },
+                  {
+                    id: 2,
+                    name: '自提'
+                  }
+                ]
+              })
+            } else {
+              this.setData({
+                isSend: 2,//0-快递  1-店内下单 2-自提
+                array: ['自提'],
+                isShop: 1,//0开通店内下单 1未开通
+                isService: 1, //0只有商品没有服务 1有服务
+                index: 0,
+                objectArray: [
+                  {
+                    id: 2,
+                    name: '自提'
+                  }
+                ]
+              })
+            }
+          } else {
+            if (isSer == 0) { //普通商品
+              this.setData({
+                array: ['快递配送', '自提'],
+                isShop: 1,//0开通店内下单 1未开通
+                isService: 0, //0只有商品没有服务 1有服务
+                index: 1,
+                objectArray: [
+                  {
+                    id: 0,
+                    name: '快递配送'
+                  },
+                  {
+                    id: 2,
+                    name: '自提'
+                  }
+                ]
+              })
+            } else {
+              this.setData({
+                isSend: 2,//0-快递  1-店内下单 2-自提
+                array: ['自提'],
+                isShop: 1,//0开通店内下单 1未开通
+                isService: 1, //0只有商品没有服务 1有服务
+                index: 0,
+                objectArray: [
+                  {
+                    id: 2,
+                    name: '自提'
+                  }
+                ]
+              })
+            }
+          }
+        } else {
+          if (isSer == 0) { //普通商品
+            this.setData({
+              array: ['快递配送', '自提'],
+              isShop: 1,//0开通店内下单 1未开通
+              isService: 0, //0只有商品没有服务 1有服务
+              objectArray: [
+                {
+                  id: 0,
+                  name: '快递配送'
+                },
+                {
+                  id: 2,
+                  name: '自提'
+                }
+              ]
+            })
+          } else {
+            this.setData({
+              isSend: 2,//0-快递  1-店内下单 2-自提
+              array: ['自提'],
+              isShop: 1,//0开通店内下单 1未开通
+              isService: 1, //0只有商品没有服务 1有服务
+              index: 0,
+              objectArray: [
+                {
+                  id: 2,
+                  name: '自提'
+                }
+              ]
+            })
+          }
+        }
+
+      } else { //开通店内下单线上线下分开所以不要店内下单
+        if (data.data.data.length > 0) {
+          console.log('开通店内下单')
+          this.setData({
+            room: data.data.data,
+            merchantId: data.data.data[0].merchantId
+          })
+          if (options.isSend) {
+            if (options.isSend == 0) {
+              if (isSer == 0) { //普通商品
+                this.setData({
+                  array: ['快递配送', '自提'],
+                  isShop: 0,//0开通店内下单 1未开通
+                  index: 0,
+                  isService: 0, //0只有商品没有服务 1有服务
+                  objectArray: [
+                    {
+                      id: 0,
+                      name: '快递配送'
+                    },
+                    {
+                      id: 2,
+                      name: '自提'
+                    }
+                  ]
+                })
+              } else {
+                this.setData({
+                  isSend: 2,//0-快递  1-店内下单 2-自提
+                  array: ['自提'],
+                  isShop: 0,//0开通店内下单 1未开通
+                  isService: 1, //0只有商品没有服务 1有服务
+                  index: 0,
+                  objectArray: [
+                    {
+                      id: 2,
+                      name: '自提'
+                    }
+                  ]
+                })
+              }
+            } else {
+              if (isSer == 0) { //普通商品
+                this.setData({
+                  array: ['快递配送', '自提'],
+                  index: 1,
+                  isShop: 0,//0开通店内下单 1未开通
+                  isService: 0, //0只有商品没有服务 1有服务
+                  objectArray: [
+                    {
+                      id: 0,
+                      name: '快递配送'
+                    },
+                    {
+                      id: 2,
+                      name: '自提'
+                    }
+                  ]
+                })
+              } else {
+                this.setData({
+                  isSend: 2,//0-快递  1-店内下单 2-自提
+                  array: ['自提'],
+                  isShop: 0,//0开通店内下单 1未开通
+                  isService: 1, //0只有商品没有服务 1有服务
+                  index: 0,
+                  objectArray: [
+                    {
+                      id: 2,
+                      name: '自提'
+                    }
+                  ]
+                })
+              }
+            }
+          } else {
+            if (isSer == 0) { //普通商品
+              this.setData({
+                array: ['快递配送', '自提'],
+                isShop: 0,//0开通店内下单 1未开通
+                isService: 0, //0只有商品没有服务 1有服务
+                objectArray: [
+                  {
+                    id: 0,
+                    name: '快递配送'
+                  },
+                  {
+                    id: 2,
+                    name: '自提'
+                  }
+                ]
+              })
+            } else {
+              this.setData({
+                isSend: 2,//0-快递  1-店内下单 2-自提
+                array: ['自提'],
+                isShop: 0,//0开通店内下单 1未开通
+                isService: 1, //0只有商品没有服务 1有服务
+                index: 0,
+                objectArray: [
+                  {
+                    id: 2,
+                    name: '自提'
+                  }
+                ]
+              })
+            }
+          }
+
+        }
+
+      }
+
+
+
+
+
+      this.setData({
+        goods: goods,
+        total: goods.length,
+        isService: isSer,
+        isPay: this.data.ispay
+
+      })
+    })
+    console.log("返回：" + options.isSend)
+    if (options.isSend) {
+      this.setData({
+        isSend: options.isSend
+      })
+    }
   },
   onShow: function (e) {
+
     //获取地址
     app.util.reqAsync('shop/getMyAddressAndCoupon', {
       customerId: this.data.customerId,
@@ -357,7 +528,7 @@ Page({
   },
   deliveryMone: function () {
     var darr = this.data.deliveyArr;
-
+    console.log(darr)
     if (this.data.name == "包邮券") {
       this.setData({
         deliveyMoney: 0
@@ -409,10 +580,10 @@ Page({
         if (mony.length > 1) {
           var bigmon = 0;
           for (var i = 0; i < mony.length; i++) {
-            bigmon += mony[i]
+            bigmon = Number(mony[i]) + Number(bigmon)
           }
         } else {
-          var bigmon = mony
+          var bigmon = Number(mony)
         }
 
         console.log(bigmon)

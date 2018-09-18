@@ -1,0 +1,120 @@
+/* packageIndex/pages/fansSearch/fansSearch.wxss */
+#fansSearch #head{
+  display: flex;
+  justify-content: space-between;
+  padding: 20rpx 25rpx;
+  border-top: solid 1rpx#e5e5e5;
+}
+
+#fansSearch #searchBox{
+  display: flex;
+  align-items: center;
+  height: 60rpx;
+  line-height: 60rpx;
+  background-color:#f3f3f3;
+  border-radius: 30rpx;
+  font-size: 30rpx;
+  padding: 0 20rpx;
+}
+
+#fansSearch .normalBox{
+  width: 540rpx;
+}
+
+#fansSearch .fullBox{
+  width: 100%!important;
+  justify-content: center;
+}
+
+#fansSearch .normalBox input{
+  width: 459rpx; 
+}
+
+#fansSearch .fullBox input{
+  width: 160rpx;
+}
+
+#fansSearch input{
+  padding-left: 15rpx;
+  color: #353535;
+}
+
+#fansSearch #searchIcon{
+  width: 31rpx;
+  height: 28rpx;
+}
+
+#fansSearch #clearIcon{
+  width: 35rpx;
+  height: 35rpx;
+}
+
+#fansSearch #search{
+  background-color: #fe732e;
+  width: 100rpx;
+  line-height: 60rpx;
+  text-align: center;
+  color: #ffffff;
+  border-radius: 30rpx;
+  font-size: 28rpx;
+}
+
+#fansSearch .list{
+  padding: 25rpx 25rpx 0 25rpx;
+}
+
+#fansSearch .listBox{
+  display: flex;
+  justify-content: space-between;
+  border-bottom: solid 1rpx #e5e5e5;
+  padding-bottom: 25rpx;
+}
+
+#fansSearch .box{
+  display: flex;
+  width: 570rpx;
+}
+
+#fansSearch .logo{
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 6rpx;
+  margin-right: 25rpx;
+}
+
+#fansSearch .infoBox{
+  display: flex;
+  flex-direction: column;
+  line-height: 60rpx;
+}
+
+#fansSearch .detailName{
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+#fansSearch .joinAmount{
+  color:#999999;
+  font-size: 26rpx;
+}
+
+#fansSearch .join{
+  line-height: 45rpx;
+  height: 45rpx;
+  width: 105rpx;
+  font-size: 22rpx;
+  border-radius: 8rpx;
+  border: solid 1rpx #666666;
+  color: #666666;
+  text-align: center;
+}
+
+#fansSearch #blank{
+  width: 100%;
+  text-align: center
+}
+
+
+
+
+

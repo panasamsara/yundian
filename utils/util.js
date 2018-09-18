@@ -9,24 +9,97 @@ const formatTime = date => {
   const minute = date.getMinutes()
   const second = date.getSeconds()
 
-  return [year, month, day].map(formatNumber).join('/') + ' ' + [hour, minute, second].map(formatNumber).join(':')
+  return [year, month, day].map(formatNumber).join('-') + ' ' + [hour, minute, second].map(formatNumber).join(':')
 }
 // 测试链接
-const URL_QRCODE = 'https://wxapp.izxcs.com/qrcode/shop/';
-
-//测试环境
+const URL_QRCODE = 'https://wxapp.izxcs.com/zxcity_restful/ws/rest';
+// 测试环境
 const URL = 'https://wxappprod.izxcs.com/zxcity_restful/ws/rest';
 const SHARE_URL ='http://share.zxtest.izxcs.com';
 const SOCKET_URL = 'wss://wxappprod.izxcs.com'
 
 //正式环境
-// const URL = 'https://wxapp.izxcs.com/zxcity_restful/ws/rest';
+// const URL = 'https://wxapp.izxcs.com/zxcity_restful/ws/rest ';
+// const URL_QRCODE = 'https://wxapp.izxcs.com/qrcode/shop/';
 // const SHARE_URL = 'http://share.izxcs.com';
 // const SOCKET_URL = 'wss://wxapp.izxcs.com'
 
 const formatNumber = n => {
   n = n.toString()
   return n[1] ? n : '0' + n
+}
+
+// 判断是否有缓存店铺，没有就缓存，有就看是否需要替换（分享进小程序时使用）
+const cacheShop = (shopId, shop, that) => {
+  if (!shop) {
+    if (shopId == undefined) {
+      wx.redirectTo({
+        url: '../scan/scan'
+      })
+    } else {
+      util.getShop(loginRes.id, shopId).then(function (res) {
+        that.setData({
+          shopInformation: res.data.data
+        })
+        //shop存入storage
+        wx.setStorageSync('shop', res.data.data.shopInfo);
+        //活动
+        wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
+        // 所有信息
+        wx.setStorageSync('shopInformation', res.data.data);
+
+      })
+    }
+  } else {
+    if (shopId == undefined || shopId == '' || shopId == null) {
+      if (shop.shopHomeConfig) {
+        if (shop.shopHomeConfig.videoPathList.length != 0) {
+          let videoInfo = {}
+          videoInfo.url = shop.shopHomeConfig.videoPathList[0].filePath
+          videoInfo.cover = shop.shopHomeConfig.videoPathList[0].coverImagePath
+          wx.setStorageSync('videoInfo', videoInfo)
+        }
+      }
+      let shopInformation = wx.getStorageSync('shopInformation')
+      that.setData({
+        shopInformation: shopInformation
+      })
+
+    } else {
+      if (shopId == shop.id) {
+        if (shop.shopHomeConfig) {
+          if (shop.shopHomeConfig.videoPathList.length != 0) {
+            let videoInfo = {}
+            videoInfo.url = shop.shopHomeConfig.videoPathList[0].filePath
+            videoInfo.cover = shop.shopHomeConfig.videoPathList[0].coverImagePath
+            wx.setStorageSync('videoInfo', videoInfo)
+          }
+        }
+        let shopInformation = wx.getStorageSync('shopInformation')
+        that.setData({
+          shopInformation: shopInformation
+        })
+
+      } else {
+        wx.removeStorageSync('shop')
+        wx.removeStorageSync('goodsInfos')
+        wx.removeStorageSync('shopInformation')
+        util.getShop(loginRes.id, shopId).then(function (res) {
+          that.setData({
+            shopInformation: res.data.data
+          })
+          //shop存入storage
+          wx.setStorageSync('shop', res.data.data.shopInfo);
+          //活动
+          wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
+          // 所有信息
+          wx.setStorageSync('shopInformation', res.data.data);
+
+        })
+      }
+    }
+
+  }
 }
 
 // 格式化金额
@@ -72,7 +145,7 @@ const formatTimeArray = date => {
 //云店动态日期格式
 const formatStoreDate = date => {
   const dates= date.split("-"); 
-  return [dates[1], date[2]].map(formatNumber).join('-')
+  return [dates[0], dates[1], date[2]].map(formatNumber).join('-')
 }
 
 //活动详情日期格式
@@ -96,7 +169,7 @@ const formatIOS= date =>{
 // 封装小程序异步请求为Promise
 const reqAsync = (cmd, data) => {
   var p = new Promise((resolve, reject) => {
-    wx.request({
+    wx.request({ 
       url: URL,
       method: 'POST',
       header: {
@@ -218,10 +291,12 @@ const checkWxLogin = (source=null) => {
             console.log(res)
             // 后台登陆app账户
             reqAsync('payBoot/wx/miniapp/login', {
-              code: res.code
+              code: res.code,
+              source:'0',
+              platform:'0'
             }).then((res) => {
               console.log(res)
-              console.log('登录app', res.data.data.scSysUser)
+              // console.log('登录app', res.data.data.scSysUser)
               wx.setStorageSync('loginToken', res.data.data.loginToken);
               // 失败则跳到注册页
               if (res.data.code != 1) {
@@ -230,10 +305,19 @@ const checkWxLogin = (source=null) => {
                 return
               }
               // 未注册用户跳转到注册页面
-              if (res.data.data.scSysUser == null) {
+ 				if (res.data.data.scSysUser == null) {
                 wx.redirectTo({ url: '/pages/reg/reg' });
                 return
               }
+              // if (!res.data.data.scSysUser) {
+              //   var result={
+              //     msg:'新用户',
+              //     status:0
+              //   }
+              //   resolve(result)
+              //   // wx.redirectTo({ url: '/pages/reg/reg' });
+              //   return
+              // }
               else {
                 wx.setStorageSync('scSysUser', res.data.data.scSysUser);
                 resolve(res.data.data.scSysUser)
@@ -280,7 +364,7 @@ const checkWxLoginShare = (source = null) => {
         wx.hideLoading();
       } else {
         wx.login({
-          success: (res) => {
+          success: (res) => { 
             console.log(res)
             // 后台登陆app账户
             reqAsync('payBoot/wx/miniapp/login', {
@@ -425,7 +509,22 @@ const hexToRGB = (color) => {
   var b = parseInt(`0x${hexArr[2]}`);
   return `rgb(${r}, ${g}, ${b})`
 }
-
+// 向后台发消息
+const sendMessage = (orderNo, shopId, userCode, messageType=null) => {
+  let promi = new Promise((resolve, reject) => {
+    reqAsync('shop/getRoomIdSendMessage', {
+      orderNo: orderNo,
+      shopId: shopId,
+      userCode: userCode,
+      type: messageType // 1是餐饮线下， 2是预约， null是线上
+    }).then((res) => {
+      resolve(res)
+    }).catch((res) => {
+      reject(res)
+    })
+  })
+  return promi
+}
 
 module.exports = {
   formatTime: formatTime,
@@ -453,6 +552,7 @@ module.exports = {
   getShop: getShop,
   checkWxLoginShare: checkWxLoginShare,
   SHARE_URL: SHARE_URL,
-  SOCKET_URL: SOCKET_URL
-  
+  SOCKET_URL: SOCKET_URL,
+  sendMessage: sendMessage,
+  cacheShop: cacheShop
 }

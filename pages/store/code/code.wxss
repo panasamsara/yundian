@@ -10,6 +10,7 @@ page{
   padding: 60rpx 70rpx;
   letter-spacing: 2rpx;
   position: relative;
+  background-color: #ffffff;
 }
 
 .code #codeborder{
@@ -100,3 +101,19 @@ page{
   border-radius: 45rpx;
 }
 
+#share,#goback{
+  position: fixed;
+  width: 80rpx;
+  height: 80rpx;
+  z-index: 99999;
+}
+
+#share{
+  right: 30rpx;
+  bottom: 280rpx;
+}
+
+#goback{
+  right: 30rpx;
+  bottom: 180rpx;
+}

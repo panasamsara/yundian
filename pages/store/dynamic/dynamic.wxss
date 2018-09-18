@@ -28,9 +28,8 @@
   word-break: break-all;
 }
 
-.dynamic .storeName,.dynamic .date{
-  font-size: 29rpx;
-  color: #989898;
+.dynamic .storeName{
+  font-size: 32rpx;
 }
 
 .dynamic .infoBox{
@@ -38,6 +37,13 @@
   padding-left: 20rpx;
   line-height: 50rpx;
   color: #333333;
+  display: flex;
+  flex-direction: column;
+}
+
+.date{
+  font-size: 24rpx;
+  color: #989898;
 }
 
 .dynamic .infoBox image{
@@ -49,10 +55,6 @@
 .dynamic .store{
   display: flex;
   align-items: center;
-}
-
-.dynamic .date{
-  width: 100rpx;
 }
 
 .dynamic .dynamicText{

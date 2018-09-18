@@ -104,53 +104,8 @@ Page({
       } 
       _this.getList();
       
-      if (!shop) {
-        if (shopId == undefined) {
-          wx.redirectTo({
-            url: '../scan/scan'
-          })
-        } else {
-          util.getShop(loginRes.id, shopId).then(function (res) {
-            _this.setData({
-              shopInformation: res.data.data
-            })
-            //shop存入storage
-            wx.setStorageSync('shop', res.data.data.shopInfo);
-            //活动
-            wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
-            // 所有信息
-            wx.setStorageSync('shopInformation', res.data.data);
-  
-          })
-        }
-      } else {
-        if (shopId == undefined || shopId == '' || shopId == null) {
-
-
-        } else {
-          if (shopId == shop.id) {
-
-
-          } else {
-            wx.removeStorageSync('shop')
-            wx.removeStorageSync('goodsInfos')
-            wx.removeStorageSync('shopInformation')
-            util.getShop(loginRes.id, shopId).then(function (res) {
-              _this.setData({
-                shopInformation: res.data.data
-              })
-              //shop存入storage
-              wx.setStorageSync('shop', res.data.data.shopInfo);
-              //活动
-              wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
-              // 所有信息
-              wx.setStorageSync('shopInformation', res.data.data);
-
-            })
-          }
-        }
-
-      }
+      // 判断是否有缓存店铺，没有就缓存，有就看是否需要替换
+      util.cacheShop(shopId, shop, _this)
 
       wx.removeStorageSync('shopId');
     })
@@ -239,9 +194,9 @@ Page({
           var descArr = data.promGoodsDesc.split("|&");
           _this.setData({ descArr: descArr});
        }else{
-          var couponGoodsName = data.couponGoodsName.split(",");
-          console.log("couponGoodsName", couponGoodsName);
-          this.setData({ quanDetail: couponGoodsName,})
+          // var couponGoodsName = data.couponGoodsName.split(",");
+          // console.log("couponGoodsName", data.couponGoodsName);
+          this.setData({ quanDetail: data.couponGoodsName,})
        }
         _this.setData({
           discountsNew: data,
@@ -264,7 +219,7 @@ Page({
       }).catch((err) => {
         wx.hideLoading();
         wx.showToast({
-          title: '失败……',
+          title: '',
           icon: 'none'
         })
       })
@@ -305,7 +260,7 @@ Page({
       }).catch((err) => {
         wx.hideLoading();
         wx.showToast({
-          title: '失败……',
+          title: '',
           icon: 'none'
         })
       })
@@ -381,10 +336,11 @@ Page({
     //   // 来自页面内转发按钮
     //   console.log()
     // }
-    if (this.data.couponType == "06" && this.data.discountsNew.couponShare == 1){
+    // if (this.data.couponType == "06" && this.data.discountsNew.couponShare == 1){
+    if (this.data.couponType == "06") {
       console.log('新人大礼包')
       return {
-        title: "[新消息]你的好友喊你来白拿钱，点击进入",
+        title: "[新消息]" + this.data.discountData.shopName + "喊你来白拿钱，点击进入",
         path: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + _this.data.id + "&couponLogId=" + _this.data.couponLogId + "&couponType=" + _this.data.couponType + "&canLimitGoods=" + _this.data.canLimitGoods + "&promGoodsTypeShare=" + _this.data.promGoodsType +"&share=" + "1",
         imageUrl: _this.data.temp,
         success: function (res) {
@@ -396,7 +352,7 @@ Page({
           }).catch((err) => {
             wx.hideLoading();
             wx.showToast({
-              title: '失败……',
+              title: '',
               icon: 'none'
             })
           })
@@ -540,7 +496,7 @@ Page({
     }).catch((err) => {
       wx.hideLoading();
       wx.showToast({
-        title: '失败……',
+        title: '',
         icon: 'none'
       })
     })

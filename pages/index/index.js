@@ -6,7 +6,8 @@ const app = getApp()
 Page({
    data: {
       userInfo: {},
-      shopInformation: {},
+      shopInformation: {}, // 店铺信息
+      goodsInfos: [],  // 店铺活动
       hasUserInfo: false,
       couponInfo: {},
       couponGoods: [],
@@ -94,8 +95,10 @@ Page({
            })
          } else {
            util.getShop(loginRes.id, shopId).then(function (res) {
+
              _this.setData({
-               shopInformation: res.data.data
+               shopInformation: res.data.data,
+               goodsInfos: res.data.data.goodsInfos
              })
              //shop存入storage
              wx.setStorageSync('shop', res.data.data.shopInfo);
@@ -127,8 +130,11 @@ Page({
              }
            }
            let shopInformation = wx.getStorageSync('shopInformation')
+           let goodsInfos = wx.getStorageSync('goodsInfos')
+           
            _this.setData({
-             shopInformation: shopInformation
+             shopInformation: shopInformation,
+             goodsInfos: _this.changeStartEndTime(goodsInfos)
            })
            _this.getShopInfo(shopInformation)
            _this.getIndexAllInfo(shop.id)
@@ -144,8 +150,11 @@ Page({
                }
              }
              let shopInformation = wx.getStorageSync('shopInformation')
+             let goodsInfos = wx.getStorageSync('goodsInfos')
+
              _this.setData({
-               shopInformation: shopInformation
+               shopInformation: shopInformation,
+               goodsInfos: _this.changeStartEndTime(goodsInfos)
              })
              _this.getShopInfo(shopInformation)
              _this.getIndexAllInfo(shop.id)
@@ -156,7 +165,8 @@ Page({
              wx.removeStorageSync('shopInformation')
              util.getShop(loginRes.id, shopId).then(function (res) {
                _this.setData({
-                 shopInformation: res.data.data
+                 shopInformation: res.data.data,
+                 goodsInfos: _this.changeStartEndTime(res.data.data.goodsInfos)
                })
                //shop存入storage
                wx.setStorageSync('shop', res.data.data.shopInfo);
@@ -187,6 +197,33 @@ Page({
     
      
    },
+   // 格式化 开始结束时间
+  changeStartEndTime(goodsInfos){
+    for (let i = 0; i < goodsInfos.length; i++) {
+      goodsInfos[i].startTime = goodsInfos[i].startTime.substring(0, 10)
+      goodsInfos[i].endTime = goodsInfos[i].endTime.substring(0, 10)
+      goodsInfos[i].startTime = goodsInfos[i].startTime.replace(/\-/g, '.')
+      goodsInfos[i].endTime = goodsInfos[i].endTime.replace(/\-/g, '.')
+    }
+    return goodsInfos
+  },
+  // 获取店铺活动
+  getShopHomeGoods(shopId){
+    let _this = this
+    util.reqAsync('shop/getShopHomeGoods', {
+      shopId: shopId,
+      pageNo: 1,
+      pageSize: 100
+    }).then((res) => {
+      console.log('店铺活动------------' ,res.data.data)
+      wx.setStorageSync('goodsInfos', res.data.data);
+      _this.setData({
+        goodsInfos: _this.changeStartEndTime(res.data.data)
+      })
+    }).catch((err) => {
+      console.log(err)
+    })
+  },
    // 获取店铺信息
   getShopInfo: function (resData) {
     //  var resData = res.data.data
@@ -226,27 +263,29 @@ Page({
      wx.setStorageSync('shop', shop);
      app.util.setHistories(shop)
 
-    //活动
-     if (resData&&resData.goodsInfos&&resData.goodsInfos.length != 0) {
-       for (let i = 0; i < resData.goodsInfos.length; i++) {
-         resData.goodsInfos[i].startTime = resData.goodsInfos[i].startTime.substring(0, 10)
-         resData.goodsInfos[i].endTime = resData.goodsInfos[i].endTime.substring(0, 10)
-         resData.goodsInfos[i].startTime = resData.goodsInfos[i].startTime.replace(/\-/g, '.')
-         resData.goodsInfos[i].endTime = resData.goodsInfos[i].endTime.replace(/\-/g, '.')
-       }
-     }
      this.setData({ shopInformation: resData });
-     if (shop.shopHomeConfig.openServiceList[0] && shop.shopHomeConfig.openServiceList[4] == false) {
-       this.setData({
-         showVideo: true,
-         showImg: false
-       })
-     } else if (shop.shopHomeConfig.openServiceList[4]) {
-       this.setData({
-         showVideo: false,
-         showImg: true
-       })
+    if (shop.configFirstSee == 1){
+        this.setData({
+          showVideo: true,
+          showImg: false
+        })
+     }else{
+        this.setData({
+          showVideo: false,
+          showImg: true
+        })
      }
+    //  if (shop.shopHomeConfig.openServiceList[0] && shop.shopHomeConfig.openServiceList[4] == false) {
+    //    this.setData({
+    //      showVideo: true,
+    //      showImg: false
+    //    })
+    //  } else if (shop.shopHomeConfig.openServiceList[4]) {
+    //    this.setData({
+    //      showVideo: false,
+    //      showImg: true
+    //    })
+    //  }
      // 判断是否有720全景地址
      if (shop.shopHomeConfig.fullView720Path.length == 0) {
        this.setData({ has720: false });
@@ -271,6 +310,8 @@ Page({
      this.getGroupBuyData()
      // 获取优惠券
      this.getCouponList()
+     // 获取店铺活动
+     this.getShopHomeGoods(wx.getStorageSync('shop').id)
    },
    //精选商品推荐列表,获取店铺信息后调用此方法
    getHotList: function(){
@@ -292,6 +333,36 @@ Page({
        }
        
        
+     })
+   },
+   // 获取店铺信息，用于上拉刷新重新 获取店铺信息并缓存
+   reloadShopInfo(){
+     let _this = this
+     let user = wx.getStorageSync('scSysUser')
+
+     util.getShop(user.id, wx.getStorageSync('shop').id ).then(function (res) {
+       wx.stopPullDownRefresh()
+       _this.setData({
+         shopInformation: res.data.data,
+         goodsInfos: _this.changeStartEndTime(res.data.data.goodsInfos)
+       })
+       //shop存入storage
+       wx.setStorageSync('shop', res.data.data.shopInfo);
+       //活动
+       wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
+       // 所有信息
+       wx.setStorageSync('shopInformation', res.data.data);
+       if (res.data.data.shopInfo.shopHomeConfig) {
+         if (res.data.data.shopInfo.shopHomeConfig.videoPathList.length != 0) {
+           let videoInfo = {}
+           videoInfo.url = res.data.data.shopInfo.shopHomeConfig.videoPathList[0].filePath
+           videoInfo.cover = res.data.data.shopInfo.shopHomeConfig.videoPathList[0].coverImagePath
+           wx.setStorageSync('videoInfo', videoInfo)
+         }
+       }
+       _this.getShopInfo(res.data.data)
+       _this.getIndexAllInfo(res.data.data.shopInfo.id)
+       _this.checkCoupon()
      })
    },
    goPhotos: function(){
@@ -432,33 +503,43 @@ Page({
          customerId: wx.getStorageSync('scSysUser').id,
          shopId: wx.getStorageSync('shop').id
        }).then((res) => {
-         var couponGoods = []
-         couponGoods = res.data.data.coupon.goodsName.split("|&")
-         couponGoods = couponGoods.slice(0, couponGoods.length - 1)
-         for (let i = 0; i < couponGoods.length; i++) {
-           if (couponGoods[i].length > 8) {
-             couponGoods[i] = couponGoods[i].substring(0, 8) + '...'
-           }
-         }
-         this.setData({
-           couponInfo: res.data.data,
-           couponGoods: couponGoods
-         })
-         if (res.data.data.receiveStatu == true && res.data.data.useStatu == false) {
-           this.setData({
-             showModal: true,
-             showCoupnBox: true,
-             showCouponGetBox: true,
-             showCouponDetail: true
-           })
-         } else {
+         if (JSON.stringify(res.data.data.coupon) == "{}" ){
            this.setData({
              showModal: false,
              showCoupnBox: false,
              showCouponGetBox: false,
              showCouponDetail: false
            })
+         }else{
+           var couponGoods = []
+           couponGoods = res.data.data.coupon.goodsName.split("|&")
+           couponGoods = couponGoods.slice(0, couponGoods.length - 1)
+           for (let i = 0; i < couponGoods.length; i++) {
+             if (couponGoods[i].length > 8) {
+               couponGoods[i] = couponGoods[i].substring(0, 8) + '...'
+             }
+           }
+           this.setData({
+             couponInfo: res.data.data,
+             couponGoods: couponGoods
+           })
+           if (res.data.data.receiveStatu == true && res.data.data.useStatu == false) {
+             this.setData({
+               showModal: true,
+               showCoupnBox: true,
+               showCouponGetBox: true,
+               showCouponDetail: true
+             })
+           } else {
+             this.setData({
+               showModal: false,
+               showCoupnBox: false,
+               showCouponGetBox: false,
+               showCouponDetail: false
+             })
+           }
          }
+         
        }).catch((err) => {
          console.log(err)
        })
@@ -565,18 +646,20 @@ Page({
    goToActivityDetail: function(e){
     let user = wx.getStorageSync('scSysUser');
     var shopId = this.data.shopInformation.shopInfo.id
-    var goodsId = e.currentTarget.dataset.activityid;
+    var goodsId = e.currentTarget.dataset.activityid
     var activityType = e.currentTarget.dataset.type
+    var actionId = e.currentTarget.dataset.activityid
+    var signType = e.currentTarget.dataset.signtype
     if (activityType ==0){
       wx.navigateTo({
-        url: '../store/activityInfo/activityInfo?shopId=' + shopId + '&goodsId=' + goodsId,
+        url: '../store/activityInfo/activityInfo?shopId=' + shopId + '&goodsId=' + goodsId + '&actionId=' + actionId + '&signType=' + signType,
         success: function (res) {
           // success
         }
       })
     }else{
       wx.navigateTo({
-        url: '../store/posterActivity/posterActivity?shopId=' + shopId + '&goodsId=' + goodsId + '&customerId=' + user.id,
+        url: '../store/posterActivity/posterActivity?shopId=' + shopId + '&goodsId=' + goodsId + '&customerId=' + user.id + '&actionId=' + actionId + '&signType=' + signType,
         success: function (res) {
           // success
         }
@@ -602,14 +685,17 @@ Page({
    // 获取秒杀
    getSecKillData: function (data) {
      let oldData = this.data.list
+     let _this = this
+     
      app.util.reqAsync('shopSecondskilActivity/getServerNowTime').then((res) => {
        if (res.data) {
          this.setData({
            nowTime: res.data.data
          })
        }
-       let _this = this
-       var timer = setInterval(function () { _this.count() }, 1000)
+       clearInterval(_this.data.timer)
+       _this.data.timer = setInterval(function () { _this.count() }, 1000)
+
      }).catch((err) => {
        console.log(err)
      })
@@ -787,17 +873,19 @@ Page({
       path: "pages/index/index?shopId=" + wx.getStorageSync('shop').id ,
     }
   },
+  // 下拉刷新
+  onPullDownRefresh(){
+    this.reloadShopInfo()
+  },
   /**
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-    // this.setData({
-    //   list:[]
-    // })
-    // this.getShopInfo() // 获取店铺信息
-    this.getHotList() // 获取店铺活动
+    // this.reloadShopInfo() // 重新获取店铺信息 (之后会 再获取拼团 秒杀 等)
+    // this.getHotList() // 获取精选商品
     // this.getSecKillData() // 获取秒杀
     // this.getGroupBuyData() // 获取拼团
+    // this.getShopHomeGoods(wx.getStorageSync('shop').id ) // 获取店铺活动
   },
 })
 

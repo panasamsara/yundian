@@ -1,0 +1,187 @@
+/* packageIntegral/pages/orderConfirm/orderConfirm.wxss */
+page{
+  width: 100%;
+  height: 100%;
+}
+
+#orderConfirm{
+  letter-spacing: 1rpx;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color:#EEEEEE;
+}
+
+#orderConfirm #buyWay{
+  padding: 0 22rpx;
+  line-height: 86rpx;
+  font-size: 28rpx;
+  border-top: solid 2rpx #EEEEEE;
+}
+
+#orderConfirm #accountType{
+  background-color: #ffffff;
+  margin-bottom: 18rpx;
+  line-height: 86rpx;
+  padding: 0 25rpx;
+  font-size: 28rpx;
+}
+
+#accountType .picker{
+  display: flex;
+  justify-content: flex-end;
+}
+
+#orderConfirm .choose{
+  width: 16rpx;
+  height: 26rpx;
+  margin-left: 15rpx;
+}
+
+#orderConfirm #userBox{
+  align-items: center;
+  font-size: 30rpx;
+  padding: 32rpx 30rpx;
+}
+
+#orderConfirm #userBox #infoBox{
+  width: 600rpx;
+}
+
+#buyWay,#userBox{
+  margin-bottom: 18rpx;
+  background-color: #ffffff;
+}
+
+#orderConfirm #userInfo{
+  line-height: 60rpx;
+}
+
+#orderConfirm #userBox #addressIcon{
+  width: 34rpx;
+  height: 36rpx;
+}
+
+#orderConfirm #userBox #enterIcon{
+  width: 16rpx;
+  height: 26rpx;
+}
+
+#orderConfirm #userBox #address{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp:3;
+  word-break: break-all;
+}
+
+#orderConfirm #goodsBox{
+  display: flex;
+  padding: 28rpx 24rpx;
+  font-size: 24rpx;
+  border-bottom: solid 2rpx#EEEEEE;
+  background-color: #ffffff;
+}
+
+#orderConfirm #goodsBox #goodsInfo{
+  display: flex;
+  flex-direction: column;
+  width: 548rpx;
+  height: 126rpx;
+  margin-left: 24rpx;
+  font-size: 24rpx;
+}
+
+#orderConfirm #goodsBox #goodsPic{
+  width: 126rpx;
+  height: 126rpx;
+}
+
+#goodsInfo #goodsName{
+  font-size: 24rpx;
+  height: 36rpx;
+}
+
+#goodsInfo #price{
+  font-size: 20rpx;
+  color: #999999;
+  text-decoration: line-through;
+  height: 54rpx;
+}
+
+#goodsInfo #point{
+  font-size: 20rpx;
+  color: #FB452C;
+  height: 36rpx;
+}
+
+#goodsInfo #pointCount{
+  font-size: 26rpx;
+}
+
+#orderConfirm #numBox{
+  line-height: 116rpx;
+  padding: 0 25rpx;
+  font-size: 28rpx;
+  background-color: #ffffff;
+}
+
+#numBox #minus,#numBox #add,#numBox #num{
+  width: 80rpx;
+  height: 68rpx;
+  background-color:#F4F4F4;
+  text-align: center;
+  line-height: 68rpx;
+  display: inline-block;
+  font-size: 40rpx;
+  color: #999999;
+}
+
+#numBox #num{
+  width: 120rpx;
+  margin: 0 2rpx;
+  font-size: 26rpx;
+  color: #666666;
+}
+
+#numBox #optionBox{
+  display: flex;
+  align-items: center;
+}
+
+#orderConfirm #check{
+  line-height: 90rpx;
+  padding-left: 25rpx;
+  font-size: 28rpx;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  background-color: #ffffff;
+}
+
+#check #totalBox{
+  width: 346rpx;
+}
+
+#check #total{
+  width: 346rpx;
+  color: #FB452C;
+}
+
+#check #confirm{
+  width: 404rpx;
+  background: -webkit-linear-gradient(left, #FF5B38 , #FF2544); /* Safari 5.1 - 6.0 */
+  background: -o-linear-gradient(right, #FF5B38, #FF2544); /* Opera 11.1 - 12.0 */
+  background: -moz-linear-gradient(right, #FF5B38, #FF2544); /* Firefox 3.6 - 15 */
+  background: linear-gradient(to right, #FF5B38 , #FF2544); /* 标准的语法 */
+  color: #ffffff;
+  text-align: center;
+  font-size: 34rpx;
+}
+
+/* 公共弹性布局样式 */
+#orderConfirm .flexSides{
+  display: flex;
+  justify-content: space-between;
+}

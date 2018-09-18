@@ -72,6 +72,13 @@ Page({
       this.getData();
     }
   },
+  onPullDownRefresh: function () {//下拉刷新
+    this.setData({
+      list: []
+    })
+    this.getData();
+    wx.stopPullDownRefresh();
+  },
   //判断当前滚动超过一屏时，设置tab标题滚动条。
   checkCor: function () {
     if (this.data.currentTab > 4) {
@@ -85,6 +92,9 @@ Page({
     }
   },
   getData: function (type) {
+    wx.showLoading({
+      title: '加载中',
+    });
     //调接口
     if (type == 1) {
       app.util.reqAsync('shop/getShopOrderListNews', {
@@ -94,25 +104,26 @@ Page({
         pageNo: Number(this.data.currentPage) + 1,
         pageSize: 10
       }).then((res) => {
+        wx.hideLoading();
         console.log(res)
         if (res.data.code == 1) {
           //下拉加载
           var oldData = this.data.goodlist;
           var data = res.data.data;
+          
           for (var ins in data) {
+            if (data[ins].bussinessType != 18) {//积分商品不精确到两位
+              data[ins].amount = data[ins].amount.toFixed(2);
+            }
+            data[ins].total = 0;
+            for (var z in data[ins].orderItemList){
+              data[ins].total += Number(data[ins].orderItemList[z].goodsNum);
+            }
             oldData.push(data[ins]);
           }
-          for (var i in oldData) {
-            oldData[i].amount = data[ins].amount.toFixed(2);
-            for (var z in res.data.data[i].orderItemList) {
-              oldData[i].total += data[ins].orderItemList[z].goodsNum;
-            }
-          }
-          console.log(oldData)
           wx.hideLoading();
 
           this.data.currentPage = ++this.data.currentPage;
-          console.log(oldData)
           this.setData({
             goodlist: oldData,
             length: oldData.length
@@ -139,10 +150,13 @@ Page({
         pageNo: 1,
         pageSize: 10
       }).then((res) => {
+        wx.hideLoading();
         if (res.data.code == 1) {
           for (var i in res.data.data) {
             res.data.data[i].total = 0;
-            res.data.data[i].amount = res.data.data[i].amount.toFixed(2);
+            if (res.data.data[i].bussinessType != 18) {//积分商品不精确到两位
+              res.data.data[i].amount = res.data.data[i].amount.toFixed(2);
+            }
             for (var z in res.data.data[i].orderItemList) {
               res.data.data[i].total += res.data.data[i].orderItemList[z].goodsNum;
             }
@@ -258,7 +272,7 @@ Page({
       goodId = e.currentTarget.dataset.goodid;
     //评价
     wx.navigateTo({
-      url: '../../appraise/appraise?shopId=' + shopId + '&goodsId=' + goodId
+      url: '../../pages/appraise/appraise?shopId=' + shopId + '&goodsId=' + goodId
     })
   },
   returnGood: function (e) {
@@ -327,24 +341,33 @@ Page({
     //确认收货
     var orderNo = e.currentTarget.dataset.no,
       customerId = e.currentTarget.dataset.customerid;//"fromBarCode":1 //是否扫码确认收货。可不填 ，不填则不是扫码确认收货
-    app.util.reqAsync('shop/confirmRecv', {
-      orderNo: orderNo,
-      customerId: customerId
-    }).then((res) => {
-      if (res.data.code == 1) {
-        this.getData();
-      } else {
-        wx.showToast({
-          title: res.data.msg,
-          icon: 'none'
-        })
-      }
+    var that = this;
+    wx.showModal({
+      title: '提示',
+      content: '确定收货？',
+      success: function (res) {
+        if (res.confirm) {
+          app.util.reqAsync('shop/confirmRecv', {
+            orderNo: orderNo,
+            customerId: customerId
+          }).then((res) => {
+            console.log(res)
+            if (res.data.code == 1) {
+              that.getData();
+              that.setData({
+                currentPage: 1
+              })
+            } else {
+              wx.showToast({
+                title: res.data.msg,
+                icon: 'none'
+              })
+            }
 
-    }).catch((err) => {
-      wx.showToast({
-        title: '失败……',
-        icon: 'none'
-      })
+          })
+
+        }
+      }
     })
   },
   shipments: function (e) {
@@ -388,6 +411,14 @@ Page({
     var orderNo = e.currentTarget.dataset.no;
     var isGroupBuying = e.currentTarget.dataset.isgrop;//是否拼单 0不是 1是
     var remark = e.currentTarget.dataset.remark;//是否秒杀活动
+
+    //跳转积分商品订单详情
+    if (e.currentTarget.dataset.type == 18) {//积分商品
+      wx.redirectTo({
+        url: "../../../packageIntegral/pages/orderdetail/orderdetail?orderNo=" + orderNo
+      })
+      return
+    }
 
     //跳转到订单详情
     if (isGroupBuying == 1) { //拼团

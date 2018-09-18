@@ -9,13 +9,18 @@ Page({
    */
   data: {
     scale: null,
-    temp: null
+    temp: null,
+    signed:false
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    this.setData({
+      signType:options.signType,
+      actionId: options.actionId
+    })
     if (options && options.q) {
       var uri = decodeURIComponent(options.q)
       var p = util.getParams(uri)
@@ -52,8 +57,8 @@ Page({
         res.data.data.startTime = app.util.formatActivityDate(res.data.data.startTime);
         res.data.data.endTime = app.util.formatActivityDate(res.data.data.endTime)
         if (res.data.data.descContent != null && res.data.data.descContent!=''){
-          res.data.data.descContent = res.data.data.descContent.replace(/\s+(id|class|style)(=(([\"\']).*?\4|\S*))?/g, "").replace(/background-color[\s:]+[^;]*;/gi, '').replace(/\"=\"\"/g, "").replace(/\<img/gi, '<img style="max-width:100%;height:auto" ');
-        }  
+          res.data.data.descContent = res.data.data.descContent.replace(/\s+(id|class|style)(=(([\"\']).*?\4|\S*))?/g, "").replace(/background-color[\s:]+[^;]*;/gi, '').replace(/\"=\"\"/g, "").replace(/\<img/gi, '<img style="max-width:100%;height:auto" ').replace(/<s>/gi, "").replace(/<u>/gi,'').replace(/<\/s>/gi,'').replace(/<\/u>/gi,'');
+        } 
         this.setData({
           data: res.data.data
         })
@@ -82,8 +87,203 @@ Page({
     }).catch((err) => {
       console.log(err);
     })
-
+    //获取报名信息
+    let params={
+      actionId:options.actionId,
+      userId: wx.getStorageSync('scSysUser').id
+    }
+    this.setData({
+      params:params
+    })
     this.setCanvasSize()
+  },
+  onShow: function () { //缓存店铺信息（分享切店铺）
+    var _this = this
+    util.checkWxLogin('share').then((loginRes) => {
+      _this.setData({
+        phone: loginRes.phone
+      })
+      var shopId = this.data.shopId
+      if (!shopId) {
+        shopId = wx.getStorageSync('shopId');
+      }
+      var shop = wx.getStorageSync('shop')
+
+      if (!shop) {
+        if (shopId == undefined) {
+          wx.redirectTo({
+            url: '../scan/scan'
+          })
+        } else {
+          util.getShop(loginRes.id, shopId).then(function (res) {
+            _this.setData({
+              shopInformation: res.data.data
+            })
+            //shop存入storage
+            wx.setStorageSync('shop', res.data.data.shopInfo);
+            //活动
+            wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
+            // 所有信息
+            wx.setStorageSync('shopInformation', res.data.data);
+
+          })
+        }
+      } else {
+        if (shopId == undefined || shopId == '' || shopId == null) {
+          if (shop.shopHomeConfig) {
+            if (shop.shopHomeConfig.videoPathList.length != 0) {
+              let videoInfo = {}
+              videoInfo.url = shop.shopHomeConfig.videoPathList[0].filePath
+              videoInfo.cover = shop.shopHomeConfig.videoPathList[0].coverImagePath
+              wx.setStorageSync('videoInfo', videoInfo)
+            }
+          }
+          let shopInformation = wx.getStorageSync('shopInformation')
+          _this.setData({
+            shopInformation: shopInformation
+          })
+
+        } else {
+          if (shopId == shop.id) {
+            if (shop.shopHomeConfig) {
+              if (shop.shopHomeConfig.videoPathList.length != 0) {
+                let videoInfo = {}
+                videoInfo.url = shop.shopHomeConfig.videoPathList[0].filePath
+                videoInfo.cover = shop.shopHomeConfig.videoPathList[0].coverImagePath
+                wx.setStorageSync('videoInfo', videoInfo)
+              }
+            }
+            let shopInformation = wx.getStorageSync('shopInformation')
+            _this.setData({
+              shopInformation: shopInformation
+            })
+
+          } else {
+            wx.removeStorageSync('shop')
+            wx.removeStorageSync('goodsInfos')
+            wx.removeStorageSync('shopInformation')
+            util.getShop(loginRes.id, shopId).then(function (res) {
+              _this.setData({
+                shopInformation: res.data.data
+              })
+              //shop存入storage
+              wx.setStorageSync('shop', res.data.data.shopInfo);
+              //活动
+              wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
+              // 所有信息
+              wx.setStorageSync('shopInformation', res.data.data);
+
+            })
+          }
+        }
+
+      }
+      wx.removeStorageSync('shopId');
+      this.getSignList(this.data.params);
+    })
+  },
+  //报名
+  sign:function(){
+    this.setData({
+      signShow:true,
+      unscroll:true
+    })
+  },
+  signHide:function(){
+    this.setData({
+      signShow:false,
+      unscroll:false
+    })
+  },
+  inputSet:function(e){
+    this.setData({
+      userName:e.detail.value
+    })
+    console.log(this.data.userName);
+  },
+  textSet:function(e){
+    console.log(e.detail.value)
+    this.setData({
+      remark:e.detail.value
+    })
+  },
+  //提交
+  submit:function(){
+    let _this=this;
+    setTimeout(function(){
+      if (userName == undefined || userName == '') {
+        wx.showToast({
+          title: '请完善信息',
+          icon: 'none'
+        })
+        return
+      }
+      if(_this.data.userName){//用户名校验
+        let userFormatExp = new RegExp("^[\u0391-\uFFE5A-Za-z]+$");
+        if (!userFormatExp.test(_this.data.userName)){
+          wx.showToast({
+            title:'用户名只能输入中英文',
+            icon:'none'
+          });
+          return
+        }
+        var userName = _this.data.userName.replace(/\s+/g, '');
+      }
+      if(_this.data.remark){//备注校验
+        let remarkFormatExp = new RegExp("^[a-zA-Z\d\u4E00-\u9FA5]+$");
+        if (!remarkFormatExp.test(_this.data.remark)) {
+          wx.showToast({
+            title: '备注只能输入中英文和数字',
+            icon: 'none'
+          });
+          return
+        }
+        var remark = _this.data.remark;
+      }
+      let params = {
+        phone: _this.data.phone,
+        remark: _this.data.remark,
+        userId: wx.getStorageSync('scSysUser').id,
+        userName: userName,
+        actionId: _this.data.actionId
+      }
+      app.util.reqAsync('shop/addActionUserInfo', params).then((res) => {
+        wx.showToast({
+          title: res.data.msg,
+          icon: 'none'
+        })
+        if(res.data.code==1||res.data.code==8){//报名成功||已报名
+          _this.setData({
+            signed: true,
+            signShow: false,
+            unscroll:false
+          })
+          _this.getSignList(_this.data.params);
+        }  
+      }).catch((err) => {
+        console.log(err);
+      })
+    },500)
+  },
+  //获取报名信息
+  getSignList:function(params){
+    app.util.reqAsync('shop/getActionUserInfo', params).then((res) => {
+      if (res.data.data) {
+        if (res.data.data.isSignUp==1){
+          this.setData({
+            signed:true
+          })
+        }
+        if(res.data.data.userList.length>0){
+          this.setData({
+            userList: res.data.data.userList,
+            signNum:res.data.data.signNum,
+          })
+        }
+      }
+    }).catch((err) => {
+      console.log(err);
+    })
   },
   //适配不同屏幕大小的canvas
   setCanvasSize: function () {
@@ -131,10 +331,10 @@ Page({
     context.setFillStyle('#000');
     context.setFontSize(17 * scale);
     context.fillText(this.data.data.goodsName, 25 * scale, 172 * scale);//绘制活动名
-    context.drawImage('../posterActivity/img/zhuanfa_hdhb_right@2x.png', 305 * scale, 160 * scale, 9 * scale, 15 * scale);//绘制小图标
+    // context.drawImage('../posterActivity/img/zhuanfa_hdhb_right@2x.png', 305 * scale, 160 * scale, 9 * scale, 15 * scale);//绘制小图标
 
-    context.setFillStyle('#f2f2f2');
-    context.fillRect(25, 185, 290 * scale, 1 * scale)
+    // context.setFillStyle('#f2f2f2');
+    // context.fillRect(25, 185, 290 * scale, 1 * scale)
 
     if (this.data.data.descTitle.length > 16) {
       var string2 = this.data.data.descTitle.substring(0, 16)
@@ -182,114 +382,6 @@ Page({
   },
 
   /**
-   * 生命周期函数--监听页面显示
-   */
-  onshow: function () { //缓存店铺信息（分享切店铺）
-    var shopId = this.data.shopId
-    if (!shopId) {
-      shopId = wx.getStorageSync('shopId');
-    }
-    var shop = wx.getStorageSync('shop')
-
-    if (!shop) {
-      if (shopId == undefined) {
-        wx.redirectTo({
-          url: '../scan/scan'
-        })
-      } else {
-        util.getShop(loginRes.id, shopId).then(function (res) {
-          _this.setData({
-            shopInformation: res.data.data
-          })
-          //shop存入storage
-          wx.setStorageSync('shop', res.data.data.shopInfo);
-          //活动
-          wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
-          // 所有信息
-          wx.setStorageSync('shopInformation', res.data.data);
-          if (res.data.data.shopInfo.shopHomeConfig) {
-            if (res.data.data.shopInfo.shopHomeConfig.videoPathList.length != 0) {
-              let videoInfo = {}
-              videoInfo.url = res.data.data.shopInfo.shopHomeConfig.videoPathList[0].filePath
-              videoInfo.cover = res.data.data.shopInfo.shopHomeConfig.videoPathList[0].coverImagePath
-              wx.setStorageSync('videoInfo', videoInfo)
-            }
-          }
-          _this.getShopInfo(res.data.data)
-          _this.getIndexAllInfo(res.data.data.shopInfo.id)
-          _this.checkCoupon()
-        })
-      }
-    } else {
-      if (shopId == undefined || shopId == '' || shopId == null) {
-        if (shop.shopHomeConfig) {
-          if (shop.shopHomeConfig.videoPathList.length != 0) {
-            let videoInfo = {}
-            videoInfo.url = shop.shopHomeConfig.videoPathList[0].filePath
-            videoInfo.cover = shop.shopHomeConfig.videoPathList[0].coverImagePath
-            wx.setStorageSync('videoInfo', videoInfo)
-          }
-        }
-        let shopInformation = wx.getStorageSync('shopInformation')
-        _this.setData({
-          shopInformation: shopInformation
-        })
-        _this.getShopInfo(shopInformation)
-        _this.getIndexAllInfo(shop.id)
-        _this.checkCoupon()
-      } else {
-        if (shopId == shop.id) {
-          if (shop.shopHomeConfig) {
-            if (shop.shopHomeConfig.videoPathList.length != 0) {
-              let videoInfo = {}
-              videoInfo.url = shop.shopHomeConfig.videoPathList[0].filePath
-              videoInfo.cover = shop.shopHomeConfig.videoPathList[0].coverImagePath
-              wx.setStorageSync('videoInfo', videoInfo)
-            }
-          }
-          let shopInformation = wx.getStorageSync('shopInformation')
-          _this.setData({
-            shopInformation: shopInformation
-          })
-          _this.getShopInfo(shopInformation)
-          _this.getIndexAllInfo(shop.id)
-          _this.checkCoupon()
-        } else {
-          wx.removeStorageSync('shop')
-          wx.removeStorageSync('goodsInfos')
-          wx.removeStorageSync('shopInformation')
-          util.getShop(loginRes.id, shopId).then(function (res) {
-            _this.setData({
-              shopInformation: res.data.data
-            })
-            //shop存入storage
-            wx.setStorageSync('shop', res.data.data.shopInfo);
-            //活动
-            wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
-            // 所有信息
-            wx.setStorageSync('shopInformation', res.data.data);
-            if (res.data.data.shopInfo.shopHomeConfig) {
-              if (res.data.data.shopInfo.shopHomeConfig.videoPathList.length != 0) {
-                let videoInfo = {}
-                videoInfo.url = res.data.data.shopInfo.shopHomeConfig.videoPathList[0].filePath
-                videoInfo.cover = res.data.data.shopInfo.shopHomeConfig.videoPathList[0].coverImagePath
-                wx.setStorageSync('videoInfo', videoInfo)
-              }
-            }
-            _this.getShopInfo(res.data.data)
-            _this.getIndexAllInfo(res.data.data.shopInfo.id)
-            _this.checkCoupon()
-
-          })
-        }
-      }
-
-    }
-
-    wx.removeStorageSync('shopId');
-  },
-
-  /**
    * 用户点击右上角分享
    */
   onShareAppMessage: function (res) {
@@ -301,10 +393,15 @@ Page({
 
     return {
       title: '[' + this.data.data.shopName + ']' + this.data.data.descTitle,
-      path: "pages/store/activityInfo/activityInfo?shopId=" + this.data.shopId + '&goodsId=' + this.data.goodsId,
+      path: "pages/store/activityInfo/activityInfo?shopId=" + this.data.shopId + '&goodsId=' + this.data.goodsId + '&actionId=' + this.data.actionId + '&signType='+this.data.signType,
       imageUrl: this.data.temp,
       success: function (res) {
-
+        // 统计转发数量
+        util.reqAsync('shop/updateforwardingAmount', {
+          goodsId: _this.data.goodsId,
+          type: 0  // 0:增加数量   1:减少数量
+        }).then((res) => {
+        })
       }
     }
   },

@@ -1,0 +1,30 @@
+<view>
+  <view class='title'>全部照片</view>
+  <view class='list'>
+    <!-- <view class='list'>
+      <image src='../images/pinkTeam.png'></image>
+    </view>
+    <view class='list'>
+      <image src='../images/pinkTeam.png'></image>
+    </view>
+    <view class='list'>
+      <image src='../images/pinkTeam.png'></image>
+    </view>
+    <view class='list'>
+      <image src='../images/pinkTeam.png'></image>
+    </view>
+    <view class='list'>
+      <image src='../images/pinkTeam.png'></image>
+    </view>
+    <view class='list'>
+      <image src='../images/pinkTeam.png'></image>
+    </view>
+    <view class='list'>
+      <image src='../images/pinkTeam.png'></image>
+    </view> -->
+    <image src='../images/pinkTeam.png'></image>
+    <image src='../images/pinkTeam.png'></image>
+    <image src='../images/pinkTeam.png'></image>
+    <image src='../images/pinkTeam.png'></image>
+  </view>
+</view>

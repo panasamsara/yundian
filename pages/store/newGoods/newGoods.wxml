@@ -1,0 +1,16 @@
+<view class="container">
+  <view class="goods">
+    <view wx:for="{{list}}" class="goods-item" wx:key="index">
+      <view class="good-box">
+        <view class="logo">
+          <image src="{{item.goodsLogo}}"></image>
+        </view>
+        <view class="title">{{item.goodsName}}</view>
+        <view class="goods-info">
+          <view class="price"><text>￥</text>{{item.price}}</view>
+          <view class="buy-num">{{item.saleNum}}人购买</view>
+        </view>
+      </view>  
+    </view>
+  </view>
+</view>

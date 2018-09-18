@@ -1,0 +1,249 @@
+page{
+  padding-bottom: 100rpx;
+}
+.bg-cover{
+  position: relative;
+  height: 456rpx;
+  overflow: hidden;
+}
+.cover-shadow{
+  width: 100%;
+  height: 170rpx;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
+}
+.bg-cover .cover{
+  z-index: -1;
+  position: absolute;
+  display: block;
+  width: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.bg-cover .btn-content{
+  display: block;
+  padding: 60rpx 0 0;
+  text-align: center;
+}
+.bg-cover .btn-buy, .bg-cover .btn-play{
+  display: inline-block;
+  height: 66rpx;
+  padding: 0 52rpx;
+  border-radius: 34rpx;
+  background: #3A83EF;
+  font-size: 32rpx;
+  line-height: 66rpx;
+  color: #fff;
+}
+.bg-cover .btn-play{
+  background: rgba(0, 0, 0, 0.2);
+}
+.bg-cover .btn-play .icon{
+  margin-left: 6rpx;
+  width: 20rpx;
+  height: 26rpx;
+}
+/* 课程说明 */
+.lesson-content{
+  display: block;
+  padding: 30rpx 24rpx;
+  background: #fff;
+  border-bottom: 20rpx solid #f3f3f3;
+}
+.lesson-content .title{
+  color: #333;
+  font-size: 50rpx;
+}
+.lesson-content .time, .lesson-content .teachers{
+  padding-top: 30rpx;
+  font-size: 28rpx;
+  color: #999;
+  line-height: 1;
+}
+.lesson-content .time text, .lesson-content .teachers text{
+  margin-left: 20rpx;
+  color: #333;
+}
+/* 标签 */
+.tab-content{
+  position: relative;
+  display: flex;
+  height: 88rpx;
+  background: #fff;
+  border-top: 1rpx solid #f3f3f3;
+  box-shadow: 0 8rpx 8rpx 0 rgba(0, 0, 0, 0.09);
+}
+.tab-content.fixed{
+  z-index: 999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+.tab-content>view{
+  position: relative;
+  flex: 1;
+  font-size: 32rpx;
+  line-height: 88rpx;
+  text-align: center;
+  color: #333;
+  transition: all 0.15s ease-in-out;
+}
+.tab-content>view::after{
+  position: absolute;
+  content: '';
+  display: block;
+  height: 4rpx;
+  width: 68rpx;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) scale(0);
+  background: #3A83EF;
+  transition: all 0.15s ease-in-out;
+}
+.tab-content>view.active{
+  color: #3A83EF;
+}
+.tab-content>view.active::after{
+  transform: translateX(-50%) scale(1);
+}
+/* 课程简介 */
+.info-content{
+  padding: 20rpx 24rpx 0;
+  font-size: 28rpx;
+  color: #333;
+  line-height: 36rpx;
+  border-bottom: 20rpx solid #F3F3F3;
+}
+.info-content image{
+  display: block;
+  margin: 0 auto;
+  border-radius: 12rpx;
+}
+.info-content text{
+  display: block;
+  padding: 30rpx 0;
+}
+/* 购买情况 */
+.buy-content, .reply-content{
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100rpx;
+  max-height: 100rpx;
+  padding: 16rpx 24rpx;
+  border-top: 1rpx solid #F3F3F3;
+  background: #fff;
+  box-sizing: border-box;
+}
+.buy-content .price{
+  font-size: 32rpx;
+  color: #E73B80;
+  line-height: 36rpx;
+}
+.buy-content .num{
+  font-size: 20rpx;
+  color: #999;
+  line-height: 36rpx;
+}
+.buy-content .buy-btn, .buy-content .buy-text{
+  position: absolute;
+  display: inline-block;
+  width: 166rpx;
+  height: 66rpx;
+  right: 24rpx;
+  top: 16rpx;
+  line-height: 66rpx;
+  font-size: 32rpx;
+  color: #fff;
+  background: #3A83EF;
+  border-radius: 66rpx;
+  text-align: center;
+}
+.buy-content .buy-text{
+  color: #3A83EF;
+  background: #fff;
+  text-align: right;
+  border-radius: 0;
+}
+/* 评论相关 */
+.comment-title{
+  padding: 40rpx 24rpx;
+  font-size: 32rpx;
+  color: #333;
+  line-height: 1;
+}
+.comment-title>text{
+  color: #999;
+}
+.comment-content{
+  padding: 0 24rpx;
+  border-bottom: 1rpx solid #F3F3F3;
+}
+.comment-content.teacher{
+  border-bottom: 20rpx solid #F3F3F3;
+}
+.comment-content:last-of-type{
+  padding-bottom: 100rpx;
+}
+.comment-content .user-content{
+  display: flex;
+  padding-bottom: 20rpx;
+}
+.comment-content .user-content>image{
+  display: inline-block;
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 100%;
+}
+.comment-content .user-content>view{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0 20rpx;
+}
+.comment-content.teacher .user-content>view{
+  justify-content: center;
+}
+.comment-content .user-content .name{
+  font-size: 28rpx;
+  color: #333;
+  line-height: 36rpx;
+}
+.comment-content .user-content .time{
+  font-size: 24rpx;
+  color: #999;
+  line-height: 32rpx;
+}
+.comment-content .comment{
+  padding: 0 0 20rpx 100rpx;
+  font-size: 28rpx;
+  color: #333;
+  line-height: 36rpx;
+}
+.comment-content .comment>text{
+  color: #999;
+  margin-right: 4rpx;
+}
+.comment-content .comment>text::after{
+  content: '：'
+}
+/* 回复相关 */
+.reply-content input{
+  width: 540rpx;
+  height: 68rpx;
+  padding: 0 24rpx;
+  font-size: 28rpx;
+  color: #333;
+  background: #F3F3F3;
+}
+.reply-content .btn-reply{
+  position: absolute;
+  display: inline-block;
+  right: 24rpx;
+  top: 16rpx;
+  line-height: 68rpx;
+  padding: 0 20rpx;
+  color: #3A83EF;
+  font-size: 36rpx;
+}

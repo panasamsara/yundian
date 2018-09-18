@@ -24,3 +24,9 @@
     <canvas canvas-id="picCanvas" style='width:610rpx;height:800rpx;' hidden='{{canvasHidden}}'></canvas>
   </view>
 </view>
+ <view id='shareBox'>
+    <button open-type='share'>
+      <image src='../../../images/shouye_btn@2x.png' id='share'></image>
+    </button>
+    <image src='../../../images/fenxinag_btn@2x.png' id='goback' bindtap='goback'></image>
+  </view>

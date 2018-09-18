@@ -1,0 +1,19 @@
+page{
+  background: #f8f8f8;
+}
+.title{
+  font-size: 28rpx;
+  color: #666;
+  padding: 24rpx 0 12rpx 24rpx;
+}
+image{
+  margin-right: 7rpx;
+  margin-top: 7rpx;
+  width: 246rpx;
+  height: 246rpx;
+  display: block;
+  float: left
+}
+page .image:nth-child(3){
+  margin: 0rpx;
+}

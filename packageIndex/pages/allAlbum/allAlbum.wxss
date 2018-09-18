@@ -1,0 +1,18 @@
+.content .list,.content .list image{
+  width: 340rpx;
+  border-radius: 8rpx;
+}
+.content .list{
+  margin-left: 24rpx;
+  display: inline-block;
+  margin-top: 38rpx;
+}
+.content .list image{
+  height: 340rpx;
+}
+.content .list .font28{
+  margin: 20rpx 0 12rpx;
+}
+.content .list view{
+  width: 340rpx;
+}

@@ -26,8 +26,8 @@
         </view>       
       </view>
       <text class='text-remark'>{{item.commentContent}}</text>
-      <view class='user-pic clearfix' wx:for="{{item.commentUploadList}}" wx:key="name">
-        <image src='{{item.filePath}}'></image>  
+      <view class='user-pic clearfix' >
+        <image wx:for="{{item.commentUploadList}}" wx:key="name" src='{{item.filePath}}'></image>  
       </view> 
       <view class='user-info clearfix'>
         <span class='{{item.stockName==null?"hide":"show"}}'>规格: {{item.stockName}}</span>

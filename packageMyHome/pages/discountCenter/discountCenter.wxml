@@ -25,10 +25,11 @@
         <view class='font30'>满{{item.amountMin}}元可使用</view>
         <view class='font20'>有效期 {{item.beginTime}}-{{item.endTime}}</view>
       </view>
-      <view class='left use' wx:if="{{list1[index]==true}}" bindtap='skipTo'>
+      <view class='left use common' wx:if="{{list1[index]==true}}" bindtap='skipTo'>
         去使用
       </view>
-      <view class='left getDraw' wx:elif="{{list1[index]==false}}" bindtap='getCoupon' data-index="{{index}}" data-arrIndex="{{1}}" data-flag="0" data-id="{{item.id}}">
+      <image class='left lootAll' src='../images/qiangguangla@2x.png' wx:if="{{item.receiveState==2}}"></image>
+      <view class='left getDraw common' wx:if="{{list1[index]==false}}" bindtap='getCoupon' data-index="{{index}}" data-arrIndex="{{1}}" data-flag="0" data-id="{{item.id}}">
         立即领取
       </view>
     </view>
@@ -51,10 +52,11 @@
         <view class='font30'>代金券</view>
         <view class='font20'>有效期 {{item.beginTime}}-{{item.endTime}}</view>
       </view>
-      <view class='left use' wx:if="{{list2[index]==true}}" bindtap='skipTo'>
+      <view class='left use common' wx:if="{{list2[index]==true}}" bindtap='skipTo'>
         去使用
       </view>
-      <view class='left getDraw' wx:if="{{list2[index]==false}}" bindtap='getCoupon' data-index="{{index}}" data-arrIndex="{{2}}"  data-flag="0" data-id="{{item.id}}">
+       <image class='left lootAll' src='../images/qiangguangla@2x.png' wx:if="{{item.receiveState==2}}"></image>
+      <view class='left getDraw common' wx:if="{{list2[index]==false}}" bindtap='getCoupon' data-index="{{index}}" data-arrIndex="{{2}}"  data-flag="0" data-id="{{item.id}}">
         立即领取
       </view>
     </view>
@@ -74,13 +76,14 @@
         <text class='font60'>包邮</text>
       </view>
       <view class='left rule'>
-        <view class='font30'>满{{item.amountMin}}元可使用</view>
+        <view class='font30'>满{{item.amountMin}}元可包邮</view>
         <view class='font20'>有效期 {{item.beginTime}}-{{item.endTime}}</view>
       </view>
-      <view class='left use' wx:if="{{list3[index]==true}}" bindtap='skipTo'>
+      <view class='left use common' wx:if="{{list3[index]==true}}" bindtap='skipTo'>
         去使用
       </view>
-      <view class='left getDraw' bindtap='skip' wx:if="{{list3[index]==false}}" bindtap='getCoupon' data-index="{{index}}" data-arrIndex="{{3}}"  data-flag="0" data-id="{{item.id}}">
+      <image class='left lootAll' src='../images/qiangguangla@2x.png' wx:if="{{item.receiveState==2}}"></image>
+      <view class='left getDraw common' bindtap='skip' wx:if="{{list3[index]==false}}" bindtap='getCoupon' data-index="{{index}}" data-arrIndex="{{3}}"  data-flag="0" data-id="{{item.id}}">
         立即领取
       </view>
     </view>

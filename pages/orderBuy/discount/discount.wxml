@@ -4,7 +4,7 @@
   </view>
   <view class='list'  wx:for="{{discount}}" data-id="{{item.couponLogId}}" wx:key="index">
     <view class="a" wx:if="{{item.couponType!='03'}}">
-      <view wx:if="{{item.status==1 && totalMoney>=item.amountMin}}" class='gray a' bindtap='skip' data-id="{{item.couponLogId}}" data-name="{{item.name}}" data-amountMin="{{item.amountMin}}" data-amount="{{item.amount}}" data-instruction="{{item.instruction}}" data-counid="{{item.id}}" data-limit="{{item.limitGoodsIds}}">
+      <view wx:if="{{totalMoney>=item.amountMin}}" class='gray a' bindtap='skip' data-id="{{item.couponLogId}}" data-name="{{item.name}}" data-amountMin="{{item.amountMin}}" data-amount="{{item.amount}}" data-instruction="{{item.instruction}}" data-counid="{{item.id}}" data-limit="{{item.limitGoodsIds}}">
         <image class="bg" src='../../myHome/images/yundian_youhuiquan.png'></image>
           <view class='con'>
             <view class='listTop'>
@@ -21,7 +21,7 @@
           <view class='time'><text class='mr10'>有效期至:</text>{{item.endTime}}</view>
         </view>
       </view>
-      <view wx:if="{{item.status==1 && totalMoney<item.amountMin}}" class='gray b'  data-id="{{item.couponLogId}}" data-name="{{item.name}}" data-amountMin="{{item.amountMin}}" data-amount="{{item.amount}}" data-instruction="{{item.instruction}}" data-counid="{{item.id}}">
+      <view wx:if="{{totalMoney<item.amountMin}}" class='gray b'  data-id="{{item.couponLogId}}" data-name="{{item.name}}" data-amountMin="{{item.amountMin}}" data-amount="{{item.amount}}" data-instruction="{{item.instruction}}" data-counid="{{item.id}}">
         <image class="bg" src='../../myHome/images/yundian_youhuiquan.png'></image>
           <view class='con'>
             <view class='listTop'>
@@ -37,7 +37,7 @@
           <view class='time'><text class='mr10'>有效期至:</text>{{item.endTime}}</view>
         </view>
       </view>
-      <view wx:if="{{item.status==0 || item.status==2}}" >
+      <!-- <view wx:if="{{item.status==0 || item.status==2}}" >
         <image class="bg" src='../../myHome/images/yundian_youhuiquan.png'></image>
           <view class='con'>
             <view class='listTop'>
@@ -52,7 +52,7 @@
           </view>
           <view class='time'><text class='mr10'>有效期至:</text>{{item.endTime}}</view>
         </view>
-      </view>
+      </view> -->
     </view> 
     <view class="b" wx:if="{{item.couponType=='03'}}">
       <view class="a1" wx:if="{{isSend==2}}" >
@@ -72,7 +72,7 @@
         </view>
       </view>
       <view class="a2" wx:if="{{isSend==0}}" >
-        <view wx:if="{{item.status==1 && totalMoney>=item.amountMin}}" class='gray a' bindtap='skip' data-id="{{item.couponLogId}}" data-name="{{item.name}}" data-amountMin="{{item.amountMin}}" data-amount="{{item.amount}}" data-instruction="{{item.instruction}}" data-counid="{{item.id}}" data-limit="{{item.limitGoodsIds}}">
+        <view wx:if="{{totalMoney>=item.amountMin}}" class='gray a' bindtap='skip' data-id="{{item.couponLogId}}" data-name="{{item.name}}" data-amountMin="{{item.amountMin}}" data-amount="{{item.amount}}" data-instruction="{{item.instruction}}" data-counid="{{item.id}}" data-limit="{{item.limitGoodsIds}}">
           <image class="bg" src='../../myHome/images/yundian_youhuiquan.png'></image>
             <view class='con'>
               <view class='listTop'>
@@ -89,7 +89,7 @@
             <view class='time'><text class='mr10'>有效期至:</text>{{item.endTime}}</view>
           </view>
         </view>
-        <view wx:if="{{item.status==1 && totalMoney<item.amountMin}}" class='gray b'  data-id="{{item.couponLogId}}" data-name="{{item.name}}" data-amountMin="{{item.amountMin}}" data-amount="{{item.amount}}" data-instruction="{{item.instruction}}" data-counid="{{item.id}}">
+        <view wx:if="{{totalMoney<item.amountMin}}" class='gray b'  data-id="{{item.couponLogId}}" data-name="{{item.name}}" data-amountMin="{{item.amountMin}}" data-amount="{{item.amount}}" data-instruction="{{item.instruction}}" data-counid="{{item.id}}">
         <image class="bg" src='../../myHome/images/yundian_youhuiquan.png'></image>
           <view class='con'>
             <view class='listTop'>
@@ -105,7 +105,7 @@
           <view class='time'><text class='mr10'>有效期至:</text>{{item.endTime}}</view>
         </view>
       </view>
-      <view wx:if="{{item.status==0 || item.status==2}}" >
+      <!-- <view wx:if="{{item.status==0 || item.status==2}}" >
         <image class="bg" src='../../myHome/images/yundian_youhuiquan.png'></image>
           <view class='con'>
             <view class='listTop'>
@@ -120,7 +120,7 @@
           </view>
           <view class='time'><text class='mr10'>有效期至:</text>{{item.endTime}}</view>
         </view>
-      </view>
+      </view> -->
       </view>
     </view>  
   </view>

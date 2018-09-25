@@ -16,7 +16,7 @@
     <view class='card-info-box'wx:if="{{show==0||show==1}}">
       <image class='card-bg-img' src='../images/zxcs_cszh_fuwuka.png'></image>
       <view class='card-name'>{{items.cardName}}</view>
-      <view class='left-num' wx:if="{{items.serviceType==1}}">剩余：{{items.totalNum-items.consumeNum}}/{{items.packNumber}}次</view>
+      <view class='left-num' wx:if="{{items.serviceType==1}}">剩余：{{items.totalNum-items.consumeNum}}/{{items.totalNum}}次</view>
       <view class='left-num' wx:if="{{items.serviceType==2}}">到期时间：{{items.remainNum}}</view>
       <view class='left-num' wx:if="{{items.serviceType==5}}">{{items.remainNum}}</view>
       

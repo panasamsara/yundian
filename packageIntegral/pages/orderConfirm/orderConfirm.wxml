@@ -7,7 +7,7 @@
   </view>
   <view id='accountType' wx:if="{{data.creditsGoodsInfo.goodsType!=3}}" class='flexSides'>
     <text>账户</text>
-    <text wx:if="{{!accountArray}}">{{data.subaccounts[0].businessName}}</text>
+    <text wx:if="{{!accountArray}}">{{data.subaccounts[0].businessName?data.subaccounts[0].businessName:'暂无账户'}}</text>
     <picker bindchange="choseAccount"  range='{{accountArray}}' id='account' wx:else>
       <view class='picker'>
         <view class="detail">{{accountText}}</view>
@@ -21,7 +21,7 @@
     <image src='../images/yundain_dizhi@2x.png' id='addressIcon'></image>
     <view id='infoBox'>
       <view id='userInfo' class='flexSides'>
-        <text id='userName'>收货人: {{data.recvAddress.name}}</text>
+        <text id='userName'>{{data.recvAddress.name?'收货人:':'请选择收货人'}} {{data.recvAddress.name}}</text>
         <text id='phone'>{{data.recvAddress.phone}}</text>
       </view>
       <view id='address'>{{address?address:'请选择收货地址'}}</view>

@@ -455,12 +455,12 @@ Page({
   //  },
    goSecKill: function(){
      wx.navigateTo({
-       url: '../secKill/secKill',
+       url: '../../packageIndex/pages/secKill/secKill',
      })
    },
    goGroupBuy: function(){
      wx.navigateTo({
-       url: '../groupBuy/groupBuy',
+       url: '../../packageIndex/pages/groupBuy/groupBuy',
      })
    },
    goAppointment: function(){

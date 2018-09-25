@@ -1,60 +1,63 @@
 // packageIndex/pages/lessonOrder/lessonOrder.js
+const app = getApp();
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    arr: new Array(50)
+    arr: [],
+    total: 0
   },
+  getList: function (flag) {
+    let arr_ = flag ? [] : this.data.arr;
+    wx.showNavigationBarLoading();
 
+    let selected = this.data.selected;
+    let conditions = this.data.conditions;
+    let params = {
+      pageNo: parseInt(arr_.length / 10) + 1,
+      pageSize: 10,
+      source: 2,
+      type: 1,
+      shopId: wx.getStorageSync('shop').id,
+      userId: wx.getStorageSync('scSysUser').id
+    }
+    app.util.reqAsync('masterCourse/getMyRecordByCondition', params).then((res) => {
+      if (res.data.code == 1) {
+        this.setData({
+          arr: arr_.concat(res.data.data),
+          total: res.data.total
+        })
+      } else {
+        wx.showToast({ title: res.data.msg || '加载失败！', icon: 'none' })
+      }
+      wx.hideNavigationBarLoading();
+      wx.stopPullDownRefresh();
+    })
+  },
+  // 跳转到详情界面
+  toDetail: function (e) {
+    let id = e.currentTarget.dataset.id;
+    wx.navigateTo({
+      url: '/packageIndex/pages/lessonDetail/lessonDetail?id=' + id,
+    })
+  },
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    this.getList()
   },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
   onPullDownRefresh: function () {
-
+    this.getList(true);
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-
+    if (this.data.total > this.data.arr.length) this.getList()
   },
 
   /**

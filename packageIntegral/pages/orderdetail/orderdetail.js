@@ -43,11 +43,11 @@ Page({
       console.log(err);
     })
   },
-  enterShop:function(e){//进入店铺
-    wx.switchTab({
-      url: '../../../pages/index/index?shopId='+e.currentTarget.dataset.id
-    })
-  },
+  // enterShop:function(e){//进入店铺
+  //   wx.switchTab({
+  //     url: '../../../pages/index/index?shopId='+e.currentTarget.dataset.id
+  //   })
+  // },
   contact:function(e){//联系商家
     wx.makePhoneCall({
       phoneNumber:e.currentTarget.dataset.num

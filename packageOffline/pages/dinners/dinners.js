@@ -79,6 +79,7 @@ Page({
       let underline = p.o
       wx.setStorageSync('shopId', shopId);
       wx.setStorageSync("facilityId", facilityId);
+      console.log(underline)
       this.setData({
         shopId: shopId,
         facilityId: facilityId,
@@ -100,24 +101,6 @@ Page({
                 url: '../../../pages/myHome/shopOrder/orderDetail/orderDetail?activeIndex=0&shopId=' + _this.data.shopId + '&userId=' + _this.data.userId + '&presaleId=' + _this.data.presaleId + '&facilityId=' + _this.data.facilityId + '&merchantId=' + _this.data.merchantId + '&selectMember=1'
               })
             }, 200)
-          } else {
-            //快餐
-            if (res.data.data == null){
-              setTimeout(function () {
-                wx.navigateTo({
-                  url: '../../../pages/myHome/shopOrder/orderDetail/orderDetail?activeIndex=0&shopId=' + _this.data.shopId + '&userId=' + _this.data.userId + '&presaleId=' + _this.data.presaleId + '&facilityId=' + _this.data.facilityId + '&merchantId=' + _this.data.merchantId + '&selectMember=1'
-                })
-              }, 200)
-            } else {
-              //店内购物
-              if (res.data.data == null){
-                setTimeout(function () {
-                  wx.navigateTo({
-                    url: '../../../pages/myHome/shopOrder/orderDetail/orderDetail?activeIndex=0&shopId=' + _this.data.shopId + '&userId=' + _this.data.userId + '&presaleId=' + _this.data.presaleId + '&facilityId=' + _this.data.facilityId + '&merchantId=' + _this.data.merchantId + '&selectMember=1'
-                  })
-                }, 200)
-              }
-            }
           }
         })
       })

@@ -1,0 +1,23 @@
+<!--pages/secKill/secKill.wxml-->
+<view class='container secKill'>
+  <view wx:for="{{list}}" wx:key="index" class='list'>
+    <navigator hover-class='none' url="../../../pages/goodsDetial/goodsDetial?shopId={{item.shopId}}&goodsId={{item.goodsId}}&cUser={{item.cUser}}&groupBuyingId={{item.id}}&status=2" class='listBox'>
+      <image src='{{item.goodsPic}}' class='pic'></image>
+      <view class='info'>
+        <text class='title'>{{item.goodsName}}</text>
+        <view class='price'>
+          <text class='newPrice'>￥{{item.minPrice}}</text>
+          <text class='oldPrice'>￥{{item.minOriginalPrice}}</text>
+        </view>
+        <view class='buyBox'>
+          <view class='secBox'>
+            <text class='end' wx:if="{{item.status==1}}">距结束<text wx:if="{{item.d>0}}">{{item.d}}天</text></text>
+            <text class='start' wx:if="{{item.status==0}}">距开始<text wx:if="{{item.d>0}}">{{item.d}}天</text></text>
+            <view class='timeBox'><text>{{item.h?item.h:0}}</text>:<text>{{item.m?item.m:0}}</text>:<text>{{item.s?item.s:0}}</text></view>
+          </view>
+          <view class='buy'>马上抢</view> 
+        </view>
+      </view>
+    </navigator>
+  </view>
+</view>

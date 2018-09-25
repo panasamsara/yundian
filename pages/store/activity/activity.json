@@ -1,4 +1,4 @@
 {
   "navigationBarTitleText":"店铺活动",
-  "enablePullDownRefresh": true
+  "disableScroll": true
 }

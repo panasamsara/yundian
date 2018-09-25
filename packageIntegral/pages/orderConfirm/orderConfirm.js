@@ -42,16 +42,13 @@ Page({
               accountArray: accountArray
             })
           }else{
-            this.setData({
-              accountText: res.data.data.subaccounts[0].businessName,
-              accountId: res.data.data.subaccounts[0].id,
-              businessId: res.data.data.subaccounts[0].businessId
-            })
+            if(res.data.data.subaccounts.length>0){
+              this.setData({
+                accountText: res.data.data.subaccounts[0].businessName,
+                accountId: res.data.data.subaccounts[0].id
+              })
+            }
           }
-        }else{
-          this.setData({
-            businessId: res.data.data.subaccounts[0].businessId
-          })
         }
         if (res.data.data.recvAddress) {
           let recvAddress = res.data.data.recvAddress,
@@ -75,8 +72,7 @@ Page({
   choseAccount:function(e){//选择账户
     this.setData({
       accountText:this.data.accountArray[e.detail.value],
-      accountId: this.data.data.subaccounts[e.detail.value].id,
-      businessId: this.data.data.subaccounts[e.detail.value].businessId
+      accountId: this.data.data.subaccounts[e.detail.value].id
     })
   },
   changeAddress:function(){//更改收货地址
@@ -102,13 +98,27 @@ Page({
       })
       return
     }
+    if (this.data.data.creditsGoodsInfo.point * count > this.data.data.userCreditsInfo.usablePoint){//积分不足
+      wx.showToast({
+        title: '积分不足',
+        icon: 'none'
+      })
+      return
+    }
     this.setData({
       count:count,
       total: this.data.data.creditsGoodsInfo.point*count.toFixed(2)
     })
   },
   confirm:function(){//确认兑换
-    if (!this.data.data.recvAddress.address){
+    if(this.data.data.subaccounts.length<=0){
+      wx.showToast({
+        title: '抱歉，您现在无账户无法兑换服务类积分商品',
+        icon:'none'
+      })
+      return
+    }
+    if (this.data.data.creditsGoodsInfo.goodsType == 3&&!this.data.data.recvAddress){
       wx.showToast({
         title: '请选择收货地址',
         icon:'none'
@@ -132,7 +142,6 @@ Page({
     let data=this.data.data,
         params={
           amount:this.data.total,
-          contactName: data.recvAddress.name,
           customerId: wx.getStorageSync('scSysUser').id,
           subaccountId: this.data.accountId||'',
           shopOrderItemList: [{
@@ -147,16 +156,17 @@ Page({
             goodsId: data.creditsGoodsInfo.goodsId,
             id: data.creditsGoodsInfo.id
           }],
-          areaId: data.recvAddress.areaId,
-          contactMobile: data.recvAddress.phone,
           realMoney: this.data.total,
-          provinceId: data.recvAddress.provinceId,
-          cityId: data.recvAddress.cityId,
-          address: data.recvAddress.address,
           bussinessId: wx.getStorageSync('shop').id
         }
     if (data.creditsGoodsInfo.goodsType==3){//普通商品
       params['deliveryType']=0;
+      params['contactName'] = data.recvAddress.name;
+      params['areaId'] = data.recvAddress.areaId;
+      params['contactMobile'] = data.recvAddress.phone;
+      params['provinceId'] = data.recvAddress.provinceId;
+      params['cityId'] = data.recvAddress.cityId;
+      params['address'] = data.recvAddress.address
     }else{//服务类
       params['deliveryType']=2;
     }

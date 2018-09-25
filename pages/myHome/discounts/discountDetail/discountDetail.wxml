@@ -31,9 +31,8 @@
       <button open-type='share' data-shoplogourl="{{discountsNew.shopLogoUrl}}" style='background:#999;' >分享</button> 
     </view>  
     <view class='serial'>
-      <view wx:if="{{share==0||share==2 || showMa==1}}"><text>序列号:{{discountsNew.couponCode}}</text></view>
-      
       <image wx:if="{{share==0||share==2 ||showMa==1}}" bindtap="previewImg" mode="scaleToFill" src="{{imagePath}}"></image>
+       <view wx:if="{{share==0||share==2 || showMa==1}}"><text>序列号:{{discountsNew.couponCode}}</text></view>
     </view>
     <view class='call'>
        <image src="../../images/wode_quandetail_phone@2x.png" bindtap='call' data-phone="{{discountsNew.shopPhone}}"></image>  
@@ -44,7 +43,7 @@
     <view class='con'>
       <image class="shopIcon" src='{{discounts.shopLogoUrl}}'></image>
       <view class='shopname color666 font28'>{{discounts.shopName}}</view>
-      <view class='font36 fontWeight color333'>{{discounts.amount}}元代金券</view>
+      <view class='font36 fontWeight color333'>{{discounts.instruction}}</view>
       <view class='color999 font26'>有效期至：{{discounts.beginTime}}至{{discounts.endTime}}</view>
       <view class="cicrl cicleLeft {{couponType==06?'yellow':'red'}}"></view>
       <view class="cicrl cicleRight {{couponType==06?'yellow':'red'}}"></view>

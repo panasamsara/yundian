@@ -468,7 +468,9 @@ const isAppUser = () => {
 }
 // 获取店铺信息 promise
 const getShop = (userId,shopId) => {
-
+  if (!shopId && shopId == "" && shopId == null){
+    shopId = 0
+  }
   let promi = new Promise((resolve, reject) => {
     reqAsync('shop/getShopHomePageInfo', {
       customerId: userId,
@@ -477,6 +479,17 @@ const getShop = (userId,shopId) => {
       pageNo: 1,
       pageSize: 100
     }).then((res) => {
+      // 查询失败跳转到扫码页
+      if(res.data.code != 1) {
+        wx.redirectTo({ url: '../scan/scan' });
+        return wx.showToast({ title: res.data.msg, icon: 'none' })
+      }
+      // 未上线店铺跳转到扫码页
+      if(res.data.data.shopInfo.shopStatus != 0) {
+        wx.redirectTo({ url: '../scan/scan'});
+        wx.showToast({ title: '店铺已下线！',  icon: 'none' })
+        return;
+      }
       //shop存入storage
       // wx.setStorageSync('shop', res.data.data.shopInfo);
       //活动

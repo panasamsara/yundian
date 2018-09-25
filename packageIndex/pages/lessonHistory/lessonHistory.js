@@ -1,14 +1,15 @@
 // packageIndex/pages/lessonHistory/lessonHistory.js
+const app = getApp();
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    arr: new Array(50).fill({})
+    arr: [],
+    total: 0
   },
-
-  timeAge: function (time) {
+  timeAgo: function (time) {
     let duration = new Date().getTime() - new Date(time.replace(/-/g, '/')).getTime();
     let days = duration / 86400000;
     if (days < 1) return '今天';
@@ -22,59 +23,70 @@ Page({
     if (days < 1095) return '三年前';
     return '很久前';
   },
+  // flag，true，表示初始化
+  getList: function (flag) {
+    wx.showNavigationBarLoading();
+    let arr_ = flag? []: this.data.arr;
+    let selected = this.data.selected;
+    let conditions = this.data.conditions;
+    let params = {
+      pageNo: parseInt(arr_.length/10) + 1,
+      pageSize: 10,
+      source: 2,
+      type: 2,
+      shopId: wx.getStorageSync('shop').id,
+      userId: wx.getStorageSync('scSysUser').id
+    }
+    app.util.reqAsync('masterCourse/getMyRecordByCondition', params).then((res) => {
+      if (res.data.code == 1) {
+        let arr = arr_.concat(res.data.data);
+        let lastTimeAgo = '';
+        for (let i = 0; i < arr.length; i++){
+          let ta = this.timeAgo(arr[i].createTime);
+          // 对比上一个timeAgo，若相同，则省略该字段
+          if (lastTimeAgo == ta) {
+            arr[i].timeAgo = ''
+          } else {
+            arr[i].timeAgo = ta;
+            lastTimeAgo = ta
+          }
+        }
+        this.setData({
+          arr: arr,
+          total: res.data.total
+        })
+      } else {
+        wx.showToast({ title: res.data.msg || '加载失败！', icon: 'none' })
+      }
+      wx.stopPullDownRefresh();
+      wx.hideNavigationBarLoading();
+    })
+  },
+  // 跳转到详情界面
+  toDetail: function (e) {
+    let id = e.currentTarget.dataset.id;
+    wx.navigateTo({
+      url: '/packageIndex/pages/lessonDetail/lessonDetail?id=' + id,
+    })
+  },
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
+    this.getList()
   },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-
+    this.getList(true);
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
+    if (this.data.total > this.data.arr.length) this.getList()
   }
 })

@@ -1,18 +1,27 @@
 <!-- 头部 -->
 <view class='bg-cover'>
-  <image class='cover' mode='widthFix' src='http://oss-cn-hangzhou.aliyuncs.com/tsnrhapp/user/photos/eda9f9011552bd8de505bf450a9b6c45.png'></image>
-  <view class='cover-shadow'></view>
-  <view class='btn-content'>
-    <view wx:if="{{!type}}" class='btn-buy'>购买</view>
-    <view wx:if="{{type}}" class='btn-play'>播放 <image class='icon' src='../../img/icon_kcxq_bf@2x.png'></image></view>
+  <image class='cover' mode='widthFix' src='{{data.cover}}'></image>
+  <view wx:if="{{!play}}" class='cover-shadow'></view>
+  <view wx:if="{{!play}}" class='btn-content'>
+    <!-- 收费 且 线上-未购买 -->
+    <view wx:if="{{data.isfree == 1 && (data.online == 1 && !data.isEntry)}}" class='btn-buy' bindtap="buy">购买</view>
+    <!-- 免费 或 线上-已购买 -->
+    <view wx:if="{{data.isfree == 0 || (data.online == 1 && data.isEntry)}}" class='btn-play' bindtap="videoPlay">
+      播放
+      <image wx:if="{{data.resourceList && data.resourceList[0].type == 1}}" class='icon' src='../../img/icon_kcxq_bf@2x.png'></image>
+      <image wx:if="{{data.resourceList && data.resourceList[0].type == 2}}" class='icon mp3' src='../../img/icon_zxkt_st@2x.png'></image>
+    </view>
   </view>
+  <video wx:if="{{play}}" id="myVideo" src="{{data.resourceList[0].resource}}" controls bindended="videoEnd" poster='{{data.resourceList[0].imgDetail}}'></video>
 </view>
 
 <!-- 课程说明 -->
 <view class='lesson-content' id='lesson-content'>
-  <view class='title'>智享大课堂，天下没有难做的金银铜铁</view>
-  <view class='time'>课时 <text>02:30:00</text></view>
-  <view class='teachers'>名师 <text>呵呵、哈哈、嘿嘿</text></view>
+  <view class='title'>{{data.name}}</view>
+  <view class='time'>课时 <text>{{data.duration}}</text></view>
+  <view class='teachers'>名师 <text>
+    <block wx:for="{{data.speakers}}" wx:key="{{index}}">{{item.name}}{{(index+1)==data.speakers.length ? '': '、'}}</block>
+  </text></view>
 </view>
 
 <!-- tab栏 -->
@@ -26,48 +35,56 @@
 
 <!-- 课程简介 -->
 <view class='info-content' id='info'>
-  <image mode='aspectFit' src='http://tsnrhapp.oss-cn-hangzhou.aliyuncs.com/itemreport/default/morenfuwuka_pic.jpg'></image>
-  <text>经营战略培训通过企业战略培训理论、方法及案例的分析与讲解，拓展战略视野，提升战略思维，帮助管理者全面认识企业战略基本框架，掌握战略分析方法和战略规划技巧，提升企业的战略规划能力。</text>
+  <block wx:for="{{data.briefs}}" wx:key="{{index}}">
+    <image mode='aspectFit' src='{{item.imgDetail}}'></image>
+    <text>{{item.intro}}</text>
+  </block>
 </view>
 
 <!-- 主讲老师/学员评论 -->
-<view class='comment-title' id='teacher'>主讲老师 <text>(1)</text></view>
+<view class='comment-title' id='teacher'>主讲老师 <text>({{data.speakers.length || 0}})</text></view>
 
-<view class='comment-content teacher'>
+<view class='comment-content teacher' wx:for="{{data.speakers}}" wx:key="{{index}}" bindtap='replyReset'>
   <view class='user-content'>
-    <image mode='center' src='https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo_top_86d58ae1.png'></image>
+    <image src='{{item.imgDetail || "../../img/default-teacher.png"}}'></image>
     <view>
-      <view class='name'>姓名</view>
+      <view class='name'>{{item.name}}</view>
     </view>
   </view>
-  <view class='comment'>经营战略培训通过企业战略培训理论、方法及案例的分析与讲解，拓展战略视野，提升战略思维，帮助管理者全面认识企业战略基本框架，掌握战略分析方法和战略规划技巧，提升企业的战略规划能力。</view>
-  <view class='comment'><text>其他用户</text>啊实打实觉得很快乐算法撒旦艰苦了公开拉升的发挥看好德国空军雷达是法国立刻撒旦发个但是</view>
+  <view class='comment'>{{item.intro}}</view>
 </view>
 
-<view class='comment-title' id='student'>学员评论 <text>(1)</text></view>
+<view class='comment-title' id='student'>学员评论 <text>({{data.comments.length || 0}})</text></view>
 
-<view class='comment-content'>
-  <view class='user-content'>
-    <image mode='center' src='https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo_top_86d58ae1.png'></image>
+<view class='comment-content' wx:for="{{comments}}" wx:key="{{index}}">
+  <view class='user-content' data-selected="{{index}}" bindtap='replyFocus'>
+    <image src='{{item.fPic}}'></image>
     <view>
-      <view class='name'>姓名</view>
-      <view class='time'>2018.08.30 21:30</view>
+      <view class='name'>{{item.fName}}</view>
+      <view class='time'>{{item.createTime}}</view>
     </view>
   </view>
-  <view class='comment'>经营战略培训通过企业战略培训理论、方法及案例的分析与讲解，拓展战略视野，提升战略思维，帮助管理者全面认识企业战略基本框架，掌握战略分析方法和战略规划技巧，提升企业的战略规划能力。</view>
-  <view class='comment'><text>其他用户</text>啊实打实觉得很快乐算法撒旦艰苦了公开拉升的发挥看好德国空军雷达是法国立刻撒旦发个但是</view>
+  <!-- 一级回复 -->
+  <view class='comment' data-selected="{{index}}" bindtap='replyFocus'>{{item.content}}</view>
+  <!-- 多级回复需要折叠和展开 -->
+  <view class='comment' wx:for="{{item.childs}}" wx:for-index="j" wx:for-item="child" wx:key="{{j}}" data-selected="{{[index, j]}}" bindtap='replyFocus' wx:if="{{j<2 || !item.fold}}">
+    <text>{{child.fName}}</text><block wx:if="{{child.lastUuid != item.uuid}}">回复<text>{{child.uName}}</text></block>
+    {{child.content}}
+  </view>
+  <view class='more-content comment' wx:if="{{item.fold}}" data-i="{{index}}" bindtap='fold'>查看详情</view>
 </view>
 
 <!-- 购买情况 -->
-<view wx:if="{{on}}" class='buy-content'>
-  <view class='price'>￥120</view>
-  <view class='num'>888人学习</view>
-  <view class='buy-btn'>购买</view>
-  <view wx:if="{{on}}" class='buy-text'>已购买</view>
+<view wx:if="{{tabActive[0] || tabActive[1]}}" class='buy-content'>
+  <view class='price'>{{data.isfree == 0 ? '免费': '￥'+data.price}}</view>
+  <view class='num'>{{data.entrCount || 0}}人学习</view>
+  <!-- 是否购买都基于收费课程 -->
+  <view wx:if="{{data.isfree == 1 && !data.isEntry}}"class='buy-btn' bindtap='buy'>购买</view>
+  <view wx:if="{{data.isfree == 1 && data.isEntry}}" class='buy-text'>已购买</view>
 </view>
 
 <!-- 评论回复 -->
-<view class='reply-content'>
-  <input placeholder='我来说一句~'></input>
-  <view class='btn-reply'>发送</view>
+<view wx:if="{{tabActive[2]}}" class='reply-content'>
+  <input placeholder='{{reply.placeholder}}' focus='{{reply.focus}}' value='{{reply.content}}' bindinput='relpyChange'></input>
+  <view class='btn-reply' bindtap='addComments'>发送</view>
 </view>

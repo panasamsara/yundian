@@ -1,0 +1,250 @@
+<view class="manageDetail">
+  <view class='header'>
+    <image src="../../../images/bgmall.png"></image>
+    <view data-type="{{activeIndex}}" wx-if="{{orderStatus==0 || orderStatus==1 || orderStatus==2}}" class='type'>订单已提交</view>
+    <view data-type="{{activeIndex}}" wx-if="{{orderStatus==3}}" class='type'>订单已完成</view>
+  </view>
+  <view class='content'>
+    <view class="info">
+      <view class='person'>
+        <view wx:if="{{facilityName}}">
+          <text>房间：</text>
+          <text>{{facilityName}}</text>
+        </view>
+        <view>
+          <text>商家店名：</text>
+          <text>{{shopName}}</text>
+        </view>
+        <view>
+          <text>订单编号：</text>
+          <text>{{presaleId}}</text>
+        </view>
+      </view>
+    </view>
+    <!-- 会员卡 请选择 -->
+    <view class="clubcardbg">
+      <view class="clubcard" hidden="{{showCard}}">
+        <view class="ext">会员卡</view>
+        <view wx:if="{{orderStatus!=3 && payStatus!=5}}" class="select a" bindtap="opencard">
+          <text>{{card}}</text>
+          <image wx:if="{{orderStatus!=3&&statuHids}}" class="rightIcon" src="../../../images/jt.png"></image>
+        </view>
+        <view wx:if="{{orderStatus==3 || payStatus==5}}" class="select b">
+          <text>{{overCard}}</text>
+          <image wx:if="{{orderStatus!=3&&statuHids}}" class="rightIcon" src="../../../images/jt.png"></image>
+        </view>
+      </view>
+    </view>
+    <!-- 选择会员卡列表 -->
+    <view class="cardpopbg" hidden="{{cShadeifshow}}" bindtap="closepop"></view>
+    <view class="cardpop"  hidden="{{cardpop}}" catchtouchmove="myCatchTouch">
+      <view class='poptit'>请选择会员账户</view>
+      <view class="cardList">
+        <scroll-view class="cardscroll" scroll-y>
+          <view class="nocard"  bindtap="nouseCard">
+            <text>暂不使用会员卡</text>
+          </view>
+          <view class="carditem {{accountInfo.ishort==0}}"  bindtap="iuseCard" wx:for="{{accountInfo}}" wx:for-index="cardx" wx:for-item="card" wx:key="*this" data-card="{{card}}" id="card_{{card.accountId}}_{{card.money}}_{{card.principalFormat}}_{{card.discount}}_{{card.discountFormat}}_{{card.ishort}}" data-businessname="{{card.accountName}}">
+            <view class="carddetails">
+              <view class="cardname">{{card.accountName}}</view>
+              <view class="cardamout">(剩余：￥{{card.principalFormat}})</view>
+            </view>
+            <view class="discount" wx:if="{{card.discountFormat!=10}}">
+              <text class="number">{{card.discount}}</text>
+              <text>折</text><text wx:if="{{card.discount=='无'}}">扣</text>
+            </view>
+          </view>
+          </scroll-view>
+      </view>
+    </view>
+    
+    <view class="list" bindtap='skip' data-id="{{presaleId}}" data-index="{{index}}">
+      <view class='shop'>
+        <view class='left'>
+          <image class="shopImg mr15" src="{{shopLogoUrl?shopLogoUrl:'../../../images/yundian_spxq_dianpu@2x.png'}}"></image>
+          <text class="mr15">{{shopName}}</text>
+        </view>
+        <view class="right right-index" bindtap='offlineSkip'>
+          <text>逛逛首页</text>
+          <image class="rightIcon" src="../../../images/yundian_spxq_gengduo.png"></image>
+        </view>
+        <!-- <view wx-if="{{activeIndex==0}}" class='right rightType'>订单已提交</view>
+        <view wx-if="{{activeIndex==1}}" class='right rightType'>订单已完成</view> -->
+      </view>
+      <!--普通商品-->
+      <view wx:for="{{scPresaleInfoList}}" wx:key="index" wx:for-item='items' wx:key="*this">
+        <view class="orderInfo">
+          <view class='left'>
+            <image src='{{items.pictureUrl}}'></image>
+          </view>
+          <view class='goodetail right'>
+            <view class='left'>
+              <view class="gname">
+               <text>{{items.purchaseName}}</text>
+               <!-- <text class="disicon" wx:if="{{items.enableType==1&&hasdiscount}}">折</text> -->
+              </view>
+              <text class="size" wx:if="{{items.stockName}}">{{items.stockName}}</text>
+              <text class='num color999 font26'>X{{items.purchaseNum}}</text>
+            </view>
+            <!--未结算-->
+            <text wx:if="{{orderStatus!=3}}" class='right font34 priceColor gprice'>
+              <!-- <text  wx:if="{{items.enableType==1&&hasdiscount}}" class='font24 color999 aprice'><text class='font24'>￥</text>{{items.unitPrice}}</text>
+              <text wx:if="{{hasdiscount}}" class='font34 priceColor account'><text class='font24'>￥</text>
+                <text wx:if="{{items.enableType==1}}">{{items.actualPayment}}</text>
+                <text wx:if="{{items.enableType==0}}">{{items.unitPrice}}</text>
+              </text> -->
+              <text class='font34 priceColor account' wx:if="{{isMember==0}}"><text class='font24'>￥</text>{{items.actualPayment}}</text>
+              <text class='font34 strick account' wx:if="{{isMember==1}}"><text class='font24'>￥</text>{{items.actualPayment}}</text>
+              <!--会员价-->
+              <text class='font34 priceColor account' wx:if="{{isMember==1}}"><text class='font24'>￥</text>{{items.gradePrice}}</text>
+            </text>
+            <!--一结算-->
+            <text wx:if="{{orderStatus==3}}" class='right font34 priceColor gprice'>
+              <!-- <text  wx:if="{{items.enableType==1&&hasdiscount}}" class='font24 color999 aprice'><text class='font24'>￥</text>{{items.unitPrice}}</text>
+              <text wx:if="{{hasdiscount}}" class='font34 priceColor account'><text class='font24'>￥</text>
+                <text wx:if="{{items.enableType==1}}">{{items.actualPayment}}</text>
+                <text wx:if="{{items.enableType==0}}">{{items.unitPrice}}</text>
+              </text> -->
+              <text class='font34 priceColor account' wx:if="{{isMember==0}}"><text class='font24'>￥</text>{{items.actualPayment}}</text>
+              <text class='font34 strick account' wx:if="{{isMember==1}}"><text class='font24'>￥</text>{{items.unitPrice}}</text>
+              <!--会员价-->
+              <text class='font34 priceColor account' wx:if="{{isMember==1}}"><text class='font24'>￥</text>{{items.actualPayment}}</text>
+            </text>
+          </view>
+        </view>
+      </view>
+      <!--超出部分留店商品-->
+      <view wx:if="{{leaveGood.length>0}}" wx:for="{{leaveGood}}" wx:key="index" wx:for-item='items' wx:key="*this">
+        <view class="orderInfo">
+          <view class='left'>
+            <image src='{{items.pictureUrl}}'></image>
+          </view>
+          <view class='goodetail right'>
+            <view class='left'>
+              <view class="gname">
+               <text>{{items.purchaseName}}</text>
+               <!-- <text class="disicon" wx:if="{{items.enableType==1&&hasdiscount}}">折</text> -->
+              </view>
+              <text class="size" wx:if="{{items.stockName}}">{{items.stockName}}</text>
+              <text class='num color999 font26'>X{{items.purchaseNum}}</text>
+            </view>
+            <text class='right font34 priceColor gprice'>
+              <!-- <text  wx:if="{{items.enableType==1&&hasdiscount}}" class='font24 color999 aprice'><text class='font24'>￥</text>{{items.unitPrice}}</text>
+              <text wx:if="{{hasdiscount}}" class='font34 priceColor account'><text class='font24'>￥</text>
+                <text wx:if="{{items.enableType==1}}">{{items.actualPayment}}</text>
+                <text wx:if="{{items.enableType==0}}">{{items.unitPrice}}</text>
+              </text> -->
+              <text class='font34 priceColor account' wx:if="{{isMember==0}}"><text class='font24'>￥</text>{{items.actualPayment}}</text>
+              <text class='font34 strick account' wx:if="{{isMember==1}}"><text class='font24'>￥</text>{{items.actualPayment}}</text>
+              <!--会员价-->
+              <text class='font34 priceColor account' wx:if="{{isMember==1}}"><text class='font24'>￥</text>{{items.gradePrice}}</text>
+            </text>
+          </view>
+        </view>
+      </view>
+      <!-- 使用会员卡 -->
+      <!-- <view class="aftercount">
+        <view class="countitem" wx:if="{{hasdiscount&&hasdisnumber}}">
+          <text class="desc">会员折扣优惠（{{discount==100?0:discount/10}}折）</text>
+          <text class="moneytext">-￥<text class="mone">{{discountDerate}}</text></text>
+        </view>
+        <view class="countitem" wx:if="{{hasDiscountPrice}}">
+          <text class="desc">指定商品优惠  (不参与折扣)</text>
+          <text class="moneytext">-￥<text class="mone">{{memberDerate}}</text></text>
+        </view>
+        <view class="countitem" wx:if="{{paywayshow}}">
+          <text class="desc">支付方式</text>
+          <text>{{payway}}</text>
+        </view>
+      </view> -->
+      <!-- aftercount end -->
+      <view>
+        <view class='linehei right'>
+          <!-- <text>共{{total}}件商品</text> -->
+          <view class='right'>
+            <text>实付：</text>
+            <text class='font34 priceColor actualPay' wx:if="{{isMember==0}}"><text class='font24'>￥</text>{{actualPay}}</text>
+            <text class='font34 priceColor newPrice' wx:if="{{isMember==1}}"><text class='font24'>￥</text>{{newPrice}}</text>
+            
+          </view>
+          <!-- <view class='reduced right' wx:if="{{hasdiscount || hasDiscountPrice}}"> 
+            <text>会员折扣</text>
+            <text class='font28 priceColor'>￥{{totalAccout}}</text>
+          </view> -->
+        </view>
+      </view>   
+      <view class="appDlond" wx:if="{{activeIndex==1}}">
+          <image  class="popularize" bindtap='appSkip' src='../../../images/wode.png'></image>
+        </view>
+        <view class="jiange">
+        </view>
+       <!--未完成-->
+       <view wx:if="{{hidden==true &&(orderStatus!=3&&orderStatus!=4)}}">
+        <view hidden='{{statuHid}}'>
+          <view class="noover" data-statu="{{payStatus}}" wx:if="{{(orderStatus==0 || orderStatus==1 || orderStatus==2)}}">
+            <view class="button white-btn" data-no="{{presaleId}}" data-price="{{shouldPay}}" data-shopid="{{shopId}}"  data-name="{{item.goodsName}}" data-memberid ="{{memberId}}" data-subaccountid="{{subaccountId}}" data-discount="{{discount}}" data-userid="{{userId}}" data-facilityid="{{facilityId}}" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" disabled="{{disabled}}"  bindtap="goOn"  hover-class="other-button-hover"> 继续添加 </view>
+            <view class="button red-btn" data-no="{{presaleId}}" data-name="{{item.goodsName}}"  size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" disabled="{{disabled}}" bindtap="buyOrder" hover-class="other-button-hover" data-price="{{shouldPay}}" data-shopid="{{shopId}}"  > 立刻结算 </view>
+          </view>
+        </view>
+        <view class="over" hidden="{{statuHids}}">
+            <view class="button red-btn" data-no="{{presaleId}}" data-name="{{item.goodsName}}"  size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" disabled="{{disabled}}" bindtap="buyOrder" hover-class="other-button-hover" data-price="{{shouldPay}}" data-shopid="{{shopId}}"  > 立刻结算 </view>
+        </view>
+      </view>
+          <!--已完成-->
+       
+        <!-- <view class="over" wx:if="{{orderStatus==3}}">
+          <view class="button red-btn" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}"
+		disabled="{{disabled}}" data-price="{{item.shouldPay}}" data-shopid="{{item.shopId}}" bindtap="againBuy" hover-class="other-button-hover"> 再来一单 </view>
+        </view> -->
+    </view>
+  </view>
+</view>
+<!-- 选择会员卡后点击结算 -->
+<view class="paycard" hidden="{{ispayCard}}">
+  <view class="paycardcon">
+    <text class="paytitle font36">会员卡支付</text>
+    <text class="shopname font32">{{shopName}}</text>
+    <text class="summoney" wx:if="{{userCardPayWay==0}}"><text class="yang">￥</text>{{newPrice}}</text>
+    <text class="summoney" wx:if="{{userCardPayWay==1&&limitBalance==1}}"><text class="yang">￥</text>{{suPrice}}</text>
+    <text class="summoney" wx:if="{{userCardPayWay==1&&limitBalance==0}}"><text class="yang">￥</text>{{newPrice}}</text>
+    <image class='mask-close-btn' bindtap='closePaycard' src='../../../images/yundian_yyxx_guanbi@2x.png'></image>
+    
+  </view>
+  <!-- 会员卡支付 -->
+  <view class="selpayway" wx:if="{{limitBalance==0 || limitBalance == 1}}">
+    <view wx:if="{{shopLogoUrl}}" class="shoplogo"><image class="shopImg mr15" src="{{shopLogoUrl}}"></image></view>
+    <view wx:else class="shoplogo"><image class="shopImg mr15" src="../../../images/yundian_spxq_dianpu@2x.png"></image></view>
+    <view class="cardinfo">
+      <text class="font32">{{card}}</text>
+      <text  class="font22 color999">（剩余：¥{{principalFormat}}）</text>
+    </view>
+    <view wx:if="{{userCardPayWay==0}}" class="selectway" data-statu="{{0}}" bindtap="UserCardchangePayway"><image src="../../../images/duozhongzhifu_xuanze@2x.png"></image></view>
+    <view wx:else class="selectway" data-statu="{{0}}" bindtap="UserCardchangePayway"><image src="../../../images/zihifu_weixuanzhong@2x.png"></image></view>
+  </view>
+  <!-- 微信支付 -->
+  <view class="selpayway" >
+    <view class="wechat-icon"><image class="shopImg mr15" src="../../../images/weixinzhifu_icon@2x.png"></image></view>
+    <view class="cardinfo">
+      <text class="font32 wep">微信支付</text>
+    </view>
+    <view wx:if="{{userCardPayWay == 1}}" data-statu="{{1}}" class="selectway" bindtap="UserCardchangePayway"><image src="../../../images/duozhongzhifu_xuanze@2x.png"></image></view>
+    <view wx:else class="selectway" data-statu="{{1}}" bindtap="UserCardchangePayway"><image src="../../../images/zihifu_weixuanzhong@2x.png"></image></view>
+  </view>
+  <button class="payforcard font36" size="{{primarySize}}" loading="{{loading}}" disabled="{{disabled}}" bindtap="confirmPay"> 确定支付</button>
+</view>
+
+<view class="popbg" hidden="{{shadeIfshow}}" bindtap="closePaycard"></view>
+<!--下单成功-->
+  <view class="modal-box order-tip" hidden="{{flagOrder}}" >
+  <view class="modal-body">
+    <image class="order-success" src="../../../images/success.png"></image>
+    <view class="modal-content">
+      <text>支付成功!</text>
+      <!-- <text>查看此订单</text> -->
+    </view>
+    <view class="modal-btn">  
+      <text class="knowBtn" bindtap="look">查看订单</text>
+      <!-- <text class="knowBtn" bindtap="againBuy">继续逛逛</text> -->
+    </view>
+  </view>
+  </view>

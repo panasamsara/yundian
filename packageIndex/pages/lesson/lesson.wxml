@@ -15,40 +15,30 @@
   </view>
   <!-- 下拉内容 -->
   <block wx:if="{{tabs[0]}}" wx:for="{{conditions[0]}}" wx:key="{{index}}">
-    <view class='item {{selected.index == 0 && selected.data == item ? "on": ""}}' data-s_i="0" data-s_d="{{item}}" bindtap='changeSelect'>{{item}}</view>
+    <view class='item {{selected[0] == 0 && selected[1] == index ? "on": ""}}' data-i="0" data-j="{{index}}" bindtap='changeSelect'>{{item.name}}</view>
   </block>
   <block wx:if="{{tabs[1]}}" wx:for="{{conditions[1]}}" wx:key="{{index}}">
-    <view class='item {{selected.index == 1 && selected.data == item ? "on": ""}}' data-s_i="1" data-s_d="{{item}}" bindtap='changeSelect'>{{item}}</view>
+    <view class='item {{selected[0] == 1 && selected[1] == index ? "on": ""}}' data-i="1" data-j="{{index}}" bindtap='changeSelect'>{{item.name}}</view>
   </block>
 </view>
 
 <view class='content'>
-
-  <view class='lesson-content' data-id="" bindtap='toDetail'>
-    <view class='cover-box'>
-      <image class='cover' mode='aspectFill' src='http://tsnrhapp.oss-cn-hangzhou.aliyuncs.com/itemreport/default/morenfuwuka_pic.jpg'></image>
-      <image class='subscripts' mode='aspectFit' src='../../img/icon_zxkt_st@2x.png'></image>
-      <text class='time'>13:14</text>
+  <navigator wx:for="{{arr}}" wx:key="{{index}}" url='../lessonDetail/lessonDetail?id={{item.id}}'>
+    <view class='lesson-content'>
+      <view class='cover-box'>
+        <image class='cover' mode='aspectFill' src='{{item.cover}}'></image>
+        <image class='subscripts' wx:if="{{item.resourceType == 1}}" mode='aspectFit' src='../../img/icon_zxkt_bf@2x.png'></image>
+        <image class='subscripts' wx:if="{{item.resourceType == 2}}" mode='aspectFit' src='../../img/icon_zxkt_st@2x.png'></image>
+        <text class='time'>{{item.duration}}</text>
+      </view>
+      <view class='text-box'>
+        <view class='title'>{{item.name}}</view>
+        <view class='column'>专栏：<text>{{item.themeName}}</text></view>
+        <view class='teacher'>{{item.speakerName}}</view>
+        <view class='price {{item.showPrice == "免费" ? "free": ""}}'>{{item.showPrice}}</view>
+      </view>
     </view>
-    <view class='text-box'>
-      <view class='title'>做店就是这么简单！</view>
-      <view class='column'>专栏：<text>花活</text></view>
-      <view class='teacher'>林老妮</view>
-      <view class='price'>¥98</view>
-    </view>
-  </view>
-
-  <view class='lesson-content'>
-    <view class='cover-box'>
-      <image class='cover' mode='aspectFill' src='http://tsnrhapp.oss-cn-hangzhou.aliyuncs.com/itemreport/default/morenfuwuka_pic.jpg'></image>
-      <image class='subscripts' mode='aspectFit' src='../../img/icon_zxkt_bf@2x.png'></image>
-      <text class='time'>13:14</text>
-    </view>
-    <view class='text-box'>
-      <view class='title'>做店就是这么简单！做店就是这么简单！做店就是这么简单！</view>
-      <view class='column'>专栏：<text>花活</text></view>
-      <view class='teacher'>林老妮</view>
-      <view class='price free'>试听</view>
-    </view>
-  </view>
+  </navigator>
 </view>
+
+<image mode='aspectFit' class='bitmap' src='../../img/zw_mykc@2x.png' wx:if="{{arr.length == 0}}"></image>

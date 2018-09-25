@@ -1,0 +1,107 @@
+/* pages/secKill/secKill.wxss */
+.container{
+  padding: 30rpx; 
+  letter-spacing: 2rpx;
+}
+
+.list{
+  display: flex;
+  flex-direction: row;
+  padding: 40rpx 0;
+  border-bottom: solid 1rpx #e5e5e5;
+}
+
+.pic{
+  width: 240rpx;
+  height: 240rpx;
+}
+
+.info{
+  display: flex;
+  flex-direction: column;
+  width: 450rpx;
+  height: 240rpx;
+  padding-left: 20rpx;
+}
+
+.title{
+  font-size: 30rpx;
+  height: 70rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.price{
+  height: 60rpx;
+  line-height: 60rpx;
+}
+
+.newPrice{
+  font-size: 30rpx;
+  color: #ff0036;
+  margin-right: 15rpx;
+}
+
+.oldPrice{
+  font-size: 24rpx;
+  text-decoration: line-through; 
+  color: #999999;
+}
+
+.secKill .end,.secKill .start{
+  font-size: 26rpx;
+  color: #666666;
+  height: 50rpx;
+  line-height: 50rpx;
+  text-indent: 8rpx;
+}
+
+.secKill .timeBox{
+  height: 60rpx;
+}
+
+.secKill .timeBox text{
+  background-color: #666666;
+  color: #ffffff;
+  font-size: 24rpx;
+  padding: 10rpx 6rpx;
+  border-radius: 10rpx;
+  margin: 0 8rpx;
+}
+
+.buyBox{
+  display: flex;
+  height: 110rpx;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.secBox{
+  display: flex;
+  height: 110rpx;
+  flex-direction: column;
+  /* align-items: flex-start; */
+}
+
+.buy{
+  width: 140rpx;
+  height: 60rpx;
+  text-align: center;
+  color: #ffffff;
+  line-height: 60rpx;
+  font-size: 28rpx;
+  border-radius: 10rpx;
+  background: -webkit-linear-gradient(left, #fb462b , #ff722b); /* Safari 5.1 - 6.0 */
+  background: -o-linear-gradient(right, #fb462b, #ff722b); /* Opera 11.1 - 12.0 */
+  background: -moz-linear-gradient(right, #fb462b, #ff722b); /* Firefox 3.6 - 15 */
+  background: linear-gradient(to right, #fb462b , #ff722b); /* 标准的语法 */
+}
+
+navigator.listBox{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+

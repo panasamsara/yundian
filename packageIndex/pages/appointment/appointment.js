@@ -16,7 +16,7 @@ Page({
     showModal:false,
     modal:'',
     picker:false,
-    multiArray:[],
+    multiArray:[], 
     multiIndex:[0,0],
     change:'area'
   },

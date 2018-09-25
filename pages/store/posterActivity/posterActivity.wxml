@@ -15,9 +15,9 @@
   </view>
 
   <view id='box' wx:if="{{userList.length>0}}">
-    <scroll-view id='userBox' scroll-x>
+    <view id='userBox'>
       <view wx:for="{{userList}}" wx:key='index' class='picBox'><image src="{{item}}" class="userPic"></image></view>
-    </scroll-view>
+    </view>
     <text id='signNum'>{{signNum}}人报名</text>
   </view>
   <view id='signModel' wx:if="{{signShow}}">
@@ -30,6 +30,7 @@
   <view id='shade' wx:if="{{signShow}}" bindtap='signHide'><image src='../activityInfo/images/guanbi@2x.png' id='close'></image></view>
   <view id='sign' wx:if="{{signType==1&&signed==false}}" bindtap='sign'>报名</view>
   <view id='signed' wx:if="{{signed}}">已报名</view>
+  <view id='passed' wx:if="{{passed}}">已过期</view>
 
 </view>
  <view id='shareBox'>

@@ -1,5 +1,5 @@
 page{
-  padding-bottom: 100rpx;
+  padding-bottom: 150rpx;
 }
 .bg-cover{
   position: relative;
@@ -33,6 +33,7 @@ page{
   font-size: 32rpx;
   line-height: 66rpx;
   color: #fff;
+  text-align: center;
 }
 .bg-cover .btn-play{
   background: rgba(0, 0, 0, 0.2);
@@ -41,6 +42,16 @@ page{
   margin-left: 6rpx;
   width: 20rpx;
   height: 26rpx;
+}
+.bg-cover .btn-play .icon.mp3{
+  width: 26rpx;
+}
+.bg-cover #myVideo{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
 }
 /* 课程说明 */
 .lesson-content{
@@ -177,7 +188,7 @@ page{
   color: #999;
 }
 .comment-content{
-  padding: 0 24rpx;
+  padding: 30rpx 24rpx 0;
   border-bottom: 1rpx solid #F3F3F3;
 }
 .comment-content.teacher{
@@ -223,10 +234,17 @@ page{
 }
 .comment-content .comment>text{
   color: #999;
-  margin-right: 4rpx;
+  margin-right: 8rpx;
 }
-.comment-content .comment>text::after{
-  content: '：'
+.comment-content .comment>text:nth-of-type(2){
+  margin-right: 0;
+  margin-left: 8rpx;
+}
+.comment-content .comment>text:last-of-type::after{
+  content: ':'
+}
+.comment-content .more-content{
+  color: #3A83EF;
 }
 /* 回复相关 */
 .reply-content input{

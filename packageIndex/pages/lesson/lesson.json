@@ -1,1 +1,4 @@
-{"navigationBarTitleText": "云店课堂"}
+{
+  "navigationBarTitleText": "云店课堂",
+  "enablePullDownRefresh": true
+}

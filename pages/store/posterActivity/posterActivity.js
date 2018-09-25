@@ -89,7 +89,7 @@ Page({
   submit: function () {
     let _this = this;
     setTimeout(function () {
-      if (userName == undefined || userName == '') {
+      if (_this.data.userName == undefined || _this.data.userName == '') {
         wx.showToast({
           title: '请完善信息',
           icon: 'none'
@@ -97,7 +97,7 @@ Page({
         return
       }
       if (_this.data.userName) {//用户名校验
-        let userFormatExp = new RegExp("^[\u0391-\uFFE5A-Za-z]+$");
+        let userFormatExp = new RegExp("^[\u4e00-\u9fa5A-Za-z]+$");
         if (!userFormatExp.test(_this.data.userName)) {
           wx.showToast({
             title: '用户名只能输入中英文',
@@ -108,8 +108,8 @@ Page({
         var userName = _this.data.userName.replace(/\s+/g, '');
       }
       if (_this.data.remark) {//备注校验
-        let remarkFormatExp = new RegExp("^[a-zA-Z\d\u4E00-\u9FA5]+$");
-        if (!remarkFormatExp.test(_this.data.remark)) {
+        let remarkFormatExp = new RegExp("[~'!@#￥$%^&*()-+_=:]");
+        if (remarkFormatExp.test(_this.data.remark)) {
           wx.showToast({
             title: '备注只能输入中英文和数字',
             icon: 'none'
@@ -131,7 +131,7 @@ Page({
           title: res.data.msg,
           icon: 'none'
         })
-        if (res.data.code == 1 || res.data.code == 8) {//报名成功||已报名
+        if (res.data.code == 1 ) {//报名成功||已报名
           _this.setData({
             signed: true,
             signShow: false,
@@ -148,9 +148,18 @@ Page({
   getSignList: function (params) {
     app.util.reqAsync('shop/getActionUserInfo', params).then((res) => {
       if (res.data.data) {
-        if (res.data.data.isSignUp == 1) {
+        if (res.data.data.isSignUp == 1) { // 已报名
           this.setData({
             signed: true
+          })
+        }
+        if (res.data.data.isTime == 1) {//活动已过期
+          this.setData({
+            passed: true
+          })
+        }else{
+          this.setData({
+            passed: false
           })
         }
         if (res.data.data.userList.length > 0) {

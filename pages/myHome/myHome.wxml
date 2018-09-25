@@ -9,7 +9,9 @@
         </view>
         <text class='float_l'>{{user.username}}</text>
       </view>
-      <image class="recommend {{animate?'shake-vertical':''}}" src='../../images/tuiajinhaoyou@2x.png'></image>
+      <navigator url='/packageIndex/pages/fly/fly'>
+        <image class="recommend {{animate?'shake-vertical':''}}" src='../../images/tuiajinhaoyou@2x.png'></image>
+      </navigator>
     </view>
   </view>
   <view class='orderTop'>

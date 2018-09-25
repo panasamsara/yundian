@@ -11,7 +11,7 @@ Page({
     facilityName: '',
     shopName: '',
     scPresaleInfoList: [], 
-    
+    suPrice:0,//有会员消费限制时的总价
     shouldPay: '',
     total: 0,
     flagOrder: true,
@@ -58,7 +58,10 @@ Page({
     gradePrice:[], //会员价相关
     isMember:0, //是否使用了会员卡 0-没使用 1- 使用
     newPrice:0,//选用会员卡之后的实付
-    hasMemberCard:true //是否会员
+    hasMemberCard:true, //是否会员
+    subaccountId:0, //结算完再次查看订单时使用，看是否用了会员
+    overCard:'',//结算完再次查看订单时用的会员名
+    payStatus:''
   },
   onLoad: function (options) {
     console.log(options);
@@ -78,7 +81,7 @@ Page({
       selectMember: options.selectMember || 1
     })
     this.getInfo();
-    this.getusercard();
+    
     var that = this; //获取手机系统是否是ios
     wx.getSystemInfo({
       success: function (res) {
@@ -101,11 +104,13 @@ Page({
     
     var _this = this
     wx.onSocketMessage(function (res) {
+      _this.onPullDownRefresh()
+      // _this.getInfo(); // 重新获取页面数据
       var msg = res.data
       if (msg && msg.length >= 5 && msg.substring(msg.length - 5) == '_over') {
 
       } else if (msg && msg.substring(msg.length - 3) == '已下单') {
-
+        
       }
     })
   },
@@ -113,16 +118,15 @@ Page({
     wx.navigateTo({ url: "/pages/myHome/downLoadIos/downLoadIos?flag=" + this.data.flag });
   },
   offlineSkip: function (e) { //跳到云店首页
-    wx.switchTab({ url: "../../../index/index" });
+    wx.switchTab({ url: "../../../pages/index/index" });
   },
   goOn: function (e) { //继续添加
     var facilityId = e.currentTarget.dataset.facilityid,
       presaleId = e.currentTarget.dataset.no,
       userId = e.currentTarget.dataset.userid,
       shopId = e.currentTarget.dataset.shopid
-    wx.navigateTo({
-      url: "../proList/proList?discount=" + this.data.discount
-    });
+      console.log(1)
+    wx.navigateBack();
   },
   buyOrder: function (e) { //结算支付
     console.log(this.data.scPresaleInfoList)
@@ -140,27 +144,27 @@ Page({
         limitBalance: supportLimitBalance   // 0不限方式消费 1仅限会员卡余额消费 
       })
     } else { //非会员
-      this.bindTestCreateOrder(code, name, this.data.sumPrice, shopid,null);
+      this.bindTestCreateOrder(code, name, this.data.sumPrice, shopid);
     }
   },
-  memberWecheat:function(){
+  memberWecheat: function (){
+    if (this.data.limitBalance) {
+     
+        var orderPay = this.data.newPrice;
+     
+    } else {
+      var orderPay = this.data.sumPrice;
+    }
     //用会员的时候选择微信支付
     app.util.reqAsync('foodBoot/wechat/verification', {
       "shopId": this.data.shopId, //店铺id
       "presaleId": this.data.presaleId, //订单id
       "memberId": this.data.accountInfo[0].accountId, //会员id
-      "orderPay": this.data.actualPay, //支付金额
+      "orderPay": orderPay, //支付金额
     }).then((res) => {
       if(res.data.code==1){
-        if (this.data.limitBalance){
-        if (this.data.limitBalance == 0) { //不限制会员消费
+        
           this.bindTestCreateOrder(this.data.presaleId, this.data.scPresaleInfoList[0].purchaseName, this.data.newPrice, this.data.shopId, this.data.accountInfo[0].accountId);
-        }else if (this.data.limitBalance == 1){ //限制
-          this.bindTestCreateOrder(this.data.presaleId, this.data.scPresaleInfoList[0].purchaseName, this.data.sumPrice, this.data.shopId,null);
-        }
-      }else{
-          this.bindTestCreateOrder(this.data.presaleId, this.data.scPresaleInfoList[0].purchaseName, this.data.sumPrice, this.data.shopId,null);
-      }
         
       }else{
         wx.showToast({
@@ -176,18 +180,18 @@ Page({
       subject: name, //商品名
       shopId: shopid, //店铺id
       amount: price,
+      memberId: memberId,
       requestBody: {
         body: '云店小程序店内下单',
         out_trade_no: code, //订单编号
         trade_type: 'JSAPI',
-        sub_openid: wx.getStorageSync('scSysUser').wxOpenId,
-        memberId: memberId
+        sub_openid: wx.getStorageSync('scSysUser').wxOpenId 
       }
     };
     //发起网络请求 微信统一下单   
     util.reqAsync('payBoot/wx/pay/food/unifiedOrderInSpMode', data).then((res) => {
       console.log(res);
-      // debugger;
+  
 
       if (res.data.code == 1) {
         //获取预支付信息
@@ -252,7 +256,7 @@ Page({
             icon: 'none'
           })
           wx.navigateTo({
-            url: "../../../../packageOffline/pages/proList/proList"
+            url: "../proList/proList"
           });
         } else {
           wx.showToast({
@@ -296,7 +300,7 @@ Page({
     })
     var facilityId = this.data.facilityId;
     app.util.reqAsync('foodBoot/findFoodPresale', {
-      id: this.data.presaleId
+       id: this.data.presaleId
     }).then((res) => {
       wx.hideLoading();
       if(res.data.code==9){
@@ -304,23 +308,53 @@ Page({
 
         }
       }else if(res.data.code==1){
+        
         var data = res.data.data; 
+        if (data.orderStatus == 3) { //如果是已经结算
+
+          wx.redirectTo({
+            url: '../endDetails/endDetails?presaleId=' + this.data.presaleId,
+          })
+        }
         var actualPay = Number(data.actualPay) + Number(data.additionalMoney);       
         this.setData({
           hidden: true,
+          payStatus: data.payStatus,// 0-未完成支付（未处理） 1-已完成支付（已支付，全额付款时为已完成支付）新增状态：2-处理中（服务中）3-待支付（服务完成未支付）;4-(定金预售)已退定; 5-订单待支付(订单已提交给微信); 6-超时未支付',
           facilityName: data.title,
           orderStatus: data.orderStatus,//订单状态: 0-待处理；1-处理中；2-待结算；3-已结算； 4-已取消',
           actualPay: actualPay,
           additionalMoney: data.additionalMoney,
           totalAccout: 0, //会员折扣
           scPresaleInfoList: data.scPresaleInfos,
-          statuHid: false,
-          statuHids: true,
           presaleId: data.id,
-          sumPrice: actualPay
+          sumPrice: actualPay,
+          subaccountId: data.subaccountId
         })
-      
-       
+        if (data.payStatus==5){
+          this.setData({
+            statuHid: true,
+            statuHids: false,
+            ispayCard:true
+          })
+        }else{
+          this.setData({
+            statuHid: false,
+            statuHids: true,
+          })
+        }
+
+        if (data.orderStatus==3){ //已结算
+          if (data.subaccountId==0){ //没用会员
+            this.setData({
+              showCard:true
+            })
+          }else{
+            this.setData({
+              showCard:false
+            })
+          }
+       }
+        this.getusercard();
       }
         
     })
@@ -330,21 +364,24 @@ Page({
     this.setData({
       flagOrder: true
     })
-    this.getInfo();
-    var hasMemberCard = this.data.hasMemberCard;
-    if (hasMemberCard) { //是会员
-      this.setData({
-        showCard: false
-      })
-    } else {
-      this.setData({
-        showCard: true
-      })
-    }
+    wx.redirectTo({
+      url: '../endDetails/endDetails?presaleId=' + this.data.presaleId,
+    })
+    //this.getInfo();
+    // var hasMemberCard = this.data.hasMemberCard;
+    // if (hasMemberCard) { //是会员
+    //   this.setData({
+    //     showCard: false
+    //   })
+    // } else {
+    //   this.setData({
+    //     showCard: true
+    //   })
+    // }
   },
   // 店内下单查询用户会员子账户
   opencard: function (e) {
-    // debugger;
+  
     if (this.data.orderStatus != 3 && this.data.statuHids) {
       this.setData({
         cShadeifshow: false,
@@ -367,10 +404,11 @@ Page({
       "presaleId": this.data.presaleId,   //订单id
       "mobile": this.data.phone  //手机号码
     }).then((res) => {
-      console.log(res.data.data)
+     
       if (res.data.code == 1) {
         if (res.data.data) {
           if (res.data.data.accountList.length>0){
+            console.log(res.data.data.accountList.length)
             that.setData({
               showCard: false,
               hasMemberCard:true
@@ -389,11 +427,12 @@ Page({
                   var ishort = 0
                 }
                 if (data.businessInfo.discount==100){
-                  var discount = 0
+                  var discount = '无'
                 }else{
                   var discount = (data.businessInfo.discount) / 10
                 }
                 var obj = {
+                  id: data.id,//子账户id
                   accountId: data.memberId, //会员id
                   accountName: data.accountName,//会员名
                   discount: discount,
@@ -427,10 +466,38 @@ Page({
             commodityGoods: lgoods
          })
         }
+        /*这里要加留店商品判断包括刷新和结算后*/
+        if (that.data.isMember==1){ //使用了会员卡
+          if (that.data.orderStatus != 3){
+            that.refreshCard(cardlist[0].accountName, cardlist[0].principalFormat);
+          }
+          
+        }
+
+        if (that.data.orderStatus == 3) { //已结算
+          if (that.data.subaccountId == 0) { //没用会员
+            that.setData({
+              showCard: true
+            })
+          } else {
+            for (var i = 0; i < cardlist.length;i++){ //已结算用了会员卡
+              if (that.data.subaccountId == cardlist[i].id){
+                that.setData({
+                    overCard: cardlist[i].accountName
+                  })
+              }
+           }
+          }
       } else {
-        this.setData({
-          showCard:true,
+          that.setData({
+          showCard:false,
           hasMemberCard: true
+        })
+      }
+      }else{
+        that.setData({
+          showCard: true,
+          hasMemberCard: false
         })
       }
     })
@@ -507,11 +574,105 @@ Page({
       return 0;
     }        
   },
+  refreshCard: function (businessname,principalFormat){
+    console.log('使用了刷新')
+    var businessname = businessname;
+    //刷新时重新计算会员折扣
+    var scPresaleInfoList = this.data.scPresaleInfoList;//商品列表
+    var gradePrice = this.data.gradePrice;//会员价
+    var commodityGoods = this.data.commodityGoods;//会员留店商品
+    var cloneArr = []; //复制下单商品
+    var moreGoods = [];//超出剩余数量的留店商品，按会员价来
+    for (var f = 0; f < scPresaleInfoList.length; f++) {
+      for (var d = 0; d < gradePrice.length; d++) {
+        if (scPresaleInfoList[f].id == gradePrice[d].presaleInfoId) {
+          scPresaleInfoList[f].gradePrice = gradePrice[d].gradePrice;
+          scPresaleInfoList[f].presaleInfoId = gradePrice[d].presaleInfoId;
+        }
+      }
+    }
+    cloneArr = cloneArr.concat(scPresaleInfoList);
+    console.log(cloneArr)
+
+    for (var b = 0; b < cloneArr.length; b++) {
+      for (var c = 0; c < commodityGoods.length; c++) { //留店商品减数量
+        if (scPresaleInfoList[b].goodsServiceId == commodityGoods[c].goodsId) { //是留店商品
+
+          if (commodityGoods[c].remainNum != 0) {
+            if (Number(scPresaleInfoList[b].purchaseNum) - Number(commodityGoods[c].remainNum) <= 0) { //在剩余数量范围内
+              console.log('未超出留店范围')
+              scPresaleInfoList[b].gradePrice = 0;
+              scPresaleInfoList[b].purchaseType = 6;
+              commodityGoods[c].remainNum = Number(commodityGoods[c].remainNum) - Number(scPresaleInfoList[b].purchaseNum);
+            } else { //超出剩余数量
+              console.log("超出留店")
+
+              var num = Number(cloneArr[b].purchaseNum) - Number(commodityGoods[c].remainNum)
+              moreGoods.push({
+                purchaseNum: num,
+                actualPayment: (Number(cloneArr[b].unitPrice)) * num,
+                goodsServiceId: cloneArr[b].goodsServiceId,
+                gradePrice: ((Number(cloneArr[b].gradePrice) / Number(cloneArr[b].purchaseNum)) * num).toFixed(2),
+                id: cloneArr[b].id,
+                pictureUrl: cloneArr[b].pictureUrl,
+                purchaseName: cloneArr[b].purchaseName,
+                purchaseType: 10,
+                stockId: cloneArr[b].stockId,
+                unitPrice: cloneArr[b].unitPrice
+              });
+              console.log(cloneArr[b].unitPrice)
+              console.log(moreGoods)
+              scPresaleInfoList[b].purchaseNum = commodityGoods[c].remainNum;
+              scPresaleInfoList[b].gradePrice = 0;
+              scPresaleInfoList[b].purchaseType = 6;
+              scPresaleInfoList[b].actualPayment = Number(commodityGoods[c].remainNum) * Number(scPresaleInfoList[b].unitPrice)
+              commodityGoods[c].remainNum = 0;
+            }
+          }
+
+
+        }
+      }
+    }
+    console.log("用完会员卡留店是否变化1")
+    console.log(moreGoods);
+    console.log(scPresaleInfoList)
+    var newPrice = 0;
+    if (moreGoods && moreGoods.length > 0) { //留店有超出
+      var leaveGood = moreGoods;
+      var newgooList = scPresaleInfoList.concat(moreGoods);
+      for (var i = 0; i < newgooList.length; i++) {
+        newPrice = Number(newPrice) + Number(newgooList[i].gradePrice)
+      }
+      console.log("有超出newPrice" + newPrice)
+    } else {
+      var leaveGood = [];
+      for (var a = 0; a < scPresaleInfoList.length; a++) {
+
+        newPrice = Number(newPrice) + Number(scPresaleInfoList[a].gradePrice)
+      }
+      console.log("没有newPrice" + newPrice)
+    }
+    console.log("newPrice" + newPrice)
+    this.setData({
+      cShadeifshow: true,
+      cardpop: true,
+      hasdiscount: true,
+      hasdisnumber: true,
+      isMember: 1,
+      principalFormat: principalFormat,
+      scPresaleInfoList: scPresaleInfoList,
+      leaveGood: moreGoods,
+      newPrice: (Number(newPrice) + Number(this.data.additionalMoney)).toFixed(2),
+      card: businessname
+    })
+    
+  },
   // 选择会员卡判断优惠后余额是否足够
   iuseCard: function (e) {
-    // debugger
+ console.log('使用了会员卡')
     var cardData = e.currentTarget.dataset.card;
-
+    console.log(cardData)
     var id = cardData.id;// e.currentTarget.id.split('_')[1];
     var principal = cardData.principal;// e.currentTarget.id.split('_')[2];
     var principalFormat = cardData.principalFormat;// e.currentTarget.id.split('_')[3];
@@ -519,52 +680,83 @@ Page({
     var discountFormat = cardData.discountFormat;// e.currentTarget.id.split('_')[5];
     var ishort = cardData.ishort;// e.currentTarget.id.split('_')[6];
     var businessname = e.currentTarget.dataset.businessname;
-    if (ishort==0){
-      this.setData({
-        isMember: 0
-      })
-      wx.showToast({
-        title: "此卡余额不足，请去收银台充值",
-        icon: 'none'
-      })
-    }else{
+   
       var scPresaleInfoList = this.data.scPresaleInfoList;//商品列表
       var gradePrice = this.data.gradePrice;//会员价
       var commodityGoods = this.data.commodityGoods;//会员留店商品
-      console.log(scPresaleInfoList)
-      console.log(gradePrice)
-      console.log(commodityGoods)
+      var cloneArr = [];
       var moreGoods = [];//超出剩余数量的留店商品，按会员价来
-      for (var b = 0; b < scPresaleInfoList.length;b++){
-        scPresaleInfoList[b].gradePrice = gradePrice[b].gradePrice;
-        scPresaleInfoList[b].presaleInfoId = gradePrice[b].presaleInfoId;
+    for (var f = 0; f < scPresaleInfoList.length;f++){
+      for (var d = 0; d < gradePrice.length;d++){
+        if (scPresaleInfoList[f].id == gradePrice[d].presaleInfoId) {
+          scPresaleInfoList[f].gradePrice = gradePrice[d].gradePrice;
+          scPresaleInfoList[f].presaleInfoId = gradePrice[d].presaleInfoId;
+        }
+      }
+    }
+    cloneArr=cloneArr.concat(scPresaleInfoList);
+    console.log(cloneArr)
+        
+    for (var b = 0; b < cloneArr.length; b++) {
         for (var c = 0; c < commodityGoods.length;c++){ //留店商品减数量
-          if (scPresaleInfoList[b].id == commodityGoods[c].id){ //是留店商品
-            if (Number(scPresaleInfoList[b].purchaseNum) - Number(commodityGoods[c].remainNum)<=0){ //在剩余数量范围内
-              
-            }else{ //超出剩余数量
-              var num = Number(scPresaleInfoList[b].purchaseNum) - Number(commodityGoods[c].remainNum);//超出的数量
-              scPresaleInfoList[b].purchaseNum = num;
-              scPresaleInfoList[b].gradePrice = (Number(scPresaleInfoList[b].gradePrice) / Number(scPresaleInfoList[b].purchaseNum)) * num
-              moreGoods.push(scPresaleInfoList[b])
+          if (scPresaleInfoList[b].goodsServiceId == commodityGoods[c].goodsId){ //是留店商品
+
+            if (commodityGoods[c].remainNum!=0){
+              if (Number(scPresaleInfoList[b].purchaseNum) - Number(commodityGoods[c].remainNum) <= 0) { //在剩余数量范围内
+                console.log('未超出留店范围')
+                scPresaleInfoList[b].gradePrice = 0;
+                scPresaleInfoList[b].purchaseType = 6;
+                commodityGoods[c].remainNum = Number(commodityGoods[c].remainNum) - Number(scPresaleInfoList[b].purchaseNum);
+              } else { //超出剩余数量
+                console.log("超出留店")
+      
+                var num = Number(cloneArr[b].purchaseNum) - Number(commodityGoods[c].remainNum)
+                moreGoods.push({
+                  purchaseNum: num,
+                  actualPayment: (Number(cloneArr[b].unitPrice))* num,
+                  goodsServiceId: cloneArr[b].goodsServiceId,
+                  gradePrice: ((Number(cloneArr[b].gradePrice) / Number(cloneArr[b].purchaseNum)) * num).toFixed(2),
+                  id: cloneArr[b].id,
+                  pictureUrl: cloneArr[b].pictureUrl,
+                  purchaseName: cloneArr[b].purchaseName,
+                  purchaseType:10,
+                  stockId: cloneArr[b].stockId,
+                  unitPrice: cloneArr[b].unitPrice
+                });
+                console.log(cloneArr[b].unitPrice)
+                console.log(moreGoods)
+                scPresaleInfoList[b].purchaseNum = commodityGoods[c].remainNum;
+                scPresaleInfoList[b].gradePrice = 0;
+                scPresaleInfoList[b].purchaseType = 6;
+                scPresaleInfoList[b].actualPayment = Number(commodityGoods[c].remainNum) * Number(scPresaleInfoList[b].unitPrice)
+                commodityGoods[c].remainNum = 0;
+              }
             }
+            
             
           }
         }
       }
+      console.log("用完会员卡留店是否变化1")
+      console.log(moreGoods);
       console.log(scPresaleInfoList)
       var newPrice=0;
       if (moreGoods && moreGoods.length>0){ //留店有超出
         var leaveGood = moreGoods;
-        var newgooList = scPresaleInfoList.contact(moreGoods);
+        var newgooList = scPresaleInfoList.concat(moreGoods);
         for (var i = 0; i < newgooList.length;i++){
-          newPrice = Number(newPrice) + newgooList[i].gradePriceUnit
+          newPrice = Number(newPrice) + Number(newgooList[i].gradePrice)
         }
+        console.log("有超出newPrice" + newPrice)
      }else{
         var leaveGood = [];
-        newPrice = this.data.accountInfo[0].actualPaymemnt;
+        for (var a = 0; a < scPresaleInfoList.length;a++){
+        
+          newPrice = Number(newPrice)+Number(scPresaleInfoList[a].gradePrice)
+        }
+        console.log("没有newPrice" + newPrice)
      }
-
+    console.log("newPrice" + newPrice)
       this.setData({
         cShadeifshow:true,
         cardpop:true,
@@ -573,109 +765,14 @@ Page({
         isMember:1,
         principalFormat: principalFormat,
         scPresaleInfoList: scPresaleInfoList,
-        leaveGood: leaveGood,
-        newPrice: Number(newPrice) + Number(this.data.additionalMoney),
+        leaveGood: moreGoods,
+        newPrice: (Number(newPrice) + Number(this.data.additionalMoney)).toFixed(2),
         card: businessname
       })
-    }
+    // }
 
   
 
-    // if (ishort == 1) {
-    //   app.util.reqAsync('shop/updateShopOrderMoney', {
-    //     subaccountId: id,  //子账户主键
-    //     discount: discount,  //会员折扣
-    //     customerId: user.id,  //用户id
-    //     memberMoney: this.data.actualPay, //应支付总金额
-    //     shopId: this.data.shopId || shop.id,  //店铺id
-    //     presaleId: this.data.presaleId  //店内订单id
-    //   }).then((res) => {
-
-    //     if (res.data.code == 1) {
-    //       console.log(res.data.data.price)
-    //       var price = res.data.data.price;
-    //       var orderId = res.data.data.orderId;
-    //       this.getPresale(orderId, 1, false);
-    //       // if (discount!=100){
-    //       // this.setData({
-    //       //   hasdiscount: true,
-    //       //   hasdisnumber:true,
-    //       //   price: price
-    //       // })
-    //       // }
-    //       if (res.data.data.price != 0) {
-    //         var reducedata = (Number(this.data.shouldPay) - Number(res.data.data.price)).toFixed(2);
-    //         console.log(reducedata)
-    //         if (res.data.data.price <= principal) {
-    //           this.setData({
-    //             price: price,
-    //             totalAccout: reducedata
-    //           })
-    //         } else {
-    //           wx.showToast({
-    //             title: "此卡余额不足，暂时无法使用",
-    //             icon: 'none'
-    //           })
-    //         }
-    //       } else {
-    //         if (this.data.shouldPay <= principal) {
-    //           this.setData({
-    //             price: price,
-    //             totalAccout: this.data.shouldPay
-    //           })
-    //         } else {
-    //           wx.showToast({
-    //             title: "此卡余额不足，暂时无法使用",
-    //             icon: 'none'
-    //           })
-    //         }
-
-    //       }
-         
-
-    //       if (price != 0) {
-    //         var reducedata = Number(this.data.shouldPay) - Number(price);
-    //         console.log(reducedata)
-    //         this.setData({
-    //           totalAccout: reducedata.toFixed(2)
-    //         })
-    //       } else {
-    //         this.setData({
-    //           totalAccout: (this.data.shouldPay).toFixed(2),
-    //           hasdiscount: true,
-    //           hasdisnumber: true
-    //         })
-    //       }
-    //       this.setData({
-    //         card: businessname,
-    //         actualPay: Number(price).toFixed(2),
-    //         principal: principal,
-    //         principalFormat: principalFormat,
-    //         cShadeifshow: true,
-    //         cardpop: true,
-    //         discount: discount
-    //       })
-    //       if (discountFormat) {
-    //         this.setData({
-    //           usecard: true,
-    //           hasdiscount: true,
-    //           hasdisnumber: true
-    //         })
-    //       }
-    //     } else {
-    //       wx.showToast({
-    //         title: res.data.msg,
-    //         icon: 'none'
-    //       })
-    //     }
-    //   })
-    // } else {
-    //   wx.showToast({
-    //     title: "此卡余额不足，请去收银台充值",
-    //     icon: 'none'
-    //   })
-    //  // this.closeSelCard();
-    // }
   },
   // 关闭会员卡列表
   closeSelCard: function () {
@@ -693,28 +790,55 @@ Page({
   },
   // 选用会员卡后更换支付方式
   UserCardchangePayway: function (e) {
-    if (this.data.limitBalance) {
-      return false
-    }
-    var userCardPayWay = this.data.userCardPayWay;
+    console.log(e)
+    var userCardPayWay = e.currentTarget.dataset.statu; //0会员卡 1-微信
+    console.log(userCardPayWay);
     if (userCardPayWay == 0) {
-      this.setData({
-        userCardPayWay: 1
-      })
-    } else {
+      console.log('会员卡')
       this.setData({
         userCardPayWay: 0
       })
+    } 
+    if (userCardPayWay==1) {
+      console.log('微信')
+      this.setData({
+        userCardPayWay: 1
+      })
+      console.log(this.data.limitBalance)
+     
+        var levGood = this.data.leaveGood; //超出部分留店商品
+        var normalList = this.data.scPresaleInfoList; //普通商品
+        var suPrice = 0;
+        if (levGood.length>0){
+          var newgd = normalList.contact(levGood);
+        }else{
+          var newgd = normalList;
+        }
+        console.log(newgd)
+        for (var i = 0; i<newgd.length;i++){
+          console.log(newgd[i].unitPrice)
+          if (newgd[i].purchaseType==6){
+            suPrice = Number(suPrice);
+          }else{
+            suPrice = Number(suPrice) + Number(newgd[i].gradePrice)
+          }
+        }
+        console.log('suPrice' + suPrice)
+        this.setData({
+          suPrice: suPrice //有会员消费限制时的总价、
+        })
+      
     }
     console.log("userCardPayWay=====>" + this.data.userCardPayWay + "limitBalance=========> " + this.data.limitBalance)
   },
   // 确定支付
   confirmPay: function () {
+    let _this = this
     var userCardPayWay = this.data.userCardPayWay;
     var presaleId = this.data.presaleId;
     var purchaseName = this.data.scPresaleInfoList[0].purchaseName;
     var accountInfo = this.data.accountInfo[0];
-    var discountedPrice = Number(this.data.actualPay) - Number(this.data.newPrice);
+    var discountedPrice = 0;//整单优惠
     // 0 会员卡余额支付
     if (userCardPayWay == 0) {
       console.log("会员卡余额支付=======================")
@@ -729,7 +853,7 @@ Page({
           "presaleId": this.data.presaleId, //订单id
           "memberId": this.data.accountInfo[0].accountId, //会员id
           "orderPay": this.data.newPrice, //支付金额
-          "discountedPrice": discountedPrice, //优惠金额
+          "discountedPrice": discountedPrice.toFixed(2), //优惠金额
           "operatorId": 0, //操作员id
           "operatorName": "小程序", //操作员名称
           "memberPay": 0,//是否会员余额结账  0 会员余额 2 现金会员
@@ -740,6 +864,10 @@ Page({
         }).then((res) => {
           console.log(res.data.code)
           if (res.data.code == 1) {
+            // 支付成功 发socket消息
+           
+           
+            this.closePaycard();
             this.sendMessage();
             this.setData({
               flagOrder: false,
@@ -747,8 +875,11 @@ Page({
               payway: "会员卡",
               paywayshow: true
             })
+            wx.sendSocketMessage({
+              data: _this.data.presaleId + ',over'
+            })
            // this.getusercard();
-            this.closePaycard();
+            
           } else {
             wx.showToast({
               title: res.data.msg,
@@ -763,7 +894,7 @@ Page({
     // 1 微信支付
     else if (userCardPayWay == 1) {
       console.log("微信支付=======================" + this.data.actualPay)
-      // debugger;
+    
       this.memberWecheat();
      
     }

@@ -30,10 +30,10 @@ Component({
         title: '加载中',
       })
       var data = {
-        sStartpage: 0,
+        pageNo: 1,
         shopId: wx.getStorageSync('shop').id,
-        merchantId: wx.getStorageSync('shop').merchantId,
-        sPagerows: 10
+        userId: wx.getStorageSync('scSysUser').id,
+        pageSize: 10
       };
       this.setData({
         datas: data
@@ -41,12 +41,12 @@ Component({
       this.getData(data);
     },
     onReachBottom: function () {
-      var totalPage = Math.ceil(this.data.total / 10-1);
+      var totalPage = Math.ceil(this.data.total / 10);
       wx.showLoading({
         title: '加载中',
       })
-      this.data.datas.sStartpage += 1;
-      if (this.data.datas.sStartpage > totalPage) {
+      this.data.datas.pageNo += 1;
+      if (this.data.datas.pageNo > totalPage) {
         wx.showToast({
           title: '已经到底了',
           icon: 'none'

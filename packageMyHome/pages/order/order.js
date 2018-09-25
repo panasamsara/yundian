@@ -13,7 +13,7 @@ Page({
     goodlist: [], //"orderStatus" 订单状态（待发货0，配送中1，已收货2， 配送失败3, 取消4，异常订单5）
     length: 0,
     customerId: '',
-    shopId: '',
+    shopId: '', 
     userCode: ''
   },
   onLoad: function (options) {
@@ -74,7 +74,8 @@ Page({
   },
   onPullDownRefresh: function () {//下拉刷新
     this.setData({
-      list: []
+      list: [],
+      currentPage: 1
     })
     this.getData();
     wx.stopPullDownRefresh();

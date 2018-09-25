@@ -98,7 +98,7 @@
     </view>
 
   
-  <navigator url='/packageIndex/pages/lesson/lesson'>
+  <navigator wx:if="{{shopInformation.masterSetupType == 1}}" url='/packageIndex/pages/lesson/lesson'>
     <image mode='aspectFit' class='banner-lesson' src='./img/zxkt_ydsy_rk@2x.png'></image>
   </navigator>
 

@@ -120,8 +120,9 @@ Page({
           var totalCard1 = totalCard.concat(res.data.data.card);
           this.setData({ getCardByUser: totalCard1 });
         } else if (data.card.length == 0 && data.package.length != 0) {
+          console.log(111111111111)
           var totalCard1 = totalCard.concat(res.data.data.package);
-          this.setData({ getCardByUser: totalCard });
+          this.setData({ getCardByUser: totalCard1 });
         } else if (data.card.length != 0 && data.package.length != 0) {
           var totalCard1 = totalCard.concat(res.data.data.card);
           var totalCardTotal = totalCard1.concat(res.data.data.package)

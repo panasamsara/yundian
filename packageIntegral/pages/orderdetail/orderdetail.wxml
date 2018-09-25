@@ -8,7 +8,7 @@
   <image src='images/bgmall.png' id='bgimg'></image>
   <view id='orderInfo'>
     <view id='orderInfoBox'>
-      <view id='deliveryBox' wx:if="{{orderInfo.orderStatusVo==3}}">
+      <view id='deliveryBox' wx:if="{{orderInfo.orderStatusVo==3||orderInfo.orderStatusVo==4||orderInfo.orderStatusVo==10}}">
         <view id='company'>
           <image src='images/express.png' id='deliveryIcon'></image>
           <text>快递公司： {{data.orderInfo.extend1}}</text>
@@ -25,14 +25,16 @@
       </view>
     </view> 
     <view id='timeBox'>
-      <text id='title'>待收货</text>
+      <text class='titles' wx:if="{{orderInfo.orderStatusVo==3}}">待收货</text>
+      <text class='titles' wx:if="{{orderInfo.orderStatusVo==2}}">待发货</text>
+      <text class='titles' wx:if="{{orderInfo.orderStatusVo==4}}">待评价</text>
+      <text class='titles' wx:if="{{orderInfo.orderStatusVo==10}}">已评论</text>
       <view id='order'>订单编号：<text>{{data.orderInfo.orderNo}}</text></view>
       <view id='time'>下单时间：<text>{{data.orderInfo.createTime}}</text></view>
     </view>
-    <view id='storeBox' bindtap='enterShop' data-id='{{data.shopInfo.id}}'>
+    <view id='storeBox' data-id='{{data.shopInfo.id}}'>
       <image src='images/shopDefault.png' id='shopIcon'></image>
       <text id='storeName'>{{data.shopInfo.shopName}}</text>
-      <image src='images/yundian_spxq_gengduo.png' id='enterShop'></image>
     </view>
     <view class='goodsBox' wx:for="{{data.orderInfo.orderItemList}}" wx:key="index"> 
       <view class='goodsImg'><image src='{{item.pictureUrl}}'></image></view>

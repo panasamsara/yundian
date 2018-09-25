@@ -38,9 +38,9 @@
     <text class='left'>失效卡</text>
     <image class="right" src="../images/right_icon.png"></image>
   </view>
-  <view class='myka' wx:if="{{getCardByUser.length!=0}}">
+  <view class='myka'>
     <view class='left {{activeIndex==0?"active":""}}' bindtap='switchover' data-index="0">
-      我的卡项({{getCardByUser.length}})
+      我的卡项({{getCardByUser.length||0}})
     </view>
     <view class='left {{activeIndex==1?"active":""}}' bindtap='switchover' data-index="1">
       留店商品({{leaveGoods.total}})
@@ -75,7 +75,7 @@
         <view>
           <text class='left font28 color0036' wx:if="{{item.serviceType==1}}">{{item.totalNum}}次</text>
           <text class='left font28 color0036' wx:if="{{item.serviceType==2}}">{{item.packNumber}}个月</text>
-          <text class='right colyor0036 font28' wx:if="{{item.serviceType==1}}">{{item.totalNum-item.consumeNum}}次</text>
+          <text class='right color0036 font28' wx:if="{{item.serviceType==1}}">{{item.totalNum-item.consumeNum}}次</text>
            <text class='right color0036 font28' wx:if="{{item.serviceType==2}}">{{item.remainNum}}</text>
         </view>  
       </view>

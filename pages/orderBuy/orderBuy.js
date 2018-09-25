@@ -133,20 +133,6 @@ Page({
       ispay: ispay
     })
 
-    // if (arr.length > 0) {
-    //   this.setData({
-    //     notInCityPrice: arr.notInCityPrice,
-    //     inCityPrice: arr.inCityPrice,
-    //     inCityPriceDetails: arr.inCityPriceDetails
-    //   })
-    // } else {
-    //   this.setData({
-    //     notInCityPrice: '',
-    //     inCityPrice: '',
-    //     inCityPriceDetails: ''
-    //   })
-    // }
-    
 
     this.setData({
       totalMoney: options.totalMoney,
@@ -394,6 +380,111 @@ Page({
             }
           }
 
+        }else{
+          if (options.isSend) {
+            if (options.isSend == 0) {
+              if (isSer == 0) { //普通商品
+                this.setData({
+                  array: ['快递配送', '自提'],
+                  isShop: 0,//0开通店内下单 1未开通
+                  index: 0,
+                  isService: 0, //0只有商品没有服务 1有服务
+                  objectArray: [
+                    {
+                      id: 0,
+                      name: '快递配送'
+                    },
+                    {
+                      id: 2,
+                      name: '自提'
+                    }
+                  ]
+                })
+              } else {
+                this.setData({
+                  isSend: 2,//0-快递  1-店内下单 2-自提
+                  array: ['自提'],
+                  isShop: 0,//0开通店内下单 1未开通
+                  isService: 1, //0只有商品没有服务 1有服务
+                  index: 0,
+                  objectArray: [
+                    {
+                      id: 2,
+                      name: '自提'
+                    }
+                  ]
+                })
+              }
+            } else {
+              if (isSer == 0) { //普通商品
+                this.setData({
+                  array: ['快递配送', '自提'],
+                  index: 1,
+                  isShop: 0,//0开通店内下单 1未开通
+                  isService: 0, //0只有商品没有服务 1有服务
+                  objectArray: [
+                    {
+                      id: 0,
+                      name: '快递配送'
+                    },
+                    {
+                      id: 2,
+                      name: '自提'
+                    }
+                  ]
+                })
+              } else {
+                this.setData({
+                  isSend: 2,//0-快递  1-店内下单 2-自提
+                  array: ['自提'],
+                  isShop: 0,//0开通店内下单 1未开通
+                  isService: 1, //0只有商品没有服务 1有服务
+                  index: 0,
+                  objectArray: [
+                    {
+                      id: 2,
+                      name: '自提'
+                    }
+                  ]
+                })
+              }
+            }
+          } else {
+            console.log(isSer)
+            if (isSer == 0) { //普通商品
+              console.log("普通商品")
+              this.setData({
+                array: ['快递配送', '自提'],
+                isShop: 0,//0开通店内下单 1未开通
+                isService: 0, //0只有商品没有服务 1有服务
+                objectArray: [
+                  {
+                    id: 0,
+                    name: '快递配送'
+                  },
+                  {
+                    id: 2,
+                    name: '自提'
+                  }
+                ]
+              })
+            } else {
+              console.log("非普通商品")
+              this.setData({
+                isSend: 2,//0-快递  1-店内下单 2-自提
+                array: ['自提'],
+                isShop: 0,//0开通店内下单 1未开通
+                isService: 1, //0只有商品没有服务 1有服务
+                index: 0,
+                objectArray: [
+                  {
+                    id: 2,
+                    name: '自提'
+                  }
+                ]
+              })
+            }
+          }
         }
 
       }
@@ -583,7 +674,7 @@ Page({
             bigmon = Number(mony[i]) + Number(bigmon)
           }
         } else {
-          var bigmon = Number(mony)
+          var bigmon = mony[0]
         }
 
         console.log(bigmon)

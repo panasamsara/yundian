@@ -7,8 +7,8 @@
     <scroll-view scroll-y style="height: {{goodsH}}px;"  scroll-with-animation="{{animation}}">
       <view wx:for="{{shopCategory}}" wx:key='index' id="cat_{{index}}_{{item.categoryId}}_{{item.type}}" class="menu-item {{(catHighLightIndex == index) ? 'current':''}}" data-name="{{item.categoryName}}" bindtap="catClickFn">{{item.categoryName}}</view>
     </scroll-view>
-    <view wx:if="{{isactive==0}}" class="gift" bindtap="showPurchase">留店商品</view>
-    <view wx:elif="{{isactive==1}}" class="gift gifton" bindtap="showPurchase">留店商品</view>
+    <!-- <view wx:if="{{isactive==0}}" class="gift" bindtap="showPurchase">留店商品</view>
+    <view wx:elif="{{isactive==1}}" class="gift gifton" bindtap="showPurchase">留店商品</view> -->
     </view>
 
     <!--右侧产品列表-->
@@ -168,7 +168,10 @@
 
               <view>
                 <view class="food" wx:for="{{cartGoodsList}}" wx:for-item="good" wx:key='index' >
-                  <view class="name">{{good.goodsName}} <text class='liudian-tip' wx:if='{{good.accountRecordId}}'> （留店商品）</text></view>
+                  <view class="name">{{good.goodsName}}
+                    <text class='liudian-tip' wx:if='{{good.stockName}}'> （{{good.stockName}}）</text> 
+                    <!-- <text class='liudian-tip' wx:if='{{good.accountRecordId}}'> （留店商品）</text> -->
+                  </view>
                   <view class="price">
                     <view> <text class='list-yangjiao'>￥</text>{{good.stockPrice? good.stockPrice : good.goodsPrice}}</view>
                   </view>
@@ -253,10 +256,10 @@
           <image src="../../../images/fenlei_hui.png"></image>
           <text class="order-txt">店铺分类</text>
         </navigator>
-        <navigator url="../../../pages/myHome/shopOrder/shopOrder" hover-class="navigator-hover">
+        <!-- <navigator url="../../../pages/myHome/shopOrder/shopOrder" hover-class="navigator-hover">
           <image src="../../../images/fenlei_hui.png"></image>
           <text class="order-txt">店内订单</text>
-        </navigator>
+        </navigator> -->
       </view>
     </view>
   </view>

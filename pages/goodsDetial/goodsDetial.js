@@ -29,6 +29,11 @@ Page({
     // app.util.getShop(user.id, options.shopId).then((res) => {
     //   wx.setStorageSync('shop', res.data.data.shopInfo);
     // })
+    if(options.share){
+      this.setData({
+        share:share
+      })
+    }
     if (options && options.q) {
       var uri = decodeURIComponent(options.q)
       var p = util.getParams(uri)
@@ -187,6 +192,12 @@ Page({
             showCancel: false,
             success: function (res) {//失效下架返回
               if (res.confirm) {
+                if(this.data.share=='share'){
+                  wx.switchTab({
+                    url: '../index/index?shopId=' + this.data.shopId
+                  })
+                  return
+                }
                 wx.navigateBack();
               }
             }
@@ -616,6 +627,7 @@ Page({
     var option=e.currentTarget.id,
         number = this.data.number,
         secondKillInfo = this.data.data.secondKillInfo[this.data.cur],
+        goodsType=this.data.data.goodsType,
         num;
     if(option=='add'){//加数量
       number += 1;
@@ -627,7 +639,7 @@ Page({
         })
         return
       } 
-      if (this.data.status == 2 && this.data.activityStatus==1 && (secondKillInfo.goodsPurchasingCount > 0 && number > secondKillInfo.goodsPurchasingCount)) {//秒杀限购数量
+      if (this.data.status == 2 && this.data.activityStatus == 1 && ((goodsType == 0 && secondKillInfo.goodsPurchasingCount > 0 && number > secondKillInfo.goodsPurchasingCount)) || (goodsType != 0 && secondKillInfo.salesCount >0 && number > secondKillInfo.salesCount)) {//秒杀限购数量
         wx.showToast({
           title: '已超过限购数量',
           icon: 'none'
@@ -1215,7 +1227,7 @@ Page({
         title: this.data.data.goodsName,
         desc: this.data.goodsName,
         imageUrl: this.data.groupPath,
-        path: '/pages/goodsDetial/goodsDetial?shopId=' + this.data.shopId + '&goodsId=' + this.data.goodsId,
+        path: '/pages/goodsDetial/goodsDetial?shopId=' + this.data.shopId + '&goodsId=' + this.data.goodsId + '&share=share',
         success: function () {
 
         }

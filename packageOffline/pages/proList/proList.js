@@ -71,7 +71,7 @@ Page({
     isBuy:1,//是否下单商品已经结算完毕 0 未结算 1已结算
     presaleId:'',
     memberid:'',
-    subaccountid:'',
+    subaccountid:'',  
     discount:'',
     shopName:'',
     buyMoney:0,
@@ -88,7 +88,8 @@ Page({
     isactive: 0,
     purchaseMap: '',//留店商品数据
     iftab: true,
-    payStatus:0
+    payStatus:0,
+    orderStatus: null
   },
   onReady: function () {
     // Do something when page ready.
@@ -102,7 +103,7 @@ Page({
       // mechine: mechine,
       systemInfo: systemInfo,
       goodsH: systemInfo.windowHeight - 118,
-      goodsHs: systemInfo.windowHeight -118,
+      goodsHs: systemInfo.windowHeight -118,  
       goodsHL: systemInfo.windowHeight - 48,
       pgoodsHL: systemInfo.windowHeight - 100
     })
@@ -119,6 +120,7 @@ Page({
         shopId: shopId,
         facilityId: facilityId
       })
+
       // 之前已经点过餐，提交过订单，又重新扫码 跳orderDetail
       util.checkWxLogin('offline').then((loginRes) => {
  
@@ -130,9 +132,13 @@ Page({
           facilityId: wx.getStorageSync('facilityId')
           
         }).then((res) => {
+          if(res.data.code == 1){
+            wx.setStorageSync('orderNo', res.data.data.id)
+          }
           if (res.data.data != null && res.data.data.orderStatus == 1) {
             _this.setData({
-              presaleId: res.data.data.id
+              presaleId: res.data.data.id,
+              payStatus: res.data.data.payStatus
             })
             setTimeout(function () {
               wx.navigateTo({
@@ -156,15 +162,25 @@ Page({
   onShow: function () {
     var _this = this
     // 之前已经点过餐，提交过订单，计算数量
-    util.checkWxLogin('offline').then((loginRes) => {
+    // util.checkWxLogin('offline').then((loginRes) => {
       app.util.reqAsync('foodBoot/findFoodPresale', {
-        shopId: wx.getStorageSync('shop').id,
+        // shopId: wx.getStorageSync('shop').id,
         // userId: loginRes.id,
         // presaleId: "", //订单id
         facilityId: wx.getStorageSync('facilityId')
       }).then((res) => {
         if (res.data.data != null && res.data.data.orderStatus == 1) {
           console.log('已有订单----------------------', res.data.data)
+          if (res.data.data.orderStatus == 1){
+            _this.setData({
+              orderStatus: 1,
+              payStatus: res.data.data.payStatus
+            })
+          } else if (res.data.data.orderStatus == 3){
+            _this.setData({
+              orderStatus: 3
+            })
+          }
           let dingDanTotalPay = 0
           let thisList = res.data.data.scPresaleInfos
           for (let i = 0; i < thisList.length; i++) {
@@ -182,7 +198,7 @@ Page({
           })
         }
       })
-    })
+    // })
 
     // 获取购物车
     // setTimeout(function(){
@@ -201,6 +217,7 @@ Page({
       discount: orderInfo.discount || "",
     })
     util.checkWxLogin('offline').then((loginRes) => {
+    
       _this.setData({
         userId: loginRes.id,
         userName: loginRes.username,
@@ -303,7 +320,8 @@ Page({
       }
       wx.removeStorageSync('shopId');
     })
-/*********************************socket消息 */
+  /*********************************socket消息 */
+    
     //消息监听
     wx.onSocketMessage(function (res) {
       //if (res && res.data.indexOf("~") != -1){
@@ -311,6 +329,20 @@ Page({
      
       if (msg && msg.length > 3 && msg.substring(msg.length - 3) == '_op') {
         msg = msg.substring(0, msg.length - 3);
+        let goodMap = _this.data.goodMap
+        let stockMap = _this.data.stockMap
+        for (let stockIndex in stockMap) {
+          if (stockMap[stockIndex].stockId) {
+            var stockId = stockMap[stockIndex].stockId
+          } else {
+            var stockId = stockMap[stockIndex].goodsId
+          }
+          stockMap[stockId].number = 0
+        }
+        for (let goodIndex in goodMap) {
+          let goodsId = goodMap[goodIndex].id
+          goodMap[goodsId].number = 0
+        }
         //获取购物车
         _this.shopCartList()
 
@@ -712,7 +744,7 @@ Page({
           console.log("删除留店2")
           this.deletePurchaseGoods(shop.id, stockId, _id, purchaseName, purchaseType, accountRecordId);    
         }else{
-          this.deleteGoods( shop.id, stockId, stockMap[stockId].goodsId)          
+          this.deleteGoods( shop.id, stockId, stockMap[stockId].goodsId, 1, true)          
         }
         // goodMap[stockMap[stockId].goodsId].number = 0
         // this.setData({
@@ -736,7 +768,7 @@ Page({
       let new_number = stockMap[_id].number - 1
       if (new_number <= 0) {
         console.log(888889)
-        this.deleteGoods(shop.id, null, stockMap[_id].goodsId)
+        this.deleteGoods(shop.id, null, stockMap[_id].goodsId, 1 , true)
         // goodMap[stockMap[_id].goodsId].number = 0
         // this.setData({
         //   goodMap: goodMap
@@ -1120,7 +1152,7 @@ Page({
     })
   },
   //云店接口，移除购物车商品
-  deleteGoods: function ( shopId, stockId, goodsId, purchaseType, isClear=false) {
+  deleteGoods: function ( shopId, stockId, goodsId, purchaseType=1, isClear=false) {
     var purchaseType = purchaseType;
     util.reqAsync('shop/delShopCartGoodsByUidAndGid', {
       customerId: wx.getStorageSync('hostId'),
@@ -1151,6 +1183,7 @@ Page({
           stockMap[goodsId].number = 0
           goodsName = stockMap[goodsId].goodsName
         }
+        
       }
 
 
@@ -1158,14 +1191,14 @@ Page({
         goodMap: goodMap
       })
       /** 清空购物车时，不发送socket消息*/
-      if (!isClear){
+      // if (!isClear){
         //移除商品后, 通知其他人
         var message = "从购物车中移除了" + goodsName + "_op";
         //发送通知
         wx.sendSocketMessage({
           data: message
         })
-      }
+      // }
      /** 清空购物车时，不发送socket消息*/
       // 获取购物车
       this.shopCartList()
@@ -1352,6 +1385,10 @@ Page({
 
       // if (this.data.isBuy == 1) {  //是否下单商品已经结算完毕 0 未结算 1已结算
         // console.log("已结算")
+        
+      if (this.data.orderStatus == 1){
+        that.changeOrdr(); // 订单未结算
+      } else { // 订单已结算
         // 开台（设备占用）
         util.reqAsync('foodBoot/updateDeviceOccupy', {
           deviceId: wx.getStorageSync('facilityId'),
@@ -1362,14 +1399,15 @@ Page({
           startTime: util.formatTime(new Date()),
 
         }).then((res) => {
-          if(res.data.code == 9){
-            that.changeOrdr();
-          }else{
-            
+          if (res.data.code == 1) {
             that.oneBuy()
+          } else {
+
           }
-          console.lgo(res)
+
         })
+      }
+        
         // this.oneBuy();
       // }else{ //修改订单
       //   this.changeOrdr();
@@ -1468,7 +1506,8 @@ Page({
       // facilityId: this.data.facilityId || wx.getStorageSync('facilityId'),
       // discount: orderInfo.discount || this.data.discount || 100,
       id: wx.getStorageSync('orderNo'),
-      operatorId: 0,
+      operatorId:0,
+      //operatorId: wx.getStorageSync('hostId'),
       // memberId: this.data.memberId, //memberId
       // subaccountId: this.data.subaccountId,
       // userId: this.data.userId,
@@ -1506,7 +1545,7 @@ Page({
         
         console.log(data)
         wx.sendSocketMessage({
-          data: data.data.data.orderId + ',confirm order'
+          data: wx.getStorageSync('orderNo') + ',confirm order'
         })
  
         
@@ -1620,7 +1659,8 @@ Page({
         scPrelases: goodsList,
         orderFrom: 4, //订单来源：0系统后台，1平板，2智大师,3云店app，4小程序
         manNum: 1, // 人数
-        operatorId: wx.getStorageSync('scSysUser').id, //操作人
+        operatorId: 0, //操作人
+        userId: wx.getStorageSync('scSysUser').id,
         operator: '小程序',
         facilityId: this.data.facilityId || wx.getStorageSync('facilityId'),
         merchantId: merchantId,
@@ -2353,7 +2393,12 @@ Page({
   },
   // 下拉重新获取留店商品
   onPullDownRefresh() {
-    this.getpurchase(wx.getStorageSync('shop'))
+    // this.getpurchase(wx.getStorageSync('shop'))
+    this.setData({
+      catHighLightIndex: 0 // 左侧类别
+    })
+    this.onShow()
+    wx.stopPullDownRefresh();
   },
 })
 

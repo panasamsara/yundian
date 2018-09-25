@@ -1,0 +1,53 @@
+/* pages/groupBuy/groupBuy.wxss */
+@import "../secKill/secKill.wxss";
+
+.groupBuy .group{
+  height: 45rpx;
+  line-height: 41rpx;
+  text-align: center;
+  border: solid 1rpx #fb452c;
+  color: #fb452c;
+  font-size: 22rpx;
+  border-radius: 6rpx;
+  box-sizing: border-box;
+  padding: 0 10rpx;
+}
+
+.groupBuy .infoBox{
+  display: flex;
+  flex-direction: row;
+}
+
+.groupBuy .price{
+  display: flex;
+  flex-direction: column;
+  height: 160rpx;
+  width: 300rpx;
+  line-height: 45rpx;
+}
+
+.groupBuy .priceBox{
+  display: flex;
+  width: 300rpx;
+  flex-direction: row;
+  margin-top: 70rpx;
+}
+
+.groupBuy .oldPrice{
+  width: 300rpx;
+  text-decoration: none;
+}
+
+.groupBuy .buyBox{
+  width:130rpx; 
+  height: 160rpx;
+}
+.groupBuy .buy{
+  margin-top: 100rpx;
+}
+
+.groupBuy navigator.listBox{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}

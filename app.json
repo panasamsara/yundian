@@ -7,7 +7,6 @@
     "pages/store/store",
     "pages/shoppingCart/shoppingCart",
     "pages/proList/proList",
-    "pages/car/car",
     "pages/myHome/myHome",
     "pages/myHome/shopOrder/shopOrder",
     "pages/myHome/shopOrder/orderDetail/orderDetail",
@@ -32,9 +31,7 @@
     "pages/store/fans/fans",
     "pages/askDetail/askDetail",
     "pages/reg/reg",
-    "pages/secKill/secKill",
     "pages/secKillBuy/secKillBuy",
-    "pages/groupBuy/groupBuy",
     "pages/give/give",
     "pages/spelldetails/spelldetails",
     "pages/myHome/downLoadIos/downLoadIos",
@@ -65,15 +62,20 @@
         "pages/lessonDetail/lessonDetail",
         "pages/lessonHistory/lessonHistory",
         "pages/lessonOrder/lessonOrder",
-        "pages/fansSearch/fansSearch"
+        "pages/fansSearch/fansSearch",
+        "pages/fansActivity/fansActivity",
+        "pages/fly/fly",
+        "pages/secKill/secKill",
+        "pages/groupBuy/groupBuy"
       ]
     },
     {
       "root": "packageOffline",
       "pages": [
         "pages/proList/proList",
-        "pages/goods/goods",
-        "pages/orderDetail/orderDetail"
+        "pages/orderDetail/orderDetail",
+        "pages/endDetails/endDetails",
+        "pages/goods/goods"
       ]
     },
     {
@@ -152,7 +154,7 @@
   },
   "plugins": {
     "wxparserPlugin": {
-      "version": "0.1.0",
+      "version": "0.2.1",
       "provider": "wx9d4d4ffa781ff3ac"
     }
   }

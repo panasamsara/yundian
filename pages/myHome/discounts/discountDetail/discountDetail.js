@@ -34,7 +34,7 @@ Page({
       withShareTicket: true,
     })
  
-    var userId=wx.getStorageSync('scSysUser').id;
+
     console.log('options',options)
     if (options && options.list) { 
       
@@ -43,14 +43,14 @@ Page({
         couponLogId: options.couponLogId,
         couponType: options.couponType,
         canLimitGoods: options.canLimitGoods,
-        userId: userId,
+        // userId: userId,
         share: options.share
       })
     }else{
       this.setData({
         couponLogId: options.couponLogId,
         couponType: options.couponType,
-        userId: userId,
+        // userId: userId,
         share: options.share
       })
     }
@@ -79,8 +79,12 @@ Page({
       this.setData({
         shareFlag: 1
       })
-
-    } 
+    } else if (options.share==0){
+      var userId = wx.getStorageSync('scSysUser').id;
+      this.setData({
+        userId: userId
+      })
+    }
 
 
   },
@@ -178,12 +182,12 @@ Page({
     }else{
       person = this.data.getUserId;
     }
-    
+
     var dataDatail={
       userId: person,
       couponLogId: this.data.couponLogId
     }
-    console.log("dataDatail", dataDatail);
+    console.log("dataDatail------------", dataDatail);
     // 判断新客礼包和满减的礼包不同
     if (this.data.couponType == "06") {
       app.util.reqAsync('coupon/selectScCouponDetail', dataDatail).then((res) => {
@@ -194,9 +198,8 @@ Page({
           var descArr = data.promGoodsDesc.split("|&");
           _this.setData({ descArr: descArr});
        }else{
-          // var couponGoodsName = data.couponGoodsName.split(",");
-          // console.log("couponGoodsName", data.couponGoodsName);
-          this.setData({ quanDetail: data.couponGoodsName,})
+          var couponGoodsName = data.couponGoodsName.split("|&");
+          this.setData({ quanDetail: couponGoodsName})
        }
         _this.setData({
           discountsNew: data,
@@ -206,6 +209,7 @@ Page({
           promGoodsTypeShare: data.promGoodsType,
           couponId: data.couponId
         });
+        console.log("discountsNew-------------------------------", this.data.discountsNew)
         _this.setData({
           storeUrl:data.couponCode
         })
@@ -219,7 +223,7 @@ Page({
       }).catch((err) => {
         wx.hideLoading();
         wx.showToast({
-          title: '',
+          title: '操作失败,请稍后再试',
           icon: 'none'
         })
       })
@@ -260,7 +264,7 @@ Page({
       }).catch((err) => {
         wx.hideLoading();
         wx.showToast({
-          title: '',
+          title: '操作失败,请稍后再试',
           icon: 'none'
         })
       })
@@ -345,14 +349,14 @@ Page({
         imageUrl: _this.data.temp,
         success: function (res) {
           app.util.reqAsync("coupon/shareCoupon", {
-            couponId: _this.data.id,
+            couponId: _this.data.couponId,
             couponLogId: _this.data.couponLogId,
             userId: _this.data.userId,
           }).then((res) => {
           }).catch((err) => {
             wx.hideLoading();
             wx.showToast({
-              title: '',
+              title: '操作失败,请稍后再试',
               icon: 'none'
             })
           })
@@ -496,7 +500,7 @@ Page({
     }).catch((err) => {
       wx.hideLoading();
       wx.showToast({
-        title: '',
+        title: '操作失败,请稍后再试',
         icon: 'none'
       })
     })

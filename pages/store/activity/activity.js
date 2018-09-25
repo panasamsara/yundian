@@ -84,7 +84,7 @@ Page({
       })
     } else {
       wx.navigateTo({
-        url: '../posterActivity/posterActivity?shopId=' + shop.id + '&goodsId=' + goodsId + '&customerId=' + user.id,
+        url: '../posterActivity/posterActivity?shopId=' + shop.id + '&goodsId=' + goodsId + '&customerId=' + user.id + '&actionId=' + actionId + '&signType=' + signType,
         success: function (res) {
           // success
         }

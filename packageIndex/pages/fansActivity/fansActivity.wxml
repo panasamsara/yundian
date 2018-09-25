@@ -1,0 +1,44 @@
+<!--packageIndex/pages/fansActivity/fansActivity.wxml-->
+<view class='container' id='fansActivity'>
+  <view id='head'>
+    <image src='{{data.detailPicUrl}}' id='banner'></image>
+    <view id='shade'></view>
+    <view id='title'>
+      <view id='activityName'>{{data.name}}</view>
+      <view id='box'>
+        <text id='endTime'>{{data.detailEndTime}}</text>
+        <text id='dynamicCount'><text>{{data.videoAlbumList.length}}</text>条活动精彩</text>
+      </view>
+    </view>
+  </view>
+  <view id='info'>
+    <view id='fansInfo'>
+      <view class='infoBox'>
+        <image src='{{data.fansTeamLogo}}' id='logo'></image>
+        <view id='nameBox'>
+          <text id='fansName'>{{data.fansTeamName}}</text>
+          <text id='orgName'>{{data.orgName}}</text>
+        </view>
+      </view>
+      <view id='joinNum'>参与人数<text id='num'>{{data.detailMaxTotal}}人</text></view>
+    </view>
+    <view id='activityInfo'>
+      <view>出行信息</view>
+      <view class='infoBox'>
+        <image src='../images/fentuandui_bg.png' id='bgImg'></image>
+        <view>
+          <image src='../images/shijian@2x.png' id='timeIcon'></image>
+          <text>开始时间： {{data.detailBeginTime}}</text>
+        </view>
+        <view id='placeBox'>
+          <image src='../images/didian@2x.png' id='addressIcon'></image>
+          <text>活动地点： {{data.place}}</text>
+        </view>
+      </view>
+    </view>
+    <view id='activityContent'>
+      <text>活动详情</text>
+      <rich-text nodes="{{data.detail}}"></rich-text>
+    </view>
+  </view>
+</view>

@@ -277,7 +277,7 @@
     <image src='{{data.pictureUrl}}' ></image>
     <view class='topBox'>
       <text class='price'>¥{{total}}</text>
-      <text class='count' wx:if="{{data.goodsType==0}}">库存 {{balance}}</text>
+      <text class='count'>库存 {{balance}}</text>
     </view>
     <scroll-view class='size clearfix' scroll-y="true" catchtouchmove='preventTouchMove'>
       <block wx:for='{{data.scShopGoodsStockList}}' wx:key='index' wx:if="{{status==1}}">

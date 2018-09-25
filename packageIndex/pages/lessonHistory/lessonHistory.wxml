@@ -1,14 +1,17 @@
 <block wx:for="{{arr}}" wx:key="{{index}}">
-  <view class='lesson-time'>今天</view>
-  <view class='lesson-content' data-id="" bindtap='toDetail'>
+  <view class='lesson-time' wx:if="{{item.timeAgo}}">{{item.timeAgo}}</view>
+  <view class='lesson-content' data-id="{{item.id}}" bindtap='toDetail'>
     <view class='cover-box'>
-      <image class='cover' mode='aspectFill' src='http://tsnrhapp.oss-cn-hangzhou.aliyuncs.com/itemreport/default/morenfuwuka_pic.jpg'></image>
-      <image class='subscripts' mode='aspectFit' src='../../img/icon_zxkt_st@2x.png'></image>
-      <text class='time'>13:14</text>
+      <image class='cover' mode='aspectFill' src='{{item.cover}}'></image>
+      <image wx:if="{{item.resourceType == 1}}" class='subscripts' mode='aspectFit' src='../../img/icon_zxkt_bf@2x.png'></image>
+      <image wx:if="{{item.resourceType == 2}}" class='subscripts' mode='aspectFit' src='../../img/icon_zxkt_st@2x.png'></image>
+      <text class='time'>{{item.duration}}</text>
     </view>
     <view class='text-box'>
-      <view class='title'>做店就是这么简单！</view>
-      <view class='teacher'>林老妮</view>
+      <view class='title'>{{item.name}}</view>
+      <view class='teacher'>{{item.speakerName}}</view>
     </view>
   </view>
 </block>
+<!-- <button loading class='loading' wx:if="{{arr.length != total}}"> 加载中 · · ·</button> -->
+<image mode='aspectFit' class='bitmap' src='../../img/zw_myxxls@2x.png' wx:if="{{arr.length == 0}}"></image>

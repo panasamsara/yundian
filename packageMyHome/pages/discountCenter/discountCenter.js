@@ -1,17 +1,28 @@
 const app = getApp();
 Page({
-
   data: {
     shopId:"",
     couponType1:[],
     couponType2:[],
     couponType3:[],
     getdiscount:"",
-    flag:""
+    flag:"",
+    loginType:0
   },
   onLoad: function (options) {
-    var shopId = wx.getStorageSync('shop').id
-    var userId=wx.getStorageSync('scSysUser').id
+    console.log(options)
+    var shopId, userId= '';
+    shopId = wx.getStorageSync('shopId')
+    if (options.shopId){
+      shopId = options.shopId
+      wx.setStorageSync('shopId', options.shopId)
+    } else if (!shopId){
+      shopId = wx.getStorageSync('shop').id
+      wx.setStorageSync('shopId', options.shopId)
+    }
+    if (wx.getStorageSync('scSysUser').id){
+       userId = wx.getStorageSync('scSysUser').id
+    }
     this.setData({ shopId: shopId, userId: userId})
   },
   onReady: function () {
@@ -19,10 +30,43 @@ Page({
   },
 
   onShow: function () {
-    this.newGift();
-    this.discount();
+    app.util.checkWxLogin('share').then(res=>{
+      if (res.id){
+        this.setData({ userId: res.id })
+        this.newGift();
+        this.discount();
+      }else{
+        // if (wx.getStorageSync('isAuth') == 'no') {
+          this.setData({
+            loginType: 1
+          })
+        // } else if (wx.getStorageSync('isAuth') == 'yes') {
+        //   this.setData({
+        //     loginType: 1
+        //   })
+        // }
+      }
+    })
+   
   },
-
+  resmevent: function (e) {
+    if (wx.getStorageSync('scSysUser')) {
+      this.setData({
+        loginType: 0,
+        userId: wx.getStorageSync('scSysUser').id
+      })
+      this.newGift();
+      this.discount();
+    }
+  },
+  resusermevent: function (e) {
+    // debugger
+    // if (!wx.getStorageSync('scSysUser')) {
+    //   this.setData({
+    //     loginType: 1
+    //   })
+    // }
+  },
   onHide: function () {
   
   },
@@ -137,7 +181,7 @@ Page({
   },
   checkDetail:function(){
     wx.navigateTo({
-      url: '../../../pages/myHome/discounts/discountDetail/discountDetail?couponLogId=' + this.data.couponLogId + '&couponType=06' + "&share=0",
+      url: '../../../pages/myHome/discounts/discountDetail/discountDetail?couponLogId=' + this.data.couponLogId + '&couponType=06' + "&share=0"+"&shopId="+this.data.shopId,
       success: function (res) {
       }
     })

@@ -196,13 +196,13 @@ Page({
       url: '../../packageIndex/pages/articleDetail/articleDetail?articleId=' + articleId,
     })
   },
-  // skipDetail:function(e){
-  //   var detailId = e.currentTarget.dataset.detailid;
-  //   var typeId = e.currentTarget.dataset.type;
-  //   wx.navigateTo({
-  //     url: '../../packageIndex/pages/pinkGroup/pinkGroup?detailId=' + detailId + "&typeId=" + typeId,
-  //   })
-  // },
+  skipDetail:function(e){
+    var detailId = e.currentTarget.dataset.detailid;
+    var typeId = e.currentTarget.dataset.type;
+    wx.navigateTo({
+      url: '../../packageIndex/pages/fansGroup/fansGroup?detailId=' + detailId + "&typeId=" + typeId,
+    })
+  },
   phoneCall(){
     let tel = wx.getStorageSync('shop').phoneService
     if (tel != null){

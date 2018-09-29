@@ -13,7 +13,7 @@ Page({
    */
   onLoad: function (options) {
     let params={
-      id: options.id || 1084,
+      id: options.id,
       userId: wx.getStorageSync('scSysUser').id
     };
     //获取活动数据

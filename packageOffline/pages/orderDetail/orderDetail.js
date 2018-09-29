@@ -129,6 +129,24 @@ Page({
     wx.navigateBack();
   },
   buyOrder: function (e) { //结算支付
+    if (this.data.isMember == 0){
+      if (this.data.actualPay == 0 || this.data.actualPay == '0.00' || this.data.actualPay == 0.00 || this.data.actualPay == '0'){
+        wx.showToast({
+          title: "支付金额必须大于0",
+          icon: 'none'
+        })
+        return false
+      }
+    }else{
+      if (this.data.newPrice == 0 || this.data.newPrice == '0.00' || this.data.newPrice == 0.00 || this.data.newPrice == '0') {
+        wx.showToast({
+          title: "支付金额必须大于0",
+          icon: 'none'
+        })
+        return false
+      }
+    }
+
     console.log(this.data.scPresaleInfoList)
     var code = this.data.presaleId;//订单编号
     var name = this.data.scPresaleInfoList[0].purchaseName;//商品名
@@ -148,13 +166,12 @@ Page({
     }
   },
   memberWecheat: function (){
-    if (this.data.limitBalance) {
+   
      
         var orderPay = this.data.newPrice;
      
-    } else {
-      var orderPay = this.data.sumPrice;
-    }
+   
+    console.log(orderPay)
     //用会员的时候选择微信支付
     app.util.reqAsync('foodBoot/wechat/verification', {
       "shopId": this.data.shopId, //店铺id
@@ -227,9 +244,12 @@ Page({
             console.log("支付成功")
 
             // 支付成功 发socket消息
-            wx.sendSocketMessage({
-              data: code + ',over'
-            })
+            if (wx.getStorageSync('multiOrderSwitch') == 1){
+              wx.sendSocketMessage({
+                data: code + ',over'
+              })
+            }
+            
             that.setData({
               flagOrder: false,
               shadeIfshow: false
@@ -240,9 +260,12 @@ Page({
           },
           'fail': function (res) {
             // 支付成功 发socket消息
-            wx.sendSocketMessage({
-              data: code + ',over'
-            })
+            if (wx.getStorageSync('multiOrderSwitch') == 1){
+              wx.sendSocketMessage({
+                data: code + ',over'
+              })
+            }
+            
             that.getInfo()
           },
           'complete': function (res) {
@@ -875,9 +898,12 @@ Page({
               payway: "会员卡",
               paywayshow: true
             })
-            wx.sendSocketMessage({
-              data: _this.data.presaleId + ',over'
-            })
+            if (wx.getStorageSync('multiOrderSwitch') == 1){
+              wx.sendSocketMessage({
+                data: _this.data.presaleId + ',over'
+              })
+            }
+            
            // this.getusercard();
             
           } else {

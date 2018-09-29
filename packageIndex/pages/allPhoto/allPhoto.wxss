@@ -6,7 +6,7 @@ page{
   color: #666;
   padding: 24rpx 0 12rpx 24rpx;
 }
-image{
+.list image{
   margin-right: 7rpx;
   margin-top: 7rpx;
   width: 246rpx;
@@ -16,4 +16,16 @@ image{
 }
 page .image:nth-child(3){
   margin: 0rpx;
+}
+.empty image{
+  display: block;
+  width: 368rpx;
+  height: 254rpx;
+  margin: 300rpx auto 0;
+}
+.empty view{
+  font-size: 28rpx;
+  color: #999;
+  text-align: center;
+  margin-top: 20rpx;
 }

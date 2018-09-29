@@ -1,0 +1,54 @@
+<!--pages/component/component-login.wxml-->
+<view class='login' wx:if="{{loginTypeProperty!=0}}" catchtouchmove='true' >
+  <!-- <view>{{loginTypeProperty}}</view> -->
+  <view class='phoneLogin'   wx:if="{{loginTypeProperty==1&&phoneType==1}}">
+    <view class='phoneModel' >
+      <view class='phonetitle'>手机号授权 </view>
+      <view class='phoneInput'>
+        <image src='../images/sjhsq_iphone@2x.png'></image>
+        <input name="phoneNum" value='{{phoneNum}}' maxlength="11" type='number' confirm-type="done" placeholder='请输入手机号' bindinput="phoneInput"></input>
+      </view>
+      <view class='phoneInput'> 
+        <image src='../images/sjhsq_password@2x.png'></image>
+        <input name="yzCode" value='{{yzCode}}' maxlength="6" type='number' bindinput="codeInput" placeholder='请输入验证码'></input><button disabled="{{codebtn||time==0?false:true}}" class='{{time==0?"yzCode active":"yzCode"}}' bindtap='getCode'>{{time==0? msg:time+'秒后重发'}}</button>
+      </view>
+      <button  class='sureLogin' bindtap='sureLogin'>手机号授权</button>
+      <view class='center'>
+        <text class='phonetext'   bindtap='changeLogin'>微信绑定手机号授权 </text>
+        <image class='phoneimg' src='../images/sjhsq_jiantou@2x.png' bindtap='closePhonemodel'></image>
+      </view>
+    </view>
+  </view>
+  <view class='phoneLogin'  wx:if="{{loginTypeProperty==1&&phoneType==2}}">
+    <view class='phoneModel' >
+      <view class='phonetitle'>手机号授权 </view>
+      <image class='wxBg' src='../images/sjhsq_pic@3x.png'></image>
+      <!-- <view class='phoneInput'>
+        <image src='../../images/sjhsq_iphone@2x.png'></image>
+        <input name="phoneNum" value='{{phoneNum}}' maxlength="11" type='number' confirm-type="done" placeholder='请输入手机号' bindblur="phoneBlur"></input>
+      </view>
+      <view class='phoneInput'> 
+        <image src='../../images/sjhsq_password@2x.png'></image>
+        <input name="yzCode" value='{{yzCode}}' maxlength="6" type='number' bindblur="codeBlur" placeholder='请输入验证码'></input><button disabled="{{time==0?false:true}}" class='{{time==0?"yzCode active":"yzCode"}}' bindtap='getCode'>{{time==0? msg:time+'秒后重发'}}</button>
+      </view> -->
+      <button open-type="getPhoneNumber" bindgetphonenumber="wxsureLogin"  class='sureLogin' >微信绑定手机号授权</button>
+      <view class='center'>
+        <text class='phonetext'   bindtap='changeLogin'>手机号授权 </text>
+        <image class='phoneimg' src='../images/sjhsq_jiantou@2x.png' bindtap='closePhonemodel'></image>
+      </view>
+    </view>
+  </view>
+
+  <view class='phoneLogin'  wx:if="{{loginTypeProperty==2}}" bindtap='cancel'> 
+    <view class='phoneModel' catchtap="true">
+      <view class='phonetitle'>用户信息授权 </view>
+      <image class='wxBg' src='../images/sjhsq_pic@3x.png'></image>
+      <button open-type="getUserInfo" bindgetuserinfo="getUserInfo"  class='sureLogin' >用户信息授权</button>
+       <!--
+      <view class='center'>
+        <text class='phonetext'   bindtap='changeLogin'>返回微信绑定手机号注册 </text>
+        <image class='phoneimg' src='../../images/sjhsq_jiantou@2x.png' bindtap='closePhonemodel'></image>
+      </view> --> 
+    </view>
+  </view>
+</view>

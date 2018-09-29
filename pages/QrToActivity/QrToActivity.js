@@ -1,4 +1,7 @@
 // pages/QrToActivity/QrToActivity.js
+
+const app = getApp();
+
 Page({
 
   /**
@@ -13,21 +16,42 @@ Page({
    */
   onLoad: function (options) {
     if (options && options.q) {
-      var uri = decodeURIComponent(e.q)
-      var p = util.getParams(uri)
+      var uri = decodeURIComponent(options.q)
+      var p = app.util.getParams(uri)
       let activeType = p.activeType
       let shopId = p.shopId
       let goodsId = p.goodsId
       let actionId = p.actionId
       let signType = p.signType
+      let routeTo = p.routeTo
 
-      if (activeType == 0){
+      /** 参数 ：
+       *  
+       *  routeTo:
+       *  0 活动 海报 {
+       *    activeType： 0-普通活动 / 非0-九大活动
+       *  }
+       *  1 商品
+       *  2 积分
+       *  
+       */
+      if (routeTo == 0){
+        if (activeType == 0) {
+          wx.redirectTo({
+            url: "../store/activityInfo/activityInfo?shopId=" + shopId + '&goodsId=' + goodsId + '&actionId=' + actionId + '&signType=' + signType,
+          })
+        } else  {
+          wx.redirectTo({
+            url: "../store/posterActivity/posterActivity?shopId=" + shopId + '&goodsId=' + goodsId + '&actionId=' + actionId + '&signType=' + signType,
+          })
+        }
+      } else if (routeTo == 1){
         wx.redirectTo({
-          url: "../store/activityInfo/activityInfo?shopId=" + shopId + '&goodsId=' + goodsId + '&actionId=' + actionId + '&signType=' + signType,
+          url: "../goodsDetial/goodsDetial?shopId=" + shopId + '&goodsId=' + goodsId
         })
-      }else{
+      } else if (routeTo == 2) {
         wx.redirectTo({
-          url: "../store/posterActivity/posterActivity?shopId=" + shopId + '&goodsId=' + goodsId + '&actionId=' + actionId + '&signType=' + signType,
+          url: "../../packageIntegral/pages/goodsDetial/goodsDetial?shopId=" + shopId + '&goodsId=' + goodsId
         })
       }
     }

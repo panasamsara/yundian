@@ -1,4 +1,7 @@
 {
   "navigationBarTitleText": "活动详情",
-  "disableScroll": true
+  "disableScroll": true,
+  "usingComponents": {
+    "login-component": "../../../components/component-login"
+  }
 }

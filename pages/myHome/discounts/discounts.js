@@ -50,6 +50,6 @@ Page({
     var canLimitGoods = e.currentTarget.dataset.canlimitgoods;
     var couponShare = e.currentTarget.dataset.couponshare;
     console.log(couponShare);
-    wx.navigateTo({ url: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + id + "&couponLogId=" + couponLogId + "&couponType=" + couponType + "&canLimitGoods=" + canLimitGoods + "&couponShare=" + couponShare+"&share=" +"0"+"&list="+"0"});
+    wx.navigateTo({ url: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + id + "&shopId="+this.data.shopId+"&couponLogId=" + couponLogId + "&couponType=" + couponType + "&canLimitGoods=" + canLimitGoods + "&couponShare=" + couponShare+"&share=" +"0"+"&list="+"0"});
   }
 })

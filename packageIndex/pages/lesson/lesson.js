@@ -25,8 +25,10 @@ Page({
   changeSelect: function (event) {
     let i = event.currentTarget.dataset.i;
     let j = event.currentTarget.dataset.j;
+    let selected = this.data.selected;
+    selected[i] = j;
     this.setData({
-      selected: [i, j],
+      selected: selected,
       arr: []
     })
     this.getList()
@@ -48,8 +50,8 @@ Page({
       pageNo: parseInt(arr_.length / 10) + 1,
       pageSize: 10,
       shopId: wx.getStorageSync('shop').id,
-      isfree: conditions[selected[0]][selected[1]].isfree,
-      themeId: conditions[selected[0]][selected[1]].id
+      isfree: conditions[0][selected[0]].isfree,
+      themeId: conditions[1][selected[1]].id
     }
     app.util.reqAsync('masterCourse/getCourseByCondition', params).then((res) => {
       if(res.data.code == 1) {

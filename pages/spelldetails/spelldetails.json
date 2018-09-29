@@ -1,3 +1,6 @@
 {
-  "navigationBarTitleText": "拼单详情"
+  "navigationBarTitleText": "拼单详情",
+  "usingComponents": {
+    "login-component": "../../components/component-login"
+  }
 }

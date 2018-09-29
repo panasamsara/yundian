@@ -1,30 +1,10 @@
-<view>
+<view wx:if="{{albumList.length>0}}" >
   <view class='title'>全部照片</view>
-  <view class='list'>
-    <!-- <view class='list'>
-      <image src='../images/pinkTeam.png'></image>
-    </view>
-    <view class='list'>
-      <image src='../images/pinkTeam.png'></image>
-    </view>
-    <view class='list'>
-      <image src='../images/pinkTeam.png'></image>
-    </view>
-    <view class='list'>
-      <image src='../images/pinkTeam.png'></image>
-    </view>
-    <view class='list'>
-      <image src='../images/pinkTeam.png'></image>
-    </view>
-    <view class='list'>
-      <image src='../images/pinkTeam.png'></image>
-    </view>
-    <view class='list'>
-      <image src='../images/pinkTeam.png'></image>
-    </view> -->
-    <image src='../images/pinkTeam.png'></image>
-    <image src='../images/pinkTeam.png'></image>
-    <image src='../images/pinkTeam.png'></image>
-    <image src='../images/pinkTeam.png'></image>
+  <view class='list' style="overflow:hidden;">
+    <image src='{{item.url}}' bindtap='previewImage' wx:for="{{albumList}}" wx:key="{{index}}" data-src='{{item.url}}' data-index='{{index}}'></image>
   </view>
+</view>
+<view class="empty" wx:if="{{albumList.length==0}}">
+  <image src="../images/xcx_ftd_quanbuzhaopian@2x.png"></image>
+  <view>没有任何照片哦~~</view>
 </view>

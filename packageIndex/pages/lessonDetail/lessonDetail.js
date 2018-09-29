@@ -63,7 +63,7 @@ Page({
   addComments: function () {
     let u = wx.getStorageSync('scSysUser');
     let params = this.data.reply;
-    if (params.content.length == 0) {
+    if (!params.content || params.content.length == 0) {
       return wx.showToast({title: '请输入内容！', icon: 'none'})
     }
     if (params.fid == params.uid) {
@@ -81,9 +81,11 @@ Page({
           reply: reply
         })
         this.replyReset({ content: ''});
+        wx.showToast({ title: '评论成功！', icon: 'none' })
+      } else {
+        wx.showToast({ title: res.data.msg || '操作失败！', icon: 'none' })
       }
       wx.hideLoading()
-      wx.showToast({ title: res.data.msg || '操作失败！', icon: 'none' })
     })
   },
   // 刷新列表
@@ -192,7 +194,6 @@ Page({
       courseId: this.data.options.id,
       userId: u.id,
       type: 2,
-      payType: 3,
       userName: u.username,
       phone: u.phone,
       shopId: wx.getStorageSync('shop').id
@@ -224,6 +225,7 @@ Page({
       courseId: this.data.options.id,
       userId: u.id,
       type: 1,
+      payType: 3,
       userName: u.username,
       phone: u.phone,
       deposit: this.data.data.price,

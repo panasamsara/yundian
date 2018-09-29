@@ -1,3 +1,6 @@
 {
-  "navigationBarTitleText": "智享云店"
+  "navigationBarTitleText": "智享云店",
+  "usingComponents": {
+    "login-component": "../../components/component-login"
+  }
 }

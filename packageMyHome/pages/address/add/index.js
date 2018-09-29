@@ -32,10 +32,18 @@ Page({
     var city = e.detail.value.city;
     var address = e.detail.value.address;
     var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
+    var userFormatExp = new RegExp("^[\u4e00-\u9fa5A-Za-z]+$");
+    var remarkFormatExp = new RegExp("[~'!@#￥$%^&*()-+_=:]");
     if (app.util.isEmpty(name)) {
       wx.showToast({ title: "请填写收货人姓名", icon: 'none' });
       return;
-    } else if (app.util.isEmpty(tel)) {
+    } else if (!app.util.isEmpty(name) && !userFormatExp.test(name)) {
+      wx.showToast({
+        title: '用户名只能输入中英文',
+        icon: 'none'
+      });
+      return;
+    }else if (app.util.isEmpty(tel)) {
       wx.showToast({ title: "请填写手机号码", icon: 'none' });
       return;
     } else if (!myreg.test(tel)) {
@@ -46,6 +54,12 @@ Page({
       return;
     } else if (app.util.isEmpty(address)) {
       wx.showToast({ title: "请填写详细地址", icon: 'none' });
+      return;
+    } else if (!app.util.isEmpty(address) && remarkFormatExp.test(address)){
+      wx.showToast({
+        title: '详细地址地址只能输入中英文和数字',
+        icon: 'none'
+      });
       return;
     }
     wx.showLoading({

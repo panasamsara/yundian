@@ -1,3 +1,4 @@
+<login-component login-type-property="{{loginType}}"  bindresusermevent="resusermevent"  bindresmevent="resmevent"></login-component>
 <view>
   <view class="header">
     <view class="headerToP">
@@ -8,6 +9,8 @@
           <image class="" src="{{user.userpic}}" bindtap='clickCount'></image>
         </view>
         <text class='float_l'>{{user.username}}</text>
+        <image class='genxi' bindtap='genxi' src='../../images/xcx_wd_gengxin@2x.png'></image>
+
       </view>
       <navigator url='/packageIndex/pages/fly/fly'>
         <image class="recommend {{animate?'shake-vertical':''}}" src='../../images/tuiajinhaoyou@2x.png'></image>

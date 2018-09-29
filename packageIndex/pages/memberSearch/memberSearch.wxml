@@ -1,0 +1,60 @@
+<!--packageIndex/pages/fansSearch/fansSearch.wxml-->
+<view class='container' id='fansSearch'>
+  <view id='head'>
+    <view id='searchBox' class="{{search?'normalBox':'fullBox'}}">
+      <!-- <view id='searchIconBox'> -->
+        <image src='../images/sousuo@2x.png' id='searchIcon' class='icon'></image>
+      <!-- </view> -->
+      <input placeholder='搜索粉小组' focus="{{name_focus}}" confirm-type='search' bindfocus='change' value='{{key}}'  bindinput='hotSearch'></input>
+      <!-- <view id='clearIconBox'>  -->
+        <image src='../images/cha@2x.png' id='clearIcon' class='icon' wx:if="{{iconShow}}" bindtap='clear'></image>
+      <!-- </view>   -->
+    </view>
+    <view id='search' bindtap='search' wx:if="{{search}}">搜索</view>
+  </view>
+  <view class='showZero' wx:if="{{isShow==0}}">
+    <view class='fans' wx:if="{{ifSearch==0}}">
+      <view class='float_l'>
+        <image class="logo" src='{{allData[0].userPic}}'></image>
+        <image class='leader' src='../images/leader.png'></image>
+      </view>
+      <view class='float_l'>{{allData[0].userName}}</view>
+    </view>
+    <view class='allMember' wx:if="{{ifSearch==0}}">全部成员</view> 
+    <view class='list' wx:for="{{ifSearch==0?allData:list}}" wx:key="{{index}}" wx:if="{{ifSearch==0?index>0:index>=0}}">
+      <image class="float_l" src='{{item.userPic}}'></image>
+      <view class='float_r'>{{item.userName}}</view>
+    </view>
+    <view wx:if="{{ifSearch==0&&allData.length==0||ifSearch==1&&list.length==0}}" id="blank">暂无数据</view>
+  </view>
+  <view class='showOne' wx:if="{{isShow==1}}" >
+    <view class='fans' wx:if="{{ifSearch==0}}">
+      <view class='float_l'>
+        <image class="logo" src='{{allData[0].userPic}}'></image>
+        <image class='leader' src='../images/leader.png'></image>
+      </view>
+      <view class='float_l expire'>
+        <view>{{allData[0].userName}}</view>
+        <view class='font28'>姓名：{{allData[0].memberName}}</view>
+        <view class='font27'>
+           <view>
+           <image src='../images/xcx_ftd_dengjibg@2x.png'></image><text class='grade'>v{{allData[0].leave}}</text></view>
+              <text>{{allData[0].periodTime}}到期</text>
+          </view>
+        </view>
+    </view>
+    <view class='allMember' wx:if="{{ifSearch==0}}">全部成员</view> 
+    <view class='list' wx:for="{{ifSearch==0?allData:list}}" wx:key="{{index}}" wx:if="{{ifSearch==0?index>0:index>=0}}">
+      <image class="float_l" src='{{item.userPic}}'></image>
+      <view class='float_r right'>
+        <view class='font32 font_333'>{{item.userName}}</view>
+        <view class='font28'>姓名：{{item.memberName}}</view>
+        <view class='font27'>
+          <view><image src='../images/xcx_ftd_dengjibg@2x.png'></image><text class='grade'>v{{item.leave}}</text></view>
+          <text>{{item.periodTime}}到期</text>
+        </view>
+      </view>
+    </view>
+    <view  wx:if="{{ifSearch==0&&allData.length==0||ifSearch==1&&list.length==0}}" id="blank">暂无数据</view>
+  </view>
+</view>

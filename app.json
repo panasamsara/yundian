@@ -15,7 +15,6 @@
     "pages/goodsDetial/goodsDetial",
     "pages/ask/ask",
     "pages/search/search",
-    "pages/store/location/location",
     "pages/store/code/code",
     "pages/store/activity/activity",
     "pages/store/activityInfo/activityInfo",
@@ -54,7 +53,7 @@
         "pages/appointment/modal/service-modal/service-modal",
         "pages/appointment/modal/serviceName-modal/serviceName-modal",
         "pages/articleDetail/articleDetail",
-        "pages/pinkGroup/pinkGroup",
+        "pages/fansGroup/fansGroup",
         "pages/allAlbum/allAlbum",
         "pages/allPhoto/allPhoto",
         "pages/activityList/activityList",
@@ -66,7 +65,8 @@
         "pages/fansActivity/fansActivity",
         "pages/fly/fly",
         "pages/secKill/secKill",
-        "pages/groupBuy/groupBuy"
+        "pages/groupBuy/groupBuy",
+        "pages/memberSearch/memberSearch"
       ]
     },
     {
@@ -75,7 +75,8 @@
         "pages/proList/proList",
         "pages/orderDetail/orderDetail",
         "pages/endDetails/endDetails",
-        "pages/goods/goods"
+        "pages/goods/goods",
+        "pages/shopOrder/shopOrder"
       ]
     },
     {
@@ -110,6 +111,12 @@
         "pages/expenseDetail/expenseDetail",
         "pages/forDetail/forDetail",
         "pages/consumptionDetail/consumptionDetail"
+      ]
+    },
+    {
+      "root": "packageShare",
+      "pages": [
+        "pages/share/share"
       ]
     }
   ],

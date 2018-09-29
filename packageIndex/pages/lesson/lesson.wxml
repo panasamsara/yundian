@@ -3,22 +3,22 @@
   <!-- 下拉按钮 -->
   <view class='condition-content'>
     <view class='{{tabs[0] ? "on": ""}}' data-i="0" catchtap='changeTabs'>
-      按费用筛选
+      {{selected[0] == 0? '按费用筛选': conditions[0][selected[0]].name}}
       <image wx:if="{{!tabs[0]}}" mode='aspectFit' class='icon' src='../../img/ydkt_sx_xl@2x.png'></image>
       <image wx:if="{{tabs[0]}}" mode='aspectFit' class='icon' src='../../img/ydkt_sx_sl@2x.png'></image>
     </view>
     <view class='{{tabs[1] ? "on": ""}}' data-i="1" catchtap='changeTabs'>
-      按专栏筛选
+      {{selected[1] == 0? '按专栏筛选': conditions[1][selected[1]].name}}
       <image wx:if="{{!tabs[1]}}" mode='aspectFit' class='icon' src='../../img/ydkt_sx_xl@2x.png'></image>
       <image wx:if="{{tabs[1]}}" mode='aspectFit' class='icon' src='../../img/ydkt_sx_sl@2x.png'></image>
     </view>
   </view>
   <!-- 下拉内容 -->
   <block wx:if="{{tabs[0]}}" wx:for="{{conditions[0]}}" wx:key="{{index}}">
-    <view class='item {{selected[0] == 0 && selected[1] == index ? "on": ""}}' data-i="0" data-j="{{index}}" bindtap='changeSelect'>{{item.name}}</view>
+    <view class='item {{selected[0] == index ? "on": ""}}' data-i="0" data-j="{{index}}" bindtap='changeSelect'>{{item.name}}</view>
   </block>
   <block wx:if="{{tabs[1]}}" wx:for="{{conditions[1]}}" wx:key="{{index}}">
-    <view class='item {{selected[0] == 1 && selected[1] == index ? "on": ""}}' data-i="1" data-j="{{index}}" bindtap='changeSelect'>{{item.name}}</view>
+    <view class='item {{selected[1] == index ? "on": ""}}' data-i="1" data-j="{{index}}" bindtap='changeSelect'>{{item.name}}</view>
   </block>
 </view>
 

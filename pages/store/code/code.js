@@ -17,6 +17,9 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    console.log(options)
+    wx.setStorageSync('shopId', options.shopId)
+    
     var user = wx.getStorageSync('scSysUser');
     var _this = this
     app.util.getShop(user.id, options.shopId).then((res) => {
@@ -241,8 +244,9 @@ Page({
     }
   },
   goback: function () {//回到首页按钮
+    console.log('../../index/index')
     wx.switchTab({
-      url: '../../index/index?shopId=' + this.data.shopId
+      url: '../../index/index'
     })
   }
 })

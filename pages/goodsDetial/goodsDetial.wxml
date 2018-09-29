@@ -1,3 +1,4 @@
+<login-component login-type-property="{{loginType}}"  bindresusermevent="resusermevent" bindresmevent="resmevent"></login-component>
 <view id='tabBox'>
   <text id='product' bindtap='tabchange' class="tab {{tabcur=='product'?'active':''}}">商品</text>
   <text id='info' bindtap='tabchange' class="tab {{tabcur=='info'?'active':''}}">详情</text>
@@ -256,7 +257,10 @@
     </scroll-view>
   </view>
   <view id='shareBox'>
-    <button open-type='share'>
+    <!-- <button open-type='share'>
+      <image src='../../images/shouye_btn@2x.png' id='share'></image>
+    </button> -->
+    <button bindtap="shareBtn">
       <image src='../../images/shouye_btn@2x.png' id='share'></image>
     </button>
     <image src='../../images/fenxinag_btn@2x.png' id='goback' bindtap='goback'></image>
@@ -302,6 +306,7 @@
   <view class='tot' bindtap='buyNow' wx:if="{{buy=='buyNow'}}">立即购买</view>
   <view class='tot cart' bindtap='addCart' wx:if="{{buy=='addCart'}}">加入购物车</view>
 </view>
+
 <view class='detail-nav'>
     <view wx:if="{{status==1}}" class='buyBox'>
       <view class='add' bindtap='tobuy' id='buy'>
@@ -330,3 +335,17 @@
   </view> 
 <canvas canvas-id='seckill' style='width:480rpx;height:380rpx;' id='secKillCanvas'></canvas>
 <canvas canvas-id='groupbuy' style='width:480rpx;height:420rpx;' id='gruopBuyCanvas'></canvas>
+<!-- 点击分享后的遮罩层 -->
+<view class='shareView' wx:if="{{ shareViewShow === true }}">
+  <view class='buttonGroup'>
+    <button open-type='share'>转发</button>
+    <button class='save_img' bindtap="saveImg">生成海报 保存分享</button>
+    <button class='close' bindtap="shareBtn">取消</button>
+  </view>
+</view>
+<!-- 引入分享模板 -->
+<!-- <import src="../../template/share.wxml"/> -->
+<!-- <template is="share7"></template> -->
+<!-- <template is="share2" data="{{list}}" wx:if="{{ shareShow === true && status === 2 }}"></template> -->
+<!-- <template is="share4" data="{{list}}" wx:elif="{{ shareShow === true && status === 1 }}"></template> -->
+<!-- <template is="share5" data="{{list}}" wx:elif="{{ shareShow === true && status === 3 }}"></template> -->

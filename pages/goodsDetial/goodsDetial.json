@@ -1,6 +1,6 @@
 {
   "navigationBarTitleText": "商品",
   "usingComponents": {
-    "chat-view": "../chat/chat"
+    "login-component": "../../components/component-login"
   }
 }

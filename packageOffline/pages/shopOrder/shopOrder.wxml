@@ -1,0 +1,59 @@
+<!--pages/myhome/shopOrder/shopOrder.wxml-->
+<view>
+  <view class="header">
+    <view class="manageTitle">
+      <text data-time="{{time}}" bindtap='typeTop' data-index="0"><text class="{{activeIndex==0?'active':''}}">进行中</text></text>
+      <text data-time="{{times}}" bindtap='typeTop' data-index="1"><text class="{{activeIndex==1?'active':''}}" >已完成</text></text>
+    </view>
+  </view>
+
+  <view class="wrap">
+    <!-- 没有可使用的预约默认图 -->
+    <block wx-if="{{orderList.length==0}}">
+      <view class="addessNull">
+        <image src="../../../../images/zwdd.png"></image>
+        <view>暂时没有订单哦~</view>
+      </view>
+    </block>
+    <view class='content' wx:for="{{orderList}}" wx:key="index" >
+      <view class="list"  bindtap='skip' data-id="{{item.id}}" data-index="{{index}}" data-shopid="{{item.shopId}}" data-facilityid="{{item.facilityId}}" data-userid="{{item.userId}}">
+        <view class='shop'>
+          <view class='left'>
+            <image class="shopImg mr15" src="{{shopLogoUrl}}"></image>
+            <text class="mr15">{{shopName}}</text>
+            <image class="rightIcon" src="../../../../images/right_icon.png"></image>
+          </view>
+          <view wx-if="{{activeIndex==0}}" class='right rightType'>订单已提交</view>
+          <view wx-if="{{activeIndex==1}}" class='right rightType'>订单已完成</view>
+        </view>
+        <view wx:for="{{item.presaleInfoList}}" wx:key="index" wx:for-item='items'>
+          <view class="orderInfo">
+            <view class='left'>
+              <image src='{{items.pictureUrl}}'></image>
+            </view>
+            <view class='right'>
+              <text>{{items.purchaseName}}</text>
+              <text class="size">{{items.stockName}}</text>
+              <text>
+              <text class='left font34 priceColor'><text class='font24'>￥</text>{{items.actualPayment}}</text>
+              <text class='right color999 font28'>X{{items.purchaseNum}}</text>
+              </text>
+            </view>
+          </view>
+        </view>
+        <view class="total-price">
+            <view class='right'>
+              <!-- <text>共{{item.goodsNum}}件商品</text> -->
+              <text>合计：</text>
+              <text class='font34 priceColor'><text class='font24'>￥</text>{{item.actualPay}}</text>
+            </view>
+        </view>
+      </view>
+       <!--未完成-->
+          <view class="noover" wx:if="{{item.orderStatus!=3}}">
+            <view class="button red-btn" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" disabled="{{disabled}}"  bindtap="buyOrder" hover-class="other-button-hover"> 结算 </view>
+            <view hidden="{{isHid}}" class="button white-btn" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" disabled="{{disabled}}"  bindtap="goOn" hover-class="other-button-hover"> 继续添加 </view>
+          </view>
+    </view>
+  </view>
+</view>

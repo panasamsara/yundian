@@ -1,7 +1,7 @@
 <!--pages/store/fans/fans.wxml-->
 <view class='container fans' wx:if="{{datas}}">
   <view class='list'>
-    <view class='banner'>
+    <view class='banner' data-detailId="{{datas.circleId}}" data-type="1" bindtap='skipDetail'>
       <image src="{{datas.bgPic}}" class='bannerPic'></image> 
       <view class='teamInfo'>
         <text class='detailName'>{{datas.circleName}}</text>
@@ -13,11 +13,11 @@
       <image src='../images/sanjiao.png' class='triangle'></image>
     </view>
     <scroll-view class="teamBox" scroll-x="true">
-      <view class='team' wx:for="{{datas.groupList}}" wx:key="index" wx:for-item="item">
+      <view class='team' wx:for="{{datas.groupList}}" wx:key="index" wx:for-item="item" data-type="2" data-detailId="{{item.detailId}}" bindtap='skipDetail'>
         <image src='{{item.detailPic}}'></image>
         <view class='infoBox'>
           <text class='teamName'>{{item.detailName}}</text>
-          <text class='total'>{{item.personCount}}</text>
+          <text class='total'>{{item.personCount}}人</text>
         </view> 
       </view>
     </scroll-view>

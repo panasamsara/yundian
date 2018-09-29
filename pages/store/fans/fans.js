@@ -50,6 +50,14 @@ Component({
         console.log(err);
         wx.hideLoading();
       })
-    }
+    },
+    skipDetail: function (e) {
+      console.log("fans");
+      var detailId = e.currentTarget.dataset.detailid;
+      var typeId = e.currentTarget.dataset.type;
+      wx.navigateTo({
+        url: '../../packageIndex/pages/fansGroup/fansGroup?detailId=' + detailId + "&typeId=" + typeId,
+      })
+    },
   }
 })

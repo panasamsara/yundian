@@ -119,7 +119,7 @@ page{
   max-width: 430rpx;
   font-size: 30rpx;
   line-height: 74rpx;
-  color: #AAB2BC;
+  color: #333;
   font-weight: medium;
   overflow: hidden;
   text-overflow: ellipsis;

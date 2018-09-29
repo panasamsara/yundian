@@ -30,9 +30,19 @@
                 <text class='detail-tit'>{{item.shopName}}</text>  
                 <image class="back" src='../../../images/yundian_spxq_gengduo.png'></image>
               </view>
+              <view class="inlin a" wx:if="{{item.isGroupBuying!=1}}">
+                <text wx:if="{{item.orderStatusVo==2&&item.deliveryType==2}}">等待取货</text>
+                <text wx:if="{{item.orderStatusVo==2&&item.deliveryType!=2}}">等待发货</text>
+              </view>
+              <view class="inlin b" wx:if="{{item.isGroupBuying==1}}">
+                <text wx:if="{{item.timeStatus == 0 &&(item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType != 2)}}">拼单中</text>
+                <view class="inlin" wx:if="{{item.timeStatus != 0}}"> 
+                  <text wx:if="{{item.orderStatusVo==2&&item.deliveryType==2}}">等待取货</text>
+                  <text wx:if="{{item.orderStatusVo==2&&item.deliveryType!=2}}">等待发货</text>
+                </view>
+                
+              </view>
               <text wx:if="{{item.orderStatusVo==1}}">等待付款</text>
-              <text wx:if="{{item.orderStatusVo==2&&item.deliveryType==2}}">等待取货</text>
-              <text wx:if="{{item.orderStatusVo==2&&item.deliveryType!=2}}">等待发货</text>
               <text wx:if="{{item.orderStatusVo==3}}">等待收货</text>
               <text wx:if="{{item.orderStatusVo==4}}">等待评价</text>
               <text wx:if="{{item.orderStatusVo==5}}">已取消</text>
@@ -76,12 +86,12 @@
             <!-- 积分商品 -->
             <view class='list-total' wx:if="{{item.bussinessType==18}}">
               <view class="total-num">共<span>{{item.total}}</span>件商品</view>
-              <view class='total-price'>合计：<span class="red">{{item.amount}}积分</span>（含运费0.00）</view>
+              <view class='total-price'>合计：<span class="red">{{item.amount}}积分</span>（含运费0.00元）</view>
             </view>
             <!-- 普通商品 -->
             <view class='list-total' wx:else>
           <view class="total-num">共<span>{{item.total}}</span>件商品</view>
-          <view class='total-price'>合计：<text class="small-size1">￥</text><span class="red">{{item.amount}}</span>（含运费<span>{{item.deliveryMoney}}</span>）</view>
+          <view class='total-price'>合计：<text class="small-size1">￥</text><span class="red">{{item.amount}}</span>（含运费<span>{{item.deliveryMoney}}</span>元）</view>
         </view>
         <view class="ctronl-btn">
                <button wx:if="{{item.orderStatusVo==1}}" class='cancel-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" bindtap="cancel" hover-class="other-button-hover" data-no="{{item.orderNo}}"> 取消订单 </button>

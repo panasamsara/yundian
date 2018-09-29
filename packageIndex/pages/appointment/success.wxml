@@ -20,7 +20,7 @@
     <view id='facilityBox'>{{data.receptionNum}}|<text id='facilityName'>{{data.facilityName}}</text></view>
   </view>
   <view class='list service' wx:if="{{data.serviceName||data.waiter}}">
-    <text>{{data.serviceName}}</text>
+    <text id='serviceName'>{{data.serviceName}}</text>
     <text wx:if="{{data.waiter}}">服务人员:{{data.waiter}}</text>
   </view>
   <view class='list client'>

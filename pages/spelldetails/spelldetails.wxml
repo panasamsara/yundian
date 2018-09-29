@@ -1,6 +1,7 @@
 <!--pages/spelldetails/spelldetails.wxml-->
 <!-- <import src="../template/modelTp.wxml"/> -->
 <!-- <template is="loading" wx:if="{{!loading}}"></template> -->
+<login-component login-type-property="{{loginType}}" bindresusermevent="resusermevent" bindresmevent="resmevent" ></login-component>
 <view class='wrap' wx:if="{{loading}}">
   <view class='time' wx:if="{{timeStatus==0}}">
     离结束还剩   <text wx:if="{{d>0}}">{{d?d:0}}天</text><text>{{h?h:0}}</text> : <text>{{m?m:0}}</text> : <text>{{s?s:0}}</text>
@@ -28,7 +29,7 @@
     <scroll-view scroll-x upper-threshold="750rpx" class='groupscroll'>
       <!-- 参团用户 -->
       <view class='groupbox'>
-        <view wx:for="{{data.groupOrderList}}" wx:key="*this" wx:for-index="gdx" wx:for-item="group" class='scroll-view-item useritem'>
+        <view wx:for="{{groupOrderList}}" wx:key="*this" wx:for-index="gdx" wx:for-item="group" class='scroll-view-item useritem'>
           <image class="headportrait" src='{{group.userpic}}' data-src=''></image> 
           <view class='scroll-view-icon' wx:if="{{gdx == 0}}">
             <image class='mainicon' src='images/yundian_pinzhu@2x.png' data-src=''></image>
@@ -117,7 +118,7 @@
     <!-- 单个推荐 end-->
     </view>
   </view>
-<view class='shade {{flag?"show":"hide"}}'  wx:if="{{flag}}" bindtap='closeMask' catchtouchmove='preventTouchMove'></view>
+<view class='shade {{flag?"show":"hide"}}'  wx:if="{{flag}}" bindtap='closeshop' catchtouchmove='preventTouchMove'></view>
 <!-- 购买弹出层 -->
  <view class='dialog' wx:if="{{flag}}"  catchtouchmove='preventTouchMove'>
   <view class='top'>

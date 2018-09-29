@@ -27,6 +27,7 @@ Page({
     count:'',
     total:0,//总价
     balance:0,
+    goodsType:0,
     select:0,//商品规模
     number:1,//商品数量
     smallGroupId:'',
@@ -39,42 +40,50 @@ Page({
     shopData:{},//订单数据
     shopList:[],
     parm:{},//数据模板
-    userId:''//当前用户ID
+    userId:'',//当前用户ID,
+    loginType:0,
+    options:{}
   },
   /**
   * 生命周期函数--监听页面加载
   */
   onLoad: function (options) {
-    
-    console.log(wx.getStorageSync('scSysUser'));
-    
+    // debugger
+    console.log(options)
     this.setData({
-      userId: wx.getStorageSync('scSysUser').id,
+      options: options,
       groupId: options.groupId,
       orderNo: options.orderNo,
       population: options.population,
       shopId: options.shopId,
       cUser: options.cUser,
       orderStatusVo: options.orderStatusVo,
-      stockId: options.stockId
+      stockId: options.stockId,
+      // goodsType: options.goodsType
     })
-    app.util.getShop(wx.getStorageSync('scSysUser').id, options.shopId).then((res)=>{
-      // debugger
-      
-      if(res.data.code==1){
-        wx.setStorageSync('shop', res.data.data.shopInfo)
-      }
-    })
+
+    return
+    console.log(wx.getStorageSync('scSysUser'));
+  },
+  //初始数据获取
+  loadFn:function(){
+    if(wx.getStorageSync('scSysUser')){
+      this.setData({
+        userId: wx.getStorageSync('scSysUser').id,
+      })
+    }
+   
+    if (wx.getStorageSync('scSysUser')){
+      app.util.getShop(wx.getStorageSync('scSysUser').id, this.data.shopId).then((res) => {
+        // debugger
+        if (res.data.code == 1) {
+          wx.setStorageSync('shop', res.data.data.shopInfo)
+        }
+      })
+    }
     console.log('orderStatusVo:' + this.data.orderStatusVo);
-    app.util.reqAsync('shopSecondskilActivity/getServerNowTime').then((res) => {
-      console.log(res.data.data)
-      if (res.data.data) {
-        this.setData({
-          nowTime: app.util.formatIOS(res.data.data)
-        })
-      }
-    })
-    
+  
+
     console.log('stockId:' + this.data.stockId);
     app.util.reqAsync('shop/getGroupBuyOrderDetail', {
       groupId: this.data.groupId, //拼团id
@@ -87,23 +96,36 @@ Page({
       // debugger;
       var data = res.data.data;
       console.log(data)
-      
-      for (var i = 0; i < data.groupOrderList.length;i++){
-        if (data.groupOrderList[i].id==this.data.userId){
+
+      for (var i = 0; i < data.groupOrderList.length; i++) {
+        if (data.groupOrderList[i].id == this.data.userId) {
           this.setData({
             isMaster: true
           })
         }
       }
-      if (data.endTime){
+      if (data.endTime) {
         this.setData({
           endTime: app.util.formatIOS(data.endTime),
-          
         })
       }
-      this.setData({      
+      app.util.reqAsync('shopSecondskilActivity/getServerNowTime').then((res) => {
+        console.log(res.data.data)
+        if (res.data.data) {
+          this.setData({
+            nowTime: app.util.formatIOS(res.data.data)
+          })
+          let count = this.data.endTime - this.data.nowTime;
+          console.log('goodId:' + this.data.goodId);
+          this.setData({
+            count: count
+          })
+        }
+      })
+    
+      this.setData({
         groupId: data.groupId,
-        loading:true,
+        loading: true,
         pictureUrl: data.pictureUrl,
         goodsTitle: data.goodsTitle,
         descTitle: data.descTitle,
@@ -112,28 +134,20 @@ Page({
         lackUser: data.lackUser ? data.lackUser : 0,
         moreGroupList: data.moreGroupList,
         groupOrderList: data.groupOrderList,
-        groupOrderListLength: data.groupOrderList.length,
         goodId: data.goodsId,
         smallGroupId: data.smallGroupId
       })
-      
-      var parms = {
+      if (wx.getStorageSync('scSysUser')) {
+
+      this.getData({
         shopId: this.data.shopId,
         goodsId: this.data.goodId,
         customerId: wx.getStorageSync('scSysUser').id
-      };
-      this.setData({
-        parm:parms
+      })
+      }
+      
 
-      })
-      this.getData(this.data.parm)
-      console.log(this.data.endTime)
-      console.log(this.data.nowTime)
-      let count=this.data.endTime-this.data.nowTime;
-      console.log('goodId:'+this.data.goodId);
-      this.setData({
-        count:count
-      })
+     
     })
     let _this = this
     clearInterval(_this.data.timer)
@@ -143,56 +157,69 @@ Page({
     // 刷新页面
     this.refreshRequest();
   },
-  onShow: function (e) {
-    //调接口
-    app.util.reqAsync('shop/getGroupBuyOrderDetail', {
-      groupId: this.data.groupId, //拼团id
-      orderNo: this.data.orderNo, //订单编号
-      pageNo: 1,
-      shopId: this.data.shopId,//店铺id
-      pageSize: 10,
-      cUser: this.data.cUser//拼团用户
-    }).then((res) => {
-      // debugger;
-      console.log(res);
-      if (res.data.data.endTime) {
-        this.setData({
-          endTime: app.util.formatIOS(res.data.data.endTime),
-        })
+  onShow: function () {
+    console.log(this.data.options)
+    // debugger
+    // if (wx.getStorageSync('scSysUser')){
+      this.loadFn()      
+    // }
+    console.log({
+      shopId: this.data.shopId,
+      goodsId: this.data.goodId,
+      customerId: wx.getStorageSync('scSysUser').id
+    })
+    app.util.checkWxLogin('share').then((loginRes) => {
+      console.log('检测是否登录---------------------loginRes', loginRes)
+      if (loginRes.status == 0) {
+        // if (wx.getStorageSync('isAuth') == 'no') {
+        //   this.setData({
+        //     loginType: 2
+        //   })
+        // } else if (wx.getStorageSync('isAuth') == 'yes') {
+          this.setData({
+            loginType: 1
+          })
+        // }
       }
-      if (res.data.code == 1) {
-        var data = res.data.data;
-        this.setData({
-          // isMaster: data.isMaster,
-          groupId: data.groupId,
-          pictureUrl: data.pictureUrl,
-          goodsTitle: data.goodsTitle,
-          descTitle: data.descTitle,
-          discountPrice: data.discountPrice,
-          timeStatus: data.timeStatus,
-          lackUser: data.lackUser ? data.lackUser : 0,
-          moreGroupList: data.moreGroupList,
-          groupOrderList: data.groupOrderList,
-          groupOrderListLength: data.groupOrderList.length
-        })
-        this.setData({
-          data:data
-        })
-       
-      } else {
-        wx.showToast({
-          title: res.data.msg,
-          icon: 'none'
-        })
-      }
-    }).catch((err) => {
-      console.log(err)
-      wx.showToast({
-        title: '失败。。',
-        icon: 'none'
-      })
     })
 
+  },
+  //登录注册回调
+  resmevent: function (e) {
+    if (wx.getStorageSync('scSysUser')) {
+      this.setData({
+        loginType: 0
+      })
+      app.util.getShop(wx.getStorageSync('scSysUser').id, this.data.shopId).then((res) => {
+        // debugger
+        if (res.data.code == 1) {
+          wx.setStorageSync('shop', res.data.data.shopInfo)
+        }
+      })
+      var parms = {
+        shopId: this.data.shopId,
+        goodsId: this.data.goodId,
+        customerId: wx.getStorageSync('scSysUser').id
+      };
+      this.setData({
+        parm: parms,
+        userId: wx.getStorageSync('scSysUser').id,
+        
+      })
+      // console.loh
+      this.getData(this.data.parm)
+      // this.loadFn(wx.getStorageSync('scSysUser').id)
+    }
+  },
+  //获取用户信息回调
+  resusermevent: function (e) {
+    // debugger
+    // if (!wx.getStorageSync('scSysUser')) {
+    //   this.setData({
+    //     loginType: 1
+    //   })
+
+    // }
   },
   showRule:function(){
     this.setData({
@@ -220,10 +247,25 @@ Page({
         //   balance: this.data.shopData.stockListDefault[e.currentTarget.dataset.index].balance
         // })
         this.setData({
+          goodsType: res.data.data.goodsType,
+            groupOrderListLength: res.data.data.groupBuyingAllNum
           
+        })
+        if (this.data.goodsType){
+          this.setData({
+            balance: res.data.data.stockBalance,
+            
+
+          })
+          
+        }else{
+          this.setData({
+            balance: res.data.data.scShopGoodsStockList ? res.data.data.scShopGoodsStockList[0].stockNum : 0,
+          })
+        }
+        this.setData({  
           shopData: res.data.data,
           shopList: res.data.data.scShopGoodsStockList,
-          balance: res.data.data.scShopGoodsStockList?res.data.data.scShopGoodsStockList[0].stockNum:0,
           stockPrice: res.data.data.scShopGoodsStockList ?res.data.data.scShopGoodsStockList[0].stockBatchPrice:0,
           total: res.data.data.scShopGoodsStockList ? (res.data.data.scShopGoodsStockList[0].stockBatchPrice * this.data.number).toFixed(2) : 0      
         })
@@ -344,25 +386,40 @@ Page({
   },
   //选规模
   chose: function (e) {//选择规格
+    if (this.data.goodsType) {
+      this.setData({
+        balance: this.data.shopData.stockBalance,
+
+      })
+
+    } else {
+      this.setData({
+        balance: this.data.shopData.scShopGoodsStockList[e.currentTarget.dataset.index].stockNum
+      })
+    }
     this.setData({
       select: e.currentTarget.dataset.index,
-      balance: this.data.shopData.scShopGoodsStockList[e.currentTarget.dataset.index].stockNum
     })
   },
   preventTouchMove:function(){
 
   },
-  closeMask: function () {//关闭遮罩
+  closeshop: function () {//关闭遮罩
     this.setData({
       flag: false
       // untouch: 'touch'
     })
-    this.getData(this.data.parm)
+   
     
     // this.getData(this.data.parm)
   },
   // 参与拼单
   participate: function(e){
+    this.getData({
+      shopId: this.data.shopId,
+      goodsId: this.data.goodId,
+      customerId: wx.getStorageSync('scSysUser').id
+    })
     this.setData({
       flag:true
     })

@@ -10,7 +10,8 @@ Page({
   data: {
     scale: null,
     temp: null,
-    signed:false
+    signed:false,
+    loginType: 0
   },
 
   /**
@@ -37,114 +38,130 @@ Page({
         })
       }
     }
+
     // 获取店铺信息
     // var user = wx.getStorageSync('scSysUser');
     // util.getShop(user.id, options.shopId).then((res) => {
     //   wx.setStorageSync('shop', res.data.data.shopInfo);
     // })
     var _this = this
-    let data = {
-      goodsId: options.goodsId,
-      shopId:options.shopId
-    }
+    
     this.setData({
       goodsId: options.goodsId,
       shopId: options.shopId
     })
     console.log(data)
-    app.util.reqAsync('shop/goodsDetail', data).then((res) => {
-      if(res.data.data){
-        res.data.data.startTime = app.util.formatActivityDate(res.data.data.startTime);
-        res.data.data.endTime = app.util.formatActivityDate(res.data.data.endTime)
-        if (res.data.data.descContent != null && res.data.data.descContent!=''){
-          res.data.data.descContent = res.data.data.descContent.replace(/\s+(id|class|style)(=(([\"\']).*?\4|\S*))?/g, "").replace(/background-color[\s:]+[^;]*;/gi, '').replace(/\"=\"\"/g, "").replace(/\<img/gi, '<img style="max-width:100%;height:auto" ').replace(/<s>/gi, "").replace(/<u>/gi,'').replace(/<\/s>/gi,'').replace(/<\/u>/gi,'');
-        } 
-        this.setData({
-          data: res.data.data
-        })
-        
-        wx.downloadFile({//缓存网络图片，直接使用网络路径真机无法显示或绘制
-          url: wx.getStorageSync('shop').logoUrl,
-          success: function (downRes) {
-            console.log(downRes.tempFilePath)
-            _this.setData({
-              logo: downRes.tempFilePath
-            })
-            wx.downloadFile({//缓存网络图片，直接使用网络路径真机无法显示或绘制
-              url: res.data.data.pictureUrl,
-              success: function (newRes) {
-                console.log(newRes.tempFilePath)
-                _this.setData({
-                  proPic: newRes.tempFilePath
-                })
-                _this.drawCanvas()
-              }
-            })
-          }
-        })
-
-      }
-    }).catch((err) => {
-      console.log(err);
-    })
+    
+   
+  
+    
     //获取报名信息
-    let params={
-      actionId:options.actionId,
-      userId: wx.getStorageSync('scSysUser').id
+    let data = {
+      goodsId: options.goodsId,
+      shopId: options.shopId
     }
-    this.setData({
-      params:params
-    })
+    _this.getData(data)
     this.setCanvasSize()
+  },
+  //登录注册回调
+  resmevent: function (e) {
+    if (wx.getStorageSync('scSysUser')) {
+      this.setData({
+        loginType: 0,
+        phone: wx.getStorageSync('scSysUser').phone
+      })
+      app.util.getShop(wx.getStorageSync('scSysUser').id, this.data.shopId).then((res) => {
+        // debugger
+        if (res.data.code == 1) {
+          wx.setStorageSync('shop', res.data.data.shopInfo)
+          wx.setStorageSync('shop', res.data.data.shopInfo);
+          //活动
+          wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
+          // 所有信息
+          wx.setStorageSync('shopInformation', res.data.data);
+          let params = {
+            actionId: this.data.actionId,
+            userId: wx.getStorageSync('scSysUser').id
+          }
+          this.setData({
+            params: params
+          })
+          var data={
+            shopId:this.data.shopId,
+            goodsId:this.data.goodsId
+          }
+          this.getSignList(this.data.params);
+          this.getData(data)
+        }
+      })
+
+
+      // this.getData(this.data.parm)
+      // this.loadFn(wx.getStorageSync('scSysUser').id)
+    }
+  },
+  //获取用户信息回调
+  resusermevent: function (e) {
+    // debugger
+    // if (!wx.getStorageSync('scSysUser')) {
+    //   this.setData({
+    //     loginType: 1
+    //   })
+
+    // }
   },
   onShow: function () { //缓存店铺信息（分享切店铺）
     var _this = this
     util.checkWxLogin('share').then((loginRes) => {
-      _this.setData({
-        phone: loginRes.phone
-      })
-      var shopId = this.data.shopId
-      if (!shopId) {
-        shopId = wx.getStorageSync('shopId');
-      }
-      var shop = wx.getStorageSync('shop')
-
-      if (!shop) {
-        if (shopId == undefined) {
-          wx.redirectTo({
-            url: '../scan/scan'
-          })
-        } else {
-          util.getShop(loginRes.id, shopId).then(function (res) {
-            _this.setData({
-              shopInformation: res.data.data
-            })
-            //shop存入storage
-            wx.setStorageSync('shop', res.data.data.shopInfo);
-            //活动
-            wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
-            // 所有信息
-            wx.setStorageSync('shopInformation', res.data.data);
-
-          })
-        }
-      } else {
-        if (shopId == undefined || shopId == '' || shopId == null) {
-          if (shop.shopHomeConfig) {
-            if (shop.shopHomeConfig.videoPathList.length != 0) {
-              let videoInfo = {}
-              videoInfo.url = shop.shopHomeConfig.videoPathList[0].filePath
-              videoInfo.cover = shop.shopHomeConfig.videoPathList[0].coverImagePath
-              wx.setStorageSync('videoInfo', videoInfo)
-            }
-          }
-          let shopInformation = wx.getStorageSync('shopInformation')
+      if (loginRes.status == 0) {
+        // if (wx.getStorageSync('isAuth') == 'no') {
+        //   _this.setData({
+        //     loginType: 2
+        //   })
+        // } else if (wx.getStorageSync('isAuth') == 'yes') {
           _this.setData({
-            shopInformation: shopInformation
+            loginType: 1
           })
+        // }
+      } else {
+        _this.setData({
+          phone: loginRes.phone
+        })
+        var shopId = _this.data.shopId
+        if (!shopId) {
+          shopId = wx.getStorageSync('shopId');
+        }
+        var shop = wx.getStorageSync('shop')
+        let params = {
+          actionId: this.data.actionId,
+          userId: wx.getStorageSync('scSysUser').id
+        }
+        _this.setData({
+          params: params
+        })
+        _this.getSignList(_this.data.params);
 
+        if (!shop) {
+          if (shopId == undefined) {
+            wx.redirectTo({
+              url: '../scan/scan'
+            })
+          } else {
+            util.getShop(loginRes.id, shopId).then(function (res) {
+              _this.setData({
+                shopInformation: res.data.data
+              })
+              //shop存入storage
+              wx.setStorageSync('shop', res.data.data.shopInfo);
+              //活动z
+              wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
+              // 所有信息
+              wx.setStorageSync('shopInformation', res.data.data);
+
+            })
+          }
         } else {
-          if (shopId == shop.id) {
+          if (shopId == undefined || shopId == '' || shopId == null) {
             if (shop.shopHomeConfig) {
               if (shop.shopHomeConfig.videoPathList.length != 0) {
                 let videoInfo = {}
@@ -159,27 +176,84 @@ Page({
             })
 
           } else {
-            wx.removeStorageSync('shop')
-            wx.removeStorageSync('goodsInfos')
-            wx.removeStorageSync('shopInformation')
-            util.getShop(loginRes.id, shopId).then(function (res) {
+            if (shopId == shop.id) {
+              if (shop.shopHomeConfig) {
+                if (shop.shopHomeConfig.videoPathList.length != 0) {
+                  let videoInfo = {}
+                  videoInfo.url = shop.shopHomeConfig.videoPathList[0].filePath
+                  videoInfo.cover = shop.shopHomeConfig.videoPathList[0].coverImagePath
+                  wx.setStorageSync('videoInfo', videoInfo)
+                }
+              }
+              let shopInformation = wx.getStorageSync('shopInformation')
               _this.setData({
-                shopInformation: res.data.data
+                shopInformation: shopInformation
               })
-              //shop存入storage
-              wx.setStorageSync('shop', res.data.data.shopInfo);
-              //活动
-              wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
-              // 所有信息
-              wx.setStorageSync('shopInformation', res.data.data);
 
-            })
+            } else {
+              wx.removeStorageSync('shop')
+              wx.removeStorageSync('goodsInfos')
+              wx.removeStorageSync('shopInformation')
+              util.getShop(loginRes.id, shopId).then(function (res) {
+                _this.setData({
+                  shopInformation: res.data.data
+                })
+                //shop存入storage
+                wx.setStorageSync('shop', res.data.data.shopInfo);
+                //活动
+                wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
+                // 所有信息
+                wx.setStorageSync('shopInformation', res.data.data);
+
+              })
+            }
           }
-        }
 
+        }
       }
+
+
       wx.removeStorageSync('shopId');
-      this.getSignList(this.data.params);
+    })
+  },
+  getData:function(data){
+    var _this =this
+    app.util.reqAsync('shop/goodsDetail', data).then((res) => {
+      console.log(res)
+      if (res.data.data) {
+        res.data.data.startTime = app.util.formatActivityDate(res.data.data.startTime);
+        res.data.data.endTime = app.util.formatActivityDate(res.data.data.endTime)
+        if (res.data.data.descContent != null && res.data.data.descContent != '') {
+          res.data.data.descContent = res.data.data.descContent.replace(/\s+(id|class|style)(=(([\"\']).*?\4|\S*))?/g, "").replace(/background-color[\s:]+[^;]*;/gi, '').replace(/\"=\"\"/g, "").replace(/\<img/gi, '<img style="max-width:100%;height:auto" ').replace(/<s>/gi, "").replace(/<u>/gi, '').replace(/<\/s>/gi, '').replace(/<\/u>/gi, '');
+        }
+        this.setData({
+          data: res.data.data
+        })
+        console.log(this.data.data)
+        if (wx.getStorageSync('shop')) {
+          wx.downloadFile({//缓存网络图片，直接使用网络路径真机无法显示或绘制
+            url: wx.getStorageSync('shop').logoUrl,
+            success: function (downRes) {
+              console.log(downRes.tempFilePath)
+              _this.setData({
+                logo: downRes.tempFilePath
+              })
+              wx.downloadFile({//缓存网络图片，直接使用网络路径真机无法显示或绘制
+                url: res.data.data.pictureUrl,
+                success: function (newRes) {
+                  console.log(newRes.tempFilePath)
+                  _this.setData({
+                    proPic: newRes.tempFilePath
+                  })
+                  _this.drawCanvas()
+                }
+              })
+            }
+          })
+        }
+      }
+    }).catch((err) => {
+      console.log(err);
     })
   },
   //报名
@@ -284,6 +358,9 @@ Page({
             passed:true
           })
         }
+        this.setData({
+          load:'done'
+        })
         if(res.data.data.userList.length>0){
           this.setData({
             userList: res.data.data.userList,

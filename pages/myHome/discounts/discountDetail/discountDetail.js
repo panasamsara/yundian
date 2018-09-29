@@ -21,12 +21,25 @@ Page({
     descArr:[],
     share:"",
     promGoodsTypeShare:"",
-    showMa:"0"
+    showMa:"0",
+    shareViewShow: false,
+    // 分享模板要传递的数据
+    list: {
+      imgUrl:'',
+      name: '海底捞2',
+      money: '1000',
+      type: '新手礼包礼包礼包'
+    },
+    loginType:0,
+    // 控制分享模板1是否显示
+    shareShow: false,
+    scale2: '',
+    oW: 0,
+    oW2: 0,
+    scale4: ''
     },
   onLoad: function(options) {
-    wx.showLoading({
-      title: '加载中',
-    })
+    
     console.log("share",options.share)
     var that=this;
     //options.share=0 说明从详情页进来 =1 说明是分享进来的
@@ -98,21 +111,86 @@ Page({
       shopId = wx.getStorageSync('shopId');
     }
     var shop = wx.getStorageSync('shop')
-    util.checkWxLoginShare().then((loginRes) => {
-      if (_this.data.shareFlag == 1){
-        _this.setData({
-          getUserId: loginRes.id
-        })
-        console.log('check login -------------------------------------------------------')
-        console.log(loginRes.id)
-      } 
-      _this.getList();
-      
-      // 判断是否有缓存店铺，没有就缓存，有就看是否需要替换
-      util.cacheShop(shopId, shop, _this)
+    app.util.checkWxLogin('share').then((loginRes) => {
+      if(loginRes.id){
+        if (_this.data.shareFlag == 1) {
+          wx.showLoading({
+            title: '加载中',
+          })
+          _this.setData({
+            getUserId: loginRes.id
+          })
+          console.log('check login -------------------------------------------------------')
+          console.log(loginRes.id)
+        }
+        _this.getList();
 
-      wx.removeStorageSync('shopId');
+        // 判断是否有缓存店铺，没有就缓存，有就看是否需要替换
+        // util.cacheShop(shopId, shop, _this)
+        util.getShop(loginRes.id, shopId).then(function (res) {
+          _this.setData({
+            shopInformation: res.data.data
+          })
+          //shop存入storage
+          wx.setStorageSync('shop', res.data.data.shopInfo);
+          //活动
+          wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
+          // 所有信息
+          wx.setStorageSync('shopInformation', res.data.data);
+
+        })
+        
+      } else{
+        // if (wx.getStorageSync('isAuth') == 'no') {
+        //   this.setData({
+        //     loginType: 2
+        //   })
+        // } else if (wx.getStorageSync('isAuth') == 'yes') {
+          this.setData({
+            loginType: 1
+          })
+        // }
+      }
     })
+  },
+  //登录注册回调
+  resmevent: function (e) {
+    if (wx.getStorageSync('scSysUser')) {
+      this.setData({
+        loginType: 0,
+        getUserId: wx.getStorageSync('scSysUser').id,
+        userId: wx.getStorageSync('scSysUser').id
+      })
+          this.getList();
+      
+      app.util.getShop(wx.getStorageSync('scSysUser').id, this.data.shopId).then((res) => {
+        // debugger
+        if (res.data.code == 1) {
+          wx.setStorageSync('shop', res.data.data.shopInfo)
+          wx.setStorageSync('shop', res.data.data.shopInfo);
+          //活动
+          wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
+          // 所有信息
+          wx.setStorageSync('shopInformation', res.data.data);
+
+
+        }
+      })
+
+
+      // this.getData(this.data.parm)
+      // this.loadFn(wx.getStorageSync('scSysUser').id)
+    }
+  },
+  //获取用户信息回调
+  resusermevent: function (e) {
+    // debugger
+    // if (!wx.getStorageSync('scSysUser')) {
+    //   this.setData({
+    //     loginType: 1
+    //   })
+
+    // }
   },
   drawCanvas: function(name, detail){
     let scale = this.data.scale
@@ -193,7 +271,7 @@ Page({
       app.util.reqAsync('coupon/selectScCouponDetail', dataDatail).then((res) => {
        //promGoodsType为0，1 0选择商品,1手动输入
         var data = res.data.data;
-        console.log(data);
+        console.log(data,'卷详情');
         if (data.promGoodsType==1){
           var descArr = data.promGoodsDesc.split("|&");
           _this.setData({ descArr: descArr});
@@ -204,10 +282,16 @@ Page({
         _this.setData({
           discountsNew: data,
           discountData: data,
+          promStatus: data.promStatus,
           shopId: data.shopId,
           quanName: data.couponInstruction,
           promGoodsTypeShare: data.promGoodsType,
-          couponId: data.couponId
+          couponId: data.couponId,
+          list: {
+            name: data.shopName,
+            money: '1000',
+            type: data.couponInstruction
+          }
         });
         console.log("discountsNew-------------------------------", this.data.discountsNew)
         _this.setData({
@@ -228,6 +312,7 @@ Page({
         })
       })
     } else {
+      console.log('我是优惠券啊')
       app.util.reqAsync('shop/getCloudCouponDetail', {
         couponId: this.data.id,
       }).then((res) => {
@@ -244,8 +329,14 @@ Page({
         console.log('优惠券信息---------------',res.data.data)
         this.setData({
           discounts: res.data.data.coupon,
-          discountData: res.data.data.coupon
+          discountData: res.data.data.coupon,
+          list: {
+            imgUrl: res.data.data.coupon.shopLogoUrl,
+            name: res.data.data.coupon.shopName,
+            type: res.data.data.coupon.name
+          }
         });
+        console.log(this.data.list,'我是优惠券啊')
         let _this=this;
         wx.downloadFile({//缓存网络图片，直接使用网络路径真机无法显示或绘制
           url: this.data.discountData.shopLogoUrl,
@@ -336,17 +427,19 @@ Page({
   
   onShareAppMessage: function (res) {
     var _this = this;
+    console.log(res)
     // if (res.from === 'button') {
     //   // 来自页面内转发按钮
     //   console.log()
     // }
-    // if (this.data.couponType == "06" && this.data.discountsNew.couponShare == 1){
+    // if (this.data.couponType == "06" && this.data.discountsNew.couponShare == 1){+
+    // debugger
+    //判断是新人礼包并且不是得到的礼包
     if (this.data.couponType == "06") {
       console.log('新人大礼包')
       return {
         title: "[新消息]" + this.data.discountData.shopName + "喊你来白拿钱，点击进入",
-        path: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + _this.data.id + "&couponLogId=" + _this.data.couponLogId + "&couponType=" + _this.data.couponType + "&canLimitGoods=" + _this.data.canLimitGoods + "&promGoodsTypeShare=" + _this.data.promGoodsType +"&share=" + "1",
-        imageUrl: _this.data.temp,
+path: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + _this.data.id + "&couponLogId=" + _this.data.couponLogId + "&couponType=" + _this.data.couponType + "&canLimitGoods=" + _this.data.canLimitGoods + "&promGoodsTypeShare=" + _this.data.promGoodsType + "&share=" + "1" + "&shopId=" + _this.data.shopId,        imageUrl: _this.data.temp,
         success: function (res) {
           app.util.reqAsync("coupon/shareCoupon", {
             couponId: _this.data.couponId,
@@ -362,14 +455,15 @@ Page({
           })
         }
       }
-    }else{
-      console.log('优惠券')
+    } else{
+      console.log(this.data.shopId)
       return{
-        title: '更多好券,尽在' + this.data.discountData.shopName+',数量有限,先到先得',
-        desc: this.data.goodsName,
-        imageUrl: this.data.discountPath,
-        path: '/packageMyHome/pages/discountCenter/discountCenter',
+        title: '更多好券,尽在' + _this.data.discountData.shopName+',数量有限,先到先得',
+        desc: _this.data.goodsName,
+        imageUrl: _this.data.discountPath,
+        path: '/packageMyHome/pages/discountCenter/discountCenter?shopId=' + _this.data.shopId,
         success: function () {
+          console.log('/packageMyHome/pages/discountCenter/discountCenter?shopId=' + this.data.shopId)
 
         },
         // fail:function(){
@@ -494,9 +588,18 @@ Page({
     console.log("data", data);
     app.util.reqAsync('shop/takeCoupon',data).then((res) => {
       //promGoodsType为0，1 0选择商品,1手动输入
-      wx.redirectTo({
-        url: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + _this.data.id + "&couponLogId=" + _this.data.couponLogId + "&couponType=" + _this.data.couponType + "&canLimitGoods=" + _this.data.canLimitGoods + "&promGoodsTypeShare=" + _this.data.promGoodsType + "&share=" + "2",
-      })
+      if(res.data.code!=1){
+        wx.showToast({
+          title: res.data.msg,
+          icon:'none'
+        })
+      }else{
+        var newcouponLogId = res.data.data.couponLogId;
+        wx.redirectTo({
+          url: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + _this.data.id + "&couponLogId=" + newcouponLogId + "&couponType=" + _this.data.couponType + "&canLimitGoods=" + _this.data.canLimitGoods + "&promGoodsTypeShare=" + _this.data.promGoodsType + "&share=" + "2&shopId=" + this.data.shopId,
+        })
+      }
+      
     }).catch((err) => {
       wx.hideLoading();
       wx.showToast({
@@ -525,6 +628,204 @@ Page({
     } else if(this.data.share == 2 && this.data.discountsNew.userCouponLogCount == 1){
       this.setData({ share: 3, showMa: 1 });
     }
+  },
+  // 点击分享后 点击取消
+  shareBtn: function () {
+    this.setData({
+      shareViewShow: !this.data.shareViewShow
+    })
+  },
+  // 点击生成海报 出现分享弹窗
+  saveImg: function () {
+    this.setData({
+      shareViewShow: !this.data.shareViewShow,
+      shareShow: !this.data.shareShow
+    })
+  },
+  btn_img: function () {
+    //创建节点选择器
+    var that = this;
+    var query = wx.createSelectorQuery();
+    if (this.data.couponType === '06') {
+      query.select('.every').boundingClientRect(function (rect) {
+        that.setData({
+          oW: rect.width
+        })
+        that.drawShare()
+      }).exec();
+    }
+    else {
+      query.select('.every6').boundingClientRect(function (rect) {
+        that.setData({
+          oW2: rect.width
+        })
+        that.draw06()
+      }).exec();
+    }
+  },
+  // 新手大礼包
+  drawShare: function () {
+    var size = this.setShareCanvasSize();//动态设置画布大小
+    var scale = this.data.scale2;
+    var _this = this
+    var context = wx.createCanvasContext('myShareCanvas');
+    context.save();//保存绘图上下文
+    context.setFillStyle('#fff');
+    context.fillRect(0, 0, 610 * scale, 800 * scale);//给画布添加背景色，无背景色真机会自动变黑
+    context.beginPath();
+    //绘制商品名
+    context.fill();
+    context.setFontSize(18 * scale);
+    context.setFillStyle('#333333');
+    context.fillText(_this.data.list.name, (size.w - context.measureText(_this.data.list.name).width) / 2, 40 * scale);
+    // 绘制图片
+    var imgUrl = '../../../../template/images/bg.png';
+    context.drawImage(imgUrl, 10 * scale, 30 * scale, 332 * scale, 422 * scale);
+
+    // 绘制标题
+    context.setFillStyle('#FF6629');
+    var price = '价值' + _this.data.list.money + '元'
+    context.fillText(price, (size.w - context.measureText(price).width) / 2, 108 * scale);
+    // 绘制礼包类型名称
+    var typeLen = this.data.list.type.length;
+    console.log('礼包的长度=',typeLen);
+    if (typeLen < 5) {
+      context.setFontSize(34 * scale);
+    }
+    else if (typeLen > 4 && typeLen < 7) {
+      context.setFontSize(28 * scale);
+    }
+    else {
+      context.setFontSize(24 * scale);
+    }
+    context.setFillStyle('#FF3E3E');
+    context.fillText(this.data.list.type, (size.w - context.measureText(this.data.list.type).width) / 2, 180 * scale);
+    context.draw(false, function () {
+      wx.canvasToTempFilePath({//绘制完成执行保存回调
+        x: 0,
+        y: 0,
+        width: 351,
+        height: 480,
+        destWidth: 702,
+        destHeight: 960,
+        fileType: 'jpg',
+        canvasId: 'myShareCanvas',
+        success: function (res) {
+          console.log(res.tempFilePath)
+          // 保存图片到本地
+          wx.saveImageToPhotosAlbum({
+            filePath: res.tempFilePath,
+            success(res) {
+              wx.showToast({
+                title: '保存成功',
+                icon: 'none'
+              })
+            }
+          })
+        }
+      })
+    });
+  },
+  //适配不同屏幕大小的canvas
+  setShareCanvasSize: function () {
+    var size = {};
+    try {
+      var res = wx.getSystemInfoSync();
+      // var scale = 750 / 686;//不同屏幕下canvas的适配比例；设计稿是750宽
+      var scale = res.windowWidth / this.data.oW;
+      var width = res.windowWidth / scale;
+      var height = width;//canvas画布为正方形
+      size.w = width;
+      size.h = height;
+      this.setData({
+        scale2: res.windowWidth / 375
+      })
+    } catch (e) {
+      // Do something when catch error
+      console.log("获取设备信息失败" + e);
+    }
+    return size;
+  },
+  // 优惠券
+  draw06: function () {
+    var size = this.setCanvasSize06();//动态设置画布大小
+    var scale = this.data.scale;
+    var _this = this
+    var context = wx.createCanvasContext('myShareCanvas6');
+    // 绘制图片
+    context.save();//保存绘图上下文
+    var imgUrl = '../../../../template/images/bg6.png';
+    context.drawImage(imgUrl, 0, 0, 350 * scale, 531 * scale);
+
+    // logo
+    context.save()
+    context.beginPath()
+    context.arc(176, 50, 28, 0, 2 * Math.PI)
+    context.clip()
+    context.drawImage('https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=347837335,1617350328&fm=27&gp=0.jpgg', 148, 22, 56, 56)
+    context.restore();
+    // context.save();
+    // context.beginPath();
+    // context.arc(145,54,55,0,Math.PI * 2,false);
+    // // context.arc(100, 75, 50, 0, 2 * Math.PI);
+    // // context.setStrokeStyle('#333333');
+    // context.clip()
+    // var imgUrl = 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=347837335,1617350328&fm=27&gp=0.jpgg';
+    // context.drawImage(imgUrl, 145 * scale, 26 * scale, 55 * scale, 55 * scale);
+    // context.restore();
+
+    // 绘制标题
+    context.setFontSize(16 * scale);
+    context.setFillStyle('#ffffff');
+    context.fillText('智美女人花银店', (size.w - context.measureText('智美女人花银店').width) / 2, 108 * scale);
+    // 绘制劵类型
+    context.setFontSize(45 * scale);
+    context.fillText('包邮券', (size.w - context.measureText('包邮券').width) / 2, 180 * scale);
+    context.draw(false, function () {
+      wx.canvasToTempFilePath({//绘制完成执行保存回调
+        x: 0,
+        y: 0,
+        width: 351,
+        height: 531,
+        destWidth: 702,
+        destHeight: 1062,
+        fileType: 'jpg',
+        canvasId: 'myShareCanvas6',
+        success: function (res) {
+          console.log(res.tempFilePath)
+          // 保存图片到本地
+          wx.saveImageToPhotosAlbum({
+            filePath: res.tempFilePath,
+            success(res) {
+              wx.showToast({
+                title: '保存成功',
+                icon: 'none'
+              })
+            }
+          })
+        }
+      })
+    });
+  },
+  //适配不同屏幕大小的canvas
+  setCanvasSize06: function () {
+    var size = {};
+    try {
+      var res = wx.getSystemInfoSync();
+      // var scale = 750 / 686;//不同屏幕下canvas的适配比例；设计稿是750宽
+      var scale = res.windowWidth / this.data.oW2;
+      var width = res.windowWidth / scale;
+      var height = width;//canvas画布为正方形
+      size.w = width;
+      size.h = height;
+      this.setData({
+        scale4: res.windowWidth / 375
+      })
+    } catch (e) {
+      // Do something when catch error
+      console.log("获取设备信息失败" + e);
+    }
+    return size;
   }
 })
 

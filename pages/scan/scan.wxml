@@ -1,14 +1,8 @@
+<login-component login-type-property="{{loginType}}"  bindresusermevent="resusermevent" bindresmevent="resmevent"></login-component>
 <view class='container'>
-   <!-- <view wx:if="{{histories && histories.length > 0}}">历史记录列表</view>
-  <block wx:for="{{histories}}" wx:key="{{index}}">
-    <view class="" bindtap='toShop' data-index='{{index}}'>
-      <image src="{{item.bgImage}}"></image>
-      <view>{{item.shopName}}</view>
-    </view>
-  </block>  -->
-   <view class='wrap' wx:if="{{histories.length == 0}}">
+   <view class='wrap' wx:if="{{histories.length == 0}}" >
     <image class="bgNull" src='../../images/bgNull.jpg'></image> 
-    <view class='scanBlock' bindtap='scanCode'><image class="sys" src="../../images/sys.png"></image>扫一扫打开店铺</view>
+    <view class='scanBlock' bindtap='scanCode' wx:if="{{showBtn}}"><image class="sys" src="../../images/sys.png"></image>扫一扫打开店铺</view>
   </view> 
 
    <view class='wrap' wx:if="{{histories && histories.length > 0}}">
@@ -28,9 +22,9 @@
         </view>
       </view>
     </view>
-    <view class='bottomStys'>
-      <view class='scanBlock' bindtap='scanCode'>
-        <image class="sys" src="../../images/sys.png"></image>扫一扫打开店铺</view>
+    <view class='bottomStys' wx:if="{{showBtn}}">
+      <view class='scanBlock' bindtap='scanCode' wx:if="{{showBtn}}">
+        <image class="sys" src="../../images/sys.png" wx:if="{{showBtn}}"></image>扫一扫打开店铺</view>
     </view>
   </view> 
 

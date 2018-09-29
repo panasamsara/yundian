@@ -1,0 +1,187 @@
+/* packageIndex/pages/fansSearch/fansSearch.wxss */
+#fansSearch{
+  padding: 0 0 60rpx;
+}
+#fansSearch #head{
+  display: flex;
+  justify-content: space-between;
+  padding: 20rpx 25rpx;
+  border-top: solid 1rpx#e5e5e5;
+  overflow: hidden;
+}
+
+#fansSearch #searchBox{
+  display: flex;
+  align-items: center;
+  height: 60rpx;
+  line-height: 60rpx;
+  background-color:#f3f3f3;
+  border-radius: 30rpx;
+  font-size: 30rpx;
+  padding: 0 20rpx;
+}
+
+#fansSearch .normalBox{
+  width: 540rpx;
+}
+
+#fansSearch .fullBox{
+  width: 100%!important;
+  justify-content: center;
+}
+
+#fansSearch .normalBox input{
+  width: 459rpx; 
+}
+
+#fansSearch .fullBox input{
+  width: 160rpx;
+}
+
+#fansSearch input{
+  padding-left: 15rpx;
+  color: #353535;
+}
+
+#fansSearch #searchIcon{
+  width: 31rpx;
+  height: 28rpx;
+}
+
+#fansSearch #clearIcon{
+  width: 35rpx;
+  height: 35rpx;
+}
+
+#fansSearch #search{
+  background-color: #fe732e;
+  width: 100rpx;
+  line-height: 60rpx;
+  text-align: center;
+  color: #ffffff;
+  border-radius: 30rpx;
+  font-size: 28rpx;
+}
+
+
+#fansSearch #blank{
+  width: 100%;
+  text-align: center;
+  font-size: 30rpx;
+  color: #666666;
+}
+.fans{
+  box-sizing: border-box;
+  padding: 0 24rpx;
+  margin: 10rpx 0 42rpx;
+  overflow: hidden;
+}
+
+.fans .float_l .leader{
+  width: 108rpx;
+  height: 28rpx;
+  position: absolute;
+  bottom: -12rpx;
+}
+.fans .float_l .logo{
+  width: 80rpx;
+  height: 80rpx;
+  position: absolute;
+  border-radius: 50%;
+  top: 14rpx;
+  left: 14rpx;
+}
+.fans .float_l:first-child{
+  position: relative;
+  height: 94rpx;
+}
+.fans .float_l:last-child{
+  margin-left: 144rpx;
+  color: #333;
+  font-size: 32rpx;
+  line-height: 122rpx;
+}
+.allMember{
+  width: 100%;
+	height: 44rpx;
+	background-color: #e5e5e5;
+  font-size: 24rpx;
+  color: #999;
+  line-height: 44rpx;
+  padding-left: 24rpx;
+  margin-bottom: 10rpx;
+}
+.showZero .list{
+  height: 130rpx;
+}
+.showZero .list image{
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  margin-top: 20rpx;
+  margin-left: 40rpx;
+}
+.showZero .list view{
+  line-height: 128rpx;
+  font-size: 32rpx;
+  color: #333;
+  margin-left: 42rpx;
+  border-bottom: 2rpx solid #e5e5e5;
+  width: 586rpx;
+}
+.expire view{
+  line-height: 56rpx;
+}
+
+.showOne .list .float_l{
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  margin-top: 20rpx;
+  margin-left: 40rpx;
+}
+.showOne .right{
+  border-bottom: 2rpx solid #e5e5e5;
+  width: 586rpx;
+  padding-top: 20rpx;
+}
+.showOne .right view{
+  text-align: left;
+  width: 586rpx;
+  line-height: 56rpx;
+}
+.showOne .list{
+  overflow: hidden;
+  margin-top: 10rpx;
+}
+.font28{
+  font-size: 28rpx;
+  color: #999;
+}
+.font27{
+  font-size: 27rpx;
+  color: #999;
+  position: relative
+}
+.font27 view{
+  position: absolute;
+  top: -4rpx;
+  left: 0;
+  width: 78rpx !important;
+  height: 38rpx !important;
+}
+.font27 view image{
+  width: 78rpx !important;
+  height: 38rpx !important;
+  vertical-align: middle;
+}
+.font27>text{
+  margin-left: 88rpx;
+}
+.grade{
+  position: absolute;
+  right: 14rpx;
+  color: #fff;
+  font-size: 18rpx;
+  top: 6rpx;
+}

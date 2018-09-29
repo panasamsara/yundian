@@ -1159,3 +1159,4 @@ canvas{
   flex-direction: row;
   align-items: center;
 }
+/* @import "../../packageShare/pages/share/share.wxss" */

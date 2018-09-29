@@ -160,6 +160,7 @@ Page({
   },
  
   onShow: function () {
+    
     var _this = this
     // 之前已经点过餐，提交过订单，计算数量
     // util.checkWxLogin('offline').then((loginRes) => {
@@ -226,29 +227,12 @@ Page({
       if (!shopId) {
         shopId = wx.getStorageSync('shopId');
       }
-/*********************************socket登录 */
 
       //获取用户id
       var userid = loginRes.id;
       //获取桌号
       var facilityId = wx.getStorageSync("facilityId");
-      console.log('桌号：' + facilityId)
-      console.log('店铺号：' + shopId)
       let SOCKET_URL = util.SOCKET_URL
-
-      //开启websocket连接
-      if (!wx.getStorageSync('socketStatus')) {
-        wx.connectSocket({
-          url: SOCKET_URL + '/zxcity_restful/ws/payBoot/live/' + shopId + '/' + facilityId + '/' + userid 
-        })
-
-        //连接成功回调
-        wx.onSocketOpen(function (res) {
-          console.log('WebSocket连接已打开！')
-          wx.setStorageSync('socketStatus', true)
-        })
-      }
-      /*********************************socket登录 */
 
       var shop = wx.getStorageSync('shop')
 
@@ -259,7 +243,8 @@ Page({
           })
         } else {
           util.getShop(loginRes.id, shopId).then(function (res) {
-
+            // 多人点餐开关
+            wx.setStorageSync('multiOrderSwitch', res.data.data.multiOrderSwitch)
             //shop存入storage
             wx.setStorageSync('shop', res.data.data.shopInfo);
             //活动
@@ -295,11 +280,16 @@ Page({
  
             _this.getData(shop)
             _this.getpurchase(shop)
-          } else {
+          } else { //已有店铺缓存， 扫码换了店铺
+            // 移除旧的缓存
             wx.removeStorageSync('shop')
             wx.removeStorageSync('goodsInfos')
             wx.removeStorageSync('shopInformation')
+            wx.removeStorageSync('multiOrderSwitch')
+            // 重新获取
             util.getShop(loginRes.id, shopId).then(function (res) {
+              // 多人点餐开关
+              wx.setStorageSync('multiOrderSwitch', res.data.data.multiOrderSwitch)
               //shop存入storage
               wx.setStorageSync('shop', res.data.data.shopInfo);
               //活动
@@ -318,6 +308,25 @@ Page({
         }
 
       }
+
+      /*********************************socket登录 */
+      //开启websocket连接
+      if (!wx.getStorageSync('socketStatus') && wx.getStorageSync('multiOrderSwitch')==1 ) {
+        wx.connectSocket({
+          url: SOCKET_URL + '/zxcity_restful/ws/payBoot/live/' + shopId + '/' + facilityId + '/' + userid
+        })
+
+        //连接成功回调
+        wx.onSocketOpen(function (res) {
+          console.log('WebSocket连接已打开！')
+          wx.setStorageSync('socketStatus', true)
+        })
+      }else{
+        wx.setStorageSync('socketStatus', false)
+        wx.setStorageSync('hostId', wx.getStorageSync('scSysUser').id)
+      }
+      /*********************************socket登录 */
+
       wx.removeStorageSync('shopId');
     })
   /*********************************socket消息 */
@@ -1018,10 +1027,12 @@ Page({
     for (let i = 0; i < cartGoodsList.length; i++) {
       this.deleteGoods( shop.id, cartGoodsList[i].stockId, cartGoodsList[i].goodsId, cartGoodsList[i].purchaseType, true)
     }
-
-    wx.sendSocketMessage({
-      data: '清空购物车_op'
-    })
+    if (wx.getStorageSync('multiOrderSwitch') == 1){
+      wx.sendSocketMessage({
+        data: '清空购物车_op'
+      })
+    }
+    
 
     // this.removePurchaseData();
     // this.setData({
@@ -1122,9 +1133,12 @@ Page({
           var opType = changeType == 'add' ? '加了' : '减了';
           var message = opType + "1份" + goodsName + "_op";
           //发送通知
-          wx.sendSocketMessage({
-            data: message
-          })
+          if (wx.getStorageSync('multiOrderSwitch') == 1){
+            wx.sendSocketMessage({
+              data: message
+            })
+          }
+          
         }
         // 获取购物车
         this.shopCartList()
@@ -1195,9 +1209,12 @@ Page({
         //移除商品后, 通知其他人
         var message = "从购物车中移除了" + goodsName + "_op";
         //发送通知
-        wx.sendSocketMessage({
-          data: message
-        })
+        if (wx.getStorageSync('multiOrderSwitch') == 1){
+          wx.sendSocketMessage({
+            data: message
+          })
+        }
+        
       // }
      /** 清空购物车时，不发送socket消息*/
       // 获取购物车
@@ -1387,7 +1404,9 @@ Page({
         // console.log("已结算")
         
       if (this.data.orderStatus == 1){
-        that.changeOrdr(); // 订单未结算
+
+        that.changeOrdr(); // 订单未结算 修改订单
+
       } else { // 订单已结算
         // 开台（设备占用）
         util.reqAsync('foodBoot/updateDeviceOccupy', {
@@ -1401,17 +1420,11 @@ Page({
         }).then((res) => {
           if (res.data.code == 1) {
             that.oneBuy()
-          } else {
-
           }
 
         })
       }
         
-        // this.oneBuy();
-      // }else{ //修改订单
-      //   this.changeOrdr();
-      // }
     }
   },
   navShow: function (e) {
@@ -1542,13 +1555,16 @@ Page({
 
         // 生成订单 socket消息跳转详情
         console.log('=================生成订单 socket消息跳转详情====================')
-        
-        console.log(data)
-        wx.sendSocketMessage({
-          data: wx.getStorageSync('orderNo') + ',confirm order'
-        })
- 
-        
+        if (wx.getStorageSync('multiOrderSwitch') == 1){
+          wx.sendSocketMessage({
+            data: wx.getStorageSync('orderNo') + ',confirm order'
+          })
+        }else{
+          wx.navigateTo({
+              url: '../../../pages/myHome/shopOrder/orderDetail/orderDetail?activeIndex=0&shopId=' + this.data.shopId + '&userId=' + this.data.userId + '&presaleId=' + wx.getStorageSync('orderNo') + '&facilityId=' + wx.getStorageSync('facilityId') + '&selectMember=1' + '&merchantId=' + this.data.merchantId
+          })
+        }
+
         // wx.navigateTo({
         //   url: '../../../pages/myHome/shopOrder/orderDetail/orderDetail?activeIndex=0&shopId=' + this.data.shopId + '&userId=' + this.data.userId + '&presaleId=' + data.data.data.orderId + '&facilityId=' + this.data.facilityId + '&selectMember=1' + '&merchantId=' + this.data.merchantId
         // })
@@ -1694,10 +1710,18 @@ Page({
               presaleId: res.data.data.id
             })
             _this.clearShopCartFn();
-            // 生成订单 socket消息跳转详情
-            wx.sendSocketMessage({
-              data: res.data.data.id + ',confirm order'
-            })
+            
+            if (wx.getStorageSync('multiOrderSwitch') == 1){
+              // 生成订单 socket消息跳转详情
+              wx.sendSocketMessage({
+                data: res.data.data.id + ',confirm order'
+              })
+            }else{
+              wx.navigateTo({
+                url: '../../../pages/myHome/shopOrder/orderDetail/orderDetail?activeIndex=0&shopId=' + this.data.shopId + '&userId=' + this.data.userId + '&presaleId=' + wx.getStorageSync('orderNo') + '&facilityId=' + wx.getStorageSync('facilityId') + '&selectMember=1' + '&merchantId=' + this.data.merchantId
+              })
+            }
+           
             // 下单成功 向后台发消息
             app.util.sendMessage(res.data.data.id, wx.getStorageSync('shop').id, wx.getStorageSync('scSysUser').usercode, 1)
           })
@@ -2150,9 +2174,11 @@ Page({
           var opType = changeType == 'add' ? '加了' : '减了';
           var message = opType + "1份" + goodsName + "_op";
           //发送通知
-          wx.sendSocketMessage({
-            data: message
-          })
+          if (wx.getStorageSync('multiOrderSwitch') == 1){
+            wx.sendSocketMessage({
+              data: message
+            })
+          }
         }
 
         this.shopCartList();
@@ -2187,10 +2213,12 @@ Page({
       //移除商品后, 通知其他人
       var message = "从购物车中移除了" + goodsname + "_op";
       //发送通知
-      wx.sendSocketMessage({
-        data: message
-      })
-
+      if (wx.getStorageSync('multiOrderSwitch') == 1){
+        wx.sendSocketMessage({
+          data: message
+        })
+      }
+      
       this.shopCartList();
       this.setPurchase(2, accountRecordId);
 

@@ -16,12 +16,12 @@ Page({
    */
   onLoad: function (options) {
     let params={
-          detailId: 542,
+          detailId: options.detailId,
           sStartpage: 1, 
           sPagerows: 10
         },
         allParams={
-          detailId: 542,
+          detailId: options.detailId,
           sStartpage: 1
         }
     this.setData({
@@ -79,7 +79,7 @@ Page({
       }
     }
   },
-  change:function(){//出现搜索按钮
+  change:function(){//显示搜索按钮
     this.setData({
       search:true
     })
@@ -105,8 +105,13 @@ Page({
       })
     }else{
       this.setData({
-        iconShow:false
+        iconShow:false,
+        list: [],
+        searchStatus:'search',
+        key: ''
       })
+      this.data.params.sStartpage=1;
+      this.getData(this.data.params);
       return
     }
     this.setData({
@@ -149,6 +154,11 @@ Page({
       searchStatus: 'searched'
     })
   },
+  enterFansInfo:function(e){
+    wx.navigateTo({
+      url: '../fansGroup/fansGroup?detailId=' + e.currentTarget.dataset.detailid + '&typeId=2'
+    })
+  }
   /**
    * 用户点击右上角分享
    */

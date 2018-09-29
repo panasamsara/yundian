@@ -28,13 +28,15 @@ Page({
     wx.showLoading({
       title: '加载中',
     })
+    var shopId = wx.getStorageSync('shop').id;
     let data = {
-      shopId: wx.getStorageSync('shop').id,
+      shopId: shopId,
       pageNo: 1,
       pageSize: 10
     };
     this.setData({
-      datas: data
+      datas: data,
+      shopId: shopId
     })
     this.getData(data);
   },
@@ -82,6 +84,13 @@ Page({
       wx.hideLoading();
     })
   },
-
+  skip:function(e){
+    var goodsId = e.currentTarget.dataset.id;
+    console.log(this.data.shopId)
+    //跳转到商品详情
+    wx.navigateTo({
+      url: '../../goodsDetial/goodsDetial?goodsId=' + goodsId + '&shopId=' + this.data.shopId, // 3 普通商品
+    })
+  }
 
 })

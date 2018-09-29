@@ -1,0 +1,146 @@
+<!-- 新手礼包海报 -->
+<template name="share1">
+  <view class='imageHtml'>
+    <view class='imageHtml_main'>
+      <view class='title init'>{{list.name}}</view>
+      <view class='imageHtml_main_c'>
+        <view class='giftMoney init'>价值{{list.money}}元</view>
+        <view class='giftName init' wx:if="{{ list.type.length < 5 }}">{{list.type}}</view>
+        <view class='giftName giftName6 init' wx:elif="{{list.type.length > 4 && list.type.length <7}}">{{list.type}}</view>
+        <view class='giftName giftName8 init' wx:else>{{list.type}}</view>
+        <!-- giftName6 -->
+        <image src='../../../../template/images/bg.png' class='img'></image>
+      </view>
+    </view>
+    <button class='hold' bindtap="btn_img">保存图片</button>
+    <canvas style="width:702rpx; height:960rpx;opacity: 0;" canvas-id="myShareCanvas" class='every'/>
+  </view>
+</template>
+<!-- 秒杀海报 -->
+<template name="share2">
+  <view class='imageHtml'>
+    <view class='imageHtml_main share2'>
+        <view class='tit'>{{list.shopName}}</view>
+        <image src='{{list.imgUrl}}' class='banner'></image>
+        <view class='bg2'>
+          <image src='../../template/images/bg2.png' class='bgB' mode="aspectFit"></image>
+          <image src='../../template/images/ms.png' class='ms'></image>
+          <view class='people'>{{list.people}}人已秒杀成功</view>
+          <view class='money init'>
+              <view class='price1 init'>
+                <text class='t'>¥</text>
+                <text>{{list.price1}}</text>
+                <text class='d'>{{list.price2}}</text>
+              </view>
+              <view class='price2 init'>
+                  <text class='t price2a'>¥</text>
+                  <text class='price2b'>{{list.price3}}</text>
+                  <text class='d price2c'>{{list.price4}}</text>
+                  <view class='init solid' style="width:{{list.oW}}rpx;"></view>
+              </view>
+          </view>
+        </view>
+    </view>
+    <button class='hold' bindtap="btn_img">保存图片</button>
+    <canvas style="width:702rpx; height:960rpx;opacity:0;" canvas-id="myShareCanvas2" class='every2'/>
+  </view>
+</template>  
+
+<!-- 保存图片的弹窗3 -->
+<!-- <view class='imageHtml' id="imageHtml">
+  <view class='imageHtml_main share3 init'>
+      <image src='images/bg3.png' class='bg3'></image>
+      <view class='header'>
+          <view class='bg4'>
+          <image src='http://pic.58pic.com/58pic/13/32/23/75H58PICKmx_1024.jpg' class='bg4_img'></image>
+          </view>
+          <view class='header_name init'>智美女人街店</view>
+          <view class='time init'>活动时间：2018.09.04—2018.10.04</view>
+          <view class='header_tit init'>活动标题活动标题</view>
+          <view class='solid'></view>
+          <view class='text1 init'>活动口号活动口号活动,活动口号活动口号活动活动口号活动口号活动</view>
+          <view class='text2 init'>每日中午12—14时，凡在我餐厅就餐5人以上的顾客。每日中午12—14时，凡在我餐厅就餐5人以上的顾客。每日中午12—14时，凡在我餐厅就餐5人以上的顾客。每日中午12—14时，凡在我餐厅就餐5人以上的顾客。</view>
+      </view>
+      <view class='footer init'>
+        <image src='images/saoma.png' class='sm'></image>
+      </view>
+  </view>
+  <button class='hold'>保存图片</button>
+</view> -->
+<!-- 保存图片的弹窗4 -->
+<template name="share4">
+  <view class='imageHtml' id="imageHtml">
+    <view class='imageHtml_main share4 init' style="background-image:url('../../template/images/bg4.png');background-size: 100% 100%;background-repeat: no-repeat;">
+        <view class='share4_tit init'>{{list.shopName}}</view>
+        <view class='share4_people init'>{{list.people}}人正在拼团</view>
+        <view class='goodsView'>
+          <image class='goodsImg' src='{{list.imgUrl}}'></image>
+          <image class='goPT' src='../../template/images/bg4_2.png'></image>
+        </view>
+        <view class='money init'>
+          <view class='price1 init'>
+            <text class='t'>¥</text>
+            <text>{{list.price1}}</text>
+            <text class='d'>{{list.price2}}</text>
+          </view>
+          <view class='price2 init'>
+            <text class='t price2a'>¥</text>
+            <text class='price2b'>{{list.price3}}</text>
+            <text class='d price2c'>{{list.price4}}</text>
+            <view class='init solid' style="width:{{list.oW}}rpx;"></view>
+          </view>
+        </view>
+    </view>
+    <button class='hold' bindtap="btn_img">保存图片</button>
+    <canvas style="width:702rpx; height:1062rpx;opacity:0;" canvas-id="myShareCanvas4" class='every4'/>
+  </view>
+</template>
+
+
+<!-- 保存图片的弹窗5 -->
+<template name="share5">
+  <view class='imageHtml' id="imageHtml5">
+    <view class='imageHtml_main share5'>
+        <view class='share5_tit'>{{list.shopName}}</view>
+        <image class='goodsImg' src='{{list.imgUrl}}'></image>
+        <view class='footer'>
+          <view class='init footer_tit'>{{list.desc}}</view>
+          <view class='init footer_price'>
+            <text class='t'>¥</text>
+            <text>{{list.price1}}</text>
+            <text class='d' style='font-size:50rpx;'>{{list.price2}}</text>
+          </view>
+        </view>
+        <view class='an' style="background-image:url('../../template/images/an.png');background-size: 100% 100%;background-repeat: no-repeat;"></view>
+    </view>
+    <button class='hold' bindtap="btn_img">保存图片</button>
+    <canvas style="width:702rpx; height:960rpx;" canvas-id="myCanvas5" class='every5'/>
+  </view>
+</template>
+
+
+
+<!-- 保存图片的弹窗6 -->
+<template name="share6">
+  <view class='imageHtml' id="imageHtml6">
+    <view class='imageHtml_main share6' style="background-image:url('../../../../template/images/bg6.png');background-size: 100% 100%;background-repeat: no-repeat;">
+        <image class='logo' src='{{list.imgUrl}}'></image>
+        <view class='share6_tit init'>{{list.name}}</view>
+        <view class='type'>{{list.type}}</view>
+    </view>
+    <button class='hold' bindtap="btn_img">保存图片</button>
+    <canvas style="width:702rpx; height:1062rpx;opacity:0;" canvas-id="myShareCanvas6" class='every6'/>
+  </view>
+</template>
+<!-- 保存图片的弹窗7 -->
+<template name="share7">
+  <view class='imageHtml' id="imageHtml7">
+    <view class='imageHtml_main share7'>
+      <image class='videoT' src='../../template/images/video.png'></image>
+      <image class='video' src='https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2599346206,437424084&fm=27&gp=0.jpg'></image>
+      <image class='bg7' src='../../template/images/bg7.png'></image>
+    </view>
+    <button class='hold' bindtap="btn_img">保存图片</button>
+    <canvas style="width:702rpx; height:1062rpx;" canvas-id="myCanvas7" class='every7'/>
+  </view>
+</template>

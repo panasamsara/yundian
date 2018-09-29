@@ -8,14 +8,18 @@ Page({
     url: '',
     goodsId: null,
     shopId: null,
+    actionId: null,
     activityData: null,
     scale: null,
     temp: null,
-    signed: false
+    signed: false,
+    signType: null,
+    loginType:0
   },
   // 生命周期函数--监听页面加载
   onLoad: function (options) {
     let url = util.SHARE_URL+'/yueba/yundian/posterTemplate/posterTemplate.html?&goodsId=' + options.goodsId + '&shopId=' + options.shopId + '&customerId=' + options.customerId
+    var _this = this;
 
     this.setData({
       url: url,
@@ -27,8 +31,7 @@ Page({
     });
     this.setCanvasSize()
 
-    this.getAct(options.goodsId, options.shopId)
-
+   
     if (options && options.q) {
       var uri = decodeURIComponent(options.q)
       var p = util.getParams(uri)
@@ -51,14 +54,67 @@ Page({
     //   wx.setStorageSync('shop', res.data.data.shopInfo);
     // })
     //获取报名信息
-    let params = {
-      actionId: options.actionId,
-      userId: wx.getStorageSync('scSysUser').id
+    this.getAct(options.goodsId, options.shopId)
+    if (wx.getStorageSync('scSysUser')){
+      let params = {
+        actionId: options.actionId,
+        userId: wx.getStorageSync('scSysUser').id
+      }
+      this.setData({
+        params: params
+      })
+      this.getSignList(_this.data.params);
+      
+    }else{
+      this.setData({
+        actionId: options.actionId
+      })
     }
-    this.setData({
-      params: params
-    })
+   
     // this.getSignList(params);
+  },
+  //登录注册回调
+  resmevent: function (e) {
+    if (wx.getStorageSync('scSysUser')) {
+      this.setData({
+        loginType: 0,
+        phone: wx.getStorageSync('scSysUser').phone
+      })
+      app.util.getShop(wx.getStorageSync('scSysUser').id, this.data.shopId).then((res) => {
+        // debugger
+        if (res.data.code == 1) {
+          wx.setStorageSync('shop', res.data.data.shopInfo)
+          wx.setStorageSync('shop', res.data.data.shopInfo);
+          //活动
+          wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
+          // 所有信息
+          wx.setStorageSync('shopInformation', res.data.data);
+          let params = {
+            actionId: this.data.actionId,
+            userId: wx.getStorageSync('scSysUser').id
+          }
+          this.setData({
+            params: params
+          })
+          this.getSignList(this.data.params);
+          this.getAct(options.goodsId, options.shopId)
+        }
+      })
+     
+      
+      // this.getData(this.data.parm)
+      // this.loadFn(wx.getStorageSync('scSysUser').id)
+    }
+  },
+  //获取用户信息回调
+  resusermevent: function (e) {
+    // debugger
+    // if (!wx.getStorageSync('scSysUser')) {
+    //   this.setData({
+    //     loginType: 1
+    //   })
+
+    // }
   },
   //报名
   sign: function () {
@@ -116,12 +172,17 @@ Page({
           });
           return
         }
-        var remark = _this.data.remark;
+        var ranges = [
+          '\ud83c[\udf00-\udfff]',
+          '\ud83d[\udc00-\ude4f]',
+          '\ud83d[\ude80-\udeff]'
+        ],
+        remark = _this.data.remark.replace(new RegExp(ranges.join('|'), 'g'), '').replace(/\s+/g, '');
       }
      
       let params = {
         phone: _this.data.phone,
-        remark: _this.data.remark,
+        remark: remark,
         userId: wx.getStorageSync('scSysUser').id,
         userName: userName,
         actionId: _this.data.actionId
@@ -162,6 +223,9 @@ Page({
             passed: false
           })
         }
+        this.setData({
+          load: 'done'
+        })
         if (res.data.data.userList.length > 0) {
           this.setData({
             userList: res.data.data.userList,
@@ -175,23 +239,51 @@ Page({
     })
   },
   onShow: function () { //缓存店铺信息（分享切店铺）
-    var _this = this
-    this.getSignList(_this.data.params);
-    util.checkWxLogin('share').then((loginRes) => {
-      _this.setData({
-        phone: loginRes.phone
-      })
-      var shopId = this.data.shopId
-      if (!shopId) {
-        shopId = wx.getStorageSync('shopId');
-      }
-      var shop = wx.getStorageSync('shop')
+    var _this = this;
 
-      // 判断是否有缓存店铺，没有就缓存，有就看是否需要替换
-      util.cacheShop(shopId, shop, _this)
-      
-      wx.removeStorageSync('shopId');
+    util.checkWxLogin('share').then((loginRes) => {
+      console.log(loginRes)
+      if (loginRes.status == 0) {
+        // if (wx.getStorageSync('isAuth') == 'no') {
+        //   this.setData({
+        //     loginType: 2
+        //   })
+        // } else if (wx.getStorageSync('isAuth') == 'yes') {
+          this.setData({
+            loginType: 1
+          })
+        // }
+      } else {
+        _this.setData({
+          phone: loginRes.phone
+        })
+        var shopId = this.data.shopId
+        if (!shopId) {
+          shopId = wx.getStorageSync('shopId');
+        }
+        // var shop = wx.getStorageSync('shop')
+
+        util.getShop(wx.getStorageSync('scSysUser').id, shopId).then(res => {
+          if (res.data.code == 1) {
+            wx.setStorageSync('shop', res.data.data.shopInfo)
+            wx.setStorageSync('shop', res.data.data.shopInfo);
+            //活动
+            wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
+            // 所有信息
+            wx.setStorageSync('shopInformation', res.data.data);
+            this.getAct(this.data.goodsId, this.data.shopId)
+
+          }
+        })
+
+        // 判断是否有缓存店铺，没有就缓存，有就看是否需要替换
+
+
+        // wx.removeStorageSync('shopId');
+
+      }
     })
+   
   },
   getAct: function (goodsId, shopId){
     var _this = this
@@ -209,28 +301,27 @@ Page({
         this.setData({
           activityData: res.data.data
         })
-        wx.downloadFile({//缓存网络图片，直接使用网络路径真机无法显示或绘制
-          url: wx.getStorageSync('shop').logoUrl,
-          success: function (downRes) {
-            console.log(downRes.tempFilePath)
-            _this.setData({
-              logo: downRes.tempFilePath
-            })
-            wx.downloadFile({//缓存网络图片，直接使用网络路径真机无法显示或绘制
-              url: res.data.data.pictureUrl,
-              success: function (newRes) {
-                console.log(newRes.tempFilePath)
-                _this.setData({
-                  proPic: newRes.tempFilePath
-                })
-                _this.drawCanvas()
-              }
-            })
-          }
-        })
-
-          
-        
+        if (wx.getStorageSync('shop')){
+          wx.downloadFile({//缓存网络图片，直接使用网络路径真机无法显示或绘制
+            url: wx.getStorageSync('shop').logoUrl,
+            success: function (downRes) {
+              console.log(downRes.tempFilePath)
+              _this.setData({
+                logo: downRes.tempFilePath
+              })
+              wx.downloadFile({//缓存网络图片，直接使用网络路径真机无法显示或绘制
+                url: res.data.data.pictureUrl,
+                success: function (newRes) {
+                  console.log(newRes.tempFilePath)
+                  _this.setData({
+                    proPic: newRes.tempFilePath
+                  })
+                  _this.drawCanvas()
+                }
+              })
+            }
+          })
+        }                   
       }
     }).catch((err) => {
       console.log(err);

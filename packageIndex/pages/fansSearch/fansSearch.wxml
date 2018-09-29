@@ -2,19 +2,15 @@
 <view class='container' id='fansSearch'>
   <view id='head'>
     <view id='searchBox' class="{{search?'normalBox':'fullBox'}}">
-      <!-- <view id='searchIconBox'> -->
-        <image src='../images/sousuo@2x.png' id='searchIcon' class='icon'></image>
-      <!-- </view> -->
+      <image src='../images/sousuo@2x.png' id='searchIcon' class='icon'></image>
       <input placeholder='搜索粉小组' confirm-type='search' bindfocus='change' value='{{key}}'  bindinput='hotSearch'></input>
-      <!-- <view id='clearIconBox'>  -->
-        <image src='../images/cha@2x.png' id='clearIcon' class='icon' wx:if="{{iconShow}}" bindtap='clear'></image>
-      <!-- </view>   -->
+      <image src='../images/cha@2x.png' id='clearIcon' class='icon' wx:if="{{iconShow}}" bindtap='clear'></image>
     </view>
     <view id='search' bindtap='search' wx:if="{{search}}">搜索</view>
   </view>
   <view id='fansList'>
     <view class='list' wx:for="{{list}}" wx:key="index" wx:if="{{list.length>0}}">
-      <view class='listBox'>
+      <view class='listBox' bindtap='enterFansInfo' data-detailid="{{item.detailId}}">
         <view class='box'>
           <image src='{{item.logo}}' class='logo'></image>
           <view class='infoBox'>

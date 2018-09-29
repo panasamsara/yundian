@@ -115,6 +115,4 @@
   </view>
   </view>
 
-  <view class='mask' catchtouchmove='preventTouchMove' hidden='{{showLoading}}'>
-    <view class='loading'>努力加载中...</view>
-  </view>  
+

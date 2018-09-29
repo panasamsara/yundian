@@ -19,8 +19,8 @@
   z-index: 1;
 }
 .top .wrap{
-  width: 138rpx;
-  height: 138rpx;
+  width: 140rpx;
+  height: 140rpx;
   border-radius: 50%;
   background:rgba(255, 255, 255, 0.3);
   margin-right: 24rpx;
@@ -34,7 +34,7 @@
   z-index: 3;
 }
 .wrap image{
-  padding: 4rpx;
+  margin: 6rpx;
 }
 .headerToP .top{
   position: absolute;
@@ -58,7 +58,7 @@
 .headerToP text{
   text-align: center;
   font-size: 34rpx;
-  margin-top: 47rpx;
+  margin-top: 37rpx;
   display: block;
   color: #fff;
 }
@@ -215,6 +215,13 @@ button[type=warn]{
   animation-duration: 2000ms;
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
+}
+.genxi{
+  height: 40rpx;
+  width: 215rpx;
+  position: absolute;
+  left: 150rpx;
+  top: 100rpx;
 }
 @keyframes shake-vertical {
   25% {

@@ -1,3 +1,4 @@
+<login-component login-type-property="{{loginType}}"  bindresusermevent="resusermevent" bindresmevent="resmevent"></login-component>
 <view class='banner_bg'> 
   <image src='../images/banner_bg@2x.png' wx:if="{{flag==1}}"></image>
   <image src='../images/liquanzhongxin_wulibao@2x.png' wx:if="{{flag==0}}"></image>

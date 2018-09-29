@@ -15,4 +15,5 @@
 .text>view:first-child{
   line-height: 50rpx;
   margin: 18rpx 0 12rpx;
+  height: 100rpx;
 }

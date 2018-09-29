@@ -1,66 +1,72 @@
-// packageIndex/pages/activityList/activityList.js
+const app = getApp()
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-  
+    dataJson: {
+    "detailId": "",
+    "type": "",
+    "sStartPage": "1",
+    "sSpagerows": "10",
+    "userId": ""
+    },
+    activityList: [],
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
   onLoad: function (options) {
-  
+    var userId = wx.getStorageSync('scSysUser').id
+    var detailId = 'dataJson.detailId';
+    var userid = 'dataJson.userId';
+    var typeId = 'dataJson.type'
+    this.setData({
+      [detailId]: options.detailId,
+      [userid]: userId,
+      [typeId]: options.typeId
+    })
+    this.detail();
   },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-  
+  detail: function () {
+    var that = this;
+    wx.showLoading({
+      title: '加载中',
+    })
+    app.util.reqAsync('fans/getFansTeamActivityNew20', this.data.dataJson).then((res) => {
+      var arr = this.data.activityList;
+      wx.hideLoading();
+      var arrNew = arr.concat(res.data.data);
+      if (res.data.code == 1) {
+        that.data.dataJson.sStartpage++;
+        this.setData({
+          activityList: arrNew,
+          total: res.data.total
+        })
+        console.log("activityList",this.data.activityList);
+      }
+    }).catch((err) => {
+      wx.hideLoading();
+      wx.showToast({
+        title: '失败……',
+        icon: 'none'
+      })
+    })
   },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-  
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-  
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-  
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-  
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
   onReachBottom: function () {
-  
+    var newpage = Math.ceil(this.data.total / this.data.dataJson.sPagerows);
+    if (this.data.dataJson.sStartpage <= newpage) {
+      wx.showLoading({
+        title: '加载中',
+      })
+      this.detail();
+    } else {
+      wx.showToast({
+        title: '到底了哦',
+        icon: "none"
+      })
+    }
   },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-  
-  }
+  fansActivity: function (e) {
+    var id = e.currentTarget.dataset.activityid;
+    wx.navigateTo({
+      url: '../fansActivity/fansActivity?id=' + id,
+    })
+  },
 })
+
+

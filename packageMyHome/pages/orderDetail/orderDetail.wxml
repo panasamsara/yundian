@@ -216,11 +216,14 @@
                 待付款
               </view>
               <!--0 拼单中 -->
-              <view wx:if="{{ item.groupDetail.timeStatus == 0 }}">
-                <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType != 2}}">
+              <view class="pindaning" wx:if="{{ item.groupDetail.timeStatus == 0 }}">
+                <view class="common-type a" wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType == 2}}">
+                    拼单中
+                  </view>
+                <view class="common-type a" wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType != 2}}">
                   拼单还未成功，邀请好友来拼单吧  
                 </view>
-                <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==5}}">
+                <view class="common-type " wx:if="{{item.orderInfo.orderStatusVo==5}}">
                   已取消
                 </view>
                 <view class="common-type" wx:if="{{item.orderInfo.orderStatusVo==6}}">
@@ -494,6 +497,11 @@
             <view class="order-num siz-four">订单编号：{{item.orderInfo.orderNo}}</view>
             <view class="order-time siz-four">下单时间：{{item.orderInfo.createTime}}</view>
           </view>
+          <view  wx:if="{{item.orderInfo.orderStatusVo==5}}" >
+          <view class="order-type siz-three">已取消</view>
+            <view class="order-num siz-four">订单编号：{{item.orderInfo.orderNo}}</view>
+            <view class="order-time siz-four">下单时间：{{item.orderInfo.createTime}}</view>
+          </view>
           <view class="b" wx:else >
             <view class="order-type siz-three">拼单中</view>
             <view class="order-num siz-four">订单编号：{{item.orderInfo.orderNo}}</view>
@@ -525,17 +533,19 @@
         <view  wx:if="{{item.groupDetail.timeStatus == 2 &&item.orderInfo.orderStatusVo!=1  && spellLeftTime == 0 }}">
         </view>
         <view wx:else>
-          <view class='storeCode ziti' wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType == 2}}">
-            <view class="code-img">
-                <!-- <view class="img-box">
-                  <image bindtap="previewImg" mode="scaleToFill" src="{{imagePath}}"></image>
-                </view> -->
-                <view class="canvas-box"  wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType == 2}}">
-                  <canvas  style="margin:0 auto;width: 650rpx;height: 630rpx;background:#f1f1f1;" canvas-id="mycanvas"/>
-                </view>
-            </view>
-            <text class="siz-four">序列号：{{item.orderInfo.serialNumber}}</text>
-            <text class="siz-four">请到此店兑换此码</text>
+          <view wx:if="{{item.groupDetail.timeStatus == 1}}">
+            <view class='storeCode ziti' wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType == 2}}">
+              <view class="code-img">
+                  <!-- <view class="img-box">
+                    <image bindtap="previewImg" mode="scaleToFill" src="{{imagePath}}"></image>
+                  </view> -->
+                  <view class="canvas-box"  wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType == 2}}">
+                    <canvas  style="margin:0 auto;width: 650rpx;height: 630rpx;background:#f1f1f1;" canvas-id="mycanvas"/>
+                  </view>
+              </view>
+              <text class="siz-four">序列号：{{item.orderInfo.serialNumber}}</text>
+              <text class="siz-four">请到此店兑换此码</text>
+            </view>  
           </view>
         </view>
       </view>
@@ -559,7 +569,7 @@
       <!-- 拼单信息 -->
       <view  wx:if="{{isGroupBuying==1 && userList.length != 0}}" >
         <!--0 拼单中 -->
-        <view wx:if="{{timeStatus==0 }}">
+        <view wx:if="{{timeStatus==0&&item.orderInfo.orderStatusVo!=5}}">
           <view class="spell" wx:if="{{spellLeftTime != 0}}">
             <view class='spellinfo'>
               <text wx:if="{{ ifshare==0 }}">待分享</text>
@@ -584,7 +594,7 @@
           </view>
         </view>
         <!-- 参与拼单人员 -->
-        <view class="userlist" >
+        <view class="userlist" wx:if="{{item.orderInfo.orderStatusVo!=5}}">
           <view class='userpic'>
             <scroll-view scroll-x>
               <view class='useritem' wx:for="{{spellUser}}" wx:key="*this" wx:for-index="splinx"  wx:for-item='spllist'>

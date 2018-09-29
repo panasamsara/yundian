@@ -64,6 +64,9 @@ page{
   float: left;
   color: #999999;
   font-size: 28rpx;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .appointment #startTime,.appointment #endTime{

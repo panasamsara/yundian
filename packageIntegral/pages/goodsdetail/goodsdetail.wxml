@@ -1,4 +1,6 @@
 <!--packageIntegral/pages/goodsdetail/goodsdetail.wxml-->
+<login-component login-type-property="{{loginType}}"  bindresmevent="resmevent" ></login-component>
+
 <view class='container' id='goodsdetail'>
   <swiper class='banner' indicator-dots>
     <swiper-item  wx:for='{{data.imageList}}' wx:key='index' class='picBox'>

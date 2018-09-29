@@ -1,17 +1,8 @@
 <view class='content'>
-  <view class='list'>
-    <image src='../images/pinkTeam.png'></image>
-    <view class='over_ellipsis font28 color_333'>最美女人花</view>
-    <view class='over_ellipsis font24 color_999'>123张</view>
-  </view>
-  <view class='list'>
-    <image src='../images/pinkTeam.png'></image>
-    <view class='over_ellipsis font28 color_333'>最美女人花</view>
-    <view class='over_ellipsis font24 color_999'>123张</view>
-  </view>
-  <view class='list'>
-    <image src='../images/pinkTeam.png'></image>
-    <view class='over_ellipsis font28 color_333'>最美女人花</view>
-    <view class='over_ellipsis font24 color_999'>123张</view>
+  <view class='list' wx:for="{{albumList}}" wx:key="index" data-albumId="{{item.albumId}}" data-albumName="{{item.albumName}}" 
+  data-circleId="{{item.circleId}}" bindtap='photoDetail'>
+    <image src='{{item.albumUrl}}'></image>
+    <view class='over_ellipsis font28 color_333'>{{item.albumName}}</view>
+    <view class='over_ellipsis font24 color_999'>{{item.number}}张</view>
   </view>
 </view>

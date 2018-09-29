@@ -99,6 +99,8 @@ Component({
     previewImage: function (e) {
       var current = e.target.dataset.src;
       var imageList = this.data.list[e.target.dataset.index].dynamicUrl;
+      console.log("list",this.data.list)
+      console.log("imageList", imageList);
       wx.previewImage({
         current: current,
         urls: imageList

@@ -132,7 +132,7 @@ Page({
     var goodsId = e.currentTarget.dataset.goodsid;
     var goodsType = e.currentTarget.dataset.goodstype;
     wx.navigateTo({
-      url: '../goodsdetail/goodsdetail?goodsId=' + goodsId + "&goodsType=" + goodsType
+      url: '../goodsdetail/goodsdetail?goodsId=' + goodsId + "&goodsType=" + goodsType + '&shopId=' + this.data.shopId
     })
   },
   onHide: function () {

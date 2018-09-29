@@ -14,11 +14,11 @@
 	"libVersion": "2.2.5",
 	"appid": "wxd471bb4262ac7505",
 	"projectname": "zshop_pro",
-	"svr": "",
-	"client": "",
-	"qcloudRoot": "",
-	"miniprogramRoot": "",
-	"pluginRoot": "",
+	"svr": "/",
+	"client": "/",
+	"qcloudRoot": "/",
+	"miniprogramRoot": "/",
+	"pluginRoot": "/",
 	"scripts": {},
 	"condition": {
 		"search": {
@@ -225,7 +225,6 @@
 					"pathName": "pages/myHome/discounts/discounts",
 					"query": ""
 				},
-
 				{
 					"id": -1,
 					"name": "拼单详情",
@@ -238,7 +237,6 @@
 					"pathName": "packageMyHome/pages/orderDetail/orderDetail",
 					"query": "orderNo=ZXCSSHOP201807180918593180012"
 				},
-
 				{
 					"id": -1,
 					"name": "search",
@@ -266,7 +264,19 @@
 				{
 					"id": -1,
 					"name": "我的",
-					"pathName": "pages/myHome/myHome"
+					"pathName": "pages/myHome/myHome",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "新手礼包劵详情",
+					"pathName": "pages/myHome/discounts/discountDetail/discountDetail",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "新手礼包劵详情",
+					"pathName": "pages/myHome/discounts/discountDetail/discountDetail"
 				}
 			]
 		}

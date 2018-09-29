@@ -46,101 +46,99 @@ Page({
       couponType4:'',
       animationData: {},
       outQrCodeParam:{},
-      shopHasCoupon: false
+      shopHasCoupon: false,
+      share:false
+      
 
    },
    onReady() {
    },
-   onLoad: function (e) {
+  onLoad: function (e) {
+    //  debugger
+     var _this =this
      console.log('进入onload---------------------------------------开始测试')
-     console.log(e)
+    console.log(e)
      if (e && e.q){
         var uri = decodeURIComponent(e.q)
         var p = util.getParams(uri)
         let shopId = p.shopId
         wx.setStorageSync('shopId', shopId);
         this.setData({
-          shopId: shopId
+          shopId: shopId,
+          share:true
+          
         })
      }else{
        if (e && e.shopId) {
          wx.setStorageSync('shopId', e.shopId);
          this.setData({
-           shopId: e.shopId
+           shopId: e.shopId,
+           share: false
          })
        }
      }
+     
 
    },
    // 每次显示做个判断，本地没有店铺就扫码，当前没有店铺就请求数据
    onShow: function () {
     //  this.onLoad();
     var _this = this
-    
-     console.log('进入onshow-------------------------------')
      
      util.checkWxLogin().then((loginRes) => {
        console.log('检测是否登录---------------------loginRes', loginRes)
-       
-       var shopId = this.data.shopId
-       if (!shopId) {
-         shopId = wx.getStorageSync('shopId');
-       }
-       var shop = wx.getStorageSync('shop')
+       //  debugger
+       if (loginRes.status === 0) {
 
-       if (!shop) {
-         if (shopId == undefined) {
+         if (this.data.share) {
            wx.redirectTo({
-             url: '../scan/scan'
+             url: '../scan/scan?share=' + this.data.share
            })
          } else {
-           util.getShop(loginRes.id, shopId).then(function (res) {
-
-             _this.setData({
-               shopInformation: res.data.data,
-               goodsInfos: res.data.data.goodsInfos
-             })
-             //shop存入storage
-             wx.setStorageSync('shop', res.data.data.shopInfo);
-             //活动
-             wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
-             // 所有信息
-             wx.setStorageSync('shopInformation', res.data.data);
-             if (res.data.data.shopInfo.shopHomeConfig) {
-               if (res.data.data.shopInfo.shopHomeConfig.videoPathList.length != 0) {
-                 let videoInfo = {}
-                 videoInfo.url = res.data.data.shopInfo.shopHomeConfig.videoPathList[0].filePath
-                 videoInfo.cover = res.data.data.shopInfo.shopHomeConfig.videoPathList[0].coverImagePath
-                 wx.setStorageSync('videoInfo', videoInfo)
-               }
-             }
-             _this.getShopInfo(res.data.data)
-             _this.getIndexAllInfo(res.data.data.shopInfo.id)
-             _this.checkCoupon()
+           wx.redirectTo({
+             url: '../scan/scan?loginType=1'
            })
          }
        } else {
-         if (shopId == undefined || shopId == '' || shopId == null) {
-           if (shop.shopHomeConfig) {
-             if (shop.shopHomeConfig.videoPathList.length != 0) {
-               let videoInfo = {}
-               videoInfo.url = shop.shopHomeConfig.videoPathList[0].filePath
-               videoInfo.cover = shop.shopHomeConfig.videoPathList[0].coverImagePath
-               wx.setStorageSync('videoInfo', videoInfo)
-             }
+
+         var shopId = this.data.shopId
+         if (!shopId) {
+           shopId = wx.getStorageSync('shopId');
+         }
+         var shop = wx.getStorageSync('shop')
+         if (!shop) {
+           if (!shopId) {
+             wx.redirectTo({
+               url: '../scan/scan'
+             })
+           } else {
+             util.getShop(loginRes.id, shopId).then(function (res) {
+
+               _this.setData({
+                 shopInformation: res.data.data,
+                 goodsInfos: res.data.data.goodsInfos
+               })
+               //shop存入storage
+               wx.setStorageSync('shop', res.data.data.shopInfo);
+               //活动
+               wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
+               // 所有信息
+               wx.setStorageSync('shopInformation', res.data.data);
+               if (res.data.data.shopInfo.shopHomeConfig) {
+                 if (res.data.data.shopInfo.shopHomeConfig.videoPathList.length != 0) {
+                   let videoInfo = {}
+                   videoInfo.url = res.data.data.shopInfo.shopHomeConfig.videoPathList[0].filePath
+                   videoInfo.cover = res.data.data.shopInfo.shopHomeConfig.videoPathList[0].coverImagePath
+                   wx.setStorageSync('videoInfo', videoInfo)
+                 }
+               }
+               _this.getShopInfo(res.data.data)
+               _this.getIndexAllInfo(res.data.data.shopInfo.id)
+               _this.checkCoupon()
+             })
            }
-           let shopInformation = wx.getStorageSync('shopInformation')
-           let goodsInfos = wx.getStorageSync('goodsInfos')
-           
-           _this.setData({
-             shopInformation: shopInformation,
-             goodsInfos: _this.changeStartEndTime(goodsInfos)
-           })
-           _this.getShopInfo(shopInformation)
-           _this.getIndexAllInfo(shop.id)
-           _this.checkCoupon()
          } else {
-           if (shopId == shop.id) {
+           if (shopId == undefined || shopId == '' || shopId == null) {
              if (shop.shopHomeConfig) {
                if (shop.shopHomeConfig.videoPathList.length != 0) {
                  let videoInfo = {}
@@ -160,40 +158,64 @@ Page({
              _this.getIndexAllInfo(shop.id)
              _this.checkCoupon()
            } else {
-             wx.removeStorageSync('shop')
-             wx.removeStorageSync('goodsInfos')
-             wx.removeStorageSync('shopInformation')
-             util.getShop(loginRes.id, shopId).then(function (res) {
-               _this.setData({
-                 shopInformation: res.data.data,
-                 goodsInfos: _this.changeStartEndTime(res.data.data.goodsInfos)
-               })
-               //shop存入storage
-               wx.setStorageSync('shop', res.data.data.shopInfo);
-               //活动
-               wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
-               // 所有信息
-               wx.setStorageSync('shopInformation', res.data.data);
-               if (res.data.data.shopInfo.shopHomeConfig) {
-                 if (res.data.data.shopInfo.shopHomeConfig.videoPathList.length != 0) {
+             if (shopId == shop.id) {
+               if (shop.shopHomeConfig) {
+                 if (shop.shopHomeConfig.videoPathList.length != 0) {
                    let videoInfo = {}
-                   videoInfo.url = res.data.data.shopInfo.shopHomeConfig.videoPathList[0].filePath
-                   videoInfo.cover = res.data.data.shopInfo.shopHomeConfig.videoPathList[0].coverImagePath
+                   videoInfo.url = shop.shopHomeConfig.videoPathList[0].filePath
+                   videoInfo.cover = shop.shopHomeConfig.videoPathList[0].coverImagePath
                    wx.setStorageSync('videoInfo', videoInfo)
                  }
                }
-               _this.getShopInfo(res.data.data)
-               _this.getIndexAllInfo(res.data.data.shopInfo.id)
+               let shopInformation = wx.getStorageSync('shopInformation')
+               let goodsInfos = wx.getStorageSync('goodsInfos')
+               console.log(wx.getStorageSync('shopInformation'))
+               _this.setData({
+                 shopInformation: shopInformation,
+                 goodsInfos: _this.changeStartEndTime(goodsInfos)
+               })
+               _this.getShopInfo(shopInformation)
+               _this.getIndexAllInfo(shop.id)
                _this.checkCoupon()
+             } else {
+               wx.removeStorageSync('shop')
+               wx.removeStorageSync('goodsInfos')
+               wx.removeStorageSync('shopInformation')
+               util.getShop(loginRes.id, shopId).then(function (res) {
+                 _this.setData({
+                   shopInformation: res.data.data,
+                   goodsInfos: _this.changeStartEndTime(res.data.data.goodsInfos)
+                 })
+                 //shop存入storage
+                 wx.setStorageSync('shop', res.data.data.shopInfo);
+                 //活动
+                 wx.setStorageSync('goodsInfos', res.data.data.goodsInfos);
+                 // 所有信息
+                 wx.setStorageSync('shopInformation', res.data.data);
+                 if (res.data.data.shopInfo.shopHomeConfig) {
+                   if (res.data.data.shopInfo.shopHomeConfig.videoPathList.length != 0) {
+                     let videoInfo = {}
+                     videoInfo.url = res.data.data.shopInfo.shopHomeConfig.videoPathList[0].filePath
+                     videoInfo.cover = res.data.data.shopInfo.shopHomeConfig.videoPathList[0].coverImagePath
+                     wx.setStorageSync('videoInfo', videoInfo)
+                   }
+                 }
+                 _this.getShopInfo(res.data.data)
+                 _this.getIndexAllInfo(res.data.data.shopInfo.id)
+                 _this.checkCoupon()
 
-             })
+               })
+             }
            }
          }
-         
+          wx.removeStorageSync('shopId');
        }
 
-       wx.removeStorageSync('shopId');
+
      })
+     console.log('进入onshow-------------------------------')
+     
+     
     
      
    },
@@ -232,12 +254,17 @@ Page({
     //  shop.fansCounter = resData.fansCounter
      if (shop.shopHomeConfig.imagePathList.length != 0) {
        let imagePath = resData.shopInfo.shopHomeConfig.imagePathList[0]
-       let index_of_query = imagePath.indexOf('?')
-       if (index_of_query >= 0) {
-         resData.bgImageLong = imagePath.substr(0, index_of_query)
-       } else {
-         resData.bgImageLong = imagePath
+       if (imagePath != undefined){
+         var index_of_query = imagePath.indexOf('?')
+         if (index_of_query >= 0) {
+           resData.bgImageLong = imagePath.substr(0, index_of_query)
+         } else {
+           resData.bgImageLong = imagePath
+         }
+       }else{
+         resData.bgImageLong = '../../images/bg1.jpg'
        }
+ 
      } else {
        resData.bgImageLong = '../../images/bg1.jpg'
      }
@@ -548,6 +575,7 @@ Page({
    },
    //领取新人礼包
    getCoupon: function(){
+     let _this = this
      util.reqAsync('shop/takeCoupon', {
        customerId: wx.getStorageSync('scSysUser').id,
        shopId: wx.getStorageSync('shop').id,
@@ -555,20 +583,30 @@ Page({
        promGoodsType: this.data.couponInfo.coupon.promGoodsType,
        number: 1
      }).then((res) => {
-       this.setData({
-         couponLogId: res.data.data.couponLogId
-       })
-       // 领取成功后没有回调
-       wx.showToast({
-         title: '领取成功',
-         icon: 'success'
-       })
-       this.setData({
-         showModal: true,
-         showCoupnBox: false,
-         showCouponGetBox: false,
-         showCouponDetail: true
-       })
+       if(res.data.code == 9){
+         wx.showToast({
+           title: res.data.msg,
+           icon: 'none'
+         })
+         // 重新刷新首页
+         _this.onPullDownRefresh()
+       }else{
+         this.setData({
+           couponLogId: res.data.data.couponLogId
+         })
+         // 领取成功后没有回调
+         wx.showToast({
+           title: '领取成功',
+           icon: 'success'
+         })
+         this.setData({
+           showModal: true,
+           showCoupnBox: false,
+           showCouponGetBox: false,
+           showCouponDetail: true
+         })
+       }
+       
      }).catch((err) => {
 
      })
@@ -588,7 +626,7 @@ Page({
       showCouponDetail: false
     })
     wx.navigateTo({
-      url: '../myHome/discounts/discountDetail/discountDetail?couponLogId=' + this.data.couponLogId + '&couponType=06' + "&share=0",
+      url: '../myHome/discounts/discountDetail/discountDetail?couponLogId=' + this.data.couponLogId + '&couponType=06' + "&share=0" + "&shopId=" + wx.getStorageSync('shop').id,
       success: function (res) {
         // success
       }

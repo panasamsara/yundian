@@ -1,7 +1,7 @@
 <view class="container">
   <view class="goods">
     <view wx:for="{{list}}" class="goods-item" wx:key="index">
-      <view class="good-box">
+      <view class="good-box"  bindtap='skip' data-id="{{item.goodsId}}">
         <view class="logo">
           <image src="{{item.goodsLogo}}"></image>
         </view>

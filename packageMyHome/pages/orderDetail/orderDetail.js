@@ -42,7 +42,7 @@ Page({
     console.log(options)
     if (options && options.q) {
       var uri = decodeURIComponent(options.q)
-      var p = util.getParams(uri)
+      var p = app.util.getParams(uri)
       let shopId = p.shopId
       wx.setStorageSync('shopId', shopId);
       this.setData({
@@ -170,7 +170,7 @@ Page({
       }
       var shop = wx.getStorageSync('shop')
       // 判断是否有缓存店铺，没有就缓存，有就看是否需要替换
-      util.cacheShop(shopId, shop, _this)
+      app.util.cacheShop(shopId, shop, _this)
 
       wx.removeStorageSync('shopId');
     })

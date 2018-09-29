@@ -1,4 +1,7 @@
 {
   "navigationBarTitleText": "领券中心",
-  "backgroundColor": "#f8f8f8"
+  "backgroundColor": "#f8f8f8",
+  "usingComponents": {
+    "login-component": "../../../components/component-login"
+  }
 }

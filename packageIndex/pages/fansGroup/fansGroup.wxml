@@ -1,0 +1,111 @@
+<view class='header'>
+  <image class="mask" src='../images/fentuandui_banner_bg@2x.png'></image>
+  <image class="bg" src="{{fansTeam.fansTeamPic}}"></image>
+  <view class="title" style="top:{{dataJson.type==2?'112rpx':'130rpx'}}">
+    <image src='{{fansTeam.fansTeamLogo}}'></image>
+    <view class='font32 font_fff' wx:if="{{dataJson.type==1}}">{{fansTeam.fansTeamName}}</view>
+    <view class='font32 font_fff' wx:if="{{dataJson.type==2}}">{{fansTeam.parentName}}</view>
+    <view class='font28 font_fff' wx:if="{{dataJson.type==2}}">{{fansTeam.fansTeamName}}</view>
+  </view>
+</view>
+<view class='fans' wx:if="{{dataJson.type==2}}" bindtap='skipDetail' data-id="2" data-detailId="{{groupList[0].detailId}}">
+  <view class='float_l'>
+    <image class="logo" src='{{groupList[0].personList[0].userPic}}'></image>
+    <image class='leader' src='../images/leader.png'></image>
+  </view>
+  <view class='float_l huName'>{{groupList[0].personList[0].userName}}</view>
+  <view class='float_r'>
+    <view class="float_r">
+      <image class="jt" src='../images/fentaundui_gengduo_jiantou@2x.png'></image>
+    </view>
+    <view class='float_l groupIcon'>
+      <view class='wrap' wx:for="{{groupList[0].personList}}" wx:key="{{index}}" wx:if="{{7>index>0}}">
+        <image class="group" src='{{groupList[0].personList[index].userPic}}'></image>
+      </view>
+    </view>
+  </view>
+</view> 
+<view class='photo_album bg_fff' wx:if="{{activityList.length>0}}">
+  <view class='navTitle'>
+    <view class='float_l'>粉活动</view>
+    <view class='float_r' wx:if="{{activityList.length>10}}" bindtap="moreActivity">
+      更多活动
+      <image src='../images/fentaundui_gengduo_jiantou@2x.png'></image>
+    </view>
+  </view>
+  <view class='content'>
+    <scroll-view scroll-x class='scroll-view_H'>
+      <view class='list acvitity' wx:for="{{activityList}}" wx:key="index" wx:if="{{index<=9}}" bindtap="fansActivity" data-id="{{item.id}}">
+        <image src='{{item.logo}}'></image>
+        <view class='over_ellipsis font32 font_333 margin_b20'>{{item.name}}</view>
+        <view class='over_ellipsis2 font24 font_666 margin_b30'>{{item.process}}
+        </view>
+        <view class='acvitity_img'>
+          <view class='float_l margin_r25'>
+            <image class="margin_r5" src='../images/fentuandui_huodong_dianzan@2x.png'></image>{{item.totalLikeCount}}</view>
+          <view class='float_l'>
+            <image class="margin_r5" src='../images/fentuandui_huodong_pinglun@2x.png'></image>{{activityList[index].commentList.totalCount}}</view>
+          <view class='float_r'>{{item.startTime}}</view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+</view>
+<view class='photo_album bg_fff' wx:if="{{albumList.length>0}}">
+  <view class='navTitle'>
+    <view class='float_l'>相册</view>
+    <view class='float_r' wx:if="{{albumList.length>4}}" bindtap="moreAlbum">
+      更多相册
+      <image src='../images/fentaundui_gengduo_jiantou@2x.png'></image>
+    </view>
+  </view>
+  <view class='content'>
+    <scroll-view scroll-x class='scroll-view_H'>
+      <view class='first position_r' wx:if="{{albumList.length==1||albumList.length!=2||albumList.length>=3}}" data-albumId="{{albumList[0].albumId}}" data-albumName="{{albumList[0].albumName}}" data-circleId="{{albumList[0].circleId}}" bindtap='photoDetail'>
+        <image src='{{albumList[0].albumUrl}}'></image>
+        <view class='over_ellipsis font24 font_999 position_a name2'>{{albumList[0].number}}张</view>
+        <view class='over_ellipsis font28 font_333 margin_b15 position_a name1'>{{albumList[0].albumName}}</view>
+      </view>
+      <view class='second' wx:if="{{albumList.length==2}}" >
+        <view class='list list_photo' wx:for="{{albumList}}" wx:key="index" data-albumId="{{item.albumId}}" data-albumName="{{item.albumName}}" data-circleId="{{item.circleId}}" bindtap='photoDetail'>
+          <image src='{{item.albumUrl}}'></image>
+          <view class='over_ellipsis font28 font_333 margin_b15'>{{item.albumName}}</view>
+          <view class='over_ellipsis font24 font_999'>{{item.number}}张</view>
+        </view>
+      </view>
+      <view class='second' wx:if="{{albumList.length>2&&albumList.length<=3}}" >
+        <view class='list list_photo' wx:for="{{albumList}}" wx:key="index" wx:if="{{index<=1}}" data-albumId="{{albumList[index+1].albumId}}" data-albumName="{{albumList[index+1].albumName}}" data-circleId="{{albumList[index+1].circleId}}" bindtap='photoDetail'>
+          <image src='{{albumList[index+1].albumUrl}}'></image>
+          <view class='over_ellipsis font28 font_333 margin_b15'>{{albumList[index+1].albumName}}</view>
+          <view class='over_ellipsis font24 font_999'>{{albumList[index+1].number}}张</view>
+        </view>
+      </view>
+      <view class='three' wx:if="{{albumList.length>=4}}">
+        <view class='list list_photo' wx:for="{{albumList}}" wx:key="index" wx:if="{{index<=2}}"  data-albumId="{{albumList[index+1].albumId}}" data-albumName="{{albumList[index+1].albumName}}" data-circleId="{{albumList[index+1].circleId}}" bindtap='photoDetail'>
+          <image src='{{albumList[index+1].albumUrl}}'></image>
+          <view class='over_ellipsis font28 font_333 margin_b15'>{{albumList[index+1].albumName}}</view>
+          <view class='over_ellipsis font24 font_999'>{{albumList[index+1].number}}张</view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+</view>
+<view class='photo_album bg_fff' wx:if="{{dataJson.type!=2&&groupList.length>0}}">
+  <view class='navTitle'>
+    <view class='float_l'>粉小组</view>
+    <view class='float_r' wx:if="{{groupList.length>10}}" bindtap="fansSearch">
+      更多粉小组
+      <image src='../images/fentaundui_gengduo_jiantou@2x.png'></image>
+    </view>
+  </view>
+  <view class='content'>
+    <scroll-view scroll-x class='scroll-view_H'>
+      <view class='list team' wx:for="{{groupList}}" wx:key="index" wx:if="{{index<=9}}" data-type="2" data-detailId="{{item.detailId}}" bindtap='skipDetail' data-id="1">
+        <image src='{{item.detailPic}}'></image>
+        <view class='over_ellipsis font28 font_333 margin_b15'>{{item.detailName}}</view>
+        <view class='over_ellipsis font24 font_999'>{{groupList[index].personList.length}}人参与</view>
+        <text wx:if="{{item.isjoin==1}}">已加入</text>
+      </view>
+    </scroll-view>
+  </view>
+</view>

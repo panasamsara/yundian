@@ -24,6 +24,10 @@ page,.content{
   border-top:1px solid #dfdfdf;
   border-bottom: 1px solid #dfdfdf;
 }
+.inlin{
+  display: inline-block;
+  float:right;
+}
 .tab-content{
   margin-top:100rpx;
 }

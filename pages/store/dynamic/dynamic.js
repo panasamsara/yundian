@@ -75,7 +75,7 @@ Component({
         if(res.data.data.length>0){
           var list = res.data.data;
           for (var i = 0; i < list.length; i++) {//时间格式处理,发布资源格式处理
-            list[i].gmtCreate = app.util.formatStoreDate(list[i].gmtCreate);
+            list[i].gmtCreate = list[i].gmtCreate.split(' ')[0];
             list[i].index = i;
             list[i].dynamicUrl = list[i].dynamicUrl.split(',');
             list[i].mylength = list[i].dynamicUrl.length;

@@ -112,7 +112,7 @@ Page({
       if (data.resMap.length>0){
         if (data.resMap[0].videoAlbumTime) {//动态时间格式处理
           var map = data.resMap[0];
-          map.videoAlbumTime = app.util.formatStoreDate(map.videoAlbumTime);
+          map.videoAlbumTime = map.videoAlbumTime.split(' ')[0];
           map.mylength = map.urls.length;
         }
       }

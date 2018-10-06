@@ -27,27 +27,25 @@ Page({
     list: {
       imgUrl:'',
       name: '海底捞2',
-      money: '1000',
-      type: '新手礼包礼包礼包'
+      money: '',
+      type: '新手礼包礼包礼包',
+      ewmImg:"",
+      buttonShow: 'true'
     },
     loginType:0,
     // 控制分享模板1是否显示
-    shareShow: false,
+    shareShow: false, 
     scale2: '',
     oW: 0,
     oW2: 0,
     scale4: ''
     },
   onLoad: function(options) {
-    
-    console.log("share",options.share)
     var that=this;
     //options.share=0 说明从详情页进来 =1 说明是分享进来的
     wx.showShareMenu({
       withShareTicket: true,
     })
- 
-
     console.log('options',options)
     if (options && options.list) { 
       
@@ -289,8 +287,9 @@ Page({
           couponId: data.couponId,
           list: {
             name: data.shopName,
-            money: '1000',
-            type: data.couponInstruction
+            money: data.couponValue,
+            type: data.couponInstruction,
+            buttonShow: true
           }
         });
         console.log("discountsNew-------------------------------", this.data.discountsNew)
@@ -333,7 +332,8 @@ Page({
           list: {
             imgUrl: res.data.data.coupon.shopLogoUrl,
             name: res.data.data.coupon.shopName,
-            type: res.data.data.coupon.name
+            type: res.data.data.coupon.name,
+            buttonShow: true
           }
         });
         console.log(this.data.list,'我是优惠券啊')
@@ -414,7 +414,6 @@ Page({
       }
     });
   },
-
   //点击图片进行预览，长按保存分享图片
   previewImg: function (e) {
     var img = this.data.imagePath;
@@ -635,6 +634,80 @@ path: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + _this.data.i
       shareViewShow: !this.data.shareViewShow
     })
   },
+  // 点击遮罩关闭
+  closeTemplate:function(){
+    this.setData({
+      shareShow: !this.data.shareShow
+    })
+  },
+  // 再授权
+  save: function () {
+    var that = this;
+    //获取相册授权
+    wx.getSetting({
+      success(res) {
+        if (!res.authSetting['scope.writePhotosAlbum']) {
+          wx.authorize({
+            scope: 'scope.writePhotosAlbum',
+            success() {//这里是用户同意授权后的回调
+              wx.showToast({
+                title: '保存中...',
+                icon: 'none'
+              })
+              let buttonshow = "list.buttonShow"
+              that.setData({
+                [buttonshow]: true
+              })
+              that.btn_img()
+            },
+            fail() {//这里是用户拒绝授权后的回调
+              console.log('走了save的fail');
+              wx.showToast({
+                title: '授权后才能保存至手机相册',
+                icon: 'none'
+              })
+              let buttonshow = "list.buttonShow"
+              that.setData({
+                [buttonshow]: false
+              })
+              return
+            }
+          })
+        } else {//用户已经授权
+          wx.showToast({
+            title: '保存中...',
+            icon: 'none'
+          })
+          that.data.list.buttonShow = true;
+          that.btn_img()
+        }
+      }
+    })
+  },
+  handleSetting: function (e) {
+    let that = this;
+    // 对用户的设置进行判断，如果没有授权，即使用户返回到保存页面，显示的也是“去授权”按钮；同意授权之后才显示保存按钮
+    if (!e.detail.authSetting['scope.writePhotosAlbum']) {
+      wx.showModal({
+        title: '提示',
+        content: '若不打开授权，则无法将图片保存在相册中！',
+        showCancel: false
+      })
+      let buttonshow = "list.buttonShow"
+      that.setData({
+        [buttonshow]: false
+      })
+    } else {
+      wx.showToast({
+        title: '已授权',
+        icon: 'none'
+      })
+      let buttonshow = "list.buttonShow"
+      that.setData({
+        [buttonshow]: true
+      })
+    }
+  },
   // 点击生成海报 出现分享弹窗
   saveImg: function () {
     this.setData({
@@ -643,6 +716,7 @@ path: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + _this.data.i
     })
   },
   btn_img: function () {
+    console.log('btn_img')
     //创建节点选择器
     var that = this;
     var query = wx.createSelectorQuery();
@@ -679,7 +753,7 @@ path: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + _this.data.i
     context.setFillStyle('#333333');
     context.fillText(_this.data.list.name, (size.w - context.measureText(_this.data.list.name).width) / 2, 40 * scale);
     // 绘制图片
-    var imgUrl = '../../../../template/images/bg.png';
+    var imgUrl = '../../../../images/bg.png';
     context.drawImage(imgUrl, 10 * scale, 30 * scale, 332 * scale, 422 * scale);
 
     // 绘制标题
@@ -726,7 +800,6 @@ path: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + _this.data.i
       })
     });
   },
-  //适配不同屏幕大小的canvas
   setShareCanvasSize: function () {
     var size = {};
     try {
@@ -754,7 +827,7 @@ path: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + _this.data.i
     var context = wx.createCanvasContext('myShareCanvas6');
     // 绘制图片
     context.save();//保存绘图上下文
-    var imgUrl = '../../../../template/images/bg6.png';
+    var imgUrl = '../../../../images/bg6.png';
     context.drawImage(imgUrl, 0, 0, 350 * scale, 531 * scale);
 
     // logo
@@ -762,25 +835,16 @@ path: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + _this.data.i
     context.beginPath()
     context.arc(176, 50, 28, 0, 2 * Math.PI)
     context.clip()
-    context.drawImage('https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=347837335,1617350328&fm=27&gp=0.jpgg', 148, 22, 56, 56)
+    context.drawImage(this.data.list.imgUrl, 148, 22, 56, 56)
     context.restore();
-    // context.save();
-    // context.beginPath();
-    // context.arc(145,54,55,0,Math.PI * 2,false);
-    // // context.arc(100, 75, 50, 0, 2 * Math.PI);
-    // // context.setStrokeStyle('#333333');
-    // context.clip()
-    // var imgUrl = 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=347837335,1617350328&fm=27&gp=0.jpgg';
-    // context.drawImage(imgUrl, 145 * scale, 26 * scale, 55 * scale, 55 * scale);
-    // context.restore();
 
     // 绘制标题
     context.setFontSize(16 * scale);
     context.setFillStyle('#ffffff');
-    context.fillText('智美女人花银店', (size.w - context.measureText('智美女人花银店').width) / 2, 108 * scale);
+    context.fillText(this.data.list.name, (size.w - context.measureText(this.data.list.name).width) / 2, 108 * scale);
     // 绘制劵类型
     context.setFontSize(45 * scale);
-    context.fillText('包邮券', (size.w - context.measureText('包邮券').width) / 2, 180 * scale);
+    context.fillText(this.data.list.type, (size.w - context.measureText(this.data.list.type).width) / 2, 180 * scale);
     context.draw(false, function () {
       wx.canvasToTempFilePath({//绘制完成执行保存回调
         x: 0,

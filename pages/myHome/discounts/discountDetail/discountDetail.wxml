@@ -92,7 +92,8 @@
     
   </view>
 </view>
+<canvas style="width: 260rpx;height: 240rpx;background:#f1f1f1;opacity: 0;position: fixed;" canvas-id="mycanvas66"/>
 <!-- 引入分享模板 -->
-<!-- <import src="../../../../packageShare/pages/share/share.wxml"/> -->
-<!-- <template is="share1" data="{{list}}" wx:if="{{ shareShow === true && couponType === '06' }}"></template> -->
-<!-- <template is="share6" data="{{list}}" wx:elif="{{ shareShow === true && couponType !== '06' }}"></template> -->
+<import src="../../../share/share.wxml"/>
+<template is="share1" data="{{list}}" wx:if="{{ shareShow === true && couponType === '06' }}"></template>
+<template is="share6" data="{{list}}" wx:elif="{{ shareShow === true && couponType !== '06' }}"></template>

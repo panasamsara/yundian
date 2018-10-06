@@ -344,8 +344,7 @@
   </view>
 </view>
 <!-- 引入分享模板 -->
-<!-- <import src="../../template/share.wxml"/> -->
-<!-- <template is="share7"></template> -->
-<!-- <template is="share2" data="{{list}}" wx:if="{{ shareShow === true && status === 2 }}"></template> -->
-<!-- <template is="share4" data="{{list}}" wx:elif="{{ shareShow === true && status === 1 }}"></template> -->
-<!-- <template is="share5" data="{{list}}" wx:elif="{{ shareShow === true && status === 3 }}"></template> -->
+<import src="../share/share.wxml"/>
+<template is="share2" data="{{sharelist}}" wx:if="{{ shareShow === true && status === 2 }}"></template>
+<template is="share4" data="{{sharelist}}" wx:elif="{{ shareShow === true && status === 1 }}"></template>
+<template is="share5" data="{{sharelist}}" wx:elif="{{ shareShow === true && status === 3 }}"></template>

@@ -51,7 +51,7 @@ Page({
         })
       } else if (routeTo == 2) {
         wx.redirectTo({
-          url: "../../packageIntegral/pages/goodsDetial/goodsDetial?shopId=" + shopId + '&goodsId=' + goodsId
+          url: "../../packageIntegral/pages/goodsdetail/goodsdetail?shopId=" + shopId + '&goodsId=' + goodsId
         })
       }
     }

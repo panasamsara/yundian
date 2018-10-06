@@ -28,7 +28,7 @@ Page({
     infoList:{},
     shareViewShow: false,
     // 传递的数据
-    list: {
+    sharelist: {
       imgUrl:'',
       shopName: '',
       people: '',
@@ -155,6 +155,17 @@ Page({
             loginType: 1
           })
         // }
+      }else{
+        var parm = {
+          shopId: this.data.shopId,
+          goodsId: this.data.shopId,
+          customerId: wx.getStorageSync('scSysUser').id
+        }
+        this.setData({
+          parm: parm
+        })
+        this.getData(this.data.parm);
+        this.getCartNum({ customerId: wx.getStorageSync('scSysUser').id, shopId: this.data.shopId })
       }
       var shopId = this.data.shopId
       if (!shopId) {
@@ -224,6 +235,7 @@ Page({
               _this.setData({
                 shopInformation: res.data.data
               })
+              
               //shop存入storage
               wx.setStorageSync('shop', res.data.data.shopInfo);
               //活动
@@ -1321,6 +1333,12 @@ Page({
       urls: imageList
     })
   },
+  // 点击遮罩关闭
+  closeTemplate: function () {
+    this.setData({
+      shareShow: !this.data.shareShow
+    })
+  },
   // 点击分享后 点击取消
   shareBtn: function () {
     this.setData({
@@ -1334,65 +1352,51 @@ Page({
     console.log(details, '所有数据')
     if (_this.data.status === 1) {
       console.log('拼团')
-      var scShopGoodsStockList = details.scShopGoodsStockList;
-      console.log(scShopGoodsStockList, '拼团数据');
-      // var priceA = 0;
-      // var arr = [];
-      // secondKillInfo.forEach(function (item, index) {
-      //   console.log(item, '单项数据');
-      //   arr.push(item.goodsPreferentialStockPrice)
-      // })
-      // // 秒杀价最小数
-      // priceA = Math.min.apply(Math, arr);
-      // var price1 = '';
-      // var price2 = '';
-      // var index = String(priceA).indexOf('.');
-      // console.log(priceA, '最小')
-      // console.log(index, '下标')
-      // if (index > -1) {
-      //   price1 = String(priceA).substring(0, index);
-      //   price2 = String(priceA).substring(index, String(priceA).length);
-      //   console.log(price1, '-', price2);
-      // } else {
-      //   price1 = priceA
-      // }
-      // // 原价
-      // var priceB = '';
-      // secondKillInfo.forEach(function (item, index) {
-      //   if (priceA === item.goodsPreferentialStockPrice) {
-      //     priceB = item.goodsOriginalStockPrice
-      //   }
-      // })
-      // var price3 = '';
-      // var price4 = '';
-      // var index2 = String(priceB).indexOf('.');
-      // console.log(priceB, '原价')
-      // console.log(index2, '下标')
-      // if (index > -1) {
-      //   price3 = String(priceB).substring(0, index2);
-      //   price4 = String(priceB).substring(index2, String(priceB).length);
-      //   console.log(price3, '-', price4);
-      // } else {
-      //   price3 = priceB
-      // }
-      // var _arr = String(priceB).split('');
-      // var cxt = wx.createCanvasContext();
-      // var ow = cxt.measureText(String(priceB)).width;
-      // console.log(ow, '宽度')
+      console.log(details.price, '原价'); //原价
+      console.log(details.groupBuyingPrice, '拼团价'); //拼团价
+      var priceA = details.groupBuyingPrice;
+      var price1 = '';
+      var price2 = '';
+      var index = String(priceA).indexOf('.');
+      if (index > -1) {
+        price1 = String(priceA).substring(0, index);
+        price2 = String(priceA).substring(index, String(priceA).length);
+        console.log(price1, '-', price2);
+      } else {
+        price1 = priceA
+      }
+
+
+      var priceB = details.price;
+      var price3 = '';
+      var price4 = '';
+      var index2 = String(priceB).indexOf('.');
+      if (index2 > -1) {
+        price3 = String(priceB).substring(0, index2);
+        price4 = String(priceB).substring(index2, String(priceB).length);
+        console.log(price3, '-', price4);
+      } else {
+        price3 = priceB
+      }
+      var _arr = String(priceB).split('');
+      var cxt = wx.createCanvasContext();
+      var ow = cxt.measureText(String(priceB)).width;
+      console.log(ow, '宽度')
       _this.setData({
-        list: {
+        sharelist: {
           shopName: details.shopName,
           imgUrl: details.imageList[0].bigFilePath,
           people: details.groupBuyingAllNum,
-          // price1: price1,
-          // price2: price2,
-          // price3: price3,
-          // price4: price4,
-          // priceB: priceB,
-          // oW: ow + 160
+          price1: price1,
+          price2: price2,
+          price3: price3,
+          price4: price4,
+          priceB: priceB,
+          oW: ow + 100,
+          buttonShow: true
         }
       })
-      console.log(_this.data.list)
+      console.log(_this.data.sharelist)
     }
     else if (_this.data.status === 2) {
       var secondKillInfo = details.secondKillInfo;
@@ -1443,7 +1447,7 @@ Page({
       var ow = cxt.measureText(String(priceB)).width;
       console.log(ow,'宽度')
       _this.setData({
-        list:{
+        sharelist:{
           shopName: details.shopName,
           imgUrl: details.imageList[0].bigFilePath,
           people: people,
@@ -1452,10 +1456,11 @@ Page({
           price3: price3,
           price4: price4,
           priceB: priceB,
-          oW: ow + 160
+          oW: ow + 160,
+          buttonShow: true
         }
       })
-      console.log(_this.data.list)
+      console.log(_this.data.sharelist)
     }
     else if (_this.data.status === 3) {
       var stockListDefault = details.stockListDefault;
@@ -1479,12 +1484,13 @@ Page({
         price5 = priceC
       }
       _this.setData({
-        list: {
+        sharelist: {
           shopName: details.shopName,
           imgUrl: details.imageList[0].bigFilePath,
           desc: details.goodsName,
           price1: price5,
-          price2: price6
+          price2: price6,
+          buttonShow: true
         }
       })
     }
@@ -1492,6 +1498,74 @@ Page({
       shareViewShow: !this.data.shareViewShow,
       shareShow: !this.data.shareShow
     })
+  },
+  // 再授权
+  save: function () {
+    var that = this;
+    //获取相册授权
+    wx.getSetting({
+      success(res) {
+        if (!res.authSetting['scope.writePhotosAlbum']) {
+          wx.authorize({
+            scope: 'scope.writePhotosAlbum',
+            success() {//这里是用户同意授权后的回调
+              wx.showToast({
+                title: '保存中...',
+                icon: 'none'
+              })
+              let buttonshow = "sharelist.buttonShow"
+              that.setData({
+                [buttonshow]: true
+              })
+              that.btn_img()
+            },
+            fail() {//这里是用户拒绝授权后的回调
+              console.log('走了save的fail');
+              wx.showToast({
+                title: '授权后才能保存至手机相册',
+                icon: 'none'
+              })
+              let buttonshow = "sharelist.buttonShow"
+              that.setData({
+                [buttonshow]: false
+              })
+              return
+            }
+          })
+        } else {//用户已经授权
+          wx.showToast({
+            title: '保存中...',
+            icon: 'none'
+          })
+          that.data.list.buttonShow = true;
+          that.btn_img()
+        }
+      }
+    })
+  },
+  handleSetting: function (e) {
+    let that = this;
+    // 对用户的设置进行判断，如果没有授权，即使用户返回到保存页面，显示的也是“去授权”按钮；同意授权之后才显示保存按钮
+    if (!e.detail.authSetting['scope.writePhotosAlbum']) {
+      wx.showModal({
+        title: '提示',
+        content: '若不打开授权，则无法将图片保存在相册中！',
+        showCancel: false
+      })
+      let buttonshow = "sharelist.buttonShow"
+      that.setData({
+        [buttonshow]: false
+      })
+    } else {
+      wx.showToast({
+        title: '已授权',
+        icon: 'none'
+      })
+      let buttonshow = "sharelist.buttonShow"
+      that.setData({
+        [buttonshow]: true
+      })
+    }
   },
   btn_img:function(){
     console.log(this.data.status,'状态')
@@ -1531,13 +1605,13 @@ Page({
     context.fillRect(0, 0, 351 * scale, 480 * scale);//给画布添加背景色，无背景色真机会自动变黑
     context.beginPath();
     // 绘制上面图片
-    var imgUrl = _this.data.list.imgUrl;
+    var imgUrl = _this.data.sharelist.imgUrl;
     context.drawImage(imgUrl, 0, 0, 351 * scale, 289 * scale);
     // 绘制下面图片
-    var imgUrl = '../../template/images/bg2.png';
+    var imgUrl = '../../images/bg2.png';
     context.drawImage(imgUrl, 0, 211 * scale, 352 * scale, 300 * scale);
     // 绘制上层图片
-    var imgUrl = '../../template/images/ms.png';
+    var imgUrl = '../../images/ms.png';
     context.drawImage(imgUrl, 36 * scale, 180 * scale, 120 * scale, 120 * scale);
 
 
@@ -1548,15 +1622,15 @@ Page({
     context.fill();
     context.setFontSize(16 * scale);
     context.setFillStyle('#FB4A26');
-    context.fillText(_this.data.list.people+'人已秒杀成功', 50 * scale, 330 * scale);
+    context.fillText(_this.data.sharelist.people+'人已秒杀成功', 50 * scale, 330 * scale);
 
     // 绘制现价
     context.fill();
     context.setFontSize(43 * scale);
     context.setFillStyle('#fff');
-    context.fillText(_this.data.list.price1, 50 * scale, 400 * scale);
+    context.fillText(_this.data.sharelist.price1, 50 * scale, 400 * scale);
     context.setFontSize(35 * scale)
-    context.fillText(_this.data.list.price2, (context.measureText(_this.data.list.price1).width + 55) * scale, 400 * scale);
+    context.fillText(_this.data.sharelist.price2, (context.measureText(_this.data.sharelist.price1).width + 55) * scale, 400 * scale);
     context.setFontSize(23 * scale);
     context.fillText('¥', 34 * scale, 400 * scale);
 
@@ -1564,15 +1638,15 @@ Page({
     context.fill();
     context.setFontSize(25 * scale);
     context.setFillStyle('#FFCEC4');
-    context.fillText(_this.data.list.price3, 52 * scale, 450 * scale);
+    context.fillText(_this.data.sharelist.price3, 52 * scale, 450 * scale);
     context.setFontSize(20 * scale);
     context.setFillStyle('#FFCEC4');
-    context.fillText(_this.data.list.price4, (context.measureText(_this.data.list.price3).width +60) * scale, 450 * scale);
+    context.fillText(_this.data.sharelist.price4, (context.measureText(_this.data.sharelist.price3).width +60) * scale, 450 * scale);
     context.setFontSize(14 * scale);
     context.fillText('¥', 38 * scale, 448 * scale);
     context.setStrokeStyle('#FFFFFF');
     context.moveTo(35 * scale, 440 * scale);
-    var num = String(_this.data.list.priceB);
+    var num = String(_this.data.sharelist.priceB);
     var numStr = ''
     for (var a = 0; a < num.length; a++) {
       numStr += '默'
@@ -1581,7 +1655,7 @@ Page({
     context.stroke()
     // 绘制头部标题
     var re = /[\u4E00-\u9FA5]/g;
-    var str = _this.data.list.shopName;
+    var str = _this.data.sharelist.shopName;
     var len = str.match(re).length;
     var arr = str.split('');
     var A_Z = 0; //有几个大写英文
@@ -1670,47 +1744,52 @@ Page({
     var context = wx.createCanvasContext('myShareCanvas4');
     // 绘制图片
     context.save();//保存绘图上下文
-    var imgUrl = '../../template/images/bg4.png';
+    var imgUrl = '../../images/bg4.png';
     context.drawImage(imgUrl, 0, 0, 351 * scale, 531 * scale);
     context.restore();
 
     // 绘制标题
     context.setFontSize(32 * scale);
     context.setFillStyle('#333333');
-    context.fillText(_this.data.list.shopName, (size.w - context.measureText(_this.data.list.shopName).width) / 2, 80 * scale);
+    context.fillText(_this.data.sharelist.shopName, (size.w - context.measureText(_this.data.sharelist.shopName).width) / 2, 80 * scale);
     // 绘制劵类型
     context.setFontSize(13 * scale);
     context.setFillStyle('#ffffff');
-    context.fillText(_this.data.list.people + '人正在拼团', (size.w - context.measureText(_this.data.list.people+'人正在拼团').width) / 2, 113 * scale);
+    context.fillText(_this.data.sharelist.people + '人正在拼团', (size.w - context.measureText(_this.data.sharelist.people+'人正在拼团').width) / 2, 113 * scale);
     // 矩形外框
     context.setStrokeStyle('red');
     context.strokeRect(18 * scale, 140 * scale, 316 * scale, 316 * scale)
-    context.drawImage(_this.data.list.imgUrl, 21 * scale, 143 * scale, 311 * scale, 311 * scale);
+    context.drawImage(_this.data.sharelist.imgUrl, 21 * scale, 143 * scale, 311 * scale, 311 * scale);
     // 绘制现价
     context.fill();
     context.setFontSize(29 * scale);
     context.setFillStyle('#FF0000');
-    context.fillText('16.8', 50 * scale, 500 * scale);
+    context.fillText(_this.data.sharelist.price1, 50 * scale, 500 * scale);
+    context.setFontSize(24 * scale);
+    context.fillText('.01', (context.measureText('.02').width) + 50 * scale, 500 * scale);
+    // context.fillText(_this.data.sharelist.price2, 50 * scale, 500 * scale);
     context.setFontSize(17 * scale);
     context.fillText('¥', 34 * scale, 500 * scale);
     // 绘制原价
     context.fill();
     context.setFontSize(16 * scale);
     context.setFillStyle('#999999');
-    context.fillText('50.00', 52 * scale, 520 * scale);
+    context.fillText(_this.data.sharelist.price3, 52 * scale, 520 * scale);
+    context.setFontSize(12 * scale);
+    context.fillText(_this.data.sharelist.price4  , (context.measureText(_this.data.sharelist.price4).width) + 60 * scale, 520 * scale);
     context.setFontSize(10 * scale);
     context.fillText('¥', 38 * scale, 520 * scale);
     context.setStrokeStyle('#999999');
-    context.moveTo(38 * scale, 515 * scale);
-    var num = '50.00'
+    context.moveTo(30 * scale, 515 * scale);
+    var num = _this.data.sharelist.priceB;
     var numStr = ''
     for (var a = 0; a < num.length; a++) {
       numStr += '默'
     }
-    context.lineTo((50 + context.measureText(numStr).width) * scale, 515 * scale);
+    context.lineTo((50 + context.measureText(numStr).width) +60 * scale, 515 * scale);
     context.stroke()
     // 右下角图片
-    context.drawImage('../../template/images/bg4_2.png', 181 * scale, 400 * scale, 171 * scale, 137 * scale);
+    context.drawImage('../../images/bg4_2.png', 181 * scale, 400 * scale, 171 * scale, 137 * scale);
     context.draw(false, function () {
       wx.canvasToTempFilePath({//绘制完成执行保存回调
         x: 0,
@@ -1782,11 +1861,11 @@ Page({
     // 绘制标题
     context.setFontSize(18 * scale);
     context.setFillStyle('#333333');
-    context.fillText(_this.data.list.shopName, (size.w - context.measureText(_this.data.list.shopName).width) / 2, 30 * scale);
+    context.fillText(_this.data.sharelist.shopName, (size.w - context.measureText(_this.data.sharelist.shopName).width) / 2, 30 * scale);
     // 绘制商品图片
-    context.drawImage(_this.data.list.imgUrl, 17 * scale, 44 * scale, 317 * scale, 317 * scale);
+    context.drawImage(_this.data.sharelist.imgUrl, 17 * scale, 44 * scale, 317 * scale, 317 * scale);
     // 绘制文字并换行
-    var st = _this.data.list.desc;
+    var st = _this.data.sharelist.desc;
     var arr = st.split('');
     var st1 = '';
     var st2 = '';
@@ -1827,24 +1906,24 @@ Page({
     context.fill();
     context.setFontSize(30 * scale);
     context.setFillStyle('#FF0000');
-    // context.fillText(_this.data.list.price1, 33 * scale, 460 * scale);
-    context.fillText(1000, 33 * scale, 460 * scale);
+    context.fillText(_this.data.sharelist.price1, 33 * scale, 460 * scale);
+    // context.fillText(1000, 33 * scale, 460 * scale);
     context.setFontSize(25 * scale);
-    var c = 1000
+    var c = _this.data.sharelist.price1
     var cc = String(c);
     var numStr = ''
     for (var a = 0; a < cc.length; a++) {
       numStr += '默'
     }
     if (numStr.length === 1) {
-      context.fillText('.01', (context.measureText(numStr).width + 25) * scale, 460 * scale);
+      context.fillText(_this.data.sharelist.price2, (context.measureText(numStr).width + 25) * scale, 460 * scale);
     } else if (numStr.length === 2) {
-      context.fillText('.01', (context.measureText(numStr).width + 20) * scale, 460 * scale);
+      context.fillText(_this.data.sharelist.price2, (context.measureText(numStr).width + 20) * scale, 460 * scale);
     } else {
-      context.fillText('.01', (context.measureText(numStr).width + 10) * scale, 460 * scale);
+      context.fillText(_this.data.sharelist.price2, (context.measureText(numStr).width + 10) * scale, 460 * scale);
     }
     
-    // context.fillText(_this.data.list.price2, (context.measureText(_this.data.list.price2).width + 33) * scale, 460 * scale);
+    // context.fillText(_this.data.sharelist.price2, (context.measureText(_this.data.sharelist.price2).width + 33) * scale, 460 * scale);
     context.setFontSize(18 * scale);
     context.fillText('¥', 17 * scale, 460 * scale);
     context.draw(false, function () {

@@ -1,4 +1,8 @@
 /* pages/store/activity/activity.wxss */
+page{
+  overflow-y: auto!important;
+}
+
 .container{
   padding: 20rpx 35rpx;
   letter-spacing: 1rpx;

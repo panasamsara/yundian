@@ -28,6 +28,7 @@
   border:none;
   border-top:0;
   border-bottom: 0;
+  border-radius:0;
 }
 .shareView .buttonGroup button::after{ border: none; }
 .shareView .buttonGroup button.save_img{
@@ -70,6 +71,26 @@
   font-weight:bold;
   color:rgba(51,51,51,1);
   padding-top: 40rpx;
+}
+.imageHtml .imageHtml_main .ewmView{
+  position:absolute;
+  width:260rpx;
+  left: 50%;
+  bottom: 150rpx;
+  margin-left: -130rpx;
+  text-align: center;
+}
+.imageHtml .imageHtml_main .ewmView .ewm{
+  display: block;
+  width: 260rpx;
+  height: 240rpx;
+  margin-bottom: 31rpx;
+  background: red;
+}
+.imageHtml .imageHtml_main .ewmView view{
+  font-size: 26rpx;
+  font-weight:bold;
+  color:rgba(255,255,255,1);
 }
 .imageHtml .imageHtml_main .imageHtml_main_c{
   width: 702rpx;
@@ -209,7 +230,7 @@
   margin-top: 33rpx;
   position: relative;
 }
-.imageHtml .imageHtml_main.share2 .money .price2 .solid{
+.imageHtml .imageHtml_main.share2 .money .price2 .solid,.imageHtml .imageHtml_main.share4 .money .price2 .solid{
   width: 150rpx;
   height: 2rpx;
   background: #FFFFFF;
@@ -278,6 +299,7 @@
   width: 100%;
   height: 100%;
   border-radius:56rpx;
+  margin-top: 20rpx;
 }
 .imageHtml .imageHtml_main.share3 .header .time{
   font-size:24rpx;
@@ -387,6 +409,7 @@
   color:rgba(255,0,0,1);
   margin-top: 10rpx;
 }
+
 .imageHtml .imageHtml_main.share4 .money .price1 text.t{
   font-size:35rpx;
   font-weight:bold;
@@ -398,7 +421,17 @@
   color:rgba(153,153,153,1);
   text-align: left;
   margin-top: 19rpx;
-  text-decoration:line-through;
+  /* text-decoration:line-through; */
+  position: relative;
+}
+.imageHtml .imageHtml_main.share4 .money .price1 .d{
+  font-size: 48rpx;
+}
+.imageHtml .imageHtml_main.share4 .money .price2 .price2c{
+  font-size: 23rpx;
+}
+.imageHtml .imageHtml_main.share4 .money .price2 .price2c{
+  font-size: 23rpx;
 }
 .imageHtml .imageHtml_main.share4 .money .price2 .t{
   /* font-size:19rpx; */

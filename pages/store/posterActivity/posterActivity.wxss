@@ -79,6 +79,8 @@ page{
   border: 1rpx solid #000;
   font-size: 30rpx;
   overflow: hidden;
+  white-space: normal;
+  word-break: break-all;
 }
 #share,#goback{
   position: fixed;
@@ -259,3 +261,4 @@ textarea{
   top: 1050rpx;
   z-index: 7777;
 }
+@import "../../share/share.wxss"

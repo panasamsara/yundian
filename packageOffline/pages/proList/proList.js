@@ -122,7 +122,7 @@ Page({
       })
 
       // 之前已经点过餐，提交过订单，又重新扫码 跳orderDetail
-      util.checkWxLogin('offline').then((loginRes) => {
+    /*  util.checkWxLogin('offline').then((loginRes) => {
  
         app.util.reqAsync('foodBoot/findFoodPresale', {
           // shopId: wx.getStorageSync('shop').id,
@@ -147,7 +147,7 @@ Page({
             }, 2000)
           }
         })
-      })
+      })*/
     } else {
       if (e && e.shopId) {
         wx.setStorageSync('shopId', e.shopId);
@@ -160,46 +160,9 @@ Page({
   },
  
   onShow: function () {
-    
+
     var _this = this
-    // 之前已经点过餐，提交过订单，计算数量
-    // util.checkWxLogin('offline').then((loginRes) => {
-      app.util.reqAsync('foodBoot/findFoodPresale', {
-        // shopId: wx.getStorageSync('shop').id,
-        // userId: loginRes.id,
-        // presaleId: "", //订单id
-        facilityId: wx.getStorageSync('facilityId')
-      }).then((res) => {
-        if (res.data.data != null && res.data.data.orderStatus == 1) {
-          console.log('已有订单----------------------', res.data.data)
-          if (res.data.data.orderStatus == 1){
-            _this.setData({
-              orderStatus: 1,
-              payStatus: res.data.data.payStatus
-            })
-          } else if (res.data.data.orderStatus == 3){
-            _this.setData({
-              orderStatus: 3
-            })
-          }
-          let dingDanTotalPay = 0
-          let thisList = res.data.data.scPresaleInfos
-          for (let i = 0; i < thisList.length; i++) {
-            dingDanTotalPay += thisList[i].actualPayment
-          }
-          dingDanTotalPay = dingDanTotalPay.toFixed(2)
-          _this.setData({
-            showMaiDan: true,
-            dingDanTotalPay: dingDanTotalPay,
-            dingDanTotalNum: res.data.data.scPresaleInfos.length
-          })
-        } else {
-          _this.setData({
-            showMaiDan: false
-          })
-        }
-      })
-    // })
+
 
     // 获取购物车
     // setTimeout(function(){
@@ -308,6 +271,42 @@ Page({
         }
 
       }
+
+      // 之前已经点过餐，提交过订单，计算数量
+      app.util.reqAsync('foodBoot/findFoodPresale', {
+        userId: wx.getStorageSync('multiOrderSwitch')==1 ? null : loginRes.id,
+        facilityId: wx.getStorageSync('facilityId')
+      }).then((res) => {
+        if (res.data.data != null && res.data.data.orderStatus == 1) {
+          console.log('已有订单----------------------', res.data.data)
+          if (res.data.data.orderStatus == 1) {
+            _this.setData({
+              orderStatus: 1,
+              payStatus: res.data.data.payStatus
+            })
+          } else if (res.data.data.orderStatus == 3) {
+            _this.setData({
+              orderStatus: 3
+            })
+          }
+          let dingDanTotalPay = 0
+          let thisList = res.data.data.scPresaleInfos
+          for (let i = 0; i < thisList.length; i++) {
+            dingDanTotalPay += thisList[i].actualPayment
+          }
+          dingDanTotalPay = dingDanTotalPay.toFixed(2)
+          _this.setData({
+            showMaiDan: true,
+            dingDanTotalPay: dingDanTotalPay,
+            dingDanTotalNum: res.data.data.scPresaleInfos.length
+          })
+        } else {
+          _this.setData({
+            showMaiDan: false,
+            orderStatus: 3
+          })
+        }
+      })
 
       /*********************************socket登录 */
       //开启websocket连接
@@ -813,58 +812,67 @@ Page({
       }
 
       this.linePos = app.bezier([this.busPos, topPoint, this.finger], 30);*/
-    let _id = e.target.id.split('_')[1];
-    let goodMap = this.data.goodMap
-    console.log(goodMap[_id])
-    if (goodMap[_id].attrList) {
-      this.setData({
-        hasAttrList: true
-      })
-      if (goodMap[_id].attrList.length != 0) {
-        let attrList = goodMap[_id].attrList
-        let myStockTrueFalseArr = []  // 决定属性高亮的数组
-        let mychosenArr = []  //已选属性
-        for (let i = 0; i < attrList.length; i++) {
-          myStockTrueFalseArr[i] = []
-          mychosenArr[i] = false
-          for (let j = 0; j < attrList[i].attrIdAndNameList.length; j++) {
-            myStockTrueFalseArr[i][j] = false
-            attrList[i].attrIdAndNameList[j].pindex = i
+
+      if (this.data.orderStatus == 1) { // '订单状态: 0-待处理；1-处理中；2-待结算；3-已结算； 4-已取消 ;'（小程序只会有1 3）
+        wx.showToast({
+          title: '已确认下单，请结算！',
+          icon: 'none'
+        })
+        return false
+      }
+      
+      let _id = e.target.id.split('_')[1];
+      let goodMap = this.data.goodMap
+      console.log(goodMap[_id])
+      if (goodMap[_id].attrList) {
+        this.setData({
+          hasAttrList: true
+        })
+        if (goodMap[_id].attrList.length != 0) {
+          let attrList = goodMap[_id].attrList
+          let myStockTrueFalseArr = []  // 决定属性高亮的数组
+          let mychosenArr = []  //已选属性
+          for (let i = 0; i < attrList.length; i++) {
+            myStockTrueFalseArr[i] = []
+            mychosenArr[i] = false
+            for (let j = 0; j < attrList[i].attrIdAndNameList.length; j++) {
+              myStockTrueFalseArr[i][j] = false
+              attrList[i].attrIdAndNameList[j].pindex = i
+            }
           }
+
+          console.log(attrList)
+
+          this.setData({
+            attrList: goodMap[_id].attrList,
+            myStockTrueFalseArr: myStockTrueFalseArr,
+            mychosenArr: mychosenArr
+          })
         }
-
-        console.log(attrList)
-
-        this.setData({
-          attrList: goodMap[_id].attrList,
-          myStockTrueFalseArr: myStockTrueFalseArr,
-          mychosenArr: mychosenArr
-        })
-      }
-    } else {
-      console.log("没有规格")
-      this.setData({
-        hasAttrList: false,
-        stocks: this.data.goodMap[_id].stockList,
-      })
-    }
-
-    // 是否弹出 选规格弹框 （默认规格不弹）
-    if (this.data.goodMap[_id].stockList.length != 0) {
-      if (this.data.goodMap[_id].stockList.length == 1 && this.data.goodMap[_id].stockList[0].isDefault == 0) {
-        console.log('默认规格')
-        this.addGoodToCartFn(e, 'defaultStock')
       } else {
+        console.log("没有规格")
         this.setData({
-          showStock: true,
+          hasAttrList: false,
           stocks: this.data.goodMap[_id].stockList,
-          chooseGoodEvent: e
         })
       }
-    } else {
-      this.addGoodToCartFn(e, 'notDefaultStock')
-      // this.startAnimation(e);
-    }
+
+      // 是否弹出 选规格弹框 （默认规格不弹）
+      if (this.data.goodMap[_id].stockList.length != 0) {
+        if (this.data.goodMap[_id].stockList.length == 1 && this.data.goodMap[_id].stockList[0].isDefault == 0) {
+          console.log('默认规格')
+          this.addGoodToCartFn(e, 'defaultStock')
+        } else {
+          this.setData({
+            showStock: true,
+            stocks: this.data.goodMap[_id].stockList,
+            chooseGoodEvent: e
+          })
+        }
+      } else {
+        this.addGoodToCartFn(e, 'notDefaultStock')
+        // this.startAnimation(e);
+      }
 
   },
   //选择规格(有规格)
@@ -1403,11 +1411,26 @@ Page({
       // if (this.data.isBuy == 1) {  //是否下单商品已经结算完毕 0 未结算 1已结算
         // console.log("已结算")
         
+
       if (this.data.orderStatus == 1){
 
         that.changeOrdr(); // 订单未结算 修改订单
 
       } else { // 订单已结算
+        if (wx.getStorageSync('multiOrderSwitch') != 1){
+          app.util.reqAsync('foodBoot/findFoodPresale', {
+            facilityId: wx.getStorageSync('facilityId')
+          }).then((res) => {
+            if (res.data.data != null && res.data.data.orderStatus == 1) {
+              wx.showToast({
+                title: '已被占用',
+                icon: 'none'
+              })
+              return 0
+            } 
+          })
+        }
+        
         // 开台（设备占用）
         util.reqAsync('foodBoot/updateDeviceOccupy', {
           deviceId: wx.getStorageSync('facilityId'),
@@ -1420,6 +1443,8 @@ Page({
         }).then((res) => {
           if (res.data.code == 1) {
             that.oneBuy()
+          }else{
+            
           }
 
         })
@@ -1560,8 +1585,11 @@ Page({
             data: wx.getStorageSync('orderNo') + ',confirm order'
           })
         }else{
+          // wx.navigateTo({
+          //     url: '../../../pages/myHome/shopOrder/orderDetail/orderDetail?activeIndex=0&shopId=' + this.data.shopId + '&userId=' + this.data.userId + '&presaleId=' + wx.getStorageSync('orderNo') + '&facilityId=' + wx.getStorageSync('facilityId') + '&selectMember=1' + '&merchantId=' + this.data.merchantId
+          // })
           wx.navigateTo({
-              url: '../../../pages/myHome/shopOrder/orderDetail/orderDetail?activeIndex=0&shopId=' + this.data.shopId + '&userId=' + this.data.userId + '&presaleId=' + wx.getStorageSync('orderNo') + '&facilityId=' + wx.getStorageSync('facilityId') + '&selectMember=1' + '&merchantId=' + this.data.merchantId
+            url: '../orderDetail/orderDetail?activeIndex=0&shopId=' + _this.data.shopId + '&userId=' + _this.data.userId + '&presaleId=' + res.data.data.id + '&facilityId=' + _this.data.facilityId + '&merchantId=' + _this.data.merchantId + '&selectMember=1'
           })
         }
 
@@ -1717,8 +1745,12 @@ Page({
                 data: res.data.data.id + ',confirm order'
               })
             }else{
+              // wx.navigateTo({
+              //   url: '../../../pages/myHome/shopOrder/orderDetail/orderDetail?activeIndex=0&shopId=' + this.data.shopId + '&userId=' + this.data.userId + '&presaleId=' + wx.getStorageSync('orderNo') + '&facilityId=' + wx.getStorageSync('facilityId') + '&selectMember=1' + '&merchantId=' + this.data.merchantId
+              // })
+              var _this = this;
               wx.navigateTo({
-                url: '../../../pages/myHome/shopOrder/orderDetail/orderDetail?activeIndex=0&shopId=' + this.data.shopId + '&userId=' + this.data.userId + '&presaleId=' + wx.getStorageSync('orderNo') + '&facilityId=' + wx.getStorageSync('facilityId') + '&selectMember=1' + '&merchantId=' + this.data.merchantId
+                url: '../orderDetail/orderDetail?activeIndex=0&shopId=' + _this.data.shopId + '&userId=' + _this.data.userId + '&presaleId=' + wx.getStorageSync('orderNo') + '&facilityId=' + _this.data.facilityId + '&merchantId=' + _this.data.merchantId + '&selectMember=1'
               })
             }
            

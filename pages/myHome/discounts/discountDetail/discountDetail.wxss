@@ -331,4 +331,4 @@ canvas#discountCanvas{
 .marginTop216{
   margin-top: 216rpx;
 }
-/* @import "../../../../packageShare/pages/share/share.wxss" */
+@import "../../../share/share.wxss"

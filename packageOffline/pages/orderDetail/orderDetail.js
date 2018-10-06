@@ -206,10 +206,10 @@ Page({
       }
     };
     //发起网络请求 微信统一下单   
-    util.reqAsync('payBoot/wx/pay/food/unifiedOrderInSpMode', data).then((res) => {
+     util.reqAsync('payBoot/wx/pay/food/unifiedOrderInSpMode', data).then((res) => {
+
       console.log(res);
   
-
       if (res.data.code == 1) {
         //获取预支付信息
         var wxResult = res.data.data.wxResult;

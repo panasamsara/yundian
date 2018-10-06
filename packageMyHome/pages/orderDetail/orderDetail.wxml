@@ -124,7 +124,7 @@
             <view wx:if="{{item.orderInfo.deliveryType!=2}}">
               <view class="express" wx:if="{{item.orderInfo.orderStatusVo ==3 || item.orderInfo.orderStatusVo==4 ||item.orderInfo.orderStatusVo==10}}"> 
                 <view class="express-type">
-                  <image src="../images/express.png"></image>
+                  <image src="../../../pages/myHome/images/express.png"></image>
                   <text class="siz-three">快递公司：{{item.orderInfo.extend1}}</text>
                 </view>
                 <text class="siz-four">快递单号：{{item.orderInfo.extend2}}</text>

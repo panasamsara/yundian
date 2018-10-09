@@ -269,3 +269,27 @@ page{
   color: #3A83EF;
   font-size: 36rpx;
 }
+
+/* 按钮 */
+#share,#goback{
+  position: fixed;
+  width: 80rpx;
+  height: 80rpx;
+  z-index: 888;
+}
+
+#share{
+  right: 30rpx;
+  bottom: 280rpx;
+}
+
+#goback{
+  right: 30rpx;
+  bottom: 180rpx;
+}
+
+/* 画布 */
+#shareCanvas{
+  position: fixed;
+  top: 10000;
+}

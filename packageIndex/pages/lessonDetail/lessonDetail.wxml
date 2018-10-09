@@ -90,3 +90,17 @@
   <input placeholder='{{reply.placeholder}}' focus='{{reply.focus}}' value='{{reply.content}}' bindinput='relpyChange'></input>
   <view class='btn-reply' bindtap='addComments'>发送</view>
 </view>
+
+<!-- 按钮 -->
+<view id='shareBox'>
+  <button bindtap="shareBtn">
+    <image src='../../../images/shouye_btn@2x.png' id='share'></image>
+  </button>
+  <image src='../../../images/fenxinag_btn@2x.png' id='goback' bindtap='goback'></image>
+</view>
+
+<!-- 海报画布 -->
+<canvas id='shareCanvas' canvas-id='shareCanvas' style='width:690rpx;height:1000rpx;' class='shareCanvas'></canvas>
+
+<!-- 海报组件 -->
+<poster-modal posterData="{{canvasUrl}}" btnData="{{btnShow}}" bind:close="closePoster" bind:closeShare="closeShare" bind:drawPoster="drawPoster" bind:saveImg="saveImg" bind:handleSetting="handleSetting" wx:if="{{posterShow}}" id="posterModal"></poster-modal>

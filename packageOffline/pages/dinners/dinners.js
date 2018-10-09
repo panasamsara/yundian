@@ -98,7 +98,7 @@ Page({
           if (res.data.data == null && res.data.data.orderStatus == 2) {
             setTimeout(function () {
               wx.navigateTo({
-                url: '../../../pages/myHome/shopOrder/orderDetail/orderDetail?activeIndex=0&shopId=' + _this.data.shopId + '&userId=' + _this.data.userId + '&presaleId=' + _this.data.presaleId + '&facilityId=' + _this.data.facilityId + '&merchantId=' + _this.data.merchantId + '&selectMember=1'
+                url: '../../../packageMyHome/pages/shopOrder/orderDetail/orderDetail?activeIndex=0&shopId=' + _this.data.shopId + '&userId=' + _this.data.userId + '&presaleId=' + _this.data.presaleId + '&facilityId=' + _this.data.facilityId + '&merchantId=' + _this.data.merchantId + '&selectMember=1'
               })
             }, 200)
           }

@@ -8,8 +8,6 @@
     "pages/shoppingCart/shoppingCart",
     "pages/proList/proList",
     "pages/myHome/myHome",
-    "pages/myHome/shopOrder/shopOrder",
-    "pages/myHome/shopOrder/orderDetail/orderDetail",
     "pages/myHome/discounts/discounts",
     "pages/myHome/discounts/discountDetail/discountDetail",
     "pages/goodsDetial/goodsDetial",
@@ -17,8 +15,6 @@
     "pages/store/code/code",
     "pages/store/activity/activity",
     "pages/store/activityInfo/activityInfo",
-    "pages/chat/chat",
-    "pages/chatList/chatList",
     "pages/manage/manage",
     "pages/orderBuy/orderBuy",
     "pages/orderBuy/discount/discount",
@@ -32,8 +28,6 @@
     "pages/secKillBuy/secKillBuy",
     "pages/give/give",
     "pages/spelldetails/spelldetails",
-    "pages/myHome/downLoadIos/downLoadIos",
-    "pages/myHome/downLoadAndroid/downLoadAndroid",
     "pages/store/posterActivity/posterActivity",
     "pages/QrToActivity/QrToActivity",
     "pages/store/dynamicInfo/dynamicInfo"
@@ -109,7 +103,11 @@
         "pages/cardDetail/cardDetail",
         "pages/expenseDetail/expenseDetail",
         "pages/forDetail/forDetail",
-        "pages/consumptionDetail/consumptionDetail"
+        "pages/consumptionDetail/consumptionDetail",
+        "pages/shopOrder/shopOrder",
+        "pages/shopOrder/orderDetail/orderDetail",
+        "pages/downLoadIos/downLoadIos",
+        "pages/downLoadAndroid/downLoadAndroid"
       ]
     },
     {

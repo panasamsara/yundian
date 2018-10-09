@@ -28,10 +28,10 @@ Page({
    */
   onShow: function () {
     let userId = wx.getStorageSync('scSysUser').id;
-    let isAdmin = wx.getStorageSync('scSysUser').isadmin;
+    let ismerchant = wx.getStorageSync('scSysUser').ismerchant;
     let merchantId = wx.getStorageSync('shop').merchantId;
 
-    let path = isAdmin ? `userId=${userId}&merchantId=${merchantId}` : `userId=${userId}`;
+    let path = ismerchant ? `userId=${userId}&merchantId=${merchantId}` : `userId=${userId}`;
     let url = app.util.SHARE_URL + '/commonpage/homepage/feiyuetixi.html?';
 
     this.setData({

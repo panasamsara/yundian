@@ -1,0 +1,590 @@
+.manageDetail{
+  padding-bottom: 50rpx;
+}
+.left{
+  float: left;
+}
+.right{
+  float: right;
+}
+.mr15{
+  margin-right: 15rpx;
+}
+.font22{
+  font-size: 22rpx;
+}
+.font24{
+  font-size: 24rpx;
+}
+.font28{
+  font-size: 28rpx;
+}
+.font30{
+  font-size: 30rpx;
+}
+.font32{
+  font-size: 32rpx;
+}
+.font34{
+  font-size: 34rpx;
+}
+.priceColor{
+  color: #ff0036;
+}
+.color999{
+  color: #999;
+}
+.mr15{
+  margin-right: 15rpx;
+}
+.header{
+  width: 100%;
+  height: 256rpx;
+}
+.header image{
+  height: 100%;
+  width: 100%;
+}
+.type{
+  position: absolute;
+  top: 58rpx;
+  left: 30rpx;
+  font-size: 34rpx;
+  color: #fff;
+}
+.info{
+  background: #fff;
+  border-radius: 10rpx 10rpx 0 0;
+  box-sizing: border-box;
+  width: 690rpx;
+  font-size: 32rpx;
+  color: #333;
+  margin: 0 auto;
+}
+.person{
+  margin-top: 20rpx;
+  	box-shadow: 0px 4px 7px 0px 
+		rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  padding-left: 30rpx;
+}
+.person>view{
+  padding-top: 20rpx;
+}
+.person>view:last-child{
+  padding: 20rpx 0 40rpx;
+  background-color: #ffffff;
+
+}
+.content{
+  width:100%;
+  position: absolute;
+  top: 126rpx;
+  /* margin-left:30rpx; */
+}
+.content .list{
+  font-size: 28rpx;
+  color: #333;
+  padding:0 30rpx;
+}
+.list>view{
+  overflow: hidden;
+}
+.content .list:first-child{
+  margin-top: 0;
+}
+.content .shop{
+  overflow: hidden;
+  padding: 30rpx 0;
+  border-bottom: 1px #e5e5e5 solid;
+}
+.content .shop .shopImg{
+  width: 32rpx;
+  height: 28rpx;
+  vertical-align: middle;
+}
+.content .shop .rightIcon{
+  width: 16rpx;
+  height: 26rpx;
+  vertical-align: middle;
+}
+.rightType{
+  color: #fb452c;
+}
+.shopList{
+  margin-top: 30rpx;
+}
+.orderInfo{
+  padding: 30rpx 0;
+  overflow: hidden;
+}
+.orderInfo>.left image{
+  width: 180rpx;
+  height: 180rpx;
+  border-radius: 10rpx;
+  margin-right: 10rpx;
+}
+.orderInfo>.right{
+  width: 480rpx;
+}
+.orderInfo>.right>text.gname{
+  display: block;
+  color: #333;
+}
+.orderInfo>.right>text{
+  font-size: 28rpx;
+  margin-bottom: 30rpx;
+}
+.orderInfo>.right .size{
+  color: #999;
+  
+}
+/*添加新的按钮*/
+.noover,.over{
+  position: fixed;
+  bottom:0;
+  z-index:3;
+  left:0;
+  width: 100%;
+}
+.noover .button{
+  width:50%;
+  height:100rpx;
+  font-size:28rpx;
+  float:left;
+  text-align: center;
+  line-height: 100rpx;
+  border:none;
+}
+.over .button{
+  width:100%;
+  height:100rpx;
+  font-size:28rpx;
+  float:right;
+  text-align: center;
+  line-height: 100rpx;
+}
+.white-btn{
+  background:#fe732e !important;
+  color:#fff;
+}
+.red-btn{
+  background:#fb452d !important;
+  color:#fff !important;
+}
+.total-price{
+  height:78rpx;
+  padding:0 30rpx;
+  line-height:78rpx;
+  border-bottom:1rpx solid #dfdfdf;
+}
+.right-index text{
+  margin-right: 10rpx;
+}
+.appDlond{
+  width:100%;
+  height:166rpx;
+  text-align: center;
+  margin:30rpx 0;
+}
+.appDlond image{
+  width:690rpx;
+  height:166rpx;
+  margin:0 auto;
+}
+.jiange{
+  width: 100%;
+  height: 130rpx;
+}
+/*下单成功*/
+.modal-box {
+width:100%;
+height:100%;
+z-index:55;
+background:rgba(0,0,0,0.4);
+overflow:hidden;
+position: fixed;
+left:0;
+top: 0;
+}
+.order-tip .modal-body{
+  height: 356rpx;
+  margin:50% auto 0;
+  position:relative;
+  border-radius:10rpx;
+  width:80%;
+  background:#fff;
+}
+.order-tip .order-success{
+  position: absolute;
+  top:-100rpx;
+  left: 50%;
+  margin-left: -155rpx;
+  width: 310rpx;
+  height: 220rpx;
+}
+.order-tip .modal-content{
+  height: 120rpx;
+  width: 100%;
+  padding-top:160rpx;
+  font-size: 28rpx;
+  color:#999;
+  border-radius: 10rpx;
+}
+.order-tip .modal-content text{
+  display: block;
+  text-align: center;
+  margin-bottom:15rpx;
+}
+.order-tip .modal-btn{
+  border-top:1px solid #e4e4e4;
+}
+.order-tip .modal-btn text{
+  width:100%;
+  float: left;
+  background: #fff;
+  border:0;
+  border-radius: 0;
+  height: 70rpx;
+  line-height: 70rpx;
+  text-align: center;
+  font-size:26rpx;
+}
+.order-tip .modal-btn text:first-child{
+  border-right: 1rpx solid #e4e4e4;
+  color:#999;
+}
+.order-tip .modal-btn text:last-child{
+  color:#ff8979;
+}
+.add-adree{
+  height:100rpx;
+  line-height:100rpx;
+  padding-left: 31rpx;
+  background:#fff;
+  border-top:1px solid #e4e4e4;
+  font-size:30rpx;
+  color:#333;
+  margin-bottom:20rpx;
+}
+.mask{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  background-color: rgba(102, 102, 102, 0.4)
+}
+.loading{
+  text-align: center;
+  margin-top: 400rpx;
+}
+.clubcardbg{
+  width: 100%;
+  background: #f8f8f8;
+  padding:20rpx 0;
+}
+.clubcard{
+  width: 100%;
+  height: 120rpx;
+  padding: 0 30rpx;
+  margin:0 auto;
+  font-size: 32rpx;
+  color: #333;
+  display: flex;
+  display: -webkit-flex;
+  justify-content: space-between;
+  line-height:120rpx;
+  background: #fff;
+  box-sizing: border-box;
+}
+.select{
+  color:#999;  
+}
+.select image{
+  width: 15rpx;
+  height: 29rpx;
+  margin-left: 10rpx;
+}
+.cardpopbg,.popbg{
+  width: 100%;
+  height: 100%;
+  background:rgba(0, 0, 0, 0.5);
+  position:fixed;
+  top:0;
+  left:0;
+  box-sizing: border-box;
+  z-index: 6;
+}
+.cardpop{
+  width: 640rpx;
+  height: 740rpx;
+  background: #fff;
+  border-radius: 10rpx;
+  position:fixed;
+  left:50%;
+  top:50%;
+  transform: translate(-50%,-50%);
+  -webkit-transform: translate(-50%,-50%);
+  z-index: 13;
+}
+.poptit{
+  width: 100%;
+  height: 98rpx;
+  font-size: 34rpx;
+  line-height: 98rpx;
+  text-align: center;
+  color: #333;
+  border-bottom: 1px #e5e5e5 solid;
+}
+.cardList{
+  width: 100%;
+  padding: 20rpx;
+  margin-top: 7rpx;
+}
+.nocard{
+  width: 600rpx;
+  height: 140rpx;
+  font-size: 32rpx;
+  line-height: 140rpx;
+  color: #333;
+  border-radius: 10rpx;
+  background: -webkit-linear-gradient( rgb(241, 241, 241) , rgb(241, 238, 238) 50% ,  rgb(228, 227, 226) 100%);
+  background: linear-gradient( rgb(241, 241, 241) , rgb(241, 238, 238) 50% ,  rgb(228, 227, 226) 100%);
+}
+.nocard text{
+  padding: 0 25rpx;
+}
+.carditem{
+  width: 600rpx;
+  height: 140rpx;
+  display: flex;
+  display: -webkit-flex;
+  justify-content:space-between;
+  background: -webkit-linear-gradient(rgb(241, 241, 241) , rgb(241, 238, 238) 50% ,  rgb(228, 227, 226) 100%);
+  background: linear-gradient(rgb(241, 241, 241) , rgb(241, 238, 238) 50% ,  rgb(228, 227, 226) 100%);
+  margin-top: 20rpx;
+
+}
+.carddetails{
+  width: 1;
+  padding: 25rpx;
+  color: #333;
+}
+.carddetails .cardname{
+  font-size: 32rpx;
+}
+.carddetails .cardamout{
+  font-size: 24rpx;
+  margin-top: 10rpx;
+}
+
+.carditem .discount{
+  width: 149rpx;
+  padding: 20rpx;
+  line-height: 100rpx;
+  border-left: 1px #fff dashed;
+  text-align: center;
+  color:#ff0036;
+  font-size: 26rpx;  
+}
+.carditem .discount .number{
+  font-size: 46rpx;
+  margin-left: 10rpx;
+}
+.carditem.short-money .carddetails{
+  color: #999;
+}
+.carditem.short-money .discount{
+  color:#999;
+}
+.cardscroll{
+  height: 590rpx;
+}
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  color: transparent;
+}
+.disicon{
+  width: 30rpx;
+  height: 30rpx;
+  background: #ff6666;
+  font-size: 22rpx;
+  color: #fff; 
+  text-align: center;
+  line-height: 30rpx;
+  margin-left: 10rpx;
+}
+.aprice{
+  text-decoration:line-through;
+}
+.aftercount{
+  box-sizing: border-box;
+}
+.countitem{
+  height: 96rpx;
+  line-height: 96rpx;
+  display: flex;
+  display: -webkit-flex;
+  justify-content:space-between;
+  border: 1px #e5e5e5 solid;
+  border-width: 1px 0 1px 0;
+}
+.countitem:last-child{
+  border-width: 0 0 1px 0;
+}
+.countitem text.desc{
+  font-size: 26rpx;
+  color: #666;
+}
+.countitem text.moneytext{
+  font-size: 22rpx;
+  color: #ff0036;
+  font-weight: bold;
+}
+.countitem text.moneytext text.mone{
+  font-size: 26rpx;
+}
+.goodetail{
+  height: 180rpx;
+  position: relative;
+  margin-left:10rpx;
+}
+.num{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+.gname{
+  display: block;
+  line-height:30rpx;
+}
+.gprice{
+  line-height:30rpx;
+}
+.size{
+  display: block;
+}
+.linehei{
+  line-height: 40rpx;
+  margin:30rpx 0;
+}
+.reduced{
+  margin:2px 20rpx 0 0;
+}
+.account{
+  margin-left: 10rpx;
+}
+.paycard{
+  width: 560rpx;
+  background: #fff;
+  border-radius: 10rpx;
+  position:fixed;
+  left:50%;
+  top:50%;
+  transform: translate(-50%,-50%);
+  -webkit-transform: translate(-50%,-50%);
+  z-index: 12;
+}
+.paycardcon{
+  margin-bottom: 50rpx;
+}
+.paycardcon>text{
+  display: block;
+}
+.paycardcon>text.paytitle{
+  width: 100%;
+  height: 100rpx;
+  color: #000;
+  font-weight: 700;
+  line-height: 100rpx;
+  border-bottom: 1rpx #fe732d solid;
+  text-align: center;
+}
+.paycardcon>text.shopname{
+  font-size: 32rpx;
+  color: #000;
+  text-align: center;
+  margin: 36rpx 0 32rpx 0;
+}
+.paycardcon>text.summoney{
+  color: #000;
+  text-align: center;
+  font-size: 78rpx;
+}
+.paycardcon>text.summoney .yang{
+  font-size: 56rpx;
+}
+.selpayway{
+  width: 502rpx;
+  border-top: 1px #d6d6d6 solid;
+  margin: 0 auto;
+  display: flex;
+  display: -webkit-flex;
+  align-content: flex-start;
+  padding:20rpx 0;
+}
+.selpayway:last-of-type{
+  border-top: 1px #d6d6d6 solid;
+  border-bottom: 1px #d6d6d6 solid;
+}
+.shoplogo{
+  width: 50rpx;
+  height: 50rpx;
+}
+.shoplogo image{
+  width: 50rpx;
+  height: 50rpx;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+}
+.cardinfo{
+  flex: 1;
+  color: #333;
+  margin-left: 20rpx;
+}
+.cardinfo>text{
+  display: block;
+  text-align: left;
+  line-height: 44rpx;
+}
+.wep{
+  text-align: left;
+}
+.wechat-icon{
+  width: 50rpx;
+  height: 50rpx;
+}
+.wechat-icon image{
+  width: 43rpx;
+  height: 39rpx;
+  margin: 0 auto;
+}
+.selectway{
+  width: 44rpx;
+  height: 44rpx;
+  margin-left: 10rpx;
+}
+.selectway image{
+  width: 44rpx;
+  height: 44rpx;
+}
+
+.payforcard{
+  width: 500rpx;
+  height: 94rpx;
+  background: #fb452c;
+  color: #fff;
+  -webkit-border-radius: 10rpx;
+  border-radius: 10rpx;
+  line-height: 94rpx;
+  text-align: center;
+  margin: 36rpx auto;
+}
+.mask-close-btn{
+  position: absolute;
+  width: 54rpx;
+  height: 55rpx;
+  top: -20rpx;
+  right: -20rpx;
+}

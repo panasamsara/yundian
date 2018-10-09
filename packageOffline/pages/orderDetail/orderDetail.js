@@ -115,7 +115,7 @@ Page({
     })
   },
   appSkip: function (e) { //点击跳转到app下载页
-    wx.navigateTo({ url: "/pages/myHome/downLoadIos/downLoadIos?flag=" + this.data.flag });
+    wx.navigateTo({ url: "packageMyHome/pages/downLoadIos/downLoadIos?flag=" + this.data.flag });
   },
   offlineSkip: function (e) { //跳到云店首页
     wx.switchTab({ url: "../../../pages/index/index" });
@@ -126,7 +126,12 @@ Page({
       userId = e.currentTarget.dataset.userid,
       shopId = e.currentTarget.dataset.shopid
       console.log(1)
-    wx.navigateBack();
+    wx.navigateTo({
+      url: "../proList/proList"
+    });
+    wx.switchTab({
+      url: "../proList/proList"
+    });
   },
   buyOrder: function (e) { //结算支付
     if (this.data.isMember == 0){

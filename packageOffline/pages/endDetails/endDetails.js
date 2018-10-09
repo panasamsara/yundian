@@ -115,7 +115,7 @@ Page({
   //   })
   // },
   appSkip: function (e) { //点击跳转到app下载页
-    wx.navigateTo({ url: "/pages/myHome/downLoadIos/downLoadIos?flag=" + this.data.flag });
+    wx.navigateTo({ url: "/packageMyHome/pages/downLoadIos/downLoadIos?flag=" + this.data.flag });
   },
   offlineSkip: function (e) { //跳到云店首页
     wx.switchTab({ url: "../../../pages/index/index" });

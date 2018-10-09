@@ -482,7 +482,7 @@ Page({
         shopId: shop.id,
         // customerId: user.id,
         goodsType: 0,
-        searchType: 0,
+        searchType: 10,
         categoryId: null
       }).then((res) => {
         goods = res.data.data
@@ -1098,7 +1098,7 @@ Page({
       merchantId: merchantid,
       shopId: shopid,
       goodsType: 0,
-      searchType: 0,
+      searchType: searchType || 10,
       customerId: wx.getStorageSync('scSysUser').id,
       categoryId: categoryid
     }).then((res) => {

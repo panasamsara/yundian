@@ -75,7 +75,7 @@ Page({
         console.log('预约成功------------------------回调数据-预约单号', res.data.data)
         app.util.sendMessage(res.data.data.orderNo, wx.getStorageSync('shop').id, wx.getStorageSync('scSysUser').usercode, 2)
         wx.showToast({
-          title: res.data.msg,
+          title: '预约已提交',
           icon:'none'
         })
         setTimeout(function(){

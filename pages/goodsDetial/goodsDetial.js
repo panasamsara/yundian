@@ -1,4 +1,6 @@
 import util from '../../utils/util.js';
+import saveImg from '../../utils/saveImg.js';
+// 1拼团 2秒杀 3普通商品
 //获取应用实例
 const app = getApp();
 Page({
@@ -24,28 +26,10 @@ Page({
     tabcur: 'product',
     info: '',
     loginType: 0,
-    // 模板所有数据
-    infoList:{},
     shareViewShow: false,
-    // 传递的数据
-    sharelist: {
-      imgUrl:'',
-      shopName: '',
-      people: '',
-      price1:'',
-      price2: '',
-      price3: '',
-      price4: ''
-    },
     loginType: 0,
-    // 控制分享模板1是否显示
-    shareShow: false,
-    scale2: '',
-    scale4: '',
-    scale5: '',
-    oW: 0,
-    oW2: 0,
-    oW5: 0
+    btnShow:'normal',
+    draw: false
   },
   onLoad: function (options) {
     if (options.share) {
@@ -91,8 +75,7 @@ Page({
 
     if (wx.getStorageSync('scSysUser')) {
       this.getData(this.data.parm);
-      this.getCartNum({ customerId: wx.getStorageSync('scSysUser').id, shopId: this.data.shopId })
-
+      this.getCartNum({ customerId: wx.getStorageSync('scSysUser').id, shopId: this.data.shopId });
     }
     //获取商品评论
     this.getComment();
@@ -142,7 +125,7 @@ Page({
     // }
   },
   onShow: function () { //缓存店铺信息（分享切店铺）
-    var _this = this
+    var _this = this;
     util.checkWxLogin('share').then((loginRes) => {
       console.log(loginRes)
       if (loginRes.status == 0) {
@@ -158,7 +141,7 @@ Page({
       }else{
         var parm = {
           shopId: this.data.shopId,
-          goodsId: this.data.shopId,
+          goodsId: this.data.goodsId,
           customerId: wx.getStorageSync('scSysUser').id
         }
         this.setData({
@@ -235,7 +218,6 @@ Page({
               _this.setData({
                 shopInformation: res.data.data
               })
-              
               //shop存入storage
               wx.setStorageSync('shop', res.data.data.shopInfo);
               //活动
@@ -424,27 +406,27 @@ Page({
       pictureUrl: pictureUrl
     })
     wx.downloadFile({//缓存店铺头像，直接使用网络路径真机无法显示或绘制
-      url: this.data.logoUrl,
+      url: _this.data.logoUrl,
       success: function (res) {
         console.log(res.tempFilePath)
         _this.setData({
           logo: res.tempFilePath
         })
-      }
-    })
-    wx.downloadFile({//缓存商品图片，直接使用网络路径真机无法显示或绘制
-      url: this.data.pictureUrl,
-      success: function (res) {
-        console.log(res.tempFilePath)
-        _this.setData({
-          proPic: res.tempFilePath
+        wx.downloadFile({//缓存商品图片，直接使用网络路径真机无法显示或绘制
+          url: _this.data.pictureUrl,
+          success: function (res) {
+            console.log(res.tempFilePath)
+            _this.setData({
+              proPic: res.tempFilePath
+            })
+            //canvas绘图
+            if (_this.data.status == 1) {//拼团
+              _this.drawPicGroup();
+            } else if (_this.data.status == 2) {//秒杀
+              _this.drawPicSeckill();
+            }
+          }
         })
-        //canvas绘图
-        if (_this.data.status == 1) {//拼团
-          _this.drawPicGroup();
-        } else if (_this.data.status == 2) {//秒杀
-          _this.drawPicSeckill();
-        }
       }
     })
   },
@@ -1320,7 +1302,7 @@ Page({
       url: '../index/index?shopId=' + this.data.shopId
     })
   },
-  previewImage: function (e) {
+  previewImage: function (e) {//图片预览
     var current = e.target.dataset.src,
       imageList = [],
       commentList = this.data.userData[e.target.dataset.index].commentUploadList;
@@ -1333,643 +1315,156 @@ Page({
       urls: imageList
     })
   },
-  // 点击遮罩关闭
-  closeTemplate: function () {
+  shareBtn:function(){//点击分享
     this.setData({
-      shareShow: !this.data.shareShow
+      posterShow:true,
+      untouch: 'untouch'
     })
   },
-  // 点击分享后 点击取消
-  shareBtn: function () {
+  closeShare:function(){//关闭分享
     this.setData({
-      shareViewShow: !this.data.shareViewShow
+      posterShow:false,
+      untouch: 'touch',
     })
   },
-  // 点击生成海报 出现分享弹窗
-  saveImg: function () {
-    var _this = this;
-    var details = _this.data.infoList
-    console.log(details, '所有数据')
-    if (_this.data.status === 1) {
-      console.log('拼团')
-      console.log(details.price, '原价'); //原价
-      console.log(details.groupBuyingPrice, '拼团价'); //拼团价
-      var priceA = details.groupBuyingPrice;
-      var price1 = '';
-      var price2 = '';
-      var index = String(priceA).indexOf('.');
-      if (index > -1) {
-        price1 = String(priceA).substring(0, index);
-        price2 = String(priceA).substring(index, String(priceA).length);
-        console.log(price1, '-', price2);
-      } else {
-        price1 = priceA
-      }
-
-
-      var priceB = details.price;
-      var price3 = '';
-      var price4 = '';
-      var index2 = String(priceB).indexOf('.');
-      if (index2 > -1) {
-        price3 = String(priceB).substring(0, index2);
-        price4 = String(priceB).substring(index2, String(priceB).length);
-        console.log(price3, '-', price4);
-      } else {
-        price3 = priceB
-      }
-      var _arr = String(priceB).split('');
-      var cxt = wx.createCanvasContext();
-      var ow = cxt.measureText(String(priceB)).width;
-      console.log(ow, '宽度')
-      _this.setData({
-        sharelist: {
-          shopName: details.shopName,
-          imgUrl: details.imageList[0].bigFilePath,
-          people: details.groupBuyingAllNum,
-          price1: price1,
-          price2: price2,
-          price3: price3,
-          price4: price4,
-          priceB: priceB,
-          oW: ow + 100,
-          buttonShow: true
-        }
-      })
-      console.log(_this.data.sharelist)
+  drawPoster:function(){//绘制海报
+    if (this.data.canvasUrl){
+      return;
     }
-    else if (_this.data.status === 2) {
-      var secondKillInfo = details.secondKillInfo;
-      console.log(secondKillInfo,'秒杀数据');
-      var people = 0;
-      var priceA = 0;
-      var arr = [];
-      secondKillInfo.forEach(function(item,index){
-        console.log(item,'单项数据');
-        people += item.goodsCount - item.salesCount ;
-        arr.push(item.goodsPreferentialStockPrice)
-      })
-      // 秒杀价最小数
-      priceA = Math.min.apply(Math, arr);
-      var price1 = '';
-      var price2 = '';
-      var index = String(priceA).indexOf('.');
-      console.log(priceA, '最小')
-      console.log(index, '下标')
-      if (index > -1) {
-        price1 = String(priceA).substring(0, index);
-        price2 = String(priceA).substring(index, String(priceA).length);
-        console.log(price1, '-', price2);
-      } else {
-        price1 = priceA
-      }
-      // 原价
-      var priceB = '';
-      secondKillInfo.forEach(function (item, index) {
-        if (priceA === item.goodsPreferentialStockPrice) {
-          priceB = item.goodsOriginalStockPrice
-        }
-      })
-      var price3 = '';
-      var price4 = '';
-      var index2 = String(priceB).indexOf('.');
-      console.log(priceB, '原价')
-      console.log(index2, '下标')
-      if (index > -1) {
-        price3 = String(priceB).substring(0, index2);
-        price4 = String(priceB).substring(index2, String(priceB).length);
-        console.log(price3, '-', price4);
-      } else {
-        price3 = priceB
-      }
-      var _arr = String(priceB).split('');
-      var cxt = wx.createCanvasContext();
-      var ow = cxt.measureText(String(priceB)).width;
-      console.log(ow,'宽度')
-      _this.setData({
-        sharelist:{
-          shopName: details.shopName,
-          imgUrl: details.imageList[0].bigFilePath,
-          people: people,
-          price1: price1,
-          price2: price2,
-          price3: price3,
-          price4: price4,
-          priceB: priceB,
-          oW: ow + 160,
-          buttonShow: true
-        }
-      })
-      console.log(_this.data.sharelist)
+    wx.showLoading();
+    var shopName = this.data.data.shopName;
+    if (shopName.length > 7) {
+      shopName = shopName.substring(0, 6) + '..';
     }
-    else if (_this.data.status === 3) {
-      var stockListDefault = details.stockListDefault;
-      console.log(stockListDefault,'普通')
-      var arr3 = [];
-      stockListDefault.forEach(function(item,index){
-        arr3.push(item.stockPrice)
-      })
-      var priceC = Math.min.apply(Math, arr3);
-      console.log(priceC,'普通最小值')
-      var price5 = '';
-      var price6 = '';
-      var index = String(priceC).indexOf('.');
-      console.log(priceC, '最小')
-      console.log(index, '下标')
-      if (index > -1) {
-        price5 = String(priceC).substring(0, index);
-        price6 = String(priceC).substring(index, String(priceC).length);
-        console.log(price5, '-', price6);
-      } else {
-        price5 = priceC
-      }
-      _this.setData({
-        sharelist: {
-          shopName: details.shopName,
-          imgUrl: details.imageList[0].bigFilePath,
-          desc: details.goodsName,
-          price1: price5,
-          price2: price6,
-          buttonShow: true
-        }
-      })
-    }
-    this.setData({
-      shareViewShow: !this.data.shareViewShow,
-      shareShow: !this.data.shareShow
-    })
-  },
-  // 再授权
-  save: function () {
-    var that = this;
-    //获取相册授权
-    wx.getSetting({
-      success(res) {
-        if (!res.authSetting['scope.writePhotosAlbum']) {
-          wx.authorize({
-            scope: 'scope.writePhotosAlbum',
-            success() {//这里是用户同意授权后的回调
-              wx.showToast({
-                title: '保存中...',
-                icon: 'none'
-              })
-              let buttonshow = "sharelist.buttonShow"
-              that.setData({
-                [buttonshow]: true
-              })
-              that.btn_img()
-            },
-            fail() {//这里是用户拒绝授权后的回调
-              console.log('走了save的fail');
-              wx.showToast({
-                title: '授权后才能保存至手机相册',
-                icon: 'none'
-              })
-              let buttonshow = "sharelist.buttonShow"
-              that.setData({
-                [buttonshow]: false
-              })
-              return
-            }
-          })
-        } else {//用户已经授权
-          wx.showToast({
-            title: '保存中...',
-            icon: 'none'
-          })
-          that.data.list.buttonShow = true;
-          that.btn_img()
-        }
-      }
-    })
-  },
-  handleSetting: function (e) {
-    let that = this;
-    // 对用户的设置进行判断，如果没有授权，即使用户返回到保存页面，显示的也是“去授权”按钮；同意授权之后才显示保存按钮
-    if (!e.detail.authSetting['scope.writePhotosAlbum']) {
-      wx.showModal({
-        title: '提示',
-        content: '若不打开授权，则无法将图片保存在相册中！',
-        showCancel: false
-      })
-      let buttonshow = "sharelist.buttonShow"
-      that.setData({
-        [buttonshow]: false
-      })
-    } else {
-      wx.showToast({
-        title: '已授权',
-        icon: 'none'
-      })
-      let buttonshow = "sharelist.buttonShow"
-      that.setData({
-        [buttonshow]: true
-      })
+    if(this.data.status==1){//拼团
+      this.groupPoster(shopName);
+    }else if(this.data.status==2){//秒杀
+      this.secPoster(shopName);
+    }else{//普通
+      this.poster(shopName);
     }
   },
-  btn_img:function(){
-    console.log(this.data.status,'状态')
-    if (this.data.status === 1) {
-      console.log('拼团');
-      this.info4();
-    }
-    else if (this.data.status === 2) {
-      console.log('秒杀')
-      this.info2();
-    }
-    else if (this.data.status === 3) {
-      console.log('普通')
-      this.info5();
-    }
-  },
-  // 秒杀canvas
-  info2: function () {
-    //创建节点选择器
-    var that = this;
-    var query = wx.createSelectorQuery();
-    query.select('.every2').boundingClientRect(function (rect) {
-      that.setData({
-        oW: rect.width
-      })
-      that.draw2()
-    }).exec();
-  },
-  draw2: function () {
-    var size = this.setCanvasSize2();//动态设置画布大小
-    console.log(size, 'size');
-    var scale = this.data.scale2;
-    var _this = this
-    var context = wx.createCanvasContext('myShareCanvas2');
-    context.save();//保存绘图上下文
-    context.setFillStyle('#fff');
-    context.fillRect(0, 0, 351 * scale, 480 * scale);//给画布添加背景色，无背景色真机会自动变黑
-    context.beginPath();
-    // 绘制上面图片
-    var imgUrl = _this.data.sharelist.imgUrl;
-    context.drawImage(imgUrl, 0, 0, 351 * scale, 289 * scale);
-    // 绘制下面图片
-    var imgUrl = '../../images/bg2.png';
-    context.drawImage(imgUrl, 0, 211 * scale, 352 * scale, 300 * scale);
-    // 绘制上层图片
-    var imgUrl = '../../images/ms.png';
-    context.drawImage(imgUrl, 36 * scale, 180 * scale, 120 * scale, 120 * scale);
-
-
-
-    //绘制x人秒杀
-    context.setFillStyle('#fff');
-    context.fillRect(36 * scale, 310 * scale, 173 * scale, 29 * scale)
-    context.fill();
-    context.setFontSize(16 * scale);
-    context.setFillStyle('#FB4A26');
-    context.fillText(_this.data.sharelist.people+'人已秒杀成功', 50 * scale, 330 * scale);
-
-    // 绘制现价
-    context.fill();
-    context.setFontSize(43 * scale);
-    context.setFillStyle('#fff');
-    context.fillText(_this.data.sharelist.price1, 50 * scale, 400 * scale);
-    context.setFontSize(35 * scale)
-    context.fillText(_this.data.sharelist.price2, (context.measureText(_this.data.sharelist.price1).width + 55) * scale, 400 * scale);
-    context.setFontSize(23 * scale);
-    context.fillText('¥', 34 * scale, 400 * scale);
-
-    // 绘制原价
-    context.fill();
-    context.setFontSize(25 * scale);
-    context.setFillStyle('#FFCEC4');
-    context.fillText(_this.data.sharelist.price3, 52 * scale, 450 * scale);
-    context.setFontSize(20 * scale);
-    context.setFillStyle('#FFCEC4');
-    context.fillText(_this.data.sharelist.price4, (context.measureText(_this.data.sharelist.price3).width +60) * scale, 450 * scale);
+  groupPoster: function (shopName){//绘制拼团商品海报
+    var context = wx.createCanvasContext('shareCanvas'),
+        scale=this.data.scale,
+        backImg="../../images/bg4.png",
+        frontImg="../../images/bg4_2.png";
+    context.fillRect(0,0,345*scale,475*scale);//设置白色背景
+    context.drawImage(backImg,0,0,345*scale,500*scale);//绘制背景图
+    context.setFillStyle('#ffffff');
     context.setFontSize(14 * scale);
-    context.fillText('¥', 38 * scale, 448 * scale);
-    context.setStrokeStyle('#FFFFFF');
-    context.moveTo(35 * scale, 440 * scale);
-    var num = String(_this.data.sharelist.priceB);
-    var numStr = ''
-    for (var a = 0; a < num.length; a++) {
-      numStr += '默'
-    }
-    context.lineTo((55 + context.measureText(numStr).width) * scale, 440 * scale);
-    context.stroke()
-    // 绘制头部标题
-    var re = /[\u4E00-\u9FA5]/g;
-    var str = _this.data.sharelist.shopName;
-    var len = str.match(re).length;
-    var arr = str.split('');
-    var A_Z = 0; //有几个大写英文
-    arr.forEach(function (item, index) {
-      if (/^[A-Z]+$/.test(item)) {
-        A_Z++;
-      }
-    });
-    console.log(A_Z, '个英文字符')
-    var titleLen = (str.length - len - A_Z) / 2 + A_Z + len
-    console.log(titleLen, '个字符')
-    var padding = 15;
-    var strW = titleLen * 14 + padding * 2;
-    var canvasW = size.w;
-    context.setFillStyle('#FB4A26')
-    context.fillRect(canvasW - strW - padding, 0, titleLen * 14 + padding * 2, 10 + padding * 2);
-    context.setFillStyle('#ffffff');
-    context.setFontSize(14);
-    context.setTextAlign('left');
-    context.setTextBaseline('top');
-    context.fillText(str, canvasW - strW, 10)
-
-    context.draw(false, function () {
-      wx.canvasToTempFilePath({//绘制完成执行保存回调
-        x: 0,
-        y: 0,
-        width: 351,
-        height: 480,
-        destWidth: 702,
-        destHeight: 960,
-        fileType: 'jpg',
-        canvasId: 'myShareCanvas2',
-        success: function (res) {
-          console.log(res.tempFilePath)
-          // 保存图片到本地
-          wx.saveImageToPhotosAlbum({
-            filePath: res.tempFilePath,
-            success(res) {
-              wx.showToast({
-                title: '保存成功',
-                icon: 'none'
-              })
-            }
-          })
-        }
-      })
-    });
-  },
-  //适配不同屏幕大小的canvas
-  setCanvasSize2: function () {
-    var size = {};
-    try {
-      var res = wx.getSystemInfoSync();
-      // var scale = 750 / 686;//不同屏幕下canvas的适配比例；设计稿是750宽
-      var scale = res.windowWidth / this.data.oW;
-      var width = res.windowWidth / scale;
-      var height = width;//canvas画布为正方形
-      size.w = width;
-      size.h = height;
-      this.setData({
-        scale2: res.windowWidth / 375
-      })
-    } catch (e) {
-      // Do something when catch error
-      console.log("获取设备信息失败" + e);
-    }
-    return size;
-  },
-  // 拼团canvas
-  info4:function(){
-    //创建节点选择器
-    var that = this;
-    var query = wx.createSelectorQuery();
-    query.select('.every4').boundingClientRect(function (rect) {
-      console.log(rect.width,'拼团canvas')
-      that.setData({
-        oW2: rect.width
-      })
-      that.draw4()
-    }).exec();
-  },
-  draw4: function () {
-    var size = this.setCanvasSize4();//动态设置画布大小
-    var scale = this.data.scale4;
-    var _this = this
-    var context = wx.createCanvasContext('myShareCanvas4');
-    // 绘制图片
-    context.save();//保存绘图上下文
-    var imgUrl = '../../images/bg4.png';
-    context.drawImage(imgUrl, 0, 0, 351 * scale, 531 * scale);
-    context.restore();
-
-    // 绘制标题
-    context.setFontSize(32 * scale);
+    let group=Math.floor(Math.random()*199+1)+'人正在拼团',
+        w=context.measureText(group).width;
+    context.fillText(group,((345-w)/2)*scale,107*scale);
     context.setFillStyle('#333333');
-    context.fillText(_this.data.sharelist.shopName, (size.w - context.measureText(_this.data.sharelist.shopName).width) / 2, 80 * scale);
-    // 绘制劵类型
-    context.setFontSize(13 * scale);
-    context.setFillStyle('#ffffff');
-    context.fillText(_this.data.sharelist.people + '人正在拼团', (size.w - context.measureText(_this.data.sharelist.people+'人正在拼团').width) / 2, 113 * scale);
-    // 矩形外框
-    context.setStrokeStyle('red');
-    context.strokeRect(18 * scale, 140 * scale, 316 * scale, 316 * scale)
-    context.drawImage(_this.data.sharelist.imgUrl, 21 * scale, 143 * scale, 311 * scale, 311 * scale);
-    // 绘制现价
-    context.fill();
-    context.setFontSize(29 * scale);
-    context.setFillStyle('#FF0000');
-    context.fillText(_this.data.sharelist.price1, 50 * scale, 500 * scale);
-    context.setFontSize(24 * scale);
-    context.fillText('.01', (context.measureText('.02').width) + 50 * scale, 500 * scale);
-    // context.fillText(_this.data.sharelist.price2, 50 * scale, 500 * scale);
-    context.setFontSize(17 * scale);
-    context.fillText('¥', 34 * scale, 500 * scale);
-    // 绘制原价
-    context.fill();
-    context.setFontSize(16 * scale);
-    context.setFillStyle('#999999');
-    context.fillText(_this.data.sharelist.price3, 52 * scale, 520 * scale);
-    context.setFontSize(12 * scale);
-    context.fillText(_this.data.sharelist.price4  , (context.measureText(_this.data.sharelist.price4).width) + 60 * scale, 520 * scale);
-    context.setFontSize(10 * scale);
-    context.fillText('¥', 38 * scale, 520 * scale);
-    context.setStrokeStyle('#999999');
-    context.moveTo(30 * scale, 515 * scale);
-    var num = _this.data.sharelist.priceB;
-    var numStr = ''
-    for (var a = 0; a < num.length; a++) {
-      numStr += '默'
-    }
-    context.lineTo((50 + context.measureText(numStr).width) +60 * scale, 515 * scale);
-    context.stroke()
-    // 右下角图片
-    context.drawImage('../../images/bg4_2.png', 181 * scale, 400 * scale, 171 * scale, 137 * scale);
-    context.draw(false, function () {
-      wx.canvasToTempFilePath({//绘制完成执行保存回调
-        x: 0,
-        y: 0,
-        width: 351,
-        height: 531,
-        destWidth: 702,
-        destHeight: 1062,
-        fileType: 'jpg',
-        canvasId: 'myShareCanvas4',
-        success: function (res) {
-          console.log(res.tempFilePath)
-          // 保存图片到本地
-          wx.saveImageToPhotosAlbum({
-            filePath: res.tempFilePath,
-            success(res) {
-              wx.showToast({
-                title: '保存成功',
-                icon: 'none'
-              })
-            }
-          })
-        }
-      })
-    });
-  },
-  //适配不同屏幕大小的canvas
-  setCanvasSize4: function () {
-    var size = {};
-    try {
-      var res = wx.getSystemInfoSync();
-      // var scale = 750 / 686;//不同屏幕下canvas的适配比例；设计稿是750宽
-      var scale = res.windowWidth / this.data.oW2;
-      var width = res.windowWidth / scale;
-      var height = width;//canvas画布为正方形
-      size.w = width;
-      size.h = height;
-      this.setData({
-        scale4: res.windowWidth / 375
-      })
-    } catch (e) {
-      // Do something when catch error
-      console.log("获取设备信息失败" + e);
-    }
-    return size;
-  },
-  // 普通商品
-  info5:function(){
-    //创建节点选择器
-    var that = this;
-    var query = wx.createSelectorQuery();
-    query.select('.every5').boundingClientRect(function (rect) {
-      that.setData({
-        oW5: rect.width
-      })
-      that.draw5()
-    }).exec();
-  },
-  draw5: function () {
-    var size = this.setCanvasSize5();//动态设置画布大小
-    var scale = this.data.scale5;
-    var _this = this
-    var context = wx.createCanvasContext('myCanvas5');
-    context.save();//保存绘图上下文
-    context.setFillStyle('#fff');
-    context.fillRect(0, 0, 351 * scale, 480 * scale);//给画布添加背景色，无背景色真机会自动变黑
+    context.setFontSize(28*scale);
+    let w1 = context.measureText(shopName).width;
+    context.fillText(shopName,((345-w1)/2)*scale,72*scale);//绘制商品名
+    context.setStrokeStyle('#fb452d');
+    context.setLineWidth(10*scale);
+    context.strokeRect(20*scale,130*scale,305*scale,305*scale);//绘制矩形边框
+    context.drawImage(this.data.proPic, 20 * scale, 130 * scale, 305 * scale, 305 * scale);//绘制商品图片
+    context.setFillStyle('#ff0400');
+    context.setFontSize(15*scale);
+    context.fillText('￥',15*scale,470*scale);
+    context.setFontSize(24*scale);
+    context.fillText(this.data.data.groupBuyingPrice.toFixed(2),30*scale,470*scale);//绘制拼团价
+    context.setFillStyle('#969696');
+    context.setFontSize(9*scale);
+    context.fillText('￥',20*scale,490*scale);
+    context.setFontSize(14*scale);
+    context.fillText(this.data.data.price.toFixed(2),30*scale,490*scale);//绘制原价
+    let w2=context.measureText('￥'+this.data.data.price.toFixed(2)).width;
     context.beginPath();
-
-    // 绘制标题
-    context.setFontSize(18 * scale);
-    context.setFillStyle('#333333');
-    context.fillText(_this.data.sharelist.shopName, (size.w - context.measureText(_this.data.sharelist.shopName).width) / 2, 30 * scale);
-    // 绘制商品图片
-    context.drawImage(_this.data.sharelist.imgUrl, 17 * scale, 44 * scale, 317 * scale, 317 * scale);
-    // 绘制文字并换行
-    var st = _this.data.sharelist.desc;
-    var arr = st.split('');
-    var st1 = '';
-    var st2 = '';
-    var st1Len = 0;
-    var st2Len = 0;
-    var flg = false
-    arr.forEach(function (item, index) {
-      var reg = new RegExp("[\\u4E00-\\u9FFF]+", "g");
-      if (st1Len < 13) {
-        st1 += item
-        if (reg.test(item)) {
-          st1Len += 1;
-        } else {
-          st1Len += 0.5;
-        }
-      } else {
-        if (st2Len < 13) {
-          st2 += item
-          if (reg.test(item)) {
-            st2Len += 1;
-          } else {
-            st2Len += 0.5;
-          }
-        } else {
-          if (flg === false) {
-            st2 += '...';
-            flg = true;
-          }
-        }
-      }
-    });
-
-    context.setFontSize(15 * scale);
-    context.setFillStyle('#666666');
-    context.fillText(st1, 17 * scale, 390 * scale);
-    context.fillText(st2, 17 * scale, 410 * scale);
-    // 绘制现价
-    context.fill();
-    context.setFontSize(30 * scale);
-    context.setFillStyle('#FF0000');
-    context.fillText(_this.data.sharelist.price1, 33 * scale, 460 * scale);
-    // context.fillText(1000, 33 * scale, 460 * scale);
-    context.setFontSize(25 * scale);
-    var c = _this.data.sharelist.price1
-    var cc = String(c);
-    var numStr = ''
-    for (var a = 0; a < cc.length; a++) {
-      numStr += '默'
-    }
-    if (numStr.length === 1) {
-      context.fillText(_this.data.sharelist.price2, (context.measureText(numStr).width + 25) * scale, 460 * scale);
-    } else if (numStr.length === 2) {
-      context.fillText(_this.data.sharelist.price2, (context.measureText(numStr).width + 20) * scale, 460 * scale);
-    } else {
-      context.fillText(_this.data.sharelist.price2, (context.measureText(numStr).width + 10) * scale, 460 * scale);
-    }
-    
-    // context.fillText(_this.data.sharelist.price2, (context.measureText(_this.data.sharelist.price2).width + 33) * scale, 460 * scale);
-    context.setFontSize(18 * scale);
-    context.fillText('¥', 17 * scale, 460 * scale);
-    context.draw(false, function () {
-      wx.canvasToTempFilePath({//绘制完成执行保存回调
-        x: 0,
-        y: 0,
-        width: 351,
-        height: 480,
-        destWidth: 702,
-        destHeight: 960,
-        fileType: 'jpg',
-        canvasId: 'myCanvas5',
-        success: function (res) {
-          console.log(res.tempFilePath)
-          // 保存图片到本地
-          wx.saveImageToPhotosAlbum({
-            filePath: res.tempFilePath,
-            success(res) {
-              wx.showToast({
-                title: '保存成功',
-                icon: 'none'
-              })
-            }
-          })
-        }
-      })
+    context.moveTo(20*scale,485*scale);
+    context.lineTo((w2+20)*scale,485*scale);
+    context.setLineWidth(1*scale);
+    context.setStrokeStyle('#969696');
+    context.stroke();
+    context.drawImage(frontImg,175*scale,370*scale,170*scale,130*scale);
+    let _this=this;
+    context.draw(false,function(){
+      // _this.temp(_this);
+      saveImg.temp(_this,'shareCanvas',690,1000,690,1000);
     });
   },
-  //适配不同屏幕大小的canvas
-  setCanvasSize5: function () {
-    var size = {};
-    try {
-      var res = wx.getSystemInfoSync();
-      // var scale = 750 / 686;//不同屏幕下canvas的适配比例；设计稿是750宽
-      var scale = res.windowWidth / this.data.oW5;
-      var width = res.windowWidth / scale;
-      var height = width;//canvas画布为正方形
-      size.w = width;
-      size.h = height;
-      this.setData({
-        scale5: res.windowWidth / 375
-      })
-    } catch (e) {
-      // Do something when catch error
-      console.log("获取设备信息失败" + e);
+  secPoster: function (shopName){//绘制秒杀商品海报
+    var context=wx.createCanvasContext('shareCanvas'),
+        scale=this.data.scale,
+        backImg ="../../images/bg2.png",
+        textImg ="../../images/ms.png";
+    context.drawImage(this.data.proPic,0,0,345*scale,345*scale);//绘制商品图片
+    context.setFillStyle('#fc4a26');
+    context.setFontSize(14*scale);
+    let w = context.measureText(shopName).width;
+    context.fillRect((345-w-35-28)*scale,0,(w+28)*scale,30*scale);//绘制商品名背景
+    context.setFillStyle('#ffffff');
+    context.fillText(shopName,(345-w-35-14)*scale,20*scale);//绘制商品名
+    context.drawImage(backImg,0,250*scale,345*scale,260*scale);//绘制背景图
+    context.drawImage(textImg,35*scale,220*scale,120*scale,120*scale);//绘制字体
+    context.fillRect(35*scale,360*scale,150*scale,30*scale);
+    context.setFontSize(20*scale);
+    context.fillText('￥',35*scale,440*scale);
+    context.setFontSize(34*scale);
+    context.fillText(this.data.listData[0].goodsPreferentialStockPrice.toFixed(2),55*scale,440*scale);//绘制秒杀价
+    context.setFillStyle('#fb4a28');
+    context.setFontSize(15*scale);
+    context.fillText(Math.floor(Math.random()*199+1)+'人已秒杀成功',50*scale,380*scale);
+    context.setFillStyle('#fececc');
+    context.setFontSize(12*scale);
+    context.fillText('￥',40*scale,470*scale);
+    context.setFontSize(20*scale);
+    context.fillText(this.data.listData[0].goodsOriginalStockPrice.toFixed(2),55*scale,470*scale);//绘制原价
+    context.beginPath();
+    context.setStrokeStyle('#f8fff8');
+    let w1=context.measureText(this.data.listData[0].goodsOriginalStockPrice.toFixed(2)).width;
+    context.moveTo(40*scale,462*scale);
+    context.lineTo((55+w1+3)*scale,462*scale);
+    context.stroke();
+    let _this=this;
+    context.draw(false,function(){
+      // _this.temp(_this);
+      saveImg.temp(_this, 'shareCanvas', 690, 1000, 690, 1000);
+    })        
+  },
+  poster: function (shopName){//绘制普通商品海报
+    var context=wx.createCanvasContext('shareCanvas'),
+        scale=this.data.scale,
+        codeImg ="../../images/an.png",
+        info='';
+    if (this.data.data.descContent != '' && this.data.data.descContent != null){
+        console.log(111)
+        info=this.data.data.descContent.replace(/<(style|script|iframe)[^>]*?>[\s\S]+?<\/\1\s*>/gi, '').replace(/<[^>]+?>/g, '').replace(/\s+/g, ' ').replace(/ /g, ' ').replace(/>/g, ' ').replace(/&nbsp;/g, '');
     }
-    return size;
+    context.setFontSize(20*scale);
+    let w = context.measureText(shopName).width;
+    context.fillText(shopName,((345-w)/2)*scale,35*scale);//绘制商品名
+    context.drawImage(this.data.proPic,18*scale,55*scale,309*scale,318*scale);//绘制商品图片
+    context.setFontSize(15*scale);
+    context.setFillStyle('#686868');
+    if (info.length > 13) {//绘制商品详情(2行)
+      context.fillText(info.substring(0, 12),18*scale,400*scale);
+      context.fillText(info.substring(13, 26) + '...',18*scale,420*scale);
+    }else{//(1行)
+      context.fillText(info,18*scale,400*scale);
+    }
+    context.setFillStyle('#ff0200');
+    context.fillText('￥',18*scale,480*scale);
+    context.setFontSize(24*scale);
+    context.fillText(this.data.data.price.toFixed(2),37*scale,480*scale);//绘制商品价格
+    context.drawImage(codeImg,235*scale,390*scale,92*scale,92*scale);
+    let _this = this;
+    context.draw(false, function () {
+      // _this.temp(_this);
+      saveImg.temp(_this, 'shareCanvas', 690, 1000, 690, 1000);
+    })
+  },
+  saveImg: function () {//保存图片
+    var that = this;
+    saveImg.saveImg(that);
+  },
+  handleSetting: function (e) {//授权
+    let that = this;
+    saveImg.handleSetting(that,e.detail.e);
   }
 })

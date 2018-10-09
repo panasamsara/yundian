@@ -12,7 +12,7 @@ Page({
       {
         icon: '../../images/dianneiorder.png',
         text: '店内订单',
-        path: '/pages/myHome/shopOrder/shopOrder',
+        path: '../../packageMyHome/pages/shopOrder/shopOrder',
         style: "width:48rpx;height:44rpx;"
       },
       // {
@@ -211,7 +211,7 @@ Page({
     wx.navigateTo({ url: e.currentTarget.dataset.path });
   },
   appSkip: function (e) { //点击跳转到app下载页
-    wx.navigateTo({ url: "/pages/myHome/downLoadIos/downLoadIos?flag=" + this.data.flag });
+    wx.navigateTo({ url: "../../packageMyHome/pages/downLoadIos/downLoadIos?flag=" + this.data.flag });
   },
   clickCount: function () {
     let count = this.data.count;

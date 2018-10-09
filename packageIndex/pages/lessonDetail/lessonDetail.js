@@ -1,3 +1,5 @@
+import saveImg from '../../../utils/saveImg.js';
+
 const app = getApp();
 Page({
 
@@ -8,7 +10,8 @@ Page({
     tabActive: [1, 0, 0],
     comments: [],
     play: false,
-    reply: { placeholder: '我来说一句~'}
+    reply: { placeholder: '我来说一句~'},
+    btnShow: 'normal'
   },
   // 获取课程详情
   getDetail: function () {
@@ -358,5 +361,62 @@ Page({
         scrollTop: scroll
       })
     }).exec();
+  },
+  goback: function () {//回到首页按钮
+    wx.switchTab({
+      url: '../index/index?shopId=' + this.data.shopId
+    })
+  },
+  shareBtn: function () {//点击分享
+    this.setData({
+      posterShow: true
+    })
+  },
+  closeShare: function () {//取消分享
+    this.setData({
+      posterShow: false
+    })
+  },
+  drawPoster:function(){//绘制海报
+    var _this=this;
+    wx.showLoading();
+    wx.downloadFile({
+      url: this.data.data.cover,
+      success:function(res){
+        let shopName = wx.getStorageSync('shop').shopName,
+            context = wx.createCanvasContext('shareCanvas'),
+            cover=res.tempFilePath,
+            scale=wx.getSystemInfoSync().windowWidth/375;
+        if (shopName.length > 7) {
+          shopName = shopName.substring(0, 6) + '..';
+        };
+        context.drawImage(cover,20*scale,18*scale,305*scale,305*scale);//绘制视频封面
+        context.drawImage('../../../images/video.png',142.5*scale,130*scale,60*scale,60*scale);//绘制播放按钮
+        context.drawImage('../../../images/bg7.png',0,200*scale,345*scale,300*scale);//绘制背景图
+        context.setFontSize(15*scale);
+        context.setFillStyle('#ffffff');
+        let w=context.measureText(shopName).width+20;
+        context.beginPath();
+        context.setStrokeStyle('#ffffff');
+        context.moveTo(50*scale,290*scale);
+        context.lineTo(295*scale,290*scale);
+        context.stroke();
+        context.setFillStyle('#fb452d');
+        context.fillRect(((345-w)/2)*scale,282.5*scale,w,15*scale);
+        context.setFillStyle('#ffffff');
+        context.fillText(shopName,((365-w)/2)*scale,294*scale);
+        context.draw(false,function(){
+          saveImg.temp(_this, 'shareCanvas', 690, 1000, 690, 1000);
+        })
+      }
+    })
+  },
+  saveImg:function(){//保存图片
+    let _this=this;
+    saveImg.saveImg(_this);
+  },
+  handleSetting:function (e){//授权
+    let that=this;
+    saveImg.handleSetting(that, e.detail.e);
   }
 })

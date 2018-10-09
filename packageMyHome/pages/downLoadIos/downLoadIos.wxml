@@ -1,0 +1,52 @@
+<!--pages/store/code/code.wxml-->
+<view class='container code'>
+  <view class="bg">
+    <image src="../../../images/download.jpg"></image>
+  </view>
+  <view class='storeInfo'>
+    <view class="step-box">
+      <image src="../../../images/fenxiangye_wenzi@2x.png"></image>
+      <view class="step-list">
+        <view class="step-one">
+          <span class="circle">1</span>
+          <view class="cirl-text">
+            <text>点击</text>
+            <text>保存图片</text>
+          </view>
+        </view>
+        <view class="step-one">
+          <span class="circle">2</span>
+          <view class="cirl-text">
+            <text>打开手机</text>
+            <text>扫一扫</text>
+          </view>
+        </view>
+        <view class="step-one">
+        <span class="circle">3</span>
+          <view class="cirl-text">
+            <text>跳转应用</text>
+            <text>点击下载</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class='storeCode'>
+    <view class="logo" id='logoBox'>
+      <image src='../../../images/yundian_bangdingdianji_logo.png'></image>
+    </view>
+    <text id='storeName' class='storeName'>智享城市</text>
+    <view class="img-box">
+      <image bindtap="previewImg" mode="scaleToFill" src="{{imagePath}}">
+      </image>
+    </view>
+    <text class='scan'>长按保存可将图片保存至系统相册</text>
+  </view>
+   <button class="save" bindtap='save' wx:if="{{show=='view'}}">保存图片</button>
+  <button type='primary' class='openSetting save' open-type="openSetting" bindopensetting='handleSetting' wx:if="{{show=='button'}}">保存图片</button>
+    <!-- <button class="downld" bindtap='downld' wx:if="{{flag=='false'}}">下载地址</button> -->
+  <view class="canvas-box">
+    <canvas  style="width: 686rpx;height: 686rpx;background:#f1f1f1;" canvas-id="mycanvas"/>
+    <canvas  style="width:610rpx;height:800rpx;" canvas-id="picCanvas" id="picCanvas"/>
+  </view>
+</view>

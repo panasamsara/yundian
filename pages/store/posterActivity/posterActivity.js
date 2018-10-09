@@ -66,7 +66,7 @@ Page({
     //获取报名信息
     this.getAct(options.goodsId, options.shopId)
     if (wx.getStorageSync('scSysUser')){
-      let params = {
+      var params = {
         actionId: options.actionId,
         userId: wx.getStorageSync('scSysUser').id
       }
@@ -253,6 +253,7 @@ Page({
 
     util.checkWxLogin('share').then((loginRes) => {
       console.log(loginRes)
+
       if (loginRes.status == 0) {
         // if (wx.getStorageSync('isAuth') == 'no') {
         //   this.setData({
@@ -264,6 +265,9 @@ Page({
           })
         // }
       } else {
+        _this.getSignList({
+          actionId: _this.data.actionId,
+          userId: wx.getStorageSync('scSysUser').id});
         _this.setData({
           phone: loginRes.phone
         })
@@ -282,7 +286,7 @@ Page({
             // 所有信息
             wx.setStorageSync('shopInformation', res.data.data);
             this.getAct(this.data.goodsId, this.data.shopId)
-
+            
           }
         })
 

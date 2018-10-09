@@ -176,15 +176,15 @@ Page({
       userId = e.currentTarget.dataset.userid,
       shopId = e.currentTarget.dataset.shopid;
     wx.navigateTo({
-      url: "orderDetail/orderDetail?facilityId=" + facilityId + "&activeIndex=" + this.data.activeIndex + "&presaleId=" + presaleId + "&userId=" + userId + "&shopId=" + shopId + '&selectMember=1'
+      url: "../orderDetail/orderDetail?facilityId=" + facilityId + "&activeIndex=" + this.data.activeIndex + "&presaleId=" + presaleId + "&userId=" + userId + "&shopId=" + shopId + '&selectMember=1'
     });
   },
   goOn: function (e) { //继续添加
     wx.navigateTo({
-      url: "../../../../../../../packageOffline/pages/proList/proList"
+      url: "../proList/proList"
     });
     wx.switchTab({
-      url: "../../../../../../../packageOffline/pages/proList/proList"
+      url: "../proList/proList"
     });
   },
   buyOrder: function (e) { //结算支付
@@ -193,7 +193,7 @@ Page({
       userId = e.currentTarget.dataset.userid,
       shopId = e.currentTarget.dataset.shopid;
     wx.navigateTo({
-      url: "orderDetail/orderDetail?facilityId=" + facilityId + "&activeIndex=" + 0 + "&presaleId=" + presaleId + "&userId=" + userId + "&shopId=" + shopId + '&selectMember=1'
+      url: "../orderDetail/orderDetail?facilityId=" + facilityId + "&activeIndex=" + 0 + "&presaleId=" + presaleId + "&userId=" + userId + "&shopId=" + shopId + '&selectMember=1'
     });
   },
   goShop: function (e) {
@@ -203,7 +203,7 @@ Page({
     })
 
     wx.navigateTo({
-      url: '../../../../../../../packageOffline/pages/proList/proList'
+      url: '../proList/proList'
     });
   }
 })

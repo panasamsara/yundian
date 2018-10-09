@@ -256,7 +256,7 @@
           <image src="../../../images/fenlei_hui.png"></image>
           <text class="order-txt">店铺分类</text>
         </navigator>
-        <!-- <navigator url="../../../pages/myHome/shopOrder/shopOrder" hover-class="navigator-hover">
+        <!-- <navigator url="../shopOrder/shopOrder" hover-class="navigator-hover">
           <image src="../../../images/fenlei_hui.png"></image>
           <text class="order-txt">店内订单</text>
         </navigator> -->

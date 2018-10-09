@@ -131,7 +131,7 @@ Page({
           if (res.data.data != null && res.data.data.orderStatus == 2) {
             setTimeout(function () {
               wx.navigateTo({
-                url: '../../../pages/myHome/shopOrder/orderDetail/orderDetail?activeIndex=0&shopId=' + _this.data.shopId + '&userId=' + _this.data.userId + '&presaleId=' + _this.data.presaleId + '&facilityId=' + _this.data.facilityId + '&merchantId=' + _this.data.merchantId + '&selectMember=1'
+                url: '../../../packageMyHome/pages/shopOrder/orderDetail/orderDetail?activeIndex=0&shopId=' + _this.data.shopId + '&userId=' + _this.data.userId + '&presaleId=' + _this.data.presaleId + '&facilityId=' + _this.data.facilityId + '&merchantId=' + _this.data.merchantId + '&selectMember=1'
               })
             }, 2000)
           }
@@ -346,7 +346,7 @@ Page({
 
           
           wx.navigateTo({
-            url: '../../../pages/myHome/shopOrder/orderDetail/orderDetail?activeIndex=0&shopId=' + _this.data.shopId + '&userId=' + wx.getStorageSync('hostId') + '&presaleId=' + presaleId + '&facilityId=' + _this.data.facilityId + '&merchantId=' + _this.data.merchantId +'&selectMember=1'
+            url: '../../../packageMyHome/pages/shopOrder/orderDetail/orderDetail?activeIndex=0&shopId=' + _this.data.shopId + '&userId=' + wx.getStorageSync('hostId') + '&presaleId=' + presaleId + '&facilityId=' + _this.data.facilityId + '&merchantId=' + _this.data.merchantId +'&selectMember=1'
           })
 
         }
@@ -1315,7 +1315,7 @@ Page({
 
       setTimeout(function () {
         wx.navigateTo({
-          url: '../../../pages/myHome/shopOrder/orderDetail/orderDetail?activeIndex=0&shopId=' + that.data.shopId + '&userId=' + that.data.userId + '&presaleId=' + that.data.presaleId + '&facilityId=' + that.data.facilityId + '&merchantId=' + that.data.merchantId
+          url: '../../../packageMyHome/pages/shopOrder/orderDetail/orderDetail?activeIndex=0&shopId=' + that.data.shopId + '&userId=' + that.data.userId + '&presaleId=' + that.data.presaleId + '&facilityId=' + that.data.facilityId + '&merchantId=' + that.data.merchantId
         })
       }, 2000)
       return false;
@@ -1707,7 +1707,7 @@ Page({
             if (data.data.data.payStatus==5){
               
               wx.navigateTo({
-                url: '../../../pages/myHome/shopOrder/orderDetail/orderDetail?activeIndex=0&shopId=' + this.data.shopId + '&userId=' + this.data.userId + '&presaleId=' + data.data.data.id + '&facilityId=' + this.data.facilityId + '&selectMember=1' + '&merchantId=' + this.data.merchantId
+                url: '../../../packageMyHome/pages/shopOrder/orderDetail/orderDetail?activeIndex=0&shopId=' + this.data.shopId + '&userId=' + this.data.userId + '&presaleId=' + data.data.data.id + '&facilityId=' + this.data.facilityId + '&selectMember=1' + '&merchantId=' + this.data.merchantId
               })              
             }
           }
@@ -2274,7 +2274,7 @@ Page({
   goOfflineOrderDetail() {
     let _this = this
     wx.navigateTo({
-      url: '../../../pages/myHome/shopOrder/orderDetail/orderDetail?activeIndex=0&shopId=' + _this.data.shopId + '&userId=' + _this.data.userId + '&presaleId=' + _this.data.presaleId + '&facilityId=' + _this.data.facilityId + '&merchantId=' + _this.data.merchantId + '&selectMember=1'
+      url: '../../../packageMyHome/pages/shopOrder/orderDetail/orderDetail?activeIndex=0&shopId=' + _this.data.shopId + '&userId=' + _this.data.userId + '&presaleId=' + _this.data.presaleId + '&facilityId=' + _this.data.facilityId + '&merchantId=' + _this.data.merchantId + '&selectMember=1'
     })
   },
   // 下拉重新获取留店商品

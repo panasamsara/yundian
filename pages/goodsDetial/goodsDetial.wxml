@@ -257,9 +257,6 @@
     </scroll-view>
   </view>
   <view id='shareBox'>
-    <!-- <button open-type='share'>
-      <image src='../../images/shouye_btn@2x.png' id='share'></image>
-    </button> -->
     <button bindtap="shareBtn">
       <image src='../../images/shouye_btn@2x.png' id='share'></image>
     </button>
@@ -335,16 +332,5 @@
   </view> 
 <canvas canvas-id='seckill' style='width:480rpx;height:380rpx;' id='secKillCanvas'></canvas>
 <canvas canvas-id='groupbuy' style='width:480rpx;height:420rpx;' id='gruopBuyCanvas'></canvas>
-<!-- 点击分享后的遮罩层 -->
-<view class='shareView' wx:if="{{ shareViewShow === true }}">
-  <view class='buttonGroup'>
-    <button open-type='share'>转发</button>
-    <button class='save_img' bindtap="saveImg">生成海报 保存分享</button>
-    <button class='close' bindtap="shareBtn">取消</button>
-  </view>
-</view>
-<!-- 引入分享模板 -->
-<import src="../share/share.wxml"/>
-<template is="share2" data="{{sharelist}}" wx:if="{{ shareShow === true && status === 2 }}"></template>
-<template is="share4" data="{{sharelist}}" wx:elif="{{ shareShow === true && status === 1 }}"></template>
-<template is="share5" data="{{sharelist}}" wx:elif="{{ shareShow === true && status === 3 }}"></template>
+<canvas id='shareCanvas' canvas-id='shareCanvas' style='width:690rpx;height:1000rpx;' class='shareCanvas'></canvas>
+<poster-modal posterData="{{canvasUrl}}" btnData="{{btnShow}}" bind:close="closePoster" bind:closeShare="closeShare" bind:drawPoster="drawPoster" bind:saveImg="saveImg" bind:handleSetting="handleSetting" wx:if="{{posterShow}}" id="posterModal"></poster-modal>

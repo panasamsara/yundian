@@ -409,6 +409,7 @@ putInCart-img{
   color: #fff;
   font-weight: bold;
   font-size: 48rpx;
+  overflow: hidden;
 }
 .coupon-price{
   position: absolute;

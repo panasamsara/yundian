@@ -1,5 +1,6 @@
 // pages/store/code/code.js
 var QR = require("../../../utils/qrcode.js");
+import saveImg from '../../../utils/saveImg.js';
 const app=getApp();
 
 Page({
@@ -10,7 +11,7 @@ Page({
   data: {
     canvasHidden: false,
     imagePath: '',
-    show:'view'
+    btnShow: 'normal'
   },
 
   /**
@@ -122,7 +123,7 @@ Page({
                 icon:'none'
               })
               that.setData({
-                show:'button'
+                btnShow: 'authorize'
               })
               return
             }
@@ -140,28 +141,7 @@ Page({
   
   handleSetting: function (e) {
     let that = this;
-    // 对用户的设置进行判断，如果没有授权，即使用户返回到保存页面，显示的也是“去授权”按钮；同意授权之后才显示保存按钮
-    if (!e.detail.authSetting['scope.writePhotosAlbum']) {
-      wx.showModal({
-        title: '提示',
-        content: '若不打开授权，则无法将图片保存在相册中！',
-        showCancel: false
-      })
-      that.setData({
-        saveImgBtnHidden: true,
-        openSettingBtnHidden: false
-      })
-    } else {
-      wx.showToast({
-        title: '已授权',
-        icon:'none'
-      })
-      that.setData({
-        saveImgBtnHidden: false,
-        openSettingBtnHidden: true,
-        show:'view'
-      })
-    }
+    saveImg.handleSetting(that,e);
   },
 
   drawPic:function(){

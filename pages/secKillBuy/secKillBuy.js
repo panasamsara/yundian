@@ -399,7 +399,7 @@ Page({
     if (this.data.isSend == 1) { //店内下单
       //跳到店内下单
       wx.redirectTo({
-        url: '../myHome/shopOrder/shopOrder'
+        url: '../../../../../packageMyHome/pages/shopOrder/shopOrder'
       })
     } else {
       if (this.data.isSeckill == 1) {//秒杀

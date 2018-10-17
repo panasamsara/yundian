@@ -7,7 +7,8 @@ Page({
    */
   data: {
     accountText:'选择账户',
-    count:1
+    count:1,
+    deliveryArray:['快递配送','自取提货']
   },
 
   /**
@@ -49,6 +50,9 @@ Page({
               })
             }
           }
+          this.setData({
+            deliveryType: 4
+          })
         }
         if (res.data.data.recvAddress) {
           let recvAddress = res.data.data.recvAddress,
@@ -73,6 +77,18 @@ Page({
     this.setData({
       accountText:this.data.accountArray[e.detail.value],
       accountId: this.data.data.subaccounts[e.detail.value].id
+    })
+  },
+  choseDelivery:function(e){
+    let deliveryType;
+    if(e.detail.value==0){//快递
+      deliveryType=0;
+    }else{//自提
+      deliveryType=2
+    }
+    this.setData({
+      deliveryText:this.data.deliveryArray[e.detail.value],
+      deliveryType:deliveryType
     })
   },
   changeAddress:function(){//更改收货地址
@@ -157,18 +173,16 @@ Page({
             id: data.creditsGoodsInfo.id
           }],
           realMoney: this.data.total,
-          bussinessId: wx.getStorageSync('shop').id
+          bussinessId: wx.getStorageSync('shop').id,
+          deliveryType: this.data.deliveryType
         }
     if (data.creditsGoodsInfo.goodsType==3){//普通商品
-      params['deliveryType']=0;
       params['contactName'] = data.recvAddress.name;
       params['areaId'] = data.recvAddress.areaId;
       params['contactMobile'] = data.recvAddress.phone;
       params['provinceId'] = data.recvAddress.provinceId;
       params['cityId'] = data.recvAddress.cityId;
       params['address'] = data.recvAddress.address
-    }else{//服务类
-      params['deliveryType']=2;
     }
     app.util.reqAsync('shop/submitOnlineCreditOrder', params).then((res) => {
       if (res.data.code==1) {

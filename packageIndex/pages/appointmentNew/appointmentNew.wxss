@@ -1,0 +1,239 @@
+/* packageIndex/pages/appointmentNew/appointmentNew.wxss */
+#appointmentNew{
+  letter-spacing: 1rpx;
+}
+
+#timeBox{
+  height: 88rpx;
+  background-color: #FB452C;
+}
+
+#timeBox view{
+  height: 56rpx;
+  line-height: 56rpx;
+  padding: 0 37rpx;
+  background-color: #ffffff;
+  color: #FB452C;
+  font-size: 25rpx;
+  border-radius: 10rpx;
+}
+
+#timeBox image{
+  width: 16rpx;
+  height: 10rpx;
+  margin-left: 10rpx;
+}
+
+#plan{
+  padding: 16rpx 24rpx;
+  border-bottom: solid 20rpx #f8f8f8;
+}
+
+.flexCenter{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flexBetween{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#plan view{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  line-height: 60rpx;
+}
+
+#plan view text:first-of-type{
+  font-size: 32rpx;
+  color: #333333;
+}
+
+.tip{
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.check,.checked{
+  width: 40rpx;
+  height: 40rpx;
+}
+
+.check,.checkSmall{
+  border-radius: 50%;
+  border: solid 1rpx #707070;
+  box-sizing: border-box;
+}
+
+#serviceCardBox{
+  padding: 0 24rpx 120rpx 24rpx;
+}
+
+#serviceCardHead{
+  font-size: 32rpx;
+  color: #000032;
+  line-height: 100rpx;
+}
+
+#serviceCardHead view text{
+  font-size: 28rpx;
+  color: #999999;
+}
+
+.enterIcon{
+  width: 11rpx;
+  height: 21rpx;
+  margin-left: 9rpx;
+}
+
+#serviceCardBox .listBox{
+  margin-bottom: 20rpx;
+}
+
+#serviceCardBox .list{
+  font-size: 29rpx;
+  background-color: #fff7f3;
+  padding: 26rpx 24rpx 26rpx 0;
+  border-top-left-radius: 10rpx;
+  border-bottom-left-radius: 10rpx;
+  position: relative;
+  z-index: 2;
+}
+
+#serviceCardBox .listChecked{
+  box-shadow: 0 6rpx 6rpx rgba(251,69,44,0.1);
+}
+
+#serviceCardBox .clip{
+  width: 30rpx;
+  height: 112rpx;
+  margin: 0 23rpx 0 -6rpx;
+}
+
+#serviceCardBox .cardType text{
+  display: block;
+}
+
+#serviceCardBox .type{
+  color: #FB452C;
+  margin-bottom: 30rpx;
+}
+
+#serviceCardBox .name{
+  color: #333333;
+}
+
+#serviceCardBox .leftTimes{
+  color: #666666;
+}
+
+#serviceCardBox .check,#serviceCardBox .checked{
+  margin-right: 15rpx;
+  align-self: flex-start;
+}
+
+#serviceCardBox .flexBetween{
+  align-items: flex-start;
+}
+
+.checkSmall,.checkedSmall{
+  width: 30rpx;
+  height: 30rpx;
+  margin-right: 15rpx;
+}
+
+#serviceCardBox .choseBox{
+  width: calc(98% - 71rpx);
+  font-size: 28rpx;
+  background-color: #fff7f3;
+  padding: 0 21rpx 0 50rpx; 
+  line-height: 100rpx;
+  border-bottom-left-radius: 10rpx;
+  border-bottom-right-radius: 10rpx;
+  margin: 0 auto;
+}
+
+.choseBox .chose{
+  font-size: 24rpx;
+  color: #FE732D;
+}
+
+.servant,.device{
+  display: flex;
+  align-items: center;
+}
+
+.servant{
+  position: relative;
+  border-bottom: solid 1rpx #EEEEEE;
+}
+
+.choseBox .tip{
+  font-size: 28rpx;
+  width: 395rpx;
+  text-indent: 20rpx;
+}
+
+.tipBox{
+  width: 360rpx;
+  height: 80rpx;
+  border-radius: 10rpx;
+  font-size: 28rpx;
+  color: #333333;
+  position: absolute;
+  background-color: #ffffff;
+  left: -24rpx;
+  top: -66rpx;
+  z-index: 333;
+}
+
+.hand{
+  width: 32rpx;
+  height: 44rpx;
+  margin-right: 20rpx;
+}
+
+.close{
+  width: 16rpx;
+  height: 16rpx;
+  margin-left: 20rpx;
+}
+
+.tipBox,.arrow{
+  box-shadow: 0 4rpx 4rx rgba(0,0,0,0.5);
+}
+
+.arrow{
+  width: 0;
+  height: 0;
+  border-left: 10rpx solid transparent;
+  border-right: 10rpx solid transparent;
+  border-top: 10rpx solid #ffffff;
+  position: absolute;
+  top: 14rpx;
+  left: 5rpx;
+}
+
+.appointBox{
+  width: 100%;
+  height: 115rpx;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  background-color: #f8f8f8;
+  z-index: 999;
+}
+
+.appoint{
+  width: 520rpx;
+  height: 80rpx;
+  color: #ffffff;
+  font-size: 32rpx;
+  text-align: center;
+  background-color: #FB452C;
+  border-radius: 40rpx;
+}

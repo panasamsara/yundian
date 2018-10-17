@@ -1,5 +1,22 @@
 import area from 'area.js'
 
+// 时间格式化
+const dateFormat= (fmt, date) => {
+  var o = {
+    'M+': date.getMonth() + 1,
+    'd+': date.getDate(),
+    'h+': date.getHours(),
+    'm+': date.getMinutes(),
+    's+': date.getSeconds(),
+    'q+': Math.floor((date.getMonth() + 3) / 3),
+    'S': date.getMilliseconds()
+  };
+  if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length));
+  for (var k in o)
+    if (new RegExp('(' + k + ')').test(fmt))
+      fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)));
+  return fmt;
+}
 // 时间格式化-自带
 const formatTime = date => {
   const year = date.getFullYear()
@@ -11,10 +28,12 @@ const formatTime = date => {
 
   return [year, month, day].map(formatNumber).join('-') + ' ' + [hour, minute, second].map(formatNumber).join(':')
 }
-// // 测试链接
-const URL_QRCODE = 'https://wxapp.izxcs.com/zxcity_restful/ws/rest';
+// 主线
+// const URL = 'https://wxappmain.izxcs.com/zxcity_restful/ws/rest';
+
 // 测试环境
 const URL = 'https://wxappprod.izxcs.com/zxcity_restful/ws/rest';
+const URL_QRCODE = 'https://wxapp.izxcs.com/zxcity_restful/ws/rest';
 const SHARE_URL ='https://share.zxtest.izxcs.com';
 const SOCKET_URL = 'wss://wxappprod.izxcs.com'
 
@@ -531,7 +550,50 @@ const sendMessage = (orderNo, shopId, userCode, messageType=null) => {
   })
   return promi
 }
-
+const userLogin = () => {
+  let promi = new Promise((resolve, reject) => {
+    wx.login({
+      success: (res) => {
+        console.log('wx.login:', res)
+        // 后台登陆app账户
+        reqAsync('payBoot/wx/miniapp/login', {
+          code: res.code,
+          source: '0',
+          platform: '0'
+        }).then((res) => {
+          console.log(res)
+          // console.log('登录app', res.data.data.scSysUser)
+          wx.setStorageSync('loginToken', res.data.data.loginToken);
+          wx.setStorageSync('isAuth', res.data.data.isAuth);
+          // 失败则跳到注册页
+          if (res.data.code != 1) {
+            loginFailed()
+            // wx.redirectTo({ url: '/pages/reg/reg' });
+            return
+          }
+          // 未注册用户跳转到注册页面
+          if (res.data.data.scSysUser == null) {
+            // wx.redirectTo({ url: '/pages/reg/reg' });
+            var result = {
+              msg: '新用户',
+              status: 0
+            }
+            resolve(result)
+            return
+          } else {
+            wx.setStorageSync('scSysUser', res.data.data.scSysUser);
+            resolve(res.data.data.scSysUser)
+            wx.hideLoading();
+            // if (!source)
+            // wx.switchTab({ url: '/pages/index/index' });
+          }
+        })
+      },
+      fail: loginFailed
+    })
+  })
+  return promi
+}
 module.exports = {
   formatTime: formatTime,
   formatMoney: formatMoney,
@@ -542,6 +604,7 @@ module.exports = {
   formatPickerTime: formatPickerTime,
   formatTimeArray: formatTimeArray,
   formatIOS: formatIOS,
+  dateFormat: dateFormat,
   reqAsync: reqAsync,
   isEmpty: isEmpty,
   inArray: inArray,
@@ -560,5 +623,6 @@ module.exports = {
   SHARE_URL: SHARE_URL,
   SOCKET_URL: SOCKET_URL,
   sendMessage: sendMessage,
-  cacheShop: cacheShop
+  cacheShop: cacheShop,
+  userLogin: userLogin
 }

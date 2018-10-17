@@ -286,7 +286,8 @@ Page({
             })
           } else if (res.data.data.orderStatus == 3) {
             _this.setData({
-              orderStatus: 3
+              orderStatus: 3,
+              payStatus: res.data.data.payStatus
             })
           }
           let dingDanTotalPay = 0
@@ -813,12 +814,21 @@ Page({
 
       this.linePos = app.bezier([this.busPos, topPoint, this.finger], 30);*/
 
-      if (this.data.orderStatus == 1) { // '订单状态: 0-待处理；1-处理中；2-待结算；3-已结算； 4-已取消 ;'（小程序只会有1 3）
+      // if (this.data.orderStatus == 1) { // '订单状态: 0-待处理；1-处理中；2-待结算；3-已结算； 4-已取消 ;'（小程序只会有1 3）
+      //   wx.showToast({
+      //     title: '已确认下单，请结算！',
+      //     icon: 'none'
+      //   })
+      //   return false
+      // }
+      var paystatus = this.data.paystatus;
+      console.log(paystatus)
+      if (paystatus == 5) { //调用微信下单接口后， paystatus改为5
         wx.showToast({
-          title: '已确认下单，请结算！',
+          title: "尚有订单待支付，请先去结算哟",
           icon: 'none'
         })
-        return false
+        return 0
       }
       
       let _id = e.target.id.split('_')[1];

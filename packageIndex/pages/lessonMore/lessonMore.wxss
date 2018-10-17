@@ -1,0 +1,168 @@
+/* packageIndex/pages/lesson/lesson.wxss */
+page{
+  min-height: 100%;
+  position: relative;
+}
+.bitmap{
+  position: absolute;
+  margin: auto;
+  width: 504rpx;
+  height: 218rpx;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.search-content{
+  z-index: 999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 108rpx;
+  border: 1px solid #eee;
+  border-bottom: 0;
+  font-size:30rpx;
+  color: #666;
+  box-shadow: 0px 4rpx 4rpx 0 rgba(0, 0, 0, 0.08);
+  transition: all 0.1s ease-in-out;
+}
+.search-content.on{
+  height: 100%;
+  max-height: 100%;
+  background: rgba(0, 0, 0, 0.25);
+  overflow: auto;
+}
+.search-content .condition-content{
+  display: flex;
+  height: 108rpx;
+  background: #fff;
+}
+.search-content .condition-content>view{
+  flex: 1;
+  height: 108rpx;
+  line-height: 108rpx;
+  text-align: center;
+}
+.search-content .condition-content>view.on{
+  color: #4F8BF7;
+}
+.search-content .condition-content>view:first-of-type{
+  border-right: 1px solid #eee;
+}
+.search-content .condition-content .icon{
+  display: inline-block;
+  width: 20rpx;
+  height: 10rpx;
+  line-height: 30rpx;
+  vertical-align: middle;
+}
+.search-content>.item{
+  display: block;
+  height: 108rpx;
+  line-height: 108rpx;
+  font-size:30rpx;
+  color: #666;
+  background: #fff;
+  border-top: 1px solid #eee;
+  text-align: center;
+}
+.search-content>.item.on{
+  color: #4F8BF7;
+}
+
+/* 课程列表部分 */
+.content{
+  padding:0 0 30rpx;
+}
+.lesson-content{
+  display: flex;
+  padding: 30rpx;
+}
+.lesson-content .cover-box{
+  position: relative;
+  display: block;
+  width: 230rpx;
+  height: 160rpx;
+}
+.lesson-content .cover-box .cover{
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 10rpx;
+}
+.lesson-content .cover-box .subscripts{
+  position: absolute;
+  display: inline-block;
+  bottom: 20rpx;
+  left: 22rpx;
+  width: 26rpx;
+  height: 22rpx;
+}
+.lesson-content .cover-box .time{
+  position: absolute;
+  display: inline;
+  bottom: 20rpx;
+  left: 60rpx;
+  font-size: 26rpx;
+  line-height:20rpx;
+  color: #fff;
+}
+
+.lesson-content .text-box{
+  position: relative;
+  display: block;
+  flex: 1;
+  padding-left: 30rpx;
+}
+.lesson-content .text-box .title{
+  max-width: 430rpx;
+  font-size: 30rpx;
+  line-height: 74rpx;
+  color: #333;
+  font-weight: medium;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.lesson-content .text-box .column{
+  font-size: 24rpx;
+  line-height: 36rpx;
+  color: #AAB2BC;
+}
+.lesson-content .text-box .column text{
+  color: #4F8BF7;
+}
+.lesson-content .text-box .teacher{
+  display: block;
+  margin-top: 26rpx;
+  font-size: 26rpx;
+  line-height: 1;
+  color: #AAB2BC;
+}
+.lesson-content .text-box .teacher::before{
+  content: ' ';
+  display: inline-block;
+  margin-right: 14rpx;
+  width: 30rpx;
+  height: 30rpx;
+  background: #FFDAE2;
+  border-radius: 100%;
+  vertical-align: middle;
+  line-height: 1;
+}
+.lesson-content .text-box .price{
+  position: absolute;
+  right: 0;
+  bottom: 22rpx;
+  font-size: 36rpx;
+  color: #E73B80;
+  letter-spacing: 1rpx;
+  line-height: 1;
+}
+.lesson-content .text-box .price:first-letter{
+  font-size: 24rpx;
+}
+.lesson-content .text-box .price.free:first-letter{
+  font-size: inherit;
+}

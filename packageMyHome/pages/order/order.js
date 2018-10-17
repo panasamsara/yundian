@@ -106,7 +106,7 @@ Page({
         pageSize: 10
       }).then((res) => {
         wx.hideLoading();
-        console.log(res)
+       
         if (res.data.code == 1) {
           //下拉加载
           var oldData = this.data.goodlist;
@@ -152,6 +152,7 @@ Page({
         pageSize: 10
       }).then((res) => {
         wx.hideLoading();
+     
         if (res.data.code == 1) {
           for (var i in res.data.data) {
             res.data.data[i].total = 0;
@@ -473,15 +474,17 @@ Page({
   //   this.getData();
   // },
   pay: function (e) {
+    console.log(e)
     var self = this;
     var dt = e.currentTarget.dataset.no;
+    var inx = e.currentTarget.dataset.inx;
     wx.showModal({
       title: '支付方式',
       content: '是否微信支付？',
       success: function (res) {
         if (res.confirm) {
           //用户点击确定（调微信支付接口）
-          self.bindTestCreateOrder(dt);
+          self.bindTestCreateOrder(dt,inx);
 
         } else if (res.cancel) {
           //用户点击取消
@@ -490,15 +493,18 @@ Page({
       }
     })
   },
-  bindTestCreateOrder: function (code) {
+  bindTestCreateOrder: function (code,i) {
+
     var data = {
+      subject: this.data.goodlist[i].orderItemList[0].goodsName,
+      openid: wx.getStorageSync('scSysUser').wxOpenId,
+      shopId: this.data.shopId,
       requestBody: {
         body: '云店小程序普通订单',
         out_trade_no: code,
         // notify_url: 'https://wxappprod.izxcs.com/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
         // notify_url: app.globalData.notify_url,
-        trade_type: 'JSAPI',
-        openid: wx.getStorageSync('scSysUser').wxOpenId
+        trade_type: 'JSAPI'
       }
     };
     //发起网络请求 微信统一下单   

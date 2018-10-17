@@ -1,0 +1,62 @@
+<!--packageIndex/pages/appointmentNew/appointmentNew.wxml-->
+<view class='container' id='appointmentNew'>
+  <view id='timeBox' class='flexCenter'>
+    <view class='flexBetween'>
+      <text>{{time}}</text>
+      <image src='images/xcx_yy_jiantou_xia@2x.png'></image>
+    </view>
+  </view>
+  <view id='plan' class='flexBetween'>
+    <view>
+      <text>到店安排</text>
+      <text class='tip'>先预约进店再选择服务</text>
+    </view>
+    <image class='checked' src='images/xcx_yy_cishukaxuanzhong@2x.png' wx:if="{{checkStore}}" bindtap='checkStore'></image>
+    <view class='check' wx:if="{{!checkStore}}" bindtap='checkStore'></view>
+  </view>
+  <view id='serviceCardBox'>
+    <view id='serviceCardHead' class='flexBetween'>
+      <text>已有服务卡 ({{cardNum}})</text>
+      <view><text>其他服务</text><image src='images/xcx_yy_jiantou_you@2x.png' class='enterIcon'></image></view>
+    </view>
+    <view id='serviceCardList'>
+      <view class="listBox" wx:for="{{cardList}}" wx:key="index">
+        <view class="flexBetween list {{item.check?'listChecked':''}}" data-check="{{item.check}}">
+          <view class='flexBetween'>
+            <image src='images/xcx_yy_dingzi@2x.png' class='clip'></image>
+            <image class='checked' src='images/xcx_yy_cishukaxuanzhong@2x.png' wx:if="{{item.check}}" bindtap='check' data-index="{{index}}" data-flag="check"></image>
+            <view class='check' wx:if="{{!item.check}}" bindtap='check' data-index="{{index}}" data-flag="check"></view>
+            <view class='cardType'>
+              <text class='type'>{{item.type}}</text>
+              <text class='name'>{{item.name}}</text>
+            </view>
+          </view>
+          <text class='leftTimes'>{{left}}/{{total}}次</text>
+        </view>
+        <view wx:if="{{item.check}}" class='choseBox'>
+          <view class='servant'>
+            <view class='tipBox flexCenter' wx:if="{{checkTimes<=1&&!closeTip}}" bindtap='closeTip'>
+              <image src='images/xcx_yy_shouzhi@2x.png' class='hand'></image>
+              点击可关闭该选项
+              <image src='images/xcx_yy_yyxx_guanbi@2x.png' class='close'></image>
+            </view>
+            <view class='arrow'></view>
+            <image class='checkedSmall' src='images/xcx_yy_xuanzhong@2x.png' wx:if="{{item.checkServant}}" bindtap='check' data-index="{{index}}" data-flag="checkServant"></image>
+            <view class='checkSmall' wx:if="{{!item.checkServant}}" bindtap='check' data-index="{{index}}" data-flag="checkServant"></view>
+            <text>服务人员</text>
+            <view class='flexBetween' wx:if="{{item.checkServant}}">:<text class='tip'>{{servant}}</text><text class='chose'>选择</text></view>
+          </view>
+          <view class='device'>
+            <image class='checkedSmall' src='images/xcx_yy_xuanzhong@2x.png' wx:if="{{item.checkDevice}}" bindtap='check' data-index="{{index}}" data-flag="checkDevice"></image>
+            <view class='checkSmall' wx:if="{{!item.checkDevice}}" bindtap='check' data-index="{{index}}" data-flag="checkDevice"></view>
+            <text>服务设备</text>
+            <view class='flexBetween' wx:if="{{item.checkDevice}}">:<text class='tip'>{{device}}</text><text class='chose'>选择</text></view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class='appointBox flexCenter'>
+    <button class='appoint'>选好了</button>
+  </view>
+</view>

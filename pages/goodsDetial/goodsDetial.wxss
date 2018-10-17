@@ -359,9 +359,12 @@ swiper-item image{
 }
 .ask text,.answer text{
   float:left;
-  width:440rpx;
+  width:520rpx;
   line-height: 40rpx;
   font-size: 26rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .ask{
   position: relative;
@@ -1103,7 +1106,7 @@ canvas{
 }
 
 .untouch{
-  height: 90%;
+  height: calc(100% - 198rpx);
   overflow: hidden;
 }
 

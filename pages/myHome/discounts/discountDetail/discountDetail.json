@@ -2,6 +2,7 @@
   "navigationBarTitleText": "券详情",
   "backgroundColor": "#f17168",
   "usingComponents": {
-    "login-component": "../../../../components/component-login"
+    "login-component": "../../../../components/component-login",
+    "poster-modal": "../../../../components/poster-modal/poster-modal"
   }
 }

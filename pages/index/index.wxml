@@ -6,7 +6,7 @@
     <view class='coupon-box'>
       <image class='new-coupon-img' src="./img/yundian_libaobeijing.png" />
       <view class='coupon-name'>{{couponInfo.coupon.instruction}}</view>
-      <view class='coupon-price'>价值{{couponInfo.coupon.couponValue}}元</view>
+      <view class='coupon-price' wx:if='{{couponInfo.coupon.couponValue}}'>价值{{couponInfo.coupon.couponValue}}元</view>
       <image class='libao-img' src='./img/libaobeij.png'></image>
       <image class='lingqu-btn' bindtap="getCoupon" src="./img/yundian_libaolingquanniu@2x.png" />
       <image class='close-btn' bindtap="closeModal" src='./img/yundian_lipinguanbi@2x.png'></image>

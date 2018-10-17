@@ -1,4 +1,5 @@
 // packageIntegral/pages/orderdetail/orderdetail.js
+var QR = require("../../../utils/qrcode.js");
 const app=getApp();
 Page({
 
@@ -35,9 +36,11 @@ Page({
         this.setData({
           data:res.data.data[0],
           address:address,
-          orderInfo: orderInfo
+          orderInfo: orderInfo,
+          scale: wx.getSystemInfoSync().windowWidth/375
         })
-        console.log(this.data.orderInfo)
+        let scale=this.data.scale;
+        QR.api.draw(this.data.orderInfo.serialNumber, "codeCanvas", 134*scale, 134*scale);
       }
     }).catch((err) => {
       console.log(err);

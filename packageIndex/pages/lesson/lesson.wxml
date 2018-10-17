@@ -1,44 +1,104 @@
-<!--packageIndex/pages/lesson/lesson.wxml-->
-<view class='search-content {{tabs[0] || tabs[1] ? "on": ""}}' bindtap="closeBox">
-  <!-- 下拉按钮 -->
-  <view class='condition-content'>
-    <view class='{{tabs[0] ? "on": ""}}' data-i="0" catchtap='changeTabs'>
-      {{selected[0] == 0? '按费用筛选': conditions[0][selected[0]].name}}
-      <image wx:if="{{!tabs[0]}}" mode='aspectFit' class='icon' src='../../img/ydkt_sx_xl@2x.png'></image>
-      <image wx:if="{{tabs[0]}}" mode='aspectFit' class='icon' src='../../img/ydkt_sx_sl@2x.png'></image>
-    </view>
-    <view class='{{tabs[1] ? "on": ""}}' data-i="1" catchtap='changeTabs'>
-      {{selected[1] == 0? '按专栏筛选': conditions[1][selected[1]].name}}
-      <image wx:if="{{!tabs[1]}}" mode='aspectFit' class='icon' src='../../img/ydkt_sx_xl@2x.png'></image>
-      <image wx:if="{{tabs[1]}}" mode='aspectFit' class='icon' src='../../img/ydkt_sx_sl@2x.png'></image>
+<view id="page" bindScroll="OnPageScroll">
+ <view class="page-section page-section-spacing swiper">
+    <swiper indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" circular="{{circular}}" vertical="{{vertical}}" interval="{{interval}}" duration="{{duration}}" previous-margin="{{previousMargin}}px" next-margin="{{nextMargin}}px" indicator-active-color="{{indicatorActiveColor}}" indicator-color="{{indicatorColor}}"  bindchange="swiperChange">
+      <swiper-item  wx:for="{{arr}}" wx:key="{{index}}">
+        <view class="swiper-item">
+          <image src='{{item.cover}}'></image>
+          <view class='swiperImg'>
+            <view class='imgicon'>
+            <image class='subscripts' wx:if="{{item.resourceType==1}}" mode='aspectFit' src='../../img/icon_zxkt_bf@2x.png'></image>
+            <image class='subscripts' wx:if="{{item.resourceType==2}}" mode='aspectFit' src='../../img/icon_zxkt_st@2x.png'></image>
+            {{item.duration}}
+            </view>
+            <view class="over_ellipsis">{{item.name}}</view>
+          </view> 
+        </view>
+      </swiper-item>
+    </swiper>
+    <view class="dots">
+      <block wx:for="{{arr}}" wx:key="{{index}}">
+          <view class="dot{{index == currentSwiper ? ' active' : ''}}"></view>
+      </block>
     </view>
   </view>
-  <!-- 下拉内容 -->
-  <block wx:if="{{tabs[0]}}" wx:for="{{conditions[0]}}" wx:key="{{index}}">
-    <view class='item {{selected[0] == index ? "on": ""}}' data-i="0" data-j="{{index}}" bindtap='changeSelect'>{{item.name}}</view>
-  </block>
-  <block wx:if="{{tabs[1]}}" wx:for="{{conditions[1]}}" wx:key="{{index}}">
-    <view class='item {{selected[1] == index ? "on": ""}}' data-i="1" data-j="{{index}}" bindtap='changeSelect'>{{item.name}}</view>
-  </block>
-</view>
+  <view class='bgimg' wx:if="{{arr.length==0}}">
+    <image src='../images/banner_ydkt_mr@3x.png'></image>
+  </view>
 
-<view class='content'>
-  <navigator wx:for="{{arr}}" wx:key="{{index}}" url='../lessonDetail/lessonDetail?id={{item.id}}'>
-    <view class='lesson-content'>
-      <view class='cover-box'>
-        <image class='cover' mode='aspectFill' src='{{item.cover}}'></image>
-        <image class='subscripts' wx:if="{{item.resourceType == 1}}" mode='aspectFit' src='../../img/icon_zxkt_bf@2x.png'></image>
-        <image class='subscripts' wx:if="{{item.resourceType == 2}}" mode='aspectFit' src='../../img/icon_zxkt_st@2x.png'></image>
-        <text class='time'>{{item.duration}}</text>
+  <!-- 学习历史 -->
+  <view class='content studyHistory' wx:if="{{historyList.length>0}}">
+      <view class='titleHistory'>
+        <view class='float_l'>学习历史</view>
+        <navigator class='float_r' wx:if="{{historyList.length>4}}" url='../lessonHistory/lessonHistory' hover-class="none">
+          <view>查看更多
+            <image src='../images/fentaundui_gengduo_jiantou@2x.png'></image>
+          </view>
+        </navigator>
       </view>
-      <view class='text-box'>
-        <view class='title'>{{item.name}}</view>
-        <view class='column'>专栏：<text>{{item.themeName}}</text></view>
-        <view class='teacher'>{{item.speakerName}}</view>
-        <view class='price {{item.showPrice == "免费" ? "free": ""}}'>{{item.showPrice}}</view>
-      </view>
+      <scroll-view scroll-x class='scroll-view_H'>
+        <navigator wx:for="{{historyList}}" wx:key="{{index}}" url='../lessonDetail/lessonDetail?id={{item.id}}' hover-class="none">
+          <view>
+            <view class='cover-box'>
+              <image class='cover' mode='aspectFill' src='{{item.cover}}'></image>
+              <image class='subscripts' wx:if="{{item.resourceType==1}}" mode='aspectFit' src='../../img/icon_zxkt_bf@2x.png'></image>
+              <image class='subscripts' wx:if="{{item.resourceType==2}}" mode='aspectFit' src='../../img/icon_zxkt_st@2x.png'></image>
+              <text class='time'>{{item.duration}}</text>
+            </view>
+            <view class='historyDes over_ellipsis'>{{item.name}}</view>
+          </view>
+        </navigator>
+      </scroll-view>
+  </view>
+  <!-- 限时试听 -->
+  <view class='content listeningTest' wx:if="{{limitlistening.length>0}}">
+    <view class='nav'>
+      <image src='../images/til_left@3x.png'></image>
+      限时试听
+      <image src='../images/til_right@3x.png'></image>
     </view>
-  </navigator>
+    <navigator class="navigator" wx:for="{{limitlistening}}" wx:key="{{index}}" url='../lessonDetail/lessonDetail?id={{item.id}}' hover-class="none">
+      <view class='lessonCon'>
+        <view class='cover-box'>
+          <image class='cover' mode='aspectFill' src='{{item.cover}}'></image>
+          <image class='subscripts' wx:if="{{item.resourceType==1}}" mode='aspectFit' src='../../img/icon_zxkt_bf@2x.png'></image>
+          <image class='subscripts' wx:if="{{item.resourceType==2}}" mode='aspectFit' src='../../img/icon_zxkt_st@2x.png'></image>
+          <text class='time'>{{item.duration}}</text>
+        </view>
+        <view class='historyDes over_ellipsis'>{{item.name}}</view>
+        <view class='lessonTitle'>
+          <view class='lessonIcon float_l'>
+            <image src='../images/pinkTeam.png'></image>
+            {{item.speakerName}}
+          </view>
+          <view class='float_r'>试听</view>
+        </view>
+      </view>
+    </navigator>
+      <navigator class='lookMore' url='../lessonMore/lessonMore?free=0' wx:if="{{limitlistening.length>5}}" hover-class="none">
+        <view>
+          查看更多
+          <image src='../images/icon_gengduo@3x.png'></image>
+        </view>
+      </navigator>
+  </view>
+  <!-- 智经营 -->
+  <view class='content management' id="aptitude" wx:if="{{capacityList[0].courses.length>0}}">
+    <lesson-model dataArr="{{capacityList[0]}}"></lesson-model>
+  </view>
+  <!-- 门店培优 -->
+  <view class='content management' id="shopexcellent" wx:if="{{capacityList[1].courses.length>0}}">
+    <lesson-model dataArr="{{capacityList[1]}}"></lesson-model>
+  </view>
+  <!-- 人事客项钱 -->
+  <view class='content management' id="peopleThing" wx:if="{{capacityList[2].courses.length>0}}">
+   <lesson-model dataArr="{{capacityList[2]}}"></lesson-model>
+  </view>
+  <!-- 六脉粉神剑 -->
+  <view class='content management' id="excalibur" wx:if="{{capacityList[3].courses.length>0}}">
+    <lesson-model dataArr="{{capacityList[3]}}"></lesson-model>
+  </view>
+  <!-- <image mode='aspectFit' class='bitmap' src='../../img/zw_mykc@2x.png' wx:if="{{arr.length == 0}}"></image> -->
 </view>
-
-<image mode='aspectFit' class='bitmap' src='../../img/zw_mykc@2x.png' wx:if="{{arr.length == 0}}"></image>
+<view class='tab-content {{fixed == true? "fixed": ""}}'>
+  <view class='{{activeIndex==index ? "active": ""}}' wx:for="{{scrollArr}}" wx:key="{{index}}" data-index="{{index}}" data-id="{{item.id}}" bindtap='scrollTo'>{{item.name}}</view>
+</view>

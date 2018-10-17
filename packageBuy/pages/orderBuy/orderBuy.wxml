@@ -1,0 +1,118 @@
+<!--立即购买/下单-->
+<view class="content">
+  <!--购买方式-->
+  <view class="buy-type">
+    <view class="section__title">购买方式</view>
+    <picker bindchange="bindPickerChange" data-val="{{array}}" value="{{array}}" range="{{array}}">
+    <view class="picker">
+      <text class="send-select">{{array[index]}}</text>
+      <image src="../../../../images/yundian_spxq_gengduo.png"></image>
+    </view>
+  </picker>
+  </view>
+  <!--地址-->
+  <view class="address-box" wx:if="{{isSend==0}}">
+    <view wx:if="{{address!=''}}" bindtap="addressSkip">
+      <view class="user-info">
+        收货人：{{userInfo.recvAddress.name}}
+        <text>{{userInfo.recvAddress.phone}}</text>
+      </view>
+      <view class="address">
+        <image src="../../../../images/address-gray.png"></image>
+        <view class="adress-cont">
+        {{ProvinceName}}-{{cityName}}-{{areaName}} {{userInfo.recvAddress.address}}
+        </view>
+      </view>
+    </view>
+    <view class='add-adree' wx:if="{{address==''}}" bindtap="addressSkip">
+      <navigator url="" hover-class="navigator-hover">请添加收货地址</navigator>
+    </view>
+    <image bindtap="addressSkip" class="right-icon" src="../../../../images/yundian_spxq_gengduo.png"></image>
+  </view>
+  <!--商品-->
+  <view class="detail">
+    <view class='detail-top'>
+      <image class="shop-icon" src="../../../../images/yundian_spxq_dianpu@2x.png"></image>
+      <text class='detail-tit'>{{shopName}}</text>
+    </view>
+    <view class="total-num">
+      共{{total}}件商品
+    </view>
+    <view class="goods-list">
+      <view class='goods' wx:for='{{goods}}' wx:for-item='items' wx:key="goods">
+        <view class='good-content inner txt' data-goodsType="{{items.goodsType}}" data-index="{{index}}" data-goodsId="{{items.goodsId}}" >
+          <view class='good-left' data-pindex="{{inx}}" data-index="{{index}}">
+              <image class='good-img' src='{{items.goodsImageUrl}}'></image>
+          </view>
+          <view class='right-info'>
+            <text class='goodname'>{{items.goodsName}}</text>
+            <text class='stock-info' wx:if="{{items.stockName!=''}}">{{items.stockName}}</text>
+            <view class='detail-down'>
+              <view class="pric">
+                <text>￥</text>
+                <text wx:if="{{items.stockName!=''}}">{{items.stockPrice}}</text>
+                <text wx:if="{{items.stockName==''}}">{{items.goodsPrice}}</text>
+              </view>
+              <view class='nums'>x{{items.number}}</view>
+              <!-- <view class="stepper">-->
+              <!-- 减号 -->
+                <!-- <text class="minus" data-index="{{index}}" bindtap="bindMinus">-</text> -->
+              <!-- 数值 -->
+                <!-- <input type="number" data-pindex="{{inx}}" data-index="{{index}}" bindinput="bindblur" value="{{items.number}}" maxlength="3" /> -->
+              <!-- 加号 -->
+                <!-- <text class="add normal" data-index="{{index}}" bindtap="bindPlus">+</text> -->
+              <!-- </view> -->
+            </view>
+          </view>
+        </view>
+      </view>  
+    </view>
+    <!--选择快递时才有店铺优惠he配送费-->
+    <view class="discount-box">
+      <view class="shop-discount" wx:if="{{isSend==0 || isSend==2}}" bindtap="selectCounp">
+        <text>店铺优惠</text>
+        <view class="discount-room" >
+          <text wx:if="{{discount.length==0}}">此店铺暂无优惠</text>
+          <text wx:if="{{discount.length>0}}">{{instruction}}</text>
+          <image src="../../../../images/yundian_spxq_gengduo.png"></image>
+        </view>
+      </view>
+      <view class="send-price" wx:if="{{isSend==0 && isService==0}}">
+        <text>配送费</text><text>￥{{deliveyMoney}}</text>
+      </view>
+      <view class="price">
+        <text>商品总额</text><text>￥{{totalMoney}}</text>
+      </view>
+    </view>
+  </view>
+  <view class="hrline">
+  </view>
+  <!--合计-->
+  <view class="ctronl-btn">
+    <view class="sun-price">
+      合计：<text>￥{{oldTotal}}</text>
+    </view>
+    <button hidden="{{sure}}" class='account-btn' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}"
+         bindtap="sumb" hover-class="other-button-hover"> 确认下单</button>
+    <button hidden="{{sures}}" class='account-btn gray' type="default" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}"
+          hover-class="other-button-hover"> 确认下单</button>
+  </view>
+</view>
+
+
+  <!--下单成功-->
+  <view class="modal-box order-tip" hidden="{{flagOrder}}" >
+  <view class="modal-body">
+    <image class="order-success" src="../../../../images/success.png"></image>
+    <view class="modal-content">
+      <text>下单成功!</text>
+      <text>选择继续购物或查看此订单</text>
+    </view>
+    <view class="modal-btn">  
+      <text class="knowBtn" bindtap="goShop">继续购物</text>
+      <text class="knowBtn" bindtap="look">查看订单</text>
+    </view>
+  </view>
+  </view>
+
+

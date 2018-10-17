@@ -548,8 +548,17 @@
             </view>  
           </view>
         </view>
+        <!--配送方式为快递-->
+        <view class="ziti sendcode" wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType != 2}}">
+          <text class="siz-three">自提兑换码</text>
+          <view class="selfcode" bindtap='showCode'>
+            <image src='../../../images/yundian_erweima@2x.png'></image>
+            <image src='../../../images/yundian_spxq_gengduo.png'></image>
+          </view>
+        </view>
       </view>
       <view wx:if="{{isGroupBuying != 1}}"> <!--普通商品-->
+      <!--配送方式为自提-->
         <view class='storeCode ziti' wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType == 2}}">
           <view class="code-img">
               <!-- <view class="img-box">
@@ -561,6 +570,14 @@
           </view>
           <text class="siz-four">序列号：{{item.orderInfo.serialNumber}}</text>
           <text class="siz-four">请到此店兑换此码</text>
+        </view>
+        <!--配送方式为快递-->
+        <view class="ziti sendcode" wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType != 2}}">
+          <text class="siz-three">自提兑换码</text>
+          <view class="selfcode" bindtap='showCode'>
+            <image src='../../../images/yundiancode.png'></image>
+            <image src='../../../images/yundian_spxq_gengduo.png'></image>
+          </view>
         </view>
       </view>
       
@@ -723,4 +740,19 @@
   </view>
   
 </view>
+<!--二维码弹窗-->
+<view class="modal-box order-tip" hidden="{{flagOrder}}" >
+  <view class="modal-body">
+    <image bindtap='closeTip' class="order-close" src="../../../images/yundianClose.png"></image>
+     <view class="code-img" wx:if="{{orderStatusVo==2 && deliveryType != 2}}">
+          <view class="canvas-box">
+            <canvas  style="width: 670rpx;height: 630rpx;" canvas-id="mycanvas"/>
+          </view>
+      </view>
+    <view class="modal-content">
+      <text>序列号：{{storeUrl}}</text>
+      <text class="tip">请到店兑换此码</text>
+    </view>
+  </view>
+  </view>
 

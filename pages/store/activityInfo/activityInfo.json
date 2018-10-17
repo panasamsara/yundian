@@ -2,6 +2,7 @@
   "navigationBarTitleText": "活动详情",
   "disableScroll": true,
   "usingComponents": {
-    "login-component": "../../../components/component-login"
+    "login-component": "../../../components/component-login",
+    "poster-modal": "../../../components/poster-modal/poster-modal"
   }
 }

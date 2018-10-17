@@ -1,0 +1,32 @@
+@import "../lesson/lesson.wxss";
+.cover-box{
+  position: relative;
+  display: block;
+}
+ .cover-box{
+  width: 230rpx;
+  height: 160rpx;
+}
+.cover-box .cover{
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 10rpx;
+}
+.cover-box .subscripts{
+  position: absolute;
+  display: inline-block;
+  bottom: 20rpx;
+  left: 22rpx;
+  width: 26rpx;
+  height: 22rpx;
+}
+.cover-box .time{
+  position: absolute;
+  display: inline;
+  bottom: 20rpx;
+  left: 60rpx;
+  font-size: 26rpx;
+  line-height:20rpx;
+  color: #fff;
+}

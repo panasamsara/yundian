@@ -1,0 +1,30 @@
+    <view class='nav'>
+      <image src='../images/til_left@3x.png'></image>
+      {{dataArr.name}}
+      <image src='../images/til_right@3x.png'></image>
+    </view>
+    <navigator class="navigator" wx:for="{{dataArr.courses}}" wx:key="{{index}}" url='../lessonDetail/lessonDetail?id={{item.id}}' hover-class="none">
+      <view class='lesson-content'>
+        <view class='cover-box'>
+          <image class='cover' mode='aspectFill' src='{{item.cover}}'></image>
+          <image class='subscripts' wx:if="{{item.resourceType == 1}}" mode='aspectFit' src='../../img/icon_zxkt_bf@2x.png'></image>
+          <image class='subscripts' wx:if="{{item.resourceType == 2}}" mode='aspectFit' src='../../img/icon_zxkt_st@2x.png'></image>
+          <text class='time'>{{item.duration}}</text>
+        </view>
+        <view class='text-box'>
+          <view class='title'>{{item.name}}</view>
+          <view class='teacher'>
+            <image src='{{item.cover}}'></image>
+            <text>{{item.speakerName}}</text>
+            <text class='price {{item.showPrice=="免费"?"free":""}}'>{{item.showPrice}}</text>
+          </view>
+        </view>
+      </view>
+    </navigator>
+    <navigator class='lookMore' url='../lessonMore/lessonMore?id={{dataArr.id}}' hover-class="none" 
+    wx:if="{{dataArr.courses.length>5}}">
+      <view class='lookMore'>
+        查看更多
+        <image src='../images/icon_gengduo@3x.png'></image>
+      </view>
+    </navigator>

@@ -1,2 +1,4 @@
 <!--pages/QrToActivity/QrToActivity.wxml-->
+<login-component login-type-property="{{loginType}}"  bindresmevent="resmevent" ></login-component>
+
 <text></text>

@@ -2,7 +2,14 @@
 <view class='container' id='orderConfirm'>
   <view id='buyWay' class='flexSides'>
     <text>购买方式</text>
-    <text wx:if="{{data.creditsGoodsInfo.goodsType==3}}">快递配送</text>
+    <picker wx:if="{{data.creditsGoodsInfo.goodsType==3}}" bindchange='choseDelivery' range='{{deliveryArray}}' id='delivery'>
+      <view class='picker'>
+        <view class="detail">{{deliveryText}}</view>
+        <view class='chooseBox'>
+          <image src='../orderDetail/images/yundian_spxq_gengduo.png' class='choose'></image>
+        </view>
+      </view>
+    </picker>
     <text wx:else>存入账户</text>
   </view>
   <view id='accountType' wx:if="{{data.creditsGoodsInfo.goodsType!=3}}" class='flexSides'>
@@ -17,7 +24,7 @@
       </view>
     </picker>
   </view>
-  <view wx:if="{{data.creditsGoodsInfo.goodsType==3}}" id='userBox' bindtap='changeAddress' class='flexSides'>
+  <view wx:if="{{data.creditsGoodsInfo.goodsType==3&&deliveryType==0}}" id='userBox' bindtap='changeAddress' class='flexSides'>
     <image src='../images/yundain_dizhi@2x.png' id='addressIcon'></image>
     <view id='infoBox'>
       <view id='userInfo' class='flexSides'>

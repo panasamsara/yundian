@@ -1,6 +1,7 @@
 /* packageIndex/pages/fansSearch/fansSearch.wxss */
 #fansSearch{
   padding: 0 0 60rpx;
+  box-sizing: border-box;
 }
 #fansSearch #head{
   display: flex;

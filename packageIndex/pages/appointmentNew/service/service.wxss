@@ -1,0 +1,38 @@
+/* packageIndex/pages/appointmentNew/service/service.wxss */
+#service #head{
+  height: 90rpx;
+  padding: 0 24rpx;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+#service #head input{
+  height: 60rpx;
+  background-color: #F5F5F5;
+  text-indent: 70rpx;
+  font-size: 24rpx;
+  color: #999999;
+  border-radius: 30rpx;
+  width: 100%;
+}
+
+#service #searchIcon{
+  width: 30rpx;
+  height: 32rpx;
+  position: absolute;
+  z-index: 999;
+}
+
+#service .title{
+  font-size: 28rpx;
+  color: #333333;
+  background-color: #F5F5F5;
+  text-indent: 24rpx;
+  height: 70rpx;
+  line-height: 70rpx;
+}
+
+#service #content{
+  padding: 0 24rpx 120rpx 24rpx;
+}

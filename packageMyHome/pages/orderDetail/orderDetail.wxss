@@ -440,3 +440,78 @@ page,.content{
   -webkit-box-orient:vertical;
   -webkit-line-clamp:2; 
 }
+.sendcode text{
+  display: inline-block;
+  float: left;
+  margin-left: 30rpx;
+}
+.sendcode{
+    padding: 20rpx 0;
+    height:40rpx;
+}
+.selfcode{
+  display: inline-block;
+  float: right;
+  margin-right: 30rpx;
+
+}
+.selfcode image{
+  display: inline-block;
+  float: left;
+}
+.selfcode image:first-child{
+  width:50rpx;
+  height:50rpx;
+  float:left;
+  margin-right:10rpx;
+  margin-top:-3rpx;
+}
+.selfcode image:last-child{
+  width:20rpx;
+  height:28rpx;
+  margin-top:8rpx;
+}
+/*二维码弹窗*/
+.modal-box{
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top:0;
+  left: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 33;
+  overflow: hidden;
+}
+.modal-box .modal-body{
+  width:600rpx;
+  height:740rpx;
+  background:#fff;
+  margin:40% auto;
+  border-radius: 10rpx;
+  overflow: hidden;
+}
+.modal-body .order-close{
+  width:50rpx;
+  height:50rpx;
+  position:absolute;
+  top:150rpx;
+  right:30rpx;
+}
+.modal-content{
+  text-align: center;
+}
+.modal-content text{
+  display: block;
+}
+.modal-content text:first-child{
+  font-size: 30rpx;
+}
+.modal-content .tip{
+  font-size: 26rpx;
+  color:#FB452C;
+  margin-top:10rpx;
+}
+.canvas-box{
+  margin-left: -40rpx;
+}
+

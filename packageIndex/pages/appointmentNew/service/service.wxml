@@ -1,0 +1,11 @@
+<!--packageIndex/pages/appointmentNew/service/service.wxml-->
+<view class='container' id='service'>
+  <view id='head'>
+    <image src='../../images/sousuo@2x.png' id='searchIcon'></image>
+    <input placeholder="请输入服务名称"></input>
+  </view>
+  <view class='title'>全部服务</view>
+  <view id='content'>
+    
+  </view>
+</view>

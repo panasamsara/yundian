@@ -3,6 +3,7 @@
   "disableScroll": true,
   "usingComponents": {
     "login-component": "../../../components/component-login",
-    "wxparser": "plugin://wxparserPlugin/wxparser"
+    "wxparser": "plugin://wxparserPlugin/wxparser",
+    "poster-modal": "../../../components/poster-modal/poster-modal"
   }
 }

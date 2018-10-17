@@ -22,6 +22,16 @@
   z-index: 999;
 }
 
+.posterBox{
+  width: 690rpx;
+  height: calc(100% - 40rpx);
+  position: fixed;
+  top: 40rpx;
+  left: 30rpx;
+  z-index: 9999;
+  overflow-y: auto;
+}
+
 .btn{
   border: none!important;
   color: #000000;
@@ -53,9 +63,6 @@
   display: block!important;
   width: 690rpx;
   height: 1000rpx;
-  position: fixed;
-  top: 40rpx;
-  left: 30rpx;
   z-index: 9999;
   background-color: rgba(255,255,255,0.9);
 }
@@ -73,9 +80,12 @@
   font-size: 35rpx;
   color: #fff;
   text-align: center;
-  position: fixed;
-  left: 30rpx;
-  top: 1070rpx;
-  z-index: 9999;
+  margin-top: 40rpx;
+  margin-bottom: 30rpx;
   background-color: #fb452d!important;
+}
+
+button{
+  font-size: 30rpx;
+  line-height: 100rpx;
 }

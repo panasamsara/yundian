@@ -1232,7 +1232,7 @@ Page({
 
       wx.setStorageSync('cart', cartGoodsList);
       wx.navigateTo({
-        url: '../orderBuy/orderBuy?shopId=' + shop.id + '&shopName=' + shop.shopName + '&customerId=' + user.id + '&totalMoney=' + this.data.totalPay
+        url: '../../../../../packageBuy/pages/orderBuy/orderBuy?shopId=' + shop.id + '&shopName=' + shop.shopName + '&customerId=' + user.id + '&totalMoney=' + this.data.totalPay
       })
 
     } 

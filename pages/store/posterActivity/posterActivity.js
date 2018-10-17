@@ -1,5 +1,5 @@
 import util from '../../../utils/util.js';
-
+import saveImg from '../../../utils/saveImg.js';
 const app = getApp();
 
 Page({
@@ -15,16 +15,7 @@ Page({
     signed: false,
     signType: null,
     loginType:0,
-    shareViewShow: false,
-    details: {},
-    list: {
-      time: '2018.09.25-2018.10.06',
-      shopName: '',
-      pictureUrl: '',
-      goodsName: '',
-      descTitle: '',
-      buttonShow: true
-    }
+    btnShow: 'normal'
   },
   // 生命周期函数--监听页面加载
   onLoad: function (options) {
@@ -316,6 +307,7 @@ Page({
         var time = app.util.formatActivityDate(res.data.data.startTime) + '-' + app.util.formatActivityDate(res.data.data.endTime);
         this.setData({
           activityData: res.data.data,
+          data:res.data.data,
           list: {
             time: time,
             shopName: _this.data.details.shopName,
@@ -325,6 +317,20 @@ Page({
             buttonShow: true
           }
         })
+        saveImg.getCode(_this, {//获取二维码
+          source: 0,
+          page: "pages/QrToActivity/QrToActivity",
+          params: {
+            shopId: wx.getStorageSync('shop').id,
+            userId: wx.getStorageSync('scSysUser').id,
+            actionId: this.data.activityData.id,
+            signType: this.data.activityData.signType,
+            goodsId: this.data.activityData.id,
+            sourcePart: '1',
+            shareType: 6,
+            shareFrom: 'posterActivity'
+          }
+        });
         if (wx.getStorageSync('shop')){
           wx.downloadFile({//缓存网络图片，直接使用网络路径真机无法显示或绘制
             url: wx.getStorageSync('shop').logoUrl,
@@ -338,7 +344,8 @@ Page({
                 success: function (newRes) {
                   console.log(newRes.tempFilePath)
                   _this.setData({
-                    proPic: newRes.tempFilePath
+                    proPic: newRes.tempFilePath,
+                    downloadStatus:'done'
                   })
                   _this.drawCanvas()
                 }
@@ -472,272 +479,147 @@ Page({
 
     })
   },
-  // 关于活动海报的
-  // 点击分享后 点击取消
-  shareBtn: function () {
-    this.setData({
-      shareViewShow: !this.data.shareViewShow
-    })
-  },
-  // 点击遮罩关闭
-  closeTemplate: function () {
-    this.setData({
-      shareShow: !this.data.shareShow
-    })
-  },
-  // 再授权
-  save: function () {
-    var that = this;
-    //获取相册授权
-    wx.getSetting({
-      success(res) {
-        if (!res.authSetting['scope.writePhotosAlbum']) {
-          wx.authorize({
-            scope: 'scope.writePhotosAlbum',
-            success() {//这里是用户同意授权后的回调
-              wx.showToast({
-                title: '保存中...',
-                icon: 'none'
-              })
-              let buttonshow = "list.buttonShow"
-              that.setData({
-                [buttonshow]: true
-              })
-              that.btn_img()
-            },
-            fail() {//这里是用户拒绝授权后的回调
-              console.log('走了save的fail');
-              wx.showToast({
-                title: '授权后才能保存至手机相册',
-                icon: 'none'
-              })
-              let buttonshow = "list.buttonShow"
-              that.setData({
-                [buttonshow]: false
-              })
-              return
-            }
-          })
-        } else {//用户已经授权
-          wx.showToast({
-            title: '保存中...',
-            icon: 'none'
-          })
-          let buttonshow = "list.buttonShow"
-          that.setData({
-            [buttonshow]: true
-          })
-          that.btn_img()
-        }
-      }
-    })
-  },
-  handleSetting: function (e) {
-    let that = this;
-    // 对用户的设置进行判断，如果没有授权，即使用户返回到保存页面，显示的也是“去授权”按钮；同意授权之后才显示保存按钮
-    if (!e.detail.authSetting['scope.writePhotosAlbum']) {
-      wx.showModal({
-        title: '提示',
-        content: '若不打开授权，则无法将图片保存在相册中！',
-        showCancel: false
-      })
-      let buttonshow = "list.buttonShow"
-      that.setData({
-        [buttonshow]: false
-      })
-    } else {
+  shareBtn: function () {//点击分享
+    if (this.data.codeStatus != 'done' || this.data.codeStatus == undefined || this.data.downloadStatus != 'done') {
       wx.showToast({
-        title: '已授权',
+        title: '页面加载中，请稍后分享',
         icon: 'none'
       })
-      let buttonshow = "list.buttonShow"
-      that.setData({
-        [buttonshow]: true
-      })
+      return;
     }
-  },
-  // 生成海报
-  saveImg: function () {
-    console.log('生成海报po');
-    console.log(this.data.list, '我是list')
     this.setData({
-      shareViewShow: !this.data.shareViewShow,
-      shareShow: !this.data.shareShow
+      posterShow: true
     })
   },
-  btn_img: function () {
-    console.log('点击了。。。po')
-    //创建节点选择器
-    var that = this;
-    var query = wx.createSelectorQuery();
-    query.select('.every3').boundingClientRect(function (rect) {
-      that.setData({
-        oW3: rect.width
-      })
-      that.draw3()
-    }).exec();
+  closeShare: function () {//取消分享
+    this.setData({
+      posterShow: false
+    })
   },
-  draw3: function () {
-    var size = this.setCanvasSize3();//动态设置画布大小
-    var scale = this.data.scale3;
-    var _this = this
-    var context = wx.createCanvasContext('myCanvas3');
-    // 背景图
-    context.drawImage('../../../images/bg3.png', 0, 0, 351 * scale, 702 * scale);
-    // 内容背景
-    context.drawImage('../../../images/bg8.png', 24 * scale, 28 * scale, 314 * scale, 361 * scale);
-    // 扫码 
-    context.drawImage('../../../images/saoma.png', 150 * scale, 412 * scale, 150 * scale, 75 * scale);
-    // 活动模板
-    context.save()
-    context.beginPath()
-    // context.arc(50, 50, 25, 0, 2 * Math.PI)
-    // context.arc(50, 150, 25, 0, 2 * Math.PI)
-    // context.clip()
-    // context.drawImage(_this.data.list.pictureUrl, 13 * scale, 38 * scale, 310 * scale, 130 * scale);
-    context.restore()
-    // 时间
-    context.setFontSize(12 * scale);
+  drawPoster: function () {//绘制海报
+    if (this.data.canvasUrl) {
+      return;
+    }
+    wx.showLoading();
+    var context = wx.createCanvasContext('newShareCanvas'),
+      scale = wx.getSystemInfoSync().windowWidth / 375,
+      _this = this;
+    context.setFillStyle('#ffffff');
+    context.fillRect(0, 0, 690 * scale, 1000 * scale);//设置白色背景
+    context.drawImage('../../../images/bg3.png', 0, 0, 690 * scale, 1000 * scale);
+    this.drawShadow(context, scale, 5, 5, 10, 'rgba(176,50,32,0.3)');//绘制阴影
+    this.roundRect(context, scale, 52, 56, 600, 704, 66);//绘制圆角矩形背景
+    this.drawShadow(context, scale, 0, 0, 30, 'rgba(228,183,177,0.3)');//绘制阴影
+    this.roundRect(context, scale, 25, 70, 610, 260, 57);//绘制海报圆角矩形阴影矩形
+    context.save();
+    this.roundRect(context, scale, 25, 70, 610, 260, 57);//绘制海报圆角矩形背景
+    context.clip();
+    context.drawImage(this.data.proPic, 25 * scale, 70 * scale, 610 * scale, 260 * scale);//绘制海报
+    context.restore();
+    context.setFontSize(30 * scale);
+    let w = context.measureText(this.data.data.shopName).width;
+    context.shadowColor = 'rgba(255,255,255,0)';
+    context.beginPath();
+    context.arc(122.5 * scale, 70 * scale, 37 * scale, 0.5 * Math.PI, 1.5 * Math.PI);//绘制左半圆
+    context.closePath();
+    context.stroke();
+    context.fill();
+    context.beginPath();
+    context.arc((122.5 + w) * scale, 70 * scale, 37 * scale, 0.5 * Math.PI, 1.5 * Math.PI, true);//绘制右半圆
+    context.closePath();
+    context.stroke();
+    context.fill();
+    context.fillRect(122.5 * scale, 33 * scale, w * scale, 74 * scale);//绘制矩形
+    context.setFillStyle('#FB452C');
+    context.fillText(this.data.data.shopName, 122.5 * scale, 79 * scale);//绘制店铺名
+    context.setFontSize(24 * scale);
+    let timeText = '活动时间:  ' + this.data.data.startTime + '—' + this.data.data.endTime,
+      w1 = context.measureText(timeText).width;
     context.setFillStyle('#FE732D');
-    context.fillText('活动时间：' + _this.data.list.time, (size.w - context.measureText('活动时间：' + _this.data.list.time).width) / 2, 200 * scale);
-    context.setFontSize(18 * scale);
+    context.fillText(timeText, (690 - w1) / 2 * scale, 380 * scale);//绘制活动时间
     context.setFillStyle('#333333');
-    context.fillText(_this.data.list.goodsName, (size.w - context.measureText(_this.data.list.goodsName).width) / 2, 230 * scale);
-    context.setStrokeStyle('#FB452C');
-    context.setLineWidth(3 * scale)
-    context.moveTo(155 * scale, 250 * scale)
-    context.lineTo(195 * scale, 250 * scale)
-    context.stroke()
-    // 活动口号
-    context.setFontSize(13 * scale);
+    context.setFontSize(36 * scale);
+    this.cut('goodsName', this.data.data.goodsName, 10);
+    let w2 = context.measureText(this.data.goodsName).width;
+    context.fillText(this.data.goodsName, (690 - w2) / 2 * scale, 470 * scale);//绘制店铺标题
+    context.setFillStyle('#FB452C');
+    context.fillRect(305 * scale, 490 * scale, 80 * scale, 6 * scale);//绘制下划线
+    context.setFontSize(26 * scale);
     context.setFillStyle('#999999');
-    context.fillText(_this.data.list.descTitle, (size.w - context.measureText(_this.data.list.descTitle).width) / 2, 275 * scale);
-    // 详情描述
-    var st = '每日中午12—14时，凡在我餐厅就餐5人以上的顾客，每人均赠河豚一条，数量有限，每日送完为止，可预约。';
-    var arr = st.split('');
-    var st1 = '';
-    var st2 = '';
-    var st3 = '';
-    var st1Len = 0;
-    var st2Len = 0;
-    var st3Len = 0;
-    var flg = false
-    arr.forEach(function (item, index) {
-      var reg = new RegExp("[\\u4E00-\\u9FFF]+", "g");
-      if (st1Len < 17) {
-        st1 += item
-        if (reg.test(item)) {
-          st1Len += 1;
-        } else {
-          st1Len += 0.5;
-        }
+    this.cut('descTitle', this.data.data.descTitle, 20, _this);
+    let w3 = context.measureText(this.data.descTitle).width;
+    context.fillText(this.data.descTitle, (690 - w3) / 2 * scale, 540 * scale);//绘制口号
+    context.setFillStyle('#666666');
+    let descContent = this.data.data.descContent;
+    let w4;
+    //绘制活动内容
+    if (descContent.length <= 19) {//一行
+      w4 = context.measureText(descContent).width;
+      context.fillText(descContent, (690 - w4) / 2 * scale, 600 * scale);
+    } else {//超过一行
+      w4 = context.measureText(descContent.substring(0, 19)).width;
+      context.fillText(descContent.substring(0, 19), (690 - w4) / 2 * scale, 600 * scale);
+      if (descContent.length <= 38) {
+        context.fillText(descContent.substring(20), (690 - w4) / 2 * scale, 645 * scale);
       } else {
-        if (st2Len < 17) {
-          st2 += item
-          if (reg.test(item)) {
-            st2Len += 1;
-          } else {
-            st2Len += 0.5;
-          }
+        context.fillText(descContent.substring(20, 38), (690 - w4) / 2 * scale, 645 * scale);
+        if (descContent.length <= 48) {
+          let w5 = context.measureText(descContent.substring(38)).width;
         } else {
-          if (st3Len < 17) {
-            st3 += item
-            if (reg.test(item)) {
-              st3Len += 1;
-            } else {
-              st3Len += 0.5;
-            }
-          } else {
-            if (flg === false) {
-              st3 += '...';
-              flg = true;
-            }
-          }
+          descContent = descContent.substring(39, 48) + '..'
+          let w5 = context.measureText(descContent).width;
+          context.fillText(descContent, (690 - w5) / 2 * scale, 690 * scale);
         }
       }
-    });
-    context.setFillStyle('#666666');
-    context.fillText(st1, (size.w - context.measureText(st1).width) / 2, 300 * scale);
-    context.fillText(st2, (size.w - context.measureText(st2).width) / 2, 320 * scale);
-    context.fillText(st3, (size.w - context.measureText(st3).width) / 2, 340 * scale);
-    this.foundRect(context, 20, 40, 305, 130, 28);
-    // 标题
-    context.drawImage('../../../images/bg9.png', 43 * scale, 19 * scale, 149 * scale, 37 * scale);
-    context.setFontSize(16 * scale);
-    context.setFillStyle('#FB452C');
-    var title = _this.data.list.shopName;
-    if (title.length > 6) {
-      title = title.substring(0, 6) + '...';
     }
-    context.fillText(title, 67 * scale, 42 * scale);
+    context.drawImage(this.data.codeUrl, 100 * scale, 800 * scale, 158 * scale, 158 * scale);//绘制二维码
+    context.drawImage('../../../images/saoma.png', 290 * scale, 800 * scale, 300 * scale, 150 * scale);//绘制扫码文字图片
     context.draw(false, function () {
-      wx.canvasToTempFilePath({//绘制完成执行保存回调
-        x: 0,
-        y: 0,
-        width: 351,
-        height: 531,
-        destWidth: 702,
-        destHeight: 1062,
-        fileType: 'jpg',
-        canvasId: 'myCanvas3',
-        success: function (res) {
-          console.log(res.tempFilePath)
-          // 保存图片到本地
-          wx.saveImageToPhotosAlbum({
-            filePath: res.tempFilePath,
-            success(res) {
-              wx.showToast({
-                title: '保存成功',
-                icon: 'none'
-              })
-            }
-          })
-        }
-      })
-    });
+      saveImg.temp(_this, 'newShareCanvas', 1380, 2000, 1380, 2000);
+    })
   },
-  //适配不同屏幕大小的canvas
-  setCanvasSize3: function () {
-    var size = {};
-    try {
-      var res = wx.getSystemInfoSync();
-      // var scale = 750 / 686;//不同屏幕下canvas的适配比例；设计稿是750宽
-      var scale = res.windowWidth / this.data.oW3;
-      var width = res.windowWidth / scale;
-      var height = width;//canvas画布为正方形
-      size.w = width;
-      size.h = height;
-      this.setData({
-        scale3: res.windowWidth / 375
-      })
-    } catch (e) {
-      // Do something when catch error
-      console.log("获取设备信息失败" + e);
-    }
-    return size;
+  saveImg: function () {//保存图片
+    let _this = this;
+    saveImg.saveImg(_this);
   },
-  // 圆角
-  foundRect: function (ctx, x, y, w, h, r) {
-    ctx.save();
-    if (w < 2 * r) {
-      r = w / 2;
+  handleSetting: function (e) {//授权
+    let that = this;
+    saveImg.handleSetting(that, e.detail.e);
+  },
+  //截取文字
+  cut: function (textName, text, length) {
+    if (text.length > length) {
+      text = text.substring(0, length) + '..';
     }
-    if (h < 2 * r) {
-      r = h / 2;
+    this.setData({
+      [textName]: text
+    })
+  },
+  //绘制阴影
+  drawShadow: function (context, scale, x, y, blur, color) {
+    context.shadowOffsetX = x * scale;
+    context.shadowOffsetY = y * scale;
+    context.shadowColor = color;
+    context.shadowBlur = blur * scale;
+  },
+  //绘制圆角矩形
+  roundRect: function (context, scale, x, y, w, h, radius) {
+    if (w < 2 * radius) {
+      radius = w / 2;
     }
-    ctx.beginPath();
-    ctx.setStrokeStyle('#fff');
-    ctx.setLineWidth(1);
-    ctx.moveTo(x + r, y);
-    ctx.arcTo(x + w, y, x + w, y + h, r);
-    ctx.arcTo(x + w, y + h, x, y + h, r);
-    ctx.arcTo(x, y + h, x, y, r);
-    ctx.arcTo(x, y, x + w, y, r);
-    ctx.clip();
-    ctx.drawImage(this.data.list.pictureUrl, 20, 40, 305, 130);
-    ctx.stroke();
-    ctx.closePath();
-    ctx.restore();
+    if (h < 2 * radius) {
+      radius = h / 2;
+    }
+    let r = radius * scale;
+    context.beginPath();
+    context.moveTo((x + r) * scale, y * scale);//a
+    context.arcTo((x + w) * scale, y * scale, (x + w) * scale, (y + h) * scale, r);//b-c
+    context.arcTo((x + w) * scale, (y + h) * scale, x * scale, (y + h) * scale, r);//c-d
+    context.arcTo(x * scale, (y + h) * scale, x * scale, y * scale, r);//d-e
+    context.arcTo(x * scale, y * scale, (x + r) * scale, y * scale, r);//e-a
+    context.closePath();
+    context.setStrokeStyle('#ffffff');
+    context.stroke();
+    context.fill();
   }
-  
 })

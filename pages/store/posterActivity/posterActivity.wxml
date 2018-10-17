@@ -42,14 +42,8 @@
     <image src='../../../images/fenxinag_btn@2x.png' id='goback' bindtap='goback'></image>
   </view>
 <canvas canvas-id="shareCanvas" style='width:720rpx; height:568rpx; position:fixed; top: 99999rpx;' ></canvas>
-<!-- 点击分享后的遮罩层 -->
-<view class='shareView' wx:if="{{ shareViewShow === true }}">
-  <view class='buttonGroup'>
-    <button open-type='share'>转发</button>
-    <button class='save_img' bindtap="saveImg">生成海报 保存分享</button>
-    <button class='close' bindtap="shareBtn">取消</button>
-  </view>
-</view>
-<!-- 引入分享模板 -->
-<import src="../../share/share.wxml"/>
-<template is="share3" data="{{list}}" wx:if="{{ shareShow === true }}"></template>
+
+<!-- 海报画布 -->
+<canvas id='shareCanvas' canvas-id='newShareCanvas' style='width:1380rpx;height:2000rpx;' class='shareCanvas'></canvas>
+<!-- 海报组件 -->
+<poster-modal posterData="{{canvasUrl}}" btnData="{{btnShow}}" bind:close="closePoster" bind:closeShare="closeShare" bind:drawPoster="drawPoster" bind:saveImg="saveImg" bind:handleSetting="handleSetting" wx:if="{{posterShow}}" id="posterModal"></poster-modal>

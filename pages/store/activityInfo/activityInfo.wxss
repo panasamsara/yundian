@@ -90,7 +90,7 @@ page{
   position: fixed;
   bottom: 0;
   left: 0;
-  z-index: 7777;
+  z-index: 666;
 }
 
 #signed,#passed{
@@ -242,4 +242,3 @@ textarea{
   top: 1050rpx;
   z-index: 7777;
 }
-@import "../../share/share.wxss"

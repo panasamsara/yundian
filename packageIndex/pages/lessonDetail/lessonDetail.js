@@ -362,12 +362,34 @@ Page({
       })
     }).exec();
   },
+  onShow:function(){
+    let _this=this;
+    saveImg.getCode(_this, {//获取商品二维码
+      source: 0,
+      page: "pages/QrToActivity/QrToActivity",
+      params: {
+        shopId: wx.getStorageSync('shop').id,
+        userId: wx.getStorageSync('scSysUser').id,
+        merchantId: wx.getStorageSync('shop').merchantId,
+        courseId: this.data.options.id,
+        sourcePart: '1',
+        shareType: 9
+      }
+    })
+  },
   goback: function () {//回到首页按钮
     wx.switchTab({
       url: '../index/index?shopId=' + this.data.shopId
     })
   },
   shareBtn: function () {//点击分享
+    if (this.data.codeStatus!='done'||this.data.codeStatus==undefined){
+      wx.showToast({
+        title: '页面加载中，请稍后分享',
+        icon: 'none'
+      })
+      return;
+    }
     this.setData({
       posterShow: true
     })
@@ -379,6 +401,9 @@ Page({
   },
   drawPoster:function(){//绘制海报
     var _this=this;
+    if(_this.data.canvasUrl){
+      return;
+    }
     wx.showLoading();
     wx.downloadFile({
       url: this.data.data.cover,
@@ -386,15 +411,16 @@ Page({
         let shopName = wx.getStorageSync('shop').shopName,
             context = wx.createCanvasContext('shareCanvas'),
             cover=res.tempFilePath,
-            scale=wx.getSystemInfoSync().windowWidth/375;
+            scale=wx.getSystemInfoSync().windowWidth/375*2;
         if (shopName.length > 7) {
           shopName = shopName.substring(0, 6) + '..';
         };
+        context.setFillStyle('#ffffff');
+        context.fillRect(0,0,690*scale,1000*scale);//设置白色背景
         context.drawImage(cover,20*scale,18*scale,305*scale,305*scale);//绘制视频封面
         context.drawImage('../../../images/video.png',142.5*scale,130*scale,60*scale,60*scale);//绘制播放按钮
         context.drawImage('../../../images/bg7.png',0,200*scale,345*scale,300*scale);//绘制背景图
         context.setFontSize(15*scale);
-        context.setFillStyle('#ffffff');
         let w=context.measureText(shopName).width+20;
         context.beginPath();
         context.setStrokeStyle('#ffffff');
@@ -405,8 +431,9 @@ Page({
         context.fillRect(((345-w)/2)*scale,282.5*scale,w,15*scale);
         context.setFillStyle('#ffffff');
         context.fillText(shopName,((365-w)/2)*scale,294*scale);
+        context.drawImage(_this.data.codeUrl,50*scale,413*scale,75*scale,75*scale);
         context.draw(false,function(){
-          saveImg.temp(_this, 'shareCanvas', 690, 1000, 690, 1000);
+          saveImg.temp(_this, 'shareCanvas', 1380, 2000, 1380, 2000);
         })
       }
     })

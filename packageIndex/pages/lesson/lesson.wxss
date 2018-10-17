@@ -1,7 +1,41 @@
 /* packageIndex/pages/lesson/lesson.wxss */
-page{
-  min-height: 100%;
+.swiper-item{
+  width: 100%;
+  height: 328rpx;
   position: relative;
+}
+.swiper{
+  margin-top: 20rpx;
+  width: 690rpx;
+  margin-left: 30rpx;
+  height: 320rpx;
+}
+.swiper swiper{
+  height: 280rpx;
+}
+.bgimg{
+  margin-left: 30rpx;
+}
+.swiper-item image,.bgimg,.bgimg image{
+  width: 690rpx;
+  height: 280rpx;
+  border-radius: 10rpx;
+  vertical-align: middle;
+}
+.swiperImg{
+  position: absolute;
+  bottom: 64rpx;
+  color: #fff;
+  font-size: 32rpx;
+  left: 20rpx;
+}
+.imgicon{
+  font-size: 26rpx;
+  margin-bottom: 10rpx;
+}
+.swiperImg image{
+  width: 26rpx;
+  height: 26rpx;
 }
 .bitmap{
   position: absolute;
@@ -13,85 +47,31 @@ page{
   right: 0;
   bottom: 0;
 }
-.search-content{
-  z-index: 999;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 108rpx;
-  border: 1px solid #eee;
-  border-bottom: 0;
-  font-size:30rpx;
-  color: #666;
-  box-shadow: 0px 4rpx 4rpx 0 rgba(0, 0, 0, 0.08);
-  transition: all 0.1s ease-in-out;
-}
-.search-content.on{
-  height: 100%;
-  max-height: 100%;
-  background: rgba(0, 0, 0, 0.25);
-  overflow: auto;
-}
-.search-content .condition-content{
-  display: flex;
-  height: 108rpx;
-  background: #fff;
-}
-.search-content .condition-content>view{
-  flex: 1;
-  height: 108rpx;
-  line-height: 108rpx;
-  text-align: center;
-}
-.search-content .condition-content>view.on{
-  color: #4F8BF7;
-}
-.search-content .condition-content>view:first-of-type{
-  border-right: 1px solid #eee;
-}
-.search-content .condition-content .icon{
-  display: inline-block;
-  width: 20rpx;
-  height: 10rpx;
-  line-height: 30rpx;
-  vertical-align: middle;
-}
-.search-content>.item{
-  display: block;
-  height: 108rpx;
-  line-height: 108rpx;
-  font-size:30rpx;
-  color: #666;
-  background: #fff;
-  border-top: 1px solid #eee;
-  text-align: center;
-}
-.search-content>.item.on{
-  color: #4F8BF7;
-}
 
 /* 课程列表部分 */
 .content{
-  padding: 108rpx 0 30rpx;
+  padding: 0 0 34rpx;
+  border-top: 24rpx solid #f8f8f8;
 }
 .lesson-content{
   display: flex;
   padding: 30rpx;
 }
-.lesson-content .cover-box{
+.cover-box{
   position: relative;
   display: block;
+}
+.management .cover-box{
   width: 230rpx;
   height: 160rpx;
 }
-.lesson-content .cover-box .cover{
+.cover-box .cover{
   display: block;
   width: 100%;
   height: 100%;
   border-radius: 10rpx;
 }
-.lesson-content .cover-box .subscripts{
+.cover-box .subscripts{
   position: absolute;
   display: inline-block;
   bottom: 20rpx;
@@ -99,7 +79,7 @@ page{
   width: 26rpx;
   height: 22rpx;
 }
-.lesson-content .cover-box .time{
+.cover-box .time{
   position: absolute;
   display: inline;
   bottom: 20rpx;
@@ -125,14 +105,6 @@ page{
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.lesson-content .text-box .column{
-  font-size: 24rpx;
-  line-height: 36rpx;
-  color: #AAB2BC;
-}
-.lesson-content .text-box .column text{
-  color: #4F8BF7;
-}
 .lesson-content .text-box .teacher{
   display: block;
   margin-top: 26rpx;
@@ -140,16 +112,12 @@ page{
   line-height: 1;
   color: #AAB2BC;
 }
-.lesson-content .text-box .teacher::before{
-  content: ' ';
-  display: inline-block;
-  margin-right: 14rpx;
-  width: 30rpx;
-  height: 30rpx;
-  background: #FFDAE2;
-  border-radius: 100%;
+.teacher image,.lessonIcon image{
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
   vertical-align: middle;
-  line-height: 1;
+  margin-right: 10rpx;
 }
 .lesson-content .text-box .price{
   position: absolute;
@@ -163,6 +131,171 @@ page{
 .lesson-content .text-box .price:first-letter{
   font-size: 24rpx;
 }
+.nav{
+  margin: 36rpx 0;
+  color: #3B82EE;
+  font-size: 32rpx;
+}
+.nav image{
+  width: 52rpx;
+  height: 2rpx;
+  vertical-align: middle;
+}
+.nav image:first-child{
+  margin-left: 248rpx;
+  margin-right: 20rpx;
+}
+.nav image:last-child{
+  margin-left: 20rpx;
+}
+.lookMore image{
+  width: 28rpx;
+  height: 28rpx;
+  vertical-align: middle;
+}
+.lookMore{
+  color:#3B82EE;
+  font-size: 28rpx;
+  text-align: center;
+  margin: 33rpx 0 50rpx;
+}
+.studyHistory .scroll-view_H{
+  white-space: nowrap;
+}
+.studyHistory .scroll-view_H navigator{
+  width:300rpx;
+  display: inline-block;
+}
+.studyHistory .scroll-view_H>view{
+  white-space: nowrap;
+  width:300rpx;
+  height:210rpx;
+}
+.studyHistory{
+  background: #f8f8f8;
+}
+.studyHistory .cover-box{
+  width: 300rpx;
+  height: 210rpx;
+  margin-left: 30rpx;
+}
+.titleHistory{
+  font-size: 26rpx;
+  color: #AAB2BC;
+  padding:20rpx 30rpx 30rpx 30rpx;
+  overflow: hidden;
+}
+.titleHistory image{
+  width: 13rpx;
+  height: 22rpx;
+  vertical-align: middle;
+  margin-left: 10rpx;
+}
+.historyDes{
+  color: #464C5B;
+  font-size: 30rpx;
+  padding-top:20rpx;
+  margin-left:20rpx;
+  width: 300rpx;
+}
+.listeningTest .cover-box{
+  width: 330rpx;
+  height: 230rpx;
+
+}
+.listeningTest .navigator{
+  width: 360rpx;
+  display: inline-block
+}
+.lessonCon{
+  display: inline-block;
+  margin-left: 30rpx;
+  overflow: hidden;
+  width: 330rpx;
+  margin-bottom: 20rpx;
+}
+.lessonCon .historyDes{
+  margin-left: 0;
+}
+.lessonTitle{
+  padding: 20rpx 0 30rpx;
+  overflow: hidden;
+}
+.lessonTitle view:last-child{
+  font-size: 34rpx;
+  color: #E73B80;
+}
+
+.lessonTitle view:first-child{
+  font-size: 26rpx;
+  color: #AAB2BC;
+}
 .lesson-content .text-box .price.free:first-letter{
   font-size: inherit;
+}
+/* 轮播图重置小圆点样式 */
+.dots{
+  display: flex; 
+  justify-content: center;
+  flex-direction: row;
+  width: 100%;
+  height: 40rpx;
+  text-align: center;
+  margin-top: 20rpx;
+}
+.dot{
+  margin-right: 10rpx;
+  width:16rpx;
+  height:4rpx;
+  background:rgba(204,204,204,1);
+  border-radius:2rpx;
+}
+.dot.active{
+  width:40rpx;
+  height:4rpx;
+  border-radius:2rpx;
+  background: #3B82EE;
+}
+/* 滚动定位 */
+.tab-content{
+  position: relative;
+  display: flex;
+  height: 88rpx;
+  background: #fff;
+  border-top: 1rpx solid #f3f3f3;
+  box-shadow: 0 8rpx 8rpx 0 rgba(0, 0, 0, 0.09);
+}
+.tab-content.fixed{
+  z-index: 999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+.tab-content>view{
+  position: relative;
+  flex: 1;
+  font-size: 32rpx;
+  line-height: 88rpx;
+  text-align: center;
+  color: #333;
+  transition: all 0.15s ease-in-out;
+}
+.tab-content>view::after{
+  position: absolute;
+  content: '';
+  display: block;
+  height: 4rpx;
+  width: 68rpx;
+  margin-top: -4rpx;
+  left: 50%;
+  transform: translateX(-50%) scale(0);
+  background: #3A83EF;
+  transition: all 0.15s ease-in-out;
+}
+.tab-content>view.active{
+  color: #3A83EF;
+}
+.tab-content>view.active::after{
+  transform: translateX(-50%) scale(1);
 }

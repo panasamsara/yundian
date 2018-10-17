@@ -83,17 +83,8 @@
 <canvas hidden="{{canvasHidden}}" style="width: 686rpx;height: 686rpx;background:#f1f1f1;" canvas-id="mycanvas"/>
 </view>
 <canvas canvas-id='discountCanvas' style='width:480rpx;height:400rpx;' id='discountCanvas'></canvas>
-<!-- 点击分享后的遮罩层 -->
-<view class='shareView' wx:if="{{ shareViewShow === true }}">
-  <view class='buttonGroup'>
-    <button open-type='share'>转发</button>
-    <button class='save_img' bindtap="saveImg">生成海报 保存分享</button>
-    <button class='close' bindtap="shareBtn">取消</button>
-    
-  </view>
-</view>
-<canvas style="width: 260rpx;height: 240rpx;background:#f1f1f1;opacity: 0;position: fixed;" canvas-id="mycanvas66"/>
-<!-- 引入分享模板 -->
-<import src="../../../share/share.wxml"/>
-<template is="share1" data="{{list}}" wx:if="{{ shareShow === true && couponType === '06' }}"></template>
-<template is="share6" data="{{list}}" wx:elif="{{ shareShow === true && couponType !== '06' }}"></template>
+
+<!-- 海报画布 -->
+<canvas id='shareCanvasNew' canvas-id='shareCanvasNew' style='width:1380rpx;height:2000rpx;' class='shareCanvas'></canvas>
+<!-- 海报组件 -->
+<poster-modal posterData="{{canvasUrl}}" btnData="{{btnShow}}" bind:close="closePoster" bind:closeShare="closeShare" bind:drawPoster="drawPoster" bind:saveImg="saveImg" bind:handleSetting="handleSetting" wx:if="{{posterShow}}" id="posterModal"></poster-modal>

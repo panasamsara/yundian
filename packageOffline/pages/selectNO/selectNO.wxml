@@ -1,0 +1,13 @@
+<view class='table-number'>桌台：<text>{{tableNo}}</text></view>
+
+<view class='welcome'>客官您几位？</view>
+
+<view class='content'>
+  <view class='val-content'><text>{{val}}</text></view>
+  <view class='num-content'>
+    <view class='btn {{btnArr[index].active? "active": ""}}' wx:for="{{[1,2,3,4,5,6,7,8,9]}}" wx:key="{{index}}" data-i="{{index}}" data-num="{{index+1}}" bindtap='calc'>{{index+1}}</view>
+    <view class='btn btn-0 {{btnArr[9].active? "active": ""}}' data-i="{{9}}" data-num="0" bindtap='calc'>0</view>
+    <view class='btn {{btnArr[10].active? "active": ""}}' data-i="{{10}}" data-num="c" bindtap='calc'>←</view>
+  </view>
+  <view class='btn btn-submit  {{btnArr[11].active? "active": ""}}' data-i="{{11}}" bindtap='toNextPage'>确定</view>
+</view>

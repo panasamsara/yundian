@@ -159,9 +159,30 @@ Page({
     })
   },
   genxi: function () {
-    this.setData({
-      loginType: 2
+    var _this = this
+    // wx.checkSession({
+    //   success:(res)=>{
+    //     console.log(res)
+    //     _this.setData({
+    //       loginType: 2
+    //     })
+    //   },
+    //   fail: (res) =>{
+    app.util.userLogin().then((loginRes) => {
+      console.log('检测是否登录---------------------loginRes', loginRes)
+      if (loginRes.status === 0) {
+        _this.setData({
+          loginType: 1
+        })
+      } else {
+        _this.setData({
+          loginType: 2
+        })
+      }
     })
+    // }
+    // })
+
   },
   resusermevent: function () {
     var _this = this
@@ -183,7 +204,7 @@ Page({
     })
   },
   resmevent: function () {
-    let _this = this;    
+    let _this = this;
     this.setData({
       loginType: 0
     })
@@ -219,7 +240,7 @@ Page({
     if (count == 9) {
       let _this = this;
       // app.util.appLogin();
-
+      // debugger
       wx.removeStorageSync('scSysUser')
       app.util.checkWxLogin('check').then((loginRes) => {
         console.log('检测是否登录---------------------loginRes', loginRes)

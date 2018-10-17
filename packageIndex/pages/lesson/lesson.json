@@ -1,4 +1,6 @@
 {
   "navigationBarTitleText": "云店课堂",
-  "enablePullDownRefresh": true
+    "usingComponents":{
+    "lesson-model":"../lessonModel/lessonModel"
+  }
 }

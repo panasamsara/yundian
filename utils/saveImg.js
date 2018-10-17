@@ -1,3 +1,22 @@
+const app=getApp();
+
+function getCode(obj,params){//获取二维码地址
+  let _this=obj;
+  app.util.reqAsync('payBoot/wx/acode/build', params).then((res) => {
+    if (res.data.code == 1) {
+      wx.downloadFile({//缓存二维码
+        url:res.data.data.url,
+        success:function(res){
+          _this.setData({
+            codeUrl: res.tempFilePath,
+            codeStatus:'done'
+          })
+        }
+      })
+    }
+  })
+}
+
 function saveImg(obj){//保存图片判断授权
   var that = obj;
   //获取相册授权
@@ -98,6 +117,7 @@ function handleSetting(obj,e){//调起授权设置页
 }
 
 module.exports={
+  getCode: getCode,
   saveImg: saveImg,
   temp: temp,
   save: save,

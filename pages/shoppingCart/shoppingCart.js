@@ -530,7 +530,7 @@ Page({
         if (selectGoods.length > 0) {
           wx.setStorageSync('cart', selectGoods);
           wx.navigateTo({
-            url: '../orderBuy/orderBuy?shopId=' + this.data.goodlist[0].shopId + '&shopName=' +
+            url: '../../../../../packageBuy/pages/orderBuy/orderBuy?shopId=' + this.data.goodlist[0].shopId + '&shopName=' +
             this.data.goodlist[0].shopName + '&customerId=' + this.data.goodlist[0].goodsList[0].customerId + '&totalMoney=' + this.data.totalMoney
           })
 

@@ -16,6 +16,7 @@ Page({
     orderNo: '',
     areaName: '',
     cityName: '',
+    flagOrder:true,
     provinceName: '',
     canvasHidden: false,
     imagePath: '',
@@ -35,7 +36,8 @@ Page({
     population: '', //拼团人数
     stockId: '', // 是否有商品规格
     lackUser: '', // 拼团缺少人数
-    userCode: ''
+    userCode: '',
+    deliveryType:0
   },
 
   onLoad: function (options) {
@@ -111,12 +113,12 @@ Page({
           }
         }
 
-        if (data.data.data[0].orderInfo.orderStatusVo == 2 && data.data.data[0].orderInfo.deliveryType == 2) { //自提
+        // if (data.data.data[0].orderInfo.orderStatusVo == 2 && data.data.data[0].orderInfo.deliveryType == 2) { //自提
           // 页面初始化 options为页面跳转所带来的参数
           var size = this.setCanvasSize();//动态设置画布大小
           var initUrl = this.data.storeUrl;
           this.createQrCode(initUrl, "mycanvas", size.w, size.h);
-        }
+        // }
         this.setData({
           no: this.data.orderNo
         })
@@ -199,7 +201,8 @@ Page({
           ProvinceName: ProvinceName,
           shopId: data.data.data[0].shopInfo.id,
           goodsName: data.data.data[0].orderInfo.orderItemList[0].goodsName,
-          stockId: data.data.data[0].orderInfo.orderItemList[0].stockId
+          stockId: data.data.data[0].orderInfo.orderItemList[0].stockId,
+          deliveryType: data.data.data[0].orderInfo.deliveryType
         })
 
         console.log('stockId:' + this.data.stockId);
@@ -632,13 +635,15 @@ Page({
   },
   bindTestCreateOrder: function (code) {
     var data = {
+      subject: this.data.goods[0].orderInfo.orderItemList[0].goodsName,
+      openid: wx.getStorageSync('scSysUser').wxOpenId,
+      shopId: this.data.shopId,
       requestBody: {
         body: '云店小程序普通订单',
         out_trade_no: code,
         //  notify_url: 'https://wxappprod.izxcs.com/zxcity_restful/ws/payBoot/wx/pay/parseOrderNotifyResult',
         //   notify_url: app.globalData.notify_url,
-        trade_type: 'JSAPI',
-        openid: wx.getStorageSync('scSysUser').wxOpenId
+        trade_type: 'JSAPI'
       }
     };
     //发起网络请求 微信统一下单   
@@ -811,6 +816,18 @@ Page({
        
       }
 
+    })
+  },
+  showCode:function(){
+    
+    //点击展示二维码
+    this.setData({
+      flagOrder:false
+    })
+  },
+  closeTip:function(){
+    this.setData({
+      flagOrder: true
     })
   }
 

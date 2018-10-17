@@ -1,0 +1,86 @@
+page{
+  background: #f3f3f3;
+}
+.table-number{
+  display: block;
+  padding: 56rpx 0;
+  font-size: 40rpx;
+  line-height: 52rpx;
+  color: #333;
+  text-align: center;
+}
+.table-number>text{
+  font-size: 52rpx;
+  color: #FF5737;
+}
+.welcome{
+  display: block;
+  padding: 50rpx;
+  font-size: 44rpx;
+  color: #333;
+  font-weight: bold;
+  line-height: 1;
+  text-align: center;
+}
+.content{
+  position: fixed;
+  padding: 20rpx 4%;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+.val-content{
+  display: block;
+  padding: 0 0 80rpx;
+  color: #FF5737;
+  font-size: 104rpx;
+  text-align: center;
+}
+.val-content>text{
+  position: relative;
+}
+.val-content>text::after{
+  content: '人';
+  position: absolute;
+  display: inline-block;
+  bottom: 0;
+  padding-left: 20rpx;
+  font-size: 48rpx;
+  color: #333;
+  line-height: 104rpx;
+}
+.num-content{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+.btn{
+  display: block;
+  height: 106rpx;
+  width: 30%;
+  max-width: 30%;
+  margin-bottom: 24rpx;
+  font-size: 64rpx;
+  line-height: 106rpx;
+  color: #FF5737;
+  text-align: center;
+  background: #fff;
+  border-radius: 10rpx;
+  box-shadow: -4rpx 4rpx 8rpx 0 rgba(251,69,44, 0.15);
+  transition: background 0.1s ease-out;
+}
+.btn.active{
+  background: rgba(251,69,44, 0.15);
+}
+.num-content>.btn-0{
+  width: 65%;
+  max-width: 65%;
+}
+.btn-submit{
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  font-size: 36rpx;
+}

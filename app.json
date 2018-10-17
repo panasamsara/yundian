@@ -16,16 +16,12 @@
     "pages/store/activity/activity",
     "pages/store/activityInfo/activityInfo",
     "pages/manage/manage",
-    "pages/orderBuy/orderBuy",
-    "pages/orderBuy/discount/discount",
     "pages/store/dynamic/dynamic",
     "pages/store/newGoods/newGoods",
     "pages/store/headline/headline",
     "pages/store/player/player",
     "pages/store/fans/fans",
     "pages/askDetail/askDetail",
-    "pages/reg/reg",
-    "pages/secKillBuy/secKillBuy",
     "pages/give/give",
     "pages/spelldetails/spelldetails",
     "pages/store/posterActivity/posterActivity",
@@ -59,7 +55,10 @@
         "pages/fly/fly",
         "pages/secKill/secKill",
         "pages/groupBuy/groupBuy",
-        "pages/memberSearch/memberSearch"
+        "pages/memberSearch/memberSearch",
+        "pages/appointmentNew/appointmentNew",
+        "pages/timePicker/timePicker",
+        "pages/appointmentNew/service/service"
       ]
     },
     {
@@ -69,7 +68,8 @@
         "pages/orderDetail/orderDetail",
         "pages/endDetails/endDetails",
         "pages/goods/goods",
-        "pages/shopOrder/shopOrder"
+        "pages/shopOrder/shopOrder",
+        "pages/selectNO/selectNO"
       ]
     },
     {
@@ -111,9 +111,11 @@
       ]
     },
     {
-      "root": "packageShare",
+      "root": "packageBuy",
       "pages": [
-        "pages/share/share"
+        "pages/orderBuy/orderBuy",
+        "pages/orderBuy/discount/discount",
+        "pages/secKillBuy/secKillBuy"
       ]
     }
   ],

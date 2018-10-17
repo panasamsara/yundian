@@ -97,3 +97,6 @@ page{
   vertical-align: middle;
   line-height: 1;
 }
+.listeningTest .lessonCon{
+  margin-bottom: 20rpx;
+}

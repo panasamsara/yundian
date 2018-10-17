@@ -222,3 +222,31 @@
   float: right;
   margin: 16rpx 30rpx;
 }
+
+#codeBox{
+  display: flex;
+  flex-direction: column;
+  line-height: 70rpx;
+  text-align: center;
+  border-bottom:solid 20rpx #f8f8f8;
+}
+
+#codeCanvas,#code{
+  width: 268rpx;
+  height: 268rpx;
+  display: block!important;
+}
+
+#code{
+  margin: 50rpx 0 0 241rpx;
+}
+
+#serialNumber{
+  font-size: 32rpx;
+  color: #333333;
+}
+
+#tip{
+  font-size: 28rpx;
+  color: #FA4D35;
+}

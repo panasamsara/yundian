@@ -260,6 +260,28 @@ Page({
   },
   //获取详情
   getData: function (parm) {
+    let _this=this,
+        params={
+          source: 0,
+          page: "pages/QrToActivity/QrToActivity",
+          params: {
+            shopId: wx.getStorageSync('shop').id,
+            userId: wx.getStorageSync('scSysUser').id,
+            goodsId: this.data.goodsId,
+            merchantId: wx.getStorageSync('shop').merchantId,
+            sourcePart: 1
+          }
+        }
+    if(this.data.status==1){//拼团
+      params['shareType']=3;
+    }else if(this.data.status==2){//秒杀
+      params['shareType'] = 2;
+    }else{
+      params['shareType'] = 1;
+    }
+    if(!this.data.codeUrl){
+      saveImg.getCode(_this,params);
+    }
     wx.showLoading({
       title: '加载中'
     })
@@ -271,7 +293,6 @@ Page({
       }
     })
     app.util.reqAsync('shop/goodsDetailAddGroupBuying', parm).then((res) => {//获取商品详情数据
-      
       if (res.data.data) {
         //获取商品状态(上架/下架/失效)
         var status = this.data.status;
@@ -284,7 +305,7 @@ Page({
         }
         //商品具体分类(普通/拼团/秒杀)
         var data = res.data.data,
-          status;
+            status;
         if (data.activityStatus || data.activityStatus == 0) {//接口更新
           if (data.activityStatus == 0) {//普通商品
             status = 3;
@@ -425,6 +446,9 @@ Page({
             } else if (_this.data.status == 2) {//秒杀
               _this.drawPicSeckill();
             }
+            _this.setData({
+              downLoadStatus:'done'
+            })
           }
         })
       }
@@ -971,7 +995,7 @@ Page({
         'unitPrice': this.data.price //单价
       }]
     if (status == 1) {//拼团
-      let urls = '../secKillBuy/secKillBuy?realMoney=' + this.data.total + '&goodsId=' + data.scShopGoodsStockList[0].goodsId + '&goodsPrice=' + this.data.price + '&goodsType=' + data.goodsType + '&remake=' + data.scShopGoodsStockList[cur].stockName + '&stockId=' + data.scShopGoodsStockList[cur].id + '&goodsName=' + data.goodsName + '&stockName=' + data.scShopGoodsStockList[cur].stockName + '&goodsNum=' + this.data.number + '&pictureUrl=' + data.pictureUrl + '&deliveryCalcContent=' + data.deliveryCalcContent + '&isSeckill=' + 0 + '&groupId=' + data.isGroupBuying + '&limitNum=' + this.data.data.limitNum;
+      let urls = '../../../../../packageBuy/pages/secKillBuy/secKillBuy?realMoney=' + this.data.total + '&goodsId=' + data.scShopGoodsStockList[0].goodsId + '&goodsPrice=' + this.data.price + '&goodsType=' + data.goodsType + '&remake=' + data.scShopGoodsStockList[cur].stockName + '&stockId=' + data.scShopGoodsStockList[cur].id + '&goodsName=' + data.goodsName + '&stockName=' + data.scShopGoodsStockList[cur].stockName + '&goodsNum=' + this.data.number + '&pictureUrl=' + data.pictureUrl + '&deliveryCalcContent=' + data.deliveryCalcContent + '&isSeckill=' + 0 + '&groupId=' + data.isGroupBuying + '&limitNum=' + this.data.data.limitNum;
       if (spellingType == 0) {//发起拼单
         url = urls + "&spellingType=" + 0 + '&SmallGroupId=' + 0;
       } else if (spellingType == 1) {//参与拼单
@@ -983,10 +1007,10 @@ Page({
           info[0]['balance'] = data.scShopGoodsStockList[cur].stockNum,
           info[0]['remake'] = data.scShopGoodsStockList[cur].stockName
         wx.setStorageSync('cart', info);
-        url = "../orderBuy/orderBuy?totalMoney=" + this.data.total
+        url = "../../../../../packageBuy/pages/orderBuy/orderBuy?totalMoney=" + this.data.total
       }
     } else if (status == 2 && this.data.activityStatus == 1) {//秒杀
-      let urls = '../secKillBuy/secKillBuy?realMoney=' + this.data.total + '&goodsId=' + data.id + '&goodsPrice=' + this.data.price + '&secondskillActivityId=' + data.secondKillInfo[cur].secondskillActivityId + '&goodsType=' + data.goodsType + '&remake=' + data.secondKillInfo[cur].stockName + '&stockId=' + data.secondKillInfo[cur].goodsStockId + '&goodsName=' + data.goodsName + '&goodsNum=' + this.data.number + '&pictureUrl=' + data.pictureUrl + '&deliveryCalcContent=' + data.deliveryCalcContent + '&isSeckill=' + 1 + '&limitNum=' + this.data.data.secondKillInfo[this.data.cur].goodsPurchasingCount
+      let urls = '../../../../../packageBuy/pages/secKillBuy/secKillBuy?realMoney=' + this.data.total + '&goodsId=' + data.id + '&goodsPrice=' + this.data.price + '&secondskillActivityId=' + data.secondKillInfo[cur].secondskillActivityId + '&goodsType=' + data.goodsType + '&remake=' + data.secondKillInfo[cur].stockName + '&stockId=' + data.secondKillInfo[cur].goodsStockId + '&goodsName=' + data.goodsName + '&goodsNum=' + this.data.number + '&pictureUrl=' + data.pictureUrl + '&deliveryCalcContent=' + data.deliveryCalcContent + '&isSeckill=' + 1 + '&limitNum=' + this.data.data.secondKillInfo[this.data.cur].goodsPurchasingCount
       if (data.secondKillInfo.length <= 1 && data.secondKillInfo[0].isDefault == 0) {
         url = urls + '&stockName=' + data.secondKillInfo[cur].stockSku
       } else {
@@ -999,7 +1023,7 @@ Page({
         info[0]['balance'] = data.stockListDefault[cur].balance,
         info[0]['remake'] = data.stockListDefault[cur].stockName
       wx.setStorageSync('cart', info);
-      url = "../orderBuy/orderBuy?totalMoney=" + this.data.total
+      url = "../../../../../packageBuy/pages/orderBuy/orderBuy?totalMoney=" + this.data.total
     }
     console.log(url)
     wx.navigateTo({
@@ -1316,6 +1340,13 @@ Page({
     })
   },
   shareBtn:function(){//点击分享
+    if(this.data.downLoadStatus!='done'||this.data.codeStatus!='done'||this.data.codeStatus==undefined){
+      wx.showToast({
+        title: '页面加载中，请稍后分享',
+        icon: 'none'
+      })
+      return;
+    }
     this.setData({
       posterShow:true,
       untouch: 'untouch'
@@ -1324,13 +1355,16 @@ Page({
   closeShare:function(){//关闭分享
     this.setData({
       posterShow:false,
-      untouch: 'touch',
+      untouch: 'touch'
     })
   },
   drawPoster:function(){//绘制海报
     if (this.data.canvasUrl){
       return;
     }
+    this.setData({
+      untouch: 'untouch'
+    })
     wx.showLoading();
     var shopName = this.data.data.shopName;
     if (shopName.length > 7) {
@@ -1346,24 +1380,25 @@ Page({
   },
   groupPoster: function (shopName){//绘制拼团商品海报
     var context = wx.createCanvasContext('shareCanvas'),
-        scale=this.data.scale,
+        scale=this.data.scale*2,
         backImg="../../images/bg4.png",
         frontImg="../../images/bg4_2.png";
-    context.fillRect(0,0,345*scale,475*scale);//设置白色背景
-    context.drawImage(backImg,0,0,345*scale,500*scale);//绘制背景图
     context.setFillStyle('#ffffff');
+    context.fillRect(0,0,690*scale,1000*scale);//设置白色背景
+    context.drawImage(backImg,0,0,345*scale,500*scale);//绘制背景图
     context.setFontSize(14 * scale);
     let group=Math.floor(Math.random()*199+1)+'人正在拼团',
         w=context.measureText(group).width;
-    context.fillText(group,((345-w)/2)*scale,107*scale);
+    context.fillText(group,(690-w)/4*scale,107*scale);
     context.setFillStyle('#333333');
     context.setFontSize(28*scale);
     let w1 = context.measureText(shopName).width;
-    context.fillText(shopName,((345-w1)/2)*scale,72*scale);//绘制商品名
+    context.fillText(shopName,(690-w1)/4*scale,72*scale);//绘制店铺名
     context.setStrokeStyle('#fb452d');
     context.setLineWidth(10*scale);
     context.strokeRect(20*scale,130*scale,305*scale,305*scale);//绘制矩形边框
     context.drawImage(this.data.proPic, 20 * scale, 130 * scale, 305 * scale, 305 * scale);//绘制商品图片
+    context.drawImage(this.data.codeUrl,20*scale,130*scale,83*scale,83*scale);//绘制二维码
     context.setFillStyle('#ff0400');
     context.setFontSize(15*scale);
     context.fillText('￥',15*scale,470*scale);
@@ -1377,7 +1412,7 @@ Page({
     let w2=context.measureText('￥'+this.data.data.price.toFixed(2)).width;
     context.beginPath();
     context.moveTo(20*scale,485*scale);
-    context.lineTo((w2+20)*scale,485*scale);
+    context.lineTo((w2+40)/2*scale,485*scale);
     context.setLineWidth(1*scale);
     context.setStrokeStyle('#969696');
     context.stroke();
@@ -1385,21 +1420,23 @@ Page({
     let _this=this;
     context.draw(false,function(){
       // _this.temp(_this);
-      saveImg.temp(_this,'shareCanvas',690,1000,690,1000);
+      saveImg.temp(_this, 'shareCanvas', 1380, 2000, 1380,2000);
     });
   },
   secPoster: function (shopName){//绘制秒杀商品海报
     var context=wx.createCanvasContext('shareCanvas'),
-        scale=this.data.scale,
+        scale=this.data.scale*2,
         backImg ="../../images/bg2.png",
         textImg ="../../images/ms.png";
+    context.setFillStyle('#ffffff');
+    context.fillRect(0,0,690*scale,1000*scale);//设置白色背景
     context.drawImage(this.data.proPic,0,0,345*scale,345*scale);//绘制商品图片
     context.setFillStyle('#fc4a26');
     context.setFontSize(14*scale);
     let w = context.measureText(shopName).width;
-    context.fillRect((345-w-35-28)*scale,0,(w+28)*scale,30*scale);//绘制商品名背景
+    context.fillRect((690-w-30-70-30)/2*scale,0,(w+60)/2*scale,30*scale);//绘制店铺名背景
     context.setFillStyle('#ffffff');
-    context.fillText(shopName,(345-w-35-14)*scale,20*scale);//绘制商品名
+    context.fillText(shopName, (690-w-30-70)/2*scale, 20*scale);//绘制店铺名
     context.drawImage(backImg,0,250*scale,345*scale,260*scale);//绘制背景图
     context.drawImage(textImg,35*scale,220*scale,120*scale,120*scale);//绘制字体
     context.fillRect(35*scale,360*scale,150*scale,30*scale);
@@ -1419,26 +1456,28 @@ Page({
     context.setStrokeStyle('#f8fff8');
     let w1=context.measureText(this.data.listData[0].goodsOriginalStockPrice.toFixed(2)).width;
     context.moveTo(40*scale,462*scale);
-    context.lineTo((55+w1+3)*scale,462*scale);
-    context.stroke();
+    context.lineTo((110+w1+6)/2*scale,462*scale);
+    context.stroke();//绘制中划线
+    context.drawImage(this.data.codeUrl,240*scale,390*scale,82*scale,82*scale);
     let _this=this;
     context.draw(false,function(){
       // _this.temp(_this);
-      saveImg.temp(_this, 'shareCanvas', 690, 1000, 690, 1000);
+      saveImg.temp(_this, 'shareCanvas', 1380, 2000, 1380, 2000);
     })        
   },
   poster: function (shopName){//绘制普通商品海报
     var context=wx.createCanvasContext('shareCanvas'),
-        scale=this.data.scale,
+        scale=this.data.scale*2,
         codeImg ="../../images/an.png",
         info='';
     if (this.data.data.descContent != '' && this.data.data.descContent != null){
-        console.log(111)
         info=this.data.data.descContent.replace(/<(style|script|iframe)[^>]*?>[\s\S]+?<\/\1\s*>/gi, '').replace(/<[^>]+?>/g, '').replace(/\s+/g, ' ').replace(/ /g, ' ').replace(/>/g, ' ').replace(/&nbsp;/g, '');
     }
+    context.setFillStyle('#ffffff');
+    context.fillRect(0,0,690*scale,1000*scale);//设置白色背景
     context.setFontSize(20*scale);
     let w = context.measureText(shopName).width;
-    context.fillText(shopName,((345-w)/2)*scale,35*scale);//绘制商品名
+    context.fillText(shopName,(690-w)/4*scale,35*scale);//绘制店铺名
     context.drawImage(this.data.proPic,18*scale,55*scale,309*scale,318*scale);//绘制商品图片
     context.setFontSize(15*scale);
     context.setFillStyle('#686868');
@@ -1452,11 +1491,12 @@ Page({
     context.fillText('￥',18*scale,480*scale);
     context.setFontSize(24*scale);
     context.fillText(this.data.data.price.toFixed(2),37*scale,480*scale);//绘制商品价格
-    context.drawImage(codeImg,235*scale,390*scale,92*scale,92*scale);
+    context.drawImage(codeImg,235*scale,390*scale,92*scale,92*scale);//绘制二维码框
+    context.drawImage(this.data.codeUrl, 243 * scale, 400 * scale, 76 * scale, 76 * scale)
     let _this = this;
     context.draw(false, function () {
       // _this.temp(_this);
-      saveImg.temp(_this, 'shareCanvas', 690, 1000, 690, 1000);
+      saveImg.temp(_this, 'shareCanvas', 1380, 2000, 1380, 2000);
     })
   },
   saveImg: function () {//保存图片

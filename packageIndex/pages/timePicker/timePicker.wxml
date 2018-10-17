@@ -1,0 +1,39 @@
+<view class='month-content'>
+  <image mode='aspectFill' wx:if="{{!limitLeft}}" src='./image/icon-l.png' data-m="-1" bindtap='changeMonth'></image>
+  <image mode='aspectFill' wx:if="{{limitLeft}}" src='./image/icon-l-active.png' data-m="-1" bindtap='changeMonth'></image>
+  <text>{{dateStr}}</text>
+  <image mode='aspectFill' wx:if="{{!limitRight}}" src='./image/icon-r.png' data-m="1" bindtap='changeMonth'></image>
+  <image mode='aspectFill' wx:if="{{limitRight}}" src='./image/icon-r-active.png' data-m="1" bindtap='changeMonth'></image>
+</view>
+<view class='day-content {{toggleArr[0]? "active": ""}}'>
+  <view class='weekend'><text>日</text></view>
+  <view><text>一</text></view>
+  <view><text>二</text></view>
+  <view><text>三</text></view>
+  <view><text>四</text></view>
+  <view><text>五</text></view>
+  <view class='weekend'><text>六</text></view>
+  <view class='{{item.active ? "active": ""}} {{item.disabled ? "disabled": ""}}' wx:for="{{days}}" wx:key="{{index}}"  data-i='{{index}}' bindtap='changeDay'>
+    <text wx:if="{{item}}">{{item.day}}</text>
+  </view>
+</view>
+<view class='content-bottom' data-i="0" bindtap='toggleContent'>
+  <block wx:if="{{toggleArr[0]}}">收起 <image src='./image/xcx_yy_shang_jiantou@3x.png'></image></block>
+  <block wx:if="{{!toggleArr[0]}}">查看所有日期 <image src='./image/xcx_yy_xia_jiantou@3x.png'></image></block>
+</view>
+
+<view class='time-content-top'>
+  <text>预计到店时间</text>
+  <image src='./image/xcx_yy_xuanzeshijian@3x.png'></image>
+</view>
+<view class='time-content {{toggleArr[1]? "active": ""}}'>
+  <view class='{{item? "": "none"}} {{item.active? "active": ""}} {{item.disabled? "disabled": ""}}' wx:for="{{timeArr}}" wx:key="{{index}}" bindtap='changeTime' data-i="{{index}}">{{item.text}}</view>
+</view>
+<view class='content-bottom' data-i="1" bindtap='toggleContent'>
+  <block wx:if="{{toggleArr[1]}}">收起 <image src='./image/xcx_yy_shang_jiantou@3x.png'></image></block>
+  <block wx:if="{{!toggleArr[1]}}">查看全部时间段 <image src='./image/xcx_yy_xia_jiantou@3x.png'></image></block>
+</view>
+
+<view class='btn-content' bindtap='toNextStep'>
+  <view class='btn-next'>下一步，预约服务</view>
+</view>

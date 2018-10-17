@@ -1,4 +1,5 @@
 var QR = require("../../../../utils/qrcode.js");
+import saveImg from '../../../../utils/saveImg.js';
 import util from '../../../../utils/util.js';
 var app = getApp();
 Page({
@@ -22,23 +23,8 @@ Page({
     share:"",
     promGoodsTypeShare:"",
     showMa:"0",
-    shareViewShow: false,
-    // 分享模板要传递的数据
-    list: {
-      imgUrl:'',
-      name: '海底捞2',
-      money: '',
-      type: '新手礼包礼包礼包',
-      ewmImg:"",
-      buttonShow: 'true'
-    },
+    btnShow: 'normal',
     loginType:0,
-    // 控制分享模板1是否显示
-    shareShow: false, 
-    scale2: '',
-    oW: 0,
-    oW2: 0,
-    scale4: ''
     },
   onLoad: function(options) {
     var that=this;
@@ -343,7 +329,8 @@ Page({
           success: function (res) {
             console.log(res.tempFilePath)
             _this.setData({
-              discountPic: res.tempFilePath
+              discountPic: res.tempFilePath,
+              downloadStatus:'done'
             })
             _this.discountDraw();
           }
@@ -360,6 +347,21 @@ Page({
         })
       })
     }
+    saveImg.getCode(_this, {//获取二维码
+      source: 0,
+      page: "pages/QrToActivity/QrToActivity",
+      params: {
+        shopId: wx.getStorageSync('shop').id,
+        userId: wx.getStorageSync('scSysUser').id,
+        couponLogId: this.data.couponLogId,
+        couponId: this.data.id,
+        couponType: this.data.couponType,
+        sourcePart: '1',
+        shareType: 7,
+        share: 1,
+        shareFrom: 'discountDetail'
+      }
+    });
   },
   skip: function(e) {
     var id = e.currentTarget.dataset.id;
@@ -628,268 +630,106 @@ path: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + _this.data.i
       this.setData({ share: 3, showMa: 1 });
     }
   },
-  // 点击分享后 点击取消
-  shareBtn: function () {
-    this.setData({
-      shareViewShow: !this.data.shareViewShow
-    })
-  },
-  // 点击遮罩关闭
-  closeTemplate:function(){
-    this.setData({
-      shareShow: !this.data.shareShow
-    })
-  },
-  // 再授权
-  save: function () {
-    var that = this;
-    //获取相册授权
-    wx.getSetting({
-      success(res) {
-        if (!res.authSetting['scope.writePhotosAlbum']) {
-          wx.authorize({
-            scope: 'scope.writePhotosAlbum',
-            success() {//这里是用户同意授权后的回调
-              wx.showToast({
-                title: '保存中...',
-                icon: 'none'
-              })
-              let buttonshow = "list.buttonShow"
-              that.setData({
-                [buttonshow]: true
-              })
-              that.btn_img()
-            },
-            fail() {//这里是用户拒绝授权后的回调
-              console.log('走了save的fail');
-              wx.showToast({
-                title: '授权后才能保存至手机相册',
-                icon: 'none'
-              })
-              let buttonshow = "list.buttonShow"
-              that.setData({
-                [buttonshow]: false
-              })
-              return
-            }
-          })
-        } else {//用户已经授权
-          wx.showToast({
-            title: '保存中...',
-            icon: 'none'
-          })
-          that.data.list.buttonShow = true;
-          that.btn_img()
-        }
-      }
-    })
-  },
-  handleSetting: function (e) {
-    let that = this;
-    // 对用户的设置进行判断，如果没有授权，即使用户返回到保存页面，显示的也是“去授权”按钮；同意授权之后才显示保存按钮
-    if (!e.detail.authSetting['scope.writePhotosAlbum']) {
-      wx.showModal({
-        title: '提示',
-        content: '若不打开授权，则无法将图片保存在相册中！',
-        showCancel: false
-      })
-      let buttonshow = "list.buttonShow"
-      that.setData({
-        [buttonshow]: false
-      })
-    } else {
+  shareBtn: function () {//点击分享
+    if (this.data.codeStatus != 'done' || this.data.codeStatus == undefined || (this.data.couponType!='06' && this.data.downloadStatus!='done')) {
       wx.showToast({
-        title: '已授权',
+        title: '页面加载中，请稍后分享',
         icon: 'none'
       })
-      let buttonshow = "list.buttonShow"
-      that.setData({
-        [buttonshow]: true
-      })
+      return;
     }
-  },
-  // 点击生成海报 出现分享弹窗
-  saveImg: function () {
     this.setData({
-      shareViewShow: !this.data.shareViewShow,
-      shareShow: !this.data.shareShow
+      posterShow: true
     })
   },
-  btn_img: function () {
-    console.log('btn_img')
-    //创建节点选择器
-    var that = this;
-    var query = wx.createSelectorQuery();
-    if (this.data.couponType === '06') {
-      query.select('.every').boundingClientRect(function (rect) {
-        that.setData({
-          oW: rect.width
-        })
-        that.drawShare()
-      }).exec();
-    }
-    else {
-      query.select('.every6').boundingClientRect(function (rect) {
-        that.setData({
-          oW2: rect.width
-        })
-        that.draw06()
-      }).exec();
-    }
+  closeShare: function () {//取消分享
+    this.setData({
+      posterShow: false
+    })
   },
-  // 新手大礼包
-  drawShare: function () {
-    var size = this.setShareCanvasSize();//动态设置画布大小
-    var scale = this.data.scale2;
-    var _this = this
-    var context = wx.createCanvasContext('myShareCanvas');
-    context.save();//保存绘图上下文
-    context.setFillStyle('#fff');
-    context.fillRect(0, 0, 610 * scale, 800 * scale);//给画布添加背景色，无背景色真机会自动变黑
-    context.beginPath();
-    //绘制商品名
-    context.fill();
-    context.setFontSize(18 * scale);
-    context.setFillStyle('#333333');
-    context.fillText(_this.data.list.name, (size.w - context.measureText(_this.data.list.name).width) / 2, 40 * scale);
-    // 绘制图片
-    var imgUrl = '../../../../images/bg.png';
-    context.drawImage(imgUrl, 10 * scale, 30 * scale, 332 * scale, 422 * scale);
-
-    // 绘制标题
-    context.setFillStyle('#FF6629');
-    var price = '价值' + _this.data.list.money + '元'
-    context.fillText(price, (size.w - context.measureText(price).width) / 2, 108 * scale);
-    // 绘制礼包类型名称
-    var typeLen = this.data.list.type.length;
-    console.log('礼包的长度=',typeLen);
-    if (typeLen < 5) {
-      context.setFontSize(34 * scale);
+  drawPoster:function(){
+    if (this.data.canvasUrl) {
+      return;
     }
-    else if (typeLen > 4 && typeLen < 7) {
-      context.setFontSize(28 * scale);
-    }
-    else {
-      context.setFontSize(24 * scale);
-    }
-    context.setFillStyle('#FF3E3E');
-    context.fillText(this.data.list.type, (size.w - context.measureText(this.data.list.type).width) / 2, 180 * scale);
-    context.draw(false, function () {
-      wx.canvasToTempFilePath({//绘制完成执行保存回调
-        x: 0,
-        y: 0,
-        width: 351,
-        height: 480,
-        destWidth: 702,
-        destHeight: 960,
-        fileType: 'jpg',
-        canvasId: 'myShareCanvas',
-        success: function (res) {
-          console.log(res.tempFilePath)
-          // 保存图片到本地
-          wx.saveImageToPhotosAlbum({
-            filePath: res.tempFilePath,
-            success(res) {
-              wx.showToast({
-                title: '保存成功',
-                icon: 'none'
-              })
-            }
-          })
-        }
-      })
-    });
-  },
-  setShareCanvasSize: function () {
-    var size = {};
-    try {
-      var res = wx.getSystemInfoSync();
-      // var scale = 750 / 686;//不同屏幕下canvas的适配比例；设计稿是750宽
-      var scale = res.windowWidth / this.data.oW;
-      var width = res.windowWidth / scale;
-      var height = width;//canvas画布为正方形
-      size.w = width;
-      size.h = height;
-      this.setData({
-        scale2: res.windowWidth / 375
-      })
-    } catch (e) {
-      // Do something when catch error
-      console.log("获取设备信息失败" + e);
-    }
-    return size;
-  },
-  // 优惠券
-  draw06: function () {
-    var size = this.setCanvasSize06();//动态设置画布大小
-    var scale = this.data.scale;
-    var _this = this
-    var context = wx.createCanvasContext('myShareCanvas6');
-    // 绘制图片
-    context.save();//保存绘图上下文
-    var imgUrl = '../../../../images/bg6.png';
-    context.drawImage(imgUrl, 0, 0, 350 * scale, 531 * scale);
-
-    // logo
-    context.save()
-    context.beginPath()
-    context.arc(176, 50, 28, 0, 2 * Math.PI)
-    context.clip()
-    context.drawImage(this.data.list.imgUrl, 148, 22, 56, 56)
-    context.restore();
-
-    // 绘制标题
-    context.setFontSize(16 * scale);
+    wx.showLoading();
+    var context = wx.createCanvasContext('shareCanvasNew'),
+        scale = wx.getSystemInfoSync().windowWidth / 375,
+        _this = this;
     context.setFillStyle('#ffffff');
-    context.fillText(this.data.list.name, (size.w - context.measureText(this.data.list.name).width) / 2, 108 * scale);
-    // 绘制劵类型
-    context.setFontSize(45 * scale);
-    context.fillText(this.data.list.type, (size.w - context.measureText(this.data.list.type).width) / 2, 180 * scale);
-    context.draw(false, function () {
-      wx.canvasToTempFilePath({//绘制完成执行保存回调
-        x: 0,
-        y: 0,
-        width: 351,
-        height: 531,
-        destWidth: 702,
-        destHeight: 1062,
-        fileType: 'jpg',
-        canvasId: 'myShareCanvas6',
-        success: function (res) {
-          console.log(res.tempFilePath)
-          // 保存图片到本地
-          wx.saveImageToPhotosAlbum({
-            filePath: res.tempFilePath,
-            success(res) {
-              wx.showToast({
-                title: '保存成功',
-                icon: 'none'
-              })
-            }
-          })
-        }
-      })
-    });
-  },
-  //适配不同屏幕大小的canvas
-  setCanvasSize06: function () {
-    var size = {};
-    try {
-      var res = wx.getSystemInfoSync();
-      // var scale = 750 / 686;//不同屏幕下canvas的适配比例；设计稿是750宽
-      var scale = res.windowWidth / this.data.oW2;
-      var width = res.windowWidth / scale;
-      var height = width;//canvas画布为正方形
-      size.w = width;
-      size.h = height;
-      this.setData({
-        scale4: res.windowWidth / 375
-      })
-    } catch (e) {
-      // Do something when catch error
-      console.log("获取设备信息失败" + e);
+    context.fillRect(0, 0, 690 * scale, 1000 * scale);//设置白色背景
+    if (this.data.couponType=='06'){//礼包
+      this.drawGiftPoster(context,scale,_this);
+    }else{//券
+      this.drawDiscountPoster(context,scale,_this);
     }
-    return size;
+  },
+  drawGiftPoster:function(context,scale,_this){//礼包海报
+    context.drawImage('../../../../images/bg.png',0,50*scale,690*scale,950*scale);//绘制背景图
+    context.setFontSize(36*scale);
+    context.setFillStyle('#333333');
+    this.cut('shopName', _this.data.discountData.shopName,7)
+    let w=context.measureText(this.data.shopName).width;
+    context.fillText(this.data.shopName,(690-w)/2*scale,60*scale);//绘制店铺名
+    context.setFillStyle('#FF6629');
+    context.setFontSize(35*scale);
+    let couponValue='免费赠送' + _this.data.discountsNew.couponValue + '抵用券',
+        w1=context.measureText(couponValue).width;
+    context.fillText(couponValue,(690-w1)/2*scale,215*scale);
+    context.setFillStyle('#FF3E3E');
+    let couponName=this.data.discountsNew.couponInstruction;
+    if (couponName.length<=4){
+      context.setFontSize(68*scale);
+    }else{
+      context.setFontSize(48*scale);
+    }
+    let w2 = context.measureText(couponName).width;
+    context.fillText(couponName,(690-w2)/2*scale,380*scale);
+    context.drawImage(this.data.codeUrl,215*scale,570*scale,260*scale,240*scale);
+    context.setFontSize(26*scale);
+    context.setFillStyle('#ffffff');
+    let w3=context.measureText('扫描或长按二维码').width;
+    context.fillText('扫描或长按二维码',(690-w3)/2*scale,860*scale);
+    context.draw(false, function () {
+      saveImg.temp(_this, 'shareCanvasNew', 1380, 2000, 1380, 2000);
+    })
+  },
+  drawDiscountPoster:function(context,scale,_this){//券海报
+    context.drawImage('../../../../images/bg6.png',0,0,690*scale,1000*scale);//绘制背景图
+    context.save();
+    context.arc(345*scale,115*scale,55*scale,0,2*Math.PI);
+    context.fill();
+    context.clip();
+    context.drawImage(this.data.discountPic,290*scale,60*scale,110*scale,110*scale);//绘制店铺头像
+    context.restore();
+    context.setFontSize(32*scale);
+    this.cut('shopName',this.data.discounts.shopName,7);
+    let shopName=this.data.shopName,
+        w=context.measureText(shopName).width;
+    context.fillText(shopName,(690-w)/2*scale,220*scale);//绘制店铺名
+    context.setFontSize(90*scale);
+    let name=this.data.discounts.name,
+        w1=context.measureText(name).width;
+    context.fillText(name,(690-w1)/2*scale,365*scale);//绘制优惠券类型
+    context.drawImage(this.data.codeUrl,105*scale,810*scale,158*scale,158*scale);//绘制二维码
+    context.draw(false, function () {
+      saveImg.temp(_this, 'shareCanvasNew', 1380, 2000, 1380, 2000);
+    })
+  },
+  cut:function(textName,text,length){
+    if(text.length>length){
+      text=text.substring(0,length)+'..';
+    }
+    this.setData({
+      [textName]:text
+    })
+  },
+  saveImg: function () {//保存图片
+    let _this = this;
+    saveImg.saveImg(_this);
+  },
+  handleSetting: function (e) {//授权
+    let that = this;
+    saveImg.handleSetting(that, e.detail.e);
   }
 })
 

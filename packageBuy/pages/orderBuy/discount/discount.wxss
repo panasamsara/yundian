@@ -1,0 +1,79 @@
+.left{
+  float: left;
+}
+.right{
+  float: right;
+}
+.mr10{
+  margin-right: 10rpx;
+}
+.bg{
+  height: 262rpx;
+  width: 100%;
+}
+.list{
+  margin: 20rpx 26rpx;
+  position: relative;
+}
+.con{
+  width: 100%;
+  position: absolute;
+  top: 0;
+  bottom:0;
+}
+.listTop{
+  overflow: hidden;
+  padding-bottom: 30rpx;
+  color: #333;
+  padding: 20rpx 0 30rpx 30rpx;
+}
+.listTop view:first-child{
+  font-size: 30rpx;
+  height: 54rpx;
+  line-height: 54rpx;
+  font-weight: bold;
+}
+.listTop view:last-child{
+  font-size: 34rpx;
+  font-weight: bold;
+}
+.listTop .left image{
+  width: 54rpx;
+  height: 54rpx;
+  margin-right: 20rpx;
+}
+.time{
+  color:#999;
+  font-size:28rpx;
+  padding:5rpx 0 20rpx 30rpx;
+  position:absolute;
+  bottom:30rpx;
+}
+.gray{
+  background: #f8f8f8;
+}
+.no-userful{
+  width: 100rpx;
+  height: 100prx;
+  border-radius: 100%;
+}
+.nose{
+ position:fixed;
+  width:100%;
+  bottom:0;
+  border-top:1rpx solid #ccc;
+  height:70rpx;
+  font-size:32rpx;
+  background:#fff;
+  color:#999;
+  text-align:center;
+  line-height:70rpx;
+}
+.zhid{
+  color:rgba(254,115,45,1);
+  font-size:24rpx !important;
+}
+.jiange{
+  width: 100%;
+  height: 90rpx;
+}

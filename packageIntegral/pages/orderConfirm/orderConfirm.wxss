@@ -27,7 +27,7 @@ page{
   font-size: 28rpx;
 }
 
-#accountType .picker{
+#orderConfirm .picker{
   display: flex;
   justify-content: flex-end;
 }

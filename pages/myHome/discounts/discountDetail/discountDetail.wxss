@@ -268,7 +268,7 @@ canvas#discountCanvas{
   position: fixed;
   width: 80rpx;
   height: 80rpx;
-  z-index: 99999;
+  z-index: 888;
 }
 
 #share{
@@ -321,7 +321,7 @@ canvas#discountCanvas{
   position:fixed;
   width:80rpx;
   height:80rpx;
-  z-index:99999;
+  z-index:888;
   right:30rpx;
   bottom:390rpx;
 }
@@ -331,4 +331,3 @@ canvas#discountCanvas{
 .marginTop216{
   margin-top: 216rpx;
 }
-@import "../../../share/share.wxss"

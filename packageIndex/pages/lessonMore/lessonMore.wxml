@@ -1,0 +1,20 @@
+<view class='content'>
+  <navigator wx:for="{{arr}}" wx:key="{{index}}" url='../lessonDetail/lessonDetail?id={{item.id}}'>
+    <view class='lesson-content'>
+      <view class='cover-box'>
+        <image class='cover' mode='aspectFill' src='{{item.cover}}'></image>
+        <image class='subscripts' wx:if="{{item.resourceType == 1}}" mode='aspectFit' src='../../img/icon_zxkt_bf@2x.png'></image>
+        <image class='subscripts' wx:if="{{item.resourceType == 2}}" mode='aspectFit' src='../../img/icon_zxkt_st@2x.png'></image>
+        <text class='time'>{{item.duration}}</text>
+      </view>
+      <view class='text-box'>
+        <view class='title'>{{item.name}}</view>
+        <view class='column'>专栏：<text>{{item.themeName}}</text></view>
+        <view class='teacher'>{{item.speakerName}}</view>
+        <view class='price {{item.showPrice == "免费" ? "free": ""}}'>{{item.showPrice}}</view>
+      </view>
+    </view>
+  </navigator>
+</view>
+
+<image mode='aspectFit' class='bitmap' src='../../img/zw_mykc@2x.png' wx:if="{{arr.length == 0}}"></image>

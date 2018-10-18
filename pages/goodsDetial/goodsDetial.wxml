@@ -330,7 +330,7 @@
       <view class='add' bindtap='tobuy' id='buyNow'>立即购买</view>
     </view>
   </view> 
-<canvas canvas-id='seckill' style='width:480rpx;height:380rpx;' id='secKillCanvas'></canvas>
-<canvas canvas-id='groupbuy' style='width:480rpx;height:420rpx;' id='gruopBuyCanvas'></canvas>
+<canvas canvas-id='seckill' style='width:960rpx;height:760rpx;' id='secKillCanvas'></canvas>
+<canvas canvas-id='groupbuy' style='width:960rpx;height:840rpx;' id='gruopBuyCanvas'></canvas>
 <canvas id='shareCanvas' canvas-id='shareCanvas' style='width:1380rpx;height:2000rpx;' class='shareCanvas'></canvas>
 <poster-modal posterData="{{canvasUrl}}" btnData="{{btnShow}}" bind:close="closePoster" bind:closeShare="closeShare" bind:drawPoster="drawPoster" bind:saveImg="saveImg" bind:handleSetting="handleSetting" wx:if="{{posterShow}}" id="posterModal"></poster-modal>

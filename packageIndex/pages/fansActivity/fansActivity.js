@@ -23,8 +23,8 @@ Page({
     app.util.reqAsync('fans/getActivityDetailNew', params).then((res) => {
       if (res.data.data) {
         let data=res.data.data;
-        if (data.detailEndTime){//时间格式处理
-          data.detailEndTime=data.detailEndTime.split(' ')[0];
+        if (data.detailPublishTime){//时间格式处理
+          data.detailPublishTime = data.detailPublishTime.split(' ')[0];
         }
         if(data.detail!='' && data.detail!=null){//富文本编辑器处理
           data.detail = data.detail.replace(/\s+(id|class|style)(=(([\"\']).*?\4|\S*))?/g, "").replace(/background-color[\s:]+[^;]*;/gi, '').replace(/\"=\"\"/g, "").replace(/\<img/gi, '<img style="max-width:100%;height:auto" ').replace(/<s>/gi, "").replace(/<u>/gi, '').replace(/<\/s>/gi, '').replace(/<\/u>/gi, '');

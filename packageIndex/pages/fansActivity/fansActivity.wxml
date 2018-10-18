@@ -6,7 +6,7 @@
     <view id='title'>
       <view id='activityName'>{{data.name}}</view>
       <view id='box'>
-        <text id='endTime'>{{data.detailEndTime}}</text>
+        <text id='endTime'>{{data.detailPublishTime}}</text>
         <text id='dynamicCount'><text>{{data.videoAlbumList.length}}</text>条活动精彩</text>
       </view>
     </view>

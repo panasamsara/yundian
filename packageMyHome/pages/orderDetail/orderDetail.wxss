@@ -472,7 +472,7 @@ page,.content{
   margin-top:8rpx;
 }
 /*二维码弹窗*/
-.modal-box{
+.mask{
   position: fixed;
   width: 100%;
   height: 100%;
@@ -483,22 +483,32 @@ page,.content{
   overflow: hidden;
 }
 .modal-box .modal-body{
-  width:600rpx;
-  height:740rpx;
-  background:#fff;
-  margin:40% auto;
-  border-radius: 10rpx;
-  overflow: hidden;
+    overflow: hidden;
 }
-.modal-body .order-close{
+.modal-box,.modal-box .modal-body{
+  width:675rpx;
+  height:750rpx;
+  background:#fff;
+  margin:0 auto;
+  border-radius: 10rpx;
+  position: fixed;
+  z-index: 44;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+.modal-box .order-close{
   width:50rpx;
   height:50rpx;
   position:absolute;
-  top:150rpx;
-  right:30rpx;
+  top:-70rpx;
+  right:0rpx;
 }
 .modal-content{
   text-align: center;
+  position: absolute;
+  bottom:20rpx;
+  width:100%;
 }
 .modal-content text{
   display: block;
@@ -511,7 +521,15 @@ page,.content{
   color:#FB452C;
   margin-top:10rpx;
 }
-.canvas-box{
-  margin-left: -40rpx;
+.modal-box .code-img{
+  position: relative;
+  width: 670rpx;
+  overflow: hidden;
+}
+.modal-box .canvas-box{
+  margin-left: -64rpx;
+}
+.modal-box canvas{
+  position: none;
 }
 

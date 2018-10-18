@@ -10,7 +10,8 @@
 </view>
 <view class='fans' wx:if="{{dataJson.type==2}}" bindtap='skipDetail' data-id="2" data-detailId="{{groupList[0].detailId}}">
   <view class='float_l'>
-    <image class="logo" src='{{groupList[0].personList[0].userPic}}'></image>
+    <image class="logo" wx:if="{{groupList[0].personList[0].userPic!=''}}" src='{{groupList[0].personList[0].userPic}}'></image>
+    <image class="logo" wx:else src='../images/yundian_morentouxiang@2x.png'></image> 
     <image class='leader' src='../images/leader.png'></image>
   </view>
   <view class='float_l huName'>{{groupList[0].personList[0].userName}}</view>
@@ -20,7 +21,9 @@
     </view>
     <view class='float_l groupIcon'>
       <view class='wrap' wx:for="{{groupList[0].personList}}" wx:key="{{index}}" wx:if="{{7>index>0}}">
-        <image class="group" src='{{groupList[0].personList[index].userPic}}'></image>
+        
+        <image class="group" wx:if="{{groupList[0].personList[index].userPic!=''}}" src='{{groupList[0].personList[index].userPic}}'></image>
+                <image class="group" wx:else src='../images/yundian_morentouxiang@2x.png'></image>
       </view>
     </view>
   </view>
@@ -28,17 +31,17 @@
 <view class='photo_album bg_fff' wx:if="{{activityList.length>0}}">
   <view class='navTitle'>
     <view class='float_l'>粉活动</view>
-    <view class='float_r' wx:if="{{activityList.length>10}}" bindtap="moreActivity">
+    <view class='float_r' wx:if="{{activityList.length>=6}}" bindtap="moreActivity">
       更多活动
       <image src='../images/fentaundui_gengduo_jiantou@2x.png'></image>
     </view>
   </view>
   <view class='content'>
     <scroll-view scroll-x class='scroll-view_H'>
-      <view class='list acvitity' wx:for="{{activityList}}" wx:key="index" wx:if="{{index<=9}}" bindtap="fansActivity" data-id="{{item.id}}">
+      <view class='list acvitity' wx:for="{{activityList}}" wx:key="index" wx:if="{{index<=5}}" bindtap="fansActivity" data-id="{{item.id}}">
         <image src='{{item.logo}}'></image>
         <view class='over_ellipsis font32 font_333 margin_b20'>{{item.name}}</view>
-        <view class='over_ellipsis2 font24 font_666 margin_b30'>{{item.process}}
+        <view class='over_ellipsis font24 font_666 margin_b30'>{{item.process}}
         </view>
         <view class='acvitity_img'>
           <view class='float_l margin_r25'>
@@ -93,19 +96,24 @@
 <view class='photo_album bg_fff' wx:if="{{dataJson.type!=2&&groupList.length>0}}">
   <view class='navTitle'>
     <view class='float_l'>粉小组</view>
-    <view class='float_r' wx:if="{{groupList.length>10}}" bindtap="fansSearch">
+    <view class='float_r' wx:if="{{groupList.length>=6}}" bindtap="fansSearch">
       更多粉小组
       <image src='../images/fentaundui_gengduo_jiantou@2x.png'></image>
     </view>
   </view>
   <view class='content'>
     <scroll-view scroll-x class='scroll-view_H'>
-      <view class='list team' wx:for="{{groupList}}" wx:key="index" wx:if="{{index<=9}}" data-type="2" data-detailId="{{item.detailId}}" bindtap='skipDetail' data-id="1">
+      <view class='list team' wx:for="{{groupList}}" wx:key="index" wx:if="{{index<=5}}" data-type="2" data-detailId="{{item.detailId}}" bindtap='skipDetail' data-id="1">
         <image src='{{item.detailPic}}'></image>
         <view class='over_ellipsis font28 font_333 margin_b15'>{{item.detailName}}</view>
         <view class='over_ellipsis font24 font_999'>{{groupList[index].personList.length}}人参与</view>
-        <text wx:if="{{item.isjoin==1}}">已加入</text>
+        <text wx:if="{{item.isJoin==1}}">已加入</text>
       </view>
     </scroll-view>
   </view>
+</view>
+
+<view class='empty' wx:if="{{dataJson.type==2&&activityList.length==0&&albumList.length==0}}">
+  <image  src='../images/yundian_fentuandui_zhanweitu@2x.png'></image>
+  <view>暂无数据哦~~~</view>`
 </view>

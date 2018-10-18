@@ -37,12 +37,16 @@ Page({
     app.util.reqAsync('fans/getFansTeam', this.data.dataJson).then((res) => {
       wx.hideLoading();
       if (res.data.code == 1) {
+        var Data=res.data.data;
+        for (var i in Data.activityList){
+          Data.activityList[i].process = Data.activityList[i].process.replace(/<(?!img).*?>/g, "").replace(/style=\"(.*)\"/gi,"");
+        }
         this.setData({
-          activityList: res.data.data.activityList,
-          albumList: res.data.data.albumList,
-          groupList: res.data.data.groupList,
-          fansTeam: res.data.data.fansTeam,
-          fansTeamId: res.data.data.fansTeam.fansTeamId//方便更多活动的id获取
+          activityList: Data.activityList,
+          albumList: Data.albumList,
+          groupList: Data.groupList,
+          fansTeam: Data.fansTeam,
+          fansTeamId: Data.fansTeam.fansTeamId//方便更多活动的id获取
         })
       }
     }).catch((err) => {

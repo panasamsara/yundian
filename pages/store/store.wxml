@@ -40,14 +40,12 @@
   <!-- 智经营 -->
   <view class="storeBody {{active == 'manage'?'show':'hidden'}}" id='storeManage'>
     <view id='dynamic'>
-      <view class='title'>
+      <navigator class='title' url='../manage/manage?url=dynamic&index=0' hover-class='none'>
         <view class='titleBox'>
           <image src='images/yundain_dpzy_yddt.png' class='titleName dynamicTitle'></image>
-          <navigator url='../manage/manage?url=dynamic&index=0' hover-class='none'>
-            <image src='images/yundian_gengduohui.png' class='enter'></image>
-          </navigator>
+          <image src='images/yundian_gengduohui.png' class='enter'></image>
         </view>
-      </view>
+      </navigator>
       <view class='body'>
       <!-- 云店动态 -->
         <view class='dynamic' wx:if="{{data.resMap.length>0}}">
@@ -103,14 +101,12 @@
     </view>
     <!-- 云店头条 -->
     <view id='headline'>
-      <view class='title'>
+      <navigator class='title' url='../manage/manage?url=headline&index=1' hover-class='none'>
         <view class='titleBox'>
           <image src='images/yundain_dpzy_tdtt.png' class='titleName headlineTitle'></image>
-          <navigator url='../manage/manage?url=headline&index=1' hover-class='none'>
-            <image src='images/yundian_gengduohui.png' class='enter'></image>
-          </navigator>
+          <image src='images/yundian_gengduohui.png' class='enter'></image>
         </view>
-      </view>
+      </navigator>
       <view class='body'>
         <view class='headline' wx:if="{{data.scCmsArticle.length>0}}"> 
           <view class='headlineList'>
@@ -144,14 +140,12 @@
     </view>
     <!-- 云店玩家圈 -->
     <view id='player'>
-      <view class='title'>
+      <navigator class='title' url='../manage/manage?url=player&index=2' hover-class='none'>
         <view class='titleBox'>
           <image src='images/yundain_dpzy_wdwjq.png' class='titleName playerTitle'></image>
-          <navigator url='../manage/manage?url=player&index=2' hover-class='none'>
-            <image src='images/yundian_gengduohui.png' class='enter'></image>
-          </navigator>
+          <image src='images/yundian_gengduohui.png' class='enter'></image>
         </view>
-      </view>
+      </navigator>
       <view class='body'>
         <view class='player' wx:if="{{data.circleNew.length>0}}"> 
           <view class='playerList'>
@@ -179,14 +173,12 @@
     </view>
     <!-- 云店粉团队 -->
     <view id='fans'>
-      <view class='title'>
+      <navigator class='title' url='../manage/manage?url=fans&index=3' hover-class='none'>
         <view class='titleBox'>
           <image src='images/yundain_dpzy_ydftd.png' class='titleName fansTitle'></image>
-          <navigator url='../manage/manage?url=fans&index=3' hover-class='none'>
-            <image src='images/yundian_gengduohui.png' class='enter'></image>
-          </navigator>
+          <image src='images/yundian_gengduohui.png' class='enter'></image>
         </view>
-      </view>
+      </navigator>
       <view class='body'>
         <view class='fans' wx:if="{{data.circleFansTeam.length>0}}">
         <!--  bindtap='skipDetail' -->

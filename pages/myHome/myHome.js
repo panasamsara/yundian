@@ -15,12 +15,12 @@ Page({
         path: '../../packageMyHome/pages/shopOrder/shopOrder',
         style: "width:48rpx;height:44rpx;"
       },
-      // {
-      //   icon: '../../images/jifenduihuan.png',
-      //   text: '积分兑换',
-      //   path: '../../packageIntegral/pages/integralMall/integralMall',
-      //   style: "width:56rpx;height:46rpx;"
-      // },
+      {
+        icon: '../../images/jifenduihuan.png',
+        text: '积分兑换',
+        path: '../../packageIntegral/pages/integralMall/integralMall',
+        style: "width:56rpx;height:46rpx;"
+      },
       {
         icon: '../../images/youhuidiscount.png',
         text: '优惠券',

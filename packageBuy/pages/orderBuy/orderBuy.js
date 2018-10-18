@@ -1263,7 +1263,7 @@ Page({
                   })
 
                   wx.switchTab({
-                    url: '../shoppingCart/shoppingCart'
+                    url: '../../../pages/shoppingCart/shoppingCart'
                   });
 
                 }

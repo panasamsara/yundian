@@ -1,14 +1,14 @@
 <!--packageIntegral/pages/orderdetail/orderdetail.wxml-->
 <view class='container' id='orderdetail'>
   <text class='title' wx:if="{{orderInfo.orderStatusVo==2&&orderInfo.deliveryType==0}}">等待发货</text>
-  <text class='title' wx:if="{{orderInfo.orderStatusVo==3||orderInfo.deliveryType==2}}">等待收货</text>
+  <text class='title' wx:if="{{orderInfo.orderStatusVo==3}}">等待收货</text>
   <text class='title' wx:if="{{orderInfo.orderStatusVo==4}}">等待评价</text>
   <text class='title' wx:if="{{orderInfo.orderStatusVo==10}}">已评论</text>
-  <text></text>
+  <text class='title' wx:if="{{orderInfo.orderStatusVo==2&&orderInfo.deliveryType==2}}">等待取货</text>
   <image src='images/bgmall.png' id='bgimg'></image>
   <view id='orderInfo'>
     <view id='orderInfoBox'>
-      <view id='deliveryBox' wx:if="{{(orderInfo.orderStatusVo==3||orderInfo.orderStatusVo==4||orderInfo.orderStatusVo==10)&&deliveryType==0}}">
+      <view id='deliveryBox' wx:if="{{(orderInfo.orderStatusVo==3||orderInfo.orderStatusVo==4||orderInfo.orderStatusVo==10)&&orderInfo.deliveryType==0}}">
         <view id='company'>
           <image src='images/express.png' id='deliveryIcon'></image>
           <text>快递公司： {{data.orderInfo.extend1}}</text>
@@ -25,17 +25,16 @@
       </view>
     </view> 
     <view id='timeBox'>
-      <text class='titles' wx:if="{{orderInfo.orderStatusVo==3||orderInfo.deliveryType==2}}">待收货</text>
+      <text class='titles' wx:if="{{orderInfo.orderStatusVo==3}}">待收货</text>
       <text class='titles' wx:if="{{orderInfo.orderStatusVo==2&&orderInfo.deliveryType==0}}">待发货</text>
       <text class='titles' wx:if="{{orderInfo.orderStatusVo==4}}">待评价</text>
       <text class='titles' wx:if="{{orderInfo.orderStatusVo==10}}">已评论</text>
+      <text class='titles' wx:if="{{orderInfo.orderStatusVo==2&&orderInfo.deliveryType==2}}">待取货</text>
       <view id='order'>订单编号：<text>{{data.orderInfo.orderNo}}</text></view>
       <view id='time'>下单时间：<text>{{data.orderInfo.createTime}}</text></view>
     </view>
-    <view id='codeBox'>
-      <view id='code'>
-        <canvas id='codeCanvas' canvas-id='codeCanvas'></canvas>
-      </view>
+    <view id='codeBox' wx:if="{{orderInfo.orderStatusVo==2}}">
+      <canvas id='codeCanvas' canvas-id='codeCanvas'></canvas>
       <text id='serialNumber'>序列号: {{orderInfo.serialNumber}}</text>
       <text id='tip'>请到店兑换此码</text>
     </view>
@@ -61,7 +60,7 @@
     </view>
     <view id='checkBox'>
       <view class='check' bindtap='remind' wx:if="{{orderInfo.orderStatusVo==2&&orderInfo.deliveryType==0}}">提醒发货</view>
-      <view class='check' bindtap='check' wx:if="{{orderInfo.orderStatusVo==3||orderInfo.deliveryType==2}}">确认收货</view>
+      <view class='check' bindtap='check' wx:if="{{orderInfo.orderStatusVo==3}}">确认收货</view>
     </view>
   </view>
 </view>

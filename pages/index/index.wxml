@@ -157,9 +157,7 @@
     <!-- 智享秒杀 -->
     <view class='sec-kill-box' wx-if="{{list.length>=1}}"> 
       <view class='sec-kill-top'>
-        <view class='sec-kill-title-img'>
-          <image src='../../images/yundian_zhixiangmiaosha@2x.png'></image>
-        </view>
+        <view class='sec-kill-title-img'>秒杀</view>
         <view class='sec-kill-more' bindtap='goSecKill'>
           更多 <image class='more-icon' src='../../images/yundian_gengduohui@2x.png'></image>
         </view>
@@ -185,9 +183,7 @@
     <!-- 趣拼团 -->
     <view class='sec-kill-box' wx-if="{{groupBuyList.length>=1}}"> 
       <view class='sec-kill-top'>
-        <view class='group-buy-title-img'>
-          <image src='../../images/yundian_qupintuan@2x.png'></image>
-        </view>
+        <view class='group-buy-title-img'>拼团</view>
         <view class='sec-kill-more' bindtap='goGroupBuy'>
           更多 <image class='more-icon' src='../../images/yundian_gengduohui@2x.png'></image>
         </view>

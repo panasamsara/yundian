@@ -99,7 +99,8 @@ Page({
             let couponType = resJson.couponType
             let couponLogId = resJson.couponLogId
             let couponId = resJson.couponId
-            let lessonId = resJson.lessonId
+            let courseId = resJson.courseId
+            let shareFrom = resJson.shareFrom
             this.setData({
               shopId: resJson.shopId,
               activeType: resJson.activeType || 0,
@@ -109,10 +110,11 @@ Page({
               signType: resJson.signType || 0,
               shareType: resJson.shareType || 0,
               share: resJson.share || 0,
-              couponType: resJson.couponType || 0,
+              couponType: resJson.couponType || '',
               couponLogId: resJson.couponLogId || 0,
               couponId: resJson.couponId || 0,
-              lessonId: resJson.lessonId || 0,
+              courseId: resJson.courseId || 0,
+              shareFrom: resJson.shareFrom || ''
             })
 
             let paramData = {
@@ -138,7 +140,7 @@ Page({
                 url: "../goodsDetial/goodsDetial?shopId=" + _this.data.shopId + '&goodsId=' + _this.data.goodsId
               })
             } else if (shareType == 6) { //活动
-              if (_this.data.activeType == 0) { //普通
+              if (_this.data.shareFrom == 'activityInfo') { //普通
                 wx.redirectTo({
                   url: "../store/activityInfo/activityInfo?shopId=" + _this.data.shopId + '&goodsId=' + _this.data.goodsId + '&actionId=' + _this.data.actionId + '&signType=' + _this.data.signType,
                 })
@@ -148,12 +150,19 @@ Page({
                 })
               }
             } else if (shareType == 7) { //新人礼包 优惠券
-              wx.redirectTo({
-                url: "../myHome/discounts/discountDetail/discountDetail?shopId=" + _this.data.shopId + '&share=' + _this.data.share + '&couponType=' + _this.data.couponType + '&couponLogId=' + _this.data.couponLogId + '&id=' + _this.data.couponId,
-              })
+              if (couponType == '06'){
+                wx.redirectTo({
+                  url: "../myHome/discounts/discountDetail/discountDetail?shopId=" + _this.data.shopId + '&share=' + _this.data.share + '&couponType=' + _this.data.couponType + '&couponLogId=' + _this.data.couponLogId + '&id=' + _this.data.couponId,
+                })
+              }else{
+                wx.redirectTo({
+                  url: "../../packageMyHome/pages/discountCenter/discountCenter?shopId=" + _this.data.shopId + '&share=' + _this.data.share + '&couponType=' + _this.data.couponType + '&couponLogId=' + _this.data.couponLogId + '&id=' + _this.data.couponId,
+                })
+              }
+              
             } else if (shareType == 8) { //云店课堂
               wx.redirectTo({
-                url: "../../packageIndex/pages/lessonDetail/lessonDetail?id=" + _this.data.lessonId ,
+                url: "../../packageIndex/pages/lessonDetail/lessonDetail?id=" + _this.data.courseId ,
               })
             }
 
@@ -240,7 +249,7 @@ Page({
         let share = resJson.share
         let couponType = resJson.couponType
         let couponLogId = resJson.couponLogId
-        let lessonId = resJson.lessonId
+        let courseId = resJson.courseId
         this.setData({
           activeType: resJson.activeType,
           shopId: resJson.shopId,
@@ -252,7 +261,7 @@ Page({
           share: resJson.share || 0,
           couponType: resJson.couponType || 0,
           couponLogId: resJson.couponLogId || 0,
-          lessonId: resJson.lessonId || 0,
+          courseId: resJson.courseId || 0,
         })
 
         let paramData = {
@@ -278,7 +287,7 @@ Page({
             url: "../goodsDetial/goodsDetial?shopId=" + _this.data.shopId + '&goodsId=' + _this.data.goodsId
           })
         } else if (shareType == 6) { //活动
-          if (_this.data.activeType == 0) { //普通
+          if (_this.data.shareFrom == 'activityInfo') { //普通
             wx.redirectTo({
               url: "../store/activityInfo/activityInfo?shopId=" + _this.data.shopId + '&goodsId=' + _this.data.goodsId + '&actionId=' + _this.data.actionId + '&signType=' + _this.data.signType,
             })
@@ -293,7 +302,7 @@ Page({
           })
         } else if (shareType == 8) { //云店课堂
           wx.redirectTo({
-            url: "../../packageIndex/pages/lessonDetail/lessonDetail?id=" + _this.data.lessonId,
+            url: "../../packageIndex/pages/lessonDetail/lessonDetail?id=" + _this.data.courseId,
           })
         }
 
@@ -319,92 +328,7 @@ Page({
         url: "../../packageIntegral/pages/goodsdetail/goodsdetail?shopId=" + _this.data.shopId + '&goodsId=' + _this.data.goodsId
       })
     }*/
-    if (options && options.q) { /** 扫二维码 */
-      var uri = decodeURIComponent(options.q)
-      var p = app.util.getParams(uri)
-      let activeType = p.activeType
-      let shopId = p.shopId
-      let goodsId = p.goodsId
-      let actionId = p.actionId
-      let signType = p.signType
-      let routeTo = p.routeTo
-      this.setData({
-        activeType: p.activeType,
-        shopId: p.shopId,
-        goodsId: p.goodsId,
-        actionId: p.actionId,
-        signType: p.signType,
-        routeTo: p.routeTo
-      })
 
-      /** 参数 ：
-       *  
-       *  routeTo:
-       *  0 活动 海报 {
-       *    activeType： 0-普通活动 / 非0-九大活动
-       *  }
-       *  1 商品
-       *  2 积分
-       *  
-       */
-      if (_this.data.routeTo == 0) {
-        if (_this.data.activeType == 0) {
-          wx.redirectTo({
-            url: "../store/activityInfo/activityInfo?shopId=" + _this.data.shopId + '&goodsId=' + _this.data.goodsId + '&actionId=' + _this.data.actionId + '&signType=' + _this.data.signType,
-          })
-        } else {
-          wx.redirectTo({
-            url: "../store/posterActivity/posterActivity?shopId=" + _this.data.shopId + '&goodsId=' + _this.data.goodsId + '&actionId=' + _this.data.actionId + '&signType=' + _this.data.signType,
-          })
-        }
-      } else if (_this.data.routeTo == 1) {
-        wx.redirectTo({
-          url: "../goodsDetial/goodsDetial?shopId=" + _this.data.shopId + '&goodsId=' + _this.data.goodsId
-        })
-      } else if (_this.data.routeTo == 2) {
-        wx.redirectTo({
-          url: "../../packageIntegral/pages/goodsdetail/goodsdetail?shopId=" + _this.data.shopId + '&goodsId=' + _this.data.goodsId
-        })
-      }
-
-    } else if (options.scene) { /** 扫小程序码 */
-      app.util.reqAsync('payBoot/wx/acode/params', {
-        scene: options.scene,
-      }).then((res) => {
-        console.log(JSON.parse(res.data.data))
-        let resJson = JSON.parse(res.data.data)
-        let activeType = resJson.activeType
-        let shopId = resJson.shopId
-        let goodsId = resJson.goodsId
-        let actionId = resJson.actionId
-        let signType = resJson.signType
-        let shareType = resJson.shareType
-        this.setData({
-          activeType: resJson.activeType,
-          shopId: resJson.shopId,
-          goodsId: resJson.goodsId,
-          actionId: resJson.actionId,
-          signType: resJson.signType,
-          shareType: resJson.shareType
-        })
-        if (shareType <= 3) {
-          wx.redirectTo({
-            url: "../goodsDetial/goodsDetial?shopId=" + shopId + '&goodsId=' + goodsId
-          })
-        } else if (shareType == 4) {
-
-        } else if (shareType == 5) {
-
-        } else if (shareType == 6) {
-
-        } else if (shareType == 7) {
-
-        } else if (shareType == 8) {
-
-        }
-
-      })
-    }
   },
 
   /**

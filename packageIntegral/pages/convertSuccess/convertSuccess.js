@@ -31,6 +31,7 @@ Page({
     this.setData({
       [dataJsonshopId]: shopId,
       [dataJsonmerchantId]: merchantId,
+      shopId: shopId
     })
     this.getList();
   },
@@ -97,7 +98,7 @@ Page({
     console.log(goodsId);
     console.log(goodsType);
     wx.navigateTo({
-      url: '../goodsdetail/goodsdetail?goodsId=' + goodsId + "&goodsType=" + goodsType
+      url: '../goodsdetail/goodsdetail?goodsId=' + goodsId + "&goodsType=" + goodsType + "&shopId=" + this.data.shopId
     })
   },
   exchange: function (e) {

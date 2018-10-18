@@ -134,15 +134,15 @@ Page({
     });
   },
   buyOrder: function (e) { //结算支付
-    if (this.data.isMember == 0){
-      if (this.data.actualPay == 0 || this.data.actualPay == '0.00' || this.data.actualPay == 0.00 || this.data.actualPay == '0'){
+    if (this.data.isMember == 0) {
+      if (this.data.actualPay == 0 || this.data.actualPay == '0.00' || this.data.actualPay == 0.00 || this.data.actualPay == '0') {
         wx.showToast({
           title: "支付金额必须大于0",
           icon: 'none'
         })
         return false
       }
-    }else{
+    } else {
       if (this.data.newPrice == 0 || this.data.newPrice == '0.00' || this.data.newPrice == 0.00 || this.data.newPrice == '0') {
         wx.showToast({
           title: "支付金额必须大于0",
@@ -151,7 +151,6 @@ Page({
         return false
       }
     }
-
     console.log(this.data.scPresaleInfoList)
     var code = this.data.presaleId;//订单编号
     var name = this.data.scPresaleInfoList[0].purchaseName;//商品名
@@ -165,18 +164,25 @@ Page({
         shadeIfshow: false,
         ispayCard: false,
         limitBalance: supportLimitBalance   // 0不限方式消费 1仅限会员卡余额消费 
+        
       })
+      
     } else { //非会员
       this.bindTestCreateOrder(code, name, this.data.sumPrice, shopid);
     }
   },
   memberWecheat: function (){
-   
-     
-        var orderPay = this.data.newPrice;
-     
-   
+    var _this = this
+    console.log(_this)
+    var orderPay = this.data.newPrice;
     console.log(orderPay)
+    // debugger;
+    // if (this.data.limitBalance) {
+    //     var orderPay = this.data.newPrice;
+    // } else {
+    //     var orderPay = this.data.sumPrice;
+    //     console.log(orderPay)
+    // }
     //用会员的时候选择微信支付
     app.util.reqAsync('foodBoot/wechat/verification', {
       "shopId": this.data.shopId, //店铺id
@@ -211,12 +217,12 @@ Page({
       }
     };
     //发起网络请求 微信统一下单   
-     util.reqAsync('payBoot/wx/pay/food/unifiedOrderInSpMode', data).then((res) => {
-
+    util.reqAsync('payBoot/wx/pay/food/unifiedOrderInSpMode', data).then((res) => {
       console.log(res);
   
+
       if (res.data.code == 1) {
-        //获取预支付信息
+        //获取预支付信息popbgppbgh//
         var wxResult = res.data.data.wxResult;
         var prepayInfo = res.data.data.prepayInfo;
         //预支付参数
@@ -249,15 +255,12 @@ Page({
             console.log("支付成功")
 
             // 支付成功 发socket消息
-            if (wx.getStorageSync('multiOrderSwitch') == 1){
-              wx.sendSocketMessage({
-                data: code + ',over'
-              })
-            }
-            
+            wx.sendSocketMessage({
+              data: code + ',over'
+            })
             that.setData({
               flagOrder: false,
-              shadeIfshow: false
+              shadeIfshow: true
             })
             that.closePaycard();
             that.getInfo()
@@ -265,12 +268,12 @@ Page({
           },
           'fail': function (res) {
             // 支付成功 发socket消息
-            if (wx.getStorageSync('multiOrderSwitch') == 1){
-              wx.sendSocketMessage({
-                data: code + ',over'
-              })
-            }
-            
+            wx.sendSocketMessage({
+              data: code + ',over'
+            })
+            that.setData({
+              shadeIfshow: true
+            })
             that.getInfo()
           },
           'complete': function (res) {
@@ -903,12 +906,9 @@ Page({
               payway: "会员卡",
               paywayshow: true
             })
-            if (wx.getStorageSync('multiOrderSwitch') == 1){
-              wx.sendSocketMessage({
-                data: _this.data.presaleId + ',over'
-              })
-            }
-            
+            wx.sendSocketMessage({
+              data: _this.data.presaleId + ',over'
+            })
            // this.getusercard();
             
           } else {

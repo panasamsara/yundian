@@ -272,16 +272,6 @@ Page({
             sourcePart: 1
           }
         }
-    if(this.data.status==1){//拼团
-      params['shareType']=3;
-    }else if(this.data.status==2){//秒杀
-      params['shareType'] = 2;
-    }else{
-      params['shareType'] = 1;
-    }
-    if(!this.data.codeUrl){
-      saveImg.getCode(_this,params);
-    }
     wx.showLoading({
       title: '加载中'
     })
@@ -395,6 +385,16 @@ Page({
           data: data,
           info: data.descContent
         })
+      }
+      if (this.data.status == 1) {//拼团
+        params.params['shareType'] = 3;
+      } else if (this.data.status == 2) {//秒杀
+        params.params['shareType'] = 2;
+      } else {
+        params.params['shareType'] = 1;
+      }
+      if (!this.data.codeUrl) {
+        saveImg.getCode(_this, params);
       }
       wx.hideLoading();
       if (wx.getStorageSync('shop')) {
@@ -1183,7 +1183,7 @@ Page({
 
   },
   drawPicSeckill: function () {//绘制秒杀页面
-    let scale = this.data.scale,
+    let scale = this.data.scale*2,
       context = wx.createCanvasContext('seckill'),
       _this = this;
     context.setFillStyle('#ffffff');
@@ -1192,7 +1192,7 @@ Page({
     context.drawImage(_this.data.proPic, 16 * scale, 18 * scale, 90 * scale, 90 * scale)//绘制商品图片
     context.setFontSize(15 * scale);
     context.setFillStyle('#e73130');
-    context.fillText('￥', 122 * scale, 45 * scale)
+    context.fillText('￥', 122 * scale, 45 * scale);
     context.setFontSize(22 * scale);
     context.fillText(this.data.listData[0].goodsPreferentialStockPrice, 135 * scale, 45 * scale);//绘制现价
     context.setFontSize(14 * scale);
@@ -1201,7 +1201,7 @@ Page({
     let w = context.measureText('￥' + this.data.listData[0].goodsOriginalStockPrice)
     context.beginPath();
     context.moveTo(122 * scale, 63 * scale);       //设置起点状态
-    context.lineTo((w.width + 122) * scale, 63 * scale);       //设置末端状态
+    context.lineTo((w.width/2 + 125) * scale, 63 * scale);       //设置末端状态
     context.setLineWidth(1);          //设置线宽状态
     context.setStrokeStyle('#9b9b9b') //设置线的颜色状态
     context.stroke();
@@ -1209,7 +1209,7 @@ Page({
     context.setFillStyle('#9b9b9b');
     context.fill();
     let w1 = context.measureText(this.data.data.payCount + '人秒杀成功');
-    context.drawImage('images/zhuanfa_kuang@2x.png', 122 * scale, 90 * scale, (w1.width) * scale, 20 * scale);
+    context.drawImage('images/zhuanfa_kuang@2x.png', 122 * scale, 90 * scale, (w1.width)/2 * scale, 20 * scale);
     context.setFontSize(12 * scale);
     context.setFillStyle('#ffffff');
     context.fillText(this.data.data.payCount + '人秒杀成功', 126 * scale, 105 * scale);
@@ -1217,10 +1217,10 @@ Page({
       wx.canvasToTempFilePath({//绘制完成执行保存回调
         x: 0,
         y: 0,
-        width: 480,
-        height: 380,
-        destWidth: 480,
-        destHeight: 380,
+        width: 960,
+        height: 760,
+        destWidth: 960,
+        destHeight: 760,
         fileType: 'jpg',
         canvasId: 'seckill',
         success: function (res) {
@@ -1234,17 +1234,17 @@ Page({
     )
   },
   drawPicGroup: function () {//绘制拼团页面
-    let scale = this.data.scale,
+    let scale = this.data.scale*2,
       context = wx.createCanvasContext('groupbuy'),
       _this = this;
     context.setFillStyle('#ffffff');
     context.fillRect(0, 0, 480 * scale, 380 * scale);//绘制背景色
     context.drawImage(_this.data.proPic, 0, 0, 240 * scale, 140 * scale);//绘制背景图
-    let w = context.measureText(this.data.groupBuyingNum + '人正在参与拼团');
-    context.drawImage('images/zhuanfa_pt_bg@2x.png', 26 * scale, 13 * scale, (w.width + 12) * scale, 26 * scale);//绘制店铺右侧店铺图片
+    let w = context.measureText(Math.floor(Math.random() * 199 + 1) + '人正在参与拼团');
+    context.drawImage('images/zhuanfa_pt_bg@2x.png', 26 * scale, 13 * scale, (w.width/2 + 12) * scale, 26 * scale);//绘制店铺右侧店铺图片
     context.setFillStyle('#ffffff');
     context.setFontSize(14 * scale);
-    context.fillText(_this.data.data.groupBuyingNum + '人正在参与拼团', 40 * scale, 31 * scale);//绘制参团人数
+    context.fillText(Math.floor(Math.random() * 199 + 1) + '人正在参与拼团', 40 * scale, 31 * scale);//绘制参团人数
     context.save();
     context.beginPath();
     context.arc(26 * scale, 26 * scale, 13 * scale, 0, 2 * Math.PI);//绘制圆形头像画布
@@ -1256,13 +1256,13 @@ Page({
     context.setFillStyle('#fb191d');
     context.fillText('￥' + this.data.data.groupBuyingPrice, 13 * scale, 174 * scale);//绘制拼团价
     let w1 = context.measureText('￥' + this.data.data.groupBuyingPrice);
-    context.setFontSize(14);
+    context.setFontSize(14*scale);
     context.setFillStyle('#989898');
-    context.fillText('￥' + this.data.data.price, (w1.width + 13 + 5) * scale, 174 * scale);//绘制原价
+    context.fillText('￥' + this.data.data.price, (w1.width/2 + 13 + 5) * scale, 174 * scale);//绘制原价
     let w2 = context.measureText('￥' + this.data.data.price);
     context.beginPath();
-    context.moveTo((w1.width + 13 + 5) * scale, 168 * scale);       //设置起点状态
-    context.lineTo((w1.width + w2.width + 13 + 5) * scale, 168 * scale);       //设置末端状态
+    context.moveTo((w1.width/2 + 13 + 5) * scale, 168 * scale);       //设置起点状态
+    context.lineTo((w1.width/2 + w2.width/2 + 13 + 5 + 3) * scale, 168 * scale);       //设置末端状态
     context.setLineWidth(1);          //设置线宽状态
     context.setStrokeStyle('#989898') //设置线的颜色状态
     context.stroke();
@@ -1274,10 +1274,10 @@ Page({
       wx.canvasToTempFilePath({//绘制完成执行保存回调
         x: 0,
         y: 0,
-        width: 480,
-        height: 420,
-        destWidth: 480,
-        destHeight: 420,
+        width: 960,
+        height: 840,
+        destWidth: 960,
+        destHeight: 840,
         fileType: 'jpg',
         canvasId: 'groupbuy',
         success: function (res) {
@@ -1469,23 +1469,21 @@ Page({
     var context=wx.createCanvasContext('shareCanvas'),
         scale=this.data.scale*2,
         codeImg ="../../images/an.png",
-        info='';
-    if (this.data.data.descContent != '' && this.data.data.descContent != null){
-        info=this.data.data.descContent.replace(/<(style|script|iframe)[^>]*?>[\s\S]+?<\/\1\s*>/gi, '').replace(/<[^>]+?>/g, '').replace(/\s+/g, ' ').replace(/ /g, ' ').replace(/>/g, ' ').replace(/&nbsp;/g, '');
-    }
+        info=this.data.data.goodsName;
     context.setFillStyle('#ffffff');
     context.fillRect(0,0,690*scale,1000*scale);//设置白色背景
     context.setFontSize(20*scale);
+    context.setFillStyle('#000000');
     let w = context.measureText(shopName).width;
     context.fillText(shopName,(690-w)/4*scale,35*scale);//绘制店铺名
     context.drawImage(this.data.proPic,18*scale,55*scale,309*scale,318*scale);//绘制商品图片
     context.setFontSize(15*scale);
     context.setFillStyle('#686868');
     if (info.length > 13) {//绘制商品详情(2行)
-      context.fillText(info.substring(0, 12),18*scale,400*scale);
-      context.fillText(info.substring(13, 26) + '...',18*scale,420*scale);
+      context.fillText(info.substring(0, 12),18*scale,405*scale);
+      context.fillText(info.substring(13, 26) + '...',18*scale,425*scale);
     }else{//(1行)
-      context.fillText(info,18*scale,400*scale);
+      context.fillText(info,18*scale,405*scale);
     }
     context.setFillStyle('#ff0200');
     context.fillText('￥',18*scale,480*scale);

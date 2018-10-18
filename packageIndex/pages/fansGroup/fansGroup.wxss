@@ -250,3 +250,14 @@ page{
   margin-top: 30rpx;
   display: inline-block;
 }
+.empty image{
+  width: 320rpx;
+  height: 236rpx;
+  margin: 160rpx auto 10rpx;
+  display: block;
+}
+.empty view{
+  text-align:center;
+  font-size:28rpx;
+  color:#999;
+}

@@ -331,3 +331,8 @@ canvas#discountCanvas{
 .marginTop216{
   margin-top: 216rpx;
 }
+
+#shareCanvasNew{
+  position: fixed;
+  top: 99999rpx;
+}

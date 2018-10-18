@@ -7,7 +7,6 @@ Page({
    */
   data: {
     tabs: [false, false],
-    conditions: [[{ name: '全部' }, { name: '免费', isfree: 0 }, { name: '收费', isfree: 1 }], [{ name: '全部'}]],
     selected: [0, 0],
     arr: [],
     total: 0,
@@ -20,9 +19,10 @@ Page({
     let params = {
       pageNo: parseInt(arr_.length / 10) + 1,
       pageSize: 10,
+      shopId: this.data.shopId
     }
     if (this.data.flagtype==0){
-      params.isfree = this.data.isfree;
+      params.isfree = this.data.free;
     } else if (this.data.flagtype == 1){
       params.themeId = this.data.id;
     }
@@ -45,11 +45,17 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    var shopId=wx.getStorageSync("shop").id;
+    this.setData({
+      shopId: shopId
+    })
     if (options.free) {
       this.setData({
         free: options.free,
         flagtype:0
       })
+      console.log(1111);
+      console.log(this.data.free);
     } else if (options.id) {
       this.setData({
         id: options.id,

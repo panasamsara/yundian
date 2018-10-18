@@ -58,6 +58,7 @@
         "pages/memberSearch/memberSearch",
         "pages/appointmentNew/appointmentNew",
         "pages/timePicker/timePicker",
+        "pages/lessonMore/lessonMore",
         "pages/appointmentNew/service/service"
       ]
     },
@@ -69,7 +70,8 @@
         "pages/endDetails/endDetails",
         "pages/goods/goods",
         "pages/shopOrder/shopOrder",
-        "pages/selectNO/selectNO"
+        "pages/selectNO/selectNO",
+        "pages/peopleNumber/peopleNumber"
       ]
     },
     {

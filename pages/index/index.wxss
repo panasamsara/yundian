@@ -524,8 +524,11 @@ putInCart-img{
   display: inline-block;
   width: 98rpx;
   height: 38rpx;
-  margin-top: 6rpx;
-
+  margin-top:4rpx;
+  margin-left:28rpx;
+  color:#ff5c46;
+  font-weight: bold;
+  font-style: italic;
 }
 .sec-kill-title-img image{
   width: 100%;
@@ -536,7 +539,11 @@ putInCart-img{
   display: inline-block;
   width: 90rpx;
   height: 40rpx;
-  margin-top:6rpx;
+  margin-top:4rpx;
+  margin-left:28rpx;
+  color:#ff5c46;
+  font-weight: bold;
+  font-style: italic;
 }
 .group-buy-title-img image{
   width: 100%;

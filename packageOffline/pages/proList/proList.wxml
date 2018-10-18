@@ -1,7 +1,7 @@
 <!--orderdetail.wxml-->
 <view class="">
 
-  <view class="goods" style="height: {{goodsH}}rpx;">
+  <view class="goods" style="height: {{goodsH}}px;">
     <!--左侧产品列表-->
     <view class="menu-wrapper" style="height: {{goodsHs}}px;">
     <scroll-view scroll-y style="height: {{goodsH}}px;"  scroll-with-animation="{{animation}}">
@@ -18,7 +18,7 @@
         <view class='go-buy-btn' bindtap='goOfflineOrderDetail'>买单</view>
       </view>
     </view>
-    <view wx:if="{{ifstore==0}}" class="foods-wrapper {{showMaiDan ? 'm-t-100' : ''}}" style="height: {{showMaiDan ? goodsHL-50 : goodsHL-50}}px;">
+    <view wx:if="{{ifstore==0}}" class="foods-wrapper {{showMaiDan ? 'm-t-100' : ''}}" style="height: {{showMaiDan ? goodsHL : goodsHL}}px;">
       <scroll-view scroll-y style="height: 100%;" scroll-into-view="{{toView}}">
       <view  class="food-grouping" id="catGood_{{item.id}}">
         <view wx:for="{{goodsInCategory}}" wx:for-item="good" wx:key='index' class="foods-item" data-id="{{good.id}}" data-status='{{good.goodsType}}' data-stocklist="{{good.stockList.length}}" bindtap='goToDetail'>
@@ -41,7 +41,7 @@
     </view>
 
     <!-- 右侧 留店商品列表 -->
-    <view wx:elif="{{ifstore==1}}" class="foods-wrapper {{showMaiDan ? 'm-t-100' : ''}}" style="height: {{showMaiDan ? goodsHL-50 : goodsHL-50}}px;">
+    <view wx:elif="{{ifstore==1}}" class="foods-wrapper {{showMaiDan ? 'm-t-100' : ''}}" style="height: {{showMaiDan ? goodsHL : goodsHL}}px;">
       <scroll-view scroll-y style="height: 100%;" >
         <view class="gift-title">留店商品</view>
         <view class="gift-list" style="height: 100%;">
@@ -206,7 +206,7 @@
 
 
 
-  <view style="height:86px;"></view>
+  <!-- <view style="height:86px;"></view> -->
 
 </view>
 <view bindtap="showShopCartFn" catchtouchmove='preventTouchMove' class="cover  {{(showShopCart && (cart_length > 0))?'':'hidden'}}"></view>
@@ -256,7 +256,7 @@
           <image src="../../../images/fenlei_hui.png"></image>
           <text class="order-txt">店铺分类</text>
         </navigator>
-        <!-- <navigator url="../shopOrder/shopOrder" hover-class="navigator-hover">
+        <!-- <navigator url="../../../pages/myHome/shopOrder/shopOrder" hover-class="navigator-hover">
           <image src="../../../images/fenlei_hui.png"></image>
           <text class="order-txt">店内订单</text>
         </navigator> -->

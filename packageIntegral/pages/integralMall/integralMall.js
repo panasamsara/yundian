@@ -26,6 +26,7 @@ Page({
   onLoad: function (options) {
     var userId = wx.getStorageSync('scSysUser').id;
     var shopId = wx.getStorageSync('shop').id;
+    console.log("shopId", shopId)
     var merchantId = wx.getStorageSync('shop').merchantId;
     var dataListshopId ='dataList.shopId';
     var dataListmerchantId ='dataList.merchantId';
@@ -39,7 +40,8 @@ Page({
       [dataJsonshopId]: shopId,
       [dataJsonmerchantId]: merchantId,
       [dataJsonuserId]: userId,
-      [userId]: userId
+      [userId]: userId,
+      shopId: shopId
     })
     this.getList();
   },
@@ -129,10 +131,11 @@ Page({
     })
   },
   goDetail:function(e){
+    var _this = this;
     var goodsId = e.currentTarget.dataset.goodsid;
     var goodsType = e.currentTarget.dataset.goodstype;
     wx.navigateTo({
-      url: '../goodsdetail/goodsdetail?goodsId=' + goodsId + "&goodsType=" + goodsType + '&shopId=' + this.data.shopId
+      url: '../goodsdetail/goodsdetail?goodsId=' + goodsId + "&goodsType=" + goodsType + '&shopId=' + _this.data.shopId
     })
   },
   onHide: function () {

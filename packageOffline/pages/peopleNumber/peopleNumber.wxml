@@ -1,0 +1,33 @@
+<view class="head">
+  <image src="img/jcrs_banner_bg@2x.png" class="banner"></image>
+  <view class="imoe">
+    <image src='{{imageed}}'></image>
+  </view>
+  <view class="naoe">{{shop.shopName}}</view>
+</view> 
+<view class='order'>
+  <text class="number">选择就餐人数</text>
+  <view class='options'>
+    <view class="bright789_view_hide{{showView?'bright789_view_show':''}}">
+      <view class="ions" wx:for="{{list}}" wx:key="list">
+        <view class="{{index==idx?'_left':'left'}}" bindtap='goIndex' data-index="{{index}}">{{item.num}}</view>
+      </view>
+    </view>
+    <view class='ions'bindtap="onChangeShowState" wx:if="{{ongkd}}">...</view>
+  </view>
+  <button class="confirm" bindtap='confirmd'>确定</button>
+</view>
+<view class="prompt" wx:if="{{prompt}}">
+  <view class="pron-bj"></view>
+  <view class="pron-ts">
+    <image src="img/pic@2x.png"></image>
+    <text class="table">此桌已开台</text>
+    <text class="table1">您确定要进入当前桌台吗？</text>
+    <view class="choose">
+      <text bindtap='choosee1'>换桌扫码</text>
+      <text bindtap='choosee2'>确定进入</text>
+    </view>
+  </view>
+</view>
+
+

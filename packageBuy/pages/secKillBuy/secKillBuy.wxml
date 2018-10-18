@@ -6,7 +6,7 @@
     <picker bindchange="bindPickerChange" data-val="{{array}}" value="{{array}}" range="{{array}}">
     <view class="picker">
       <text class="send-select">{{array[index]}}</text>
-      <image src="../../../../images/yundian_spxq_gengduo.png"></image>
+      <image src="../../../images/yundian_spxq_gengduo.png"></image>
     </view>
   </picker>
   </view>
@@ -18,7 +18,7 @@
         <text>{{userInfo.recvAddress.phone}}</text>
       </view>
       <view class="address">
-        <image src="../../../../images/address-gray.png"></image>
+        <image src="../../../images/address-gray.png"></image>
         <view class="adress-cont">
         {{ProvinceName}}-{{cityName}}-{{areaName}} {{userInfo.recvAddress.address}}
         </view>
@@ -27,12 +27,12 @@
     <view class='add-adree' wx:if="{{address==''}}" bindtap="addressSkip">
       <navigator url="" hover-class="navigator-hover">请添加收货地址</navigator>
     </view>
-    <image bindtap="addressSkip" class="right-icon" src="../../../../images/yundian_spxq_gengduo.png"></image>
+    <image bindtap="addressSkip" class="right-icon" src="../../../images/yundian_spxq_gengduo.png"></image>
   </view>
   <!--商品-->
   <view class="detail">
     <view class='detail-top'>
-      <image class="shop-icon" src="../../../../images/yundian_spxq_dianpu@2x.png"></image>
+      <image class="shop-icon" src="../../../images/yundian_spxq_dianpu@2x.png"></image>
       <text class='detail-tit'>{{shopName}}</text>
     </view>
     <view class="total-num">
@@ -87,7 +87,7 @@
   <!--下单成功-->
   <view class="modal-box order-tip" hidden="{{flagOrder}}" >
   <view class="modal-body">
-    <image class="order-success" src="../../../../images/success.png"></image>
+    <image class="order-success" src="../../../images/success.png"></image>
     <view class="modal-content">
       <text>下单成功!</text>
       <text>选择继续购物或查看此订单</text>

@@ -487,7 +487,7 @@ path: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + _this.data.i
   },
   discountDraw:function(){
     let context = wx.createCanvasContext('discountCanvas'),
-        scale=this.data.scale,
+        scale=this.data.scale*2,
         _this=this,
         shopName=_this.data.discountData.shopName,
         endTime=_this.data.discountData.endTime.split(' ')[0],
@@ -507,17 +507,17 @@ path: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + _this.data.i
     } else if (_this.data.discountData.couponType == '03'){//包邮券
       couponType='包邮券'
     }
-    context.setFontSize(25);
+    context.setFontSize(25*scale);
     context.fillText(couponType,13*scale,38*scale);//绘制券类型
     context.setFontSize(18*scale);
     context.setFillStyle('#ffffff');
     context.fillText(shopName,13*scale,68*scale);//绘制店铺名
-    context.setFontSize(12);
+    context.setFontSize(12*scale);
     context.fillText('券详情',125*scale,58*scale);
     context.save();
     context.beginPath();
     context.arc(146 * scale, 90 * scale, 25 * scale, 0, 2 * Math.PI);//绘制圆形头像画布
-    context.setFillStyle('grey')
+    context.setFillStyle('grey');
     context.fill();
     context.clip();
     context.drawImage(_this.data.discountPic,121*scale,65*scale,50*scale,50*scale);//绘制店铺头像
@@ -525,19 +525,19 @@ path: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + _this.data.i
     context.setFontSize(11*scale);
     context.setFillStyle('#726f6a');
     let w=context.measureText(shopName).width;
-    context.fillText(shopName,((280-w)/2)*scale,135*scale);//绘制店铺名
+    context.fillText(shopName,((280-w/2)/2)*scale,135*scale);//绘制店铺名
     context.fillText('有效期至:'+endTime,85*scale,185*scale);//绘制有效期
     context.setFontSize(16*scale);
     context.setFillStyle('#000000');
-    context.fillText(couponType,120*scale,160*scale);
+    context.fillText(couponType,115*scale,160*scale);
     context.draw(false,function(){
       wx.canvasToTempFilePath({//绘制完成执行保存回调
         x: 0,
         y: 0,
-        width: 480,
-        height: 400,
-        destWidth: 480,
-        destHeight: 400,
+        width: 960,
+        height: 800,
+        destWidth: 960,
+        destHeight: 800,
         fileType: 'jpg',
         canvasId: 'discountCanvas',
         success: function (res) {

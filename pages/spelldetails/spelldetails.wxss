@@ -500,3 +500,6 @@
   width: 15rpx;
   height: 28rpx;
 }
+.notBuy{
+  background-color: #bdbdbd!important;
+}

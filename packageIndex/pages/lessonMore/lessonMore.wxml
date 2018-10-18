@@ -8,9 +8,10 @@
         <text class='time'>{{item.duration}}</text>
       </view>
       <view class='text-box'>
+      
         <view class='title'>{{item.name}}</view>
         <view class='column'>专栏：<text>{{item.themeName}}</text></view>
-        <view class='teacher'>{{item.speakerName}}</view>
+        <view class='teacher'><image src='{{item.speakerImg}}'></image>{{item.speakerName}}</view>
         <view class='price {{item.showPrice == "免费" ? "free": ""}}'>{{item.showPrice}}</view>
       </view>
     </view>

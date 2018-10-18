@@ -6,43 +6,44 @@ Page({
     isMaster: false, //是否拼主 0不是1是  #int  
     groupId: '', //拼团id
     pictureUrl: '', //商品图片
-    goodsTitle:'',  //商品名称
-    discountPrice:'',//拼团价格
+    goodsTitle: '',  //商品名称
+    discountPrice: '',//拼团价格
     descTitle: '',  //商品描述
-    endTime:'',     //结束时间
+    endTime: '',     //结束时间
     timeStatus: '', //拼团状态 0进行中 1成团 2过期失败#int
-    lackUser: '' , //成团缺少人数#int
+    lackUser: '', //成团缺少人数#int
     moreGroupList: [], //推荐更多拼团商品list
-    groupOrderList:[], //已加入拼团用户list
-    groupOrderListLength:'',
-    showStock:false,
-    loading:false,
-    shopId:'',
-    goodId:'',
-    population:'', //几人团
-    spellUser:'',
-    orderStatusVo:'', //付款状态 
+    groupOrderList: [], //已加入拼团用户list
+    groupOrderListLength: '',
+    showStock: false,
+    loading: false,
+    shopId: '',
+    goodId: '',
+    population: '', //几人团
+    spellUser: '',
+    orderStatusVo: '', //付款状态 
     stockId: '', //商品是否有默认规格，默认规格 不返回 stockId
     timer: '',
-    count:'',
-    total:0,//总价
-    balance:0,
-    goodsType:0,
-    select:0,//商品规模
-    number:1,//商品数量
-    smallGroupId:'',
-    stockPrice:0,//商品单价
-    flag:false,//控制弹框渲染
-    d:'',
-    h:'',
-    m:'',
-    s:'',
-    shopData:{},//订单数据
-    shopList:[],
-    parm:{},//数据模板
-    userId:'',//当前用户ID,
-    loginType:0,
-    options:{}
+    count: '',
+    total: 0,//总价
+    balance: 0,
+    goodsType: 0,
+    select: 0,//商品规模
+    number: 1,//商品数量
+    smallGroupId: '',
+    stockPrice: 0,//商品单价
+    flag: false,//控制弹框渲染
+    d: '',
+    h: '',
+    m: '',
+    s: '',
+    shopData: {},//订单数据
+    shopList: [],
+    parm: {},//数据模板
+    userId: '',//当前用户ID,
+    loginType: 0,
+    options: {},
+    shopBtn: true
   },
   /**
   * 生命周期函数--监听页面加载
@@ -66,23 +67,26 @@ Page({
     console.log(wx.getStorageSync('scSysUser'));
   },
   //初始数据获取
-  loadFn:function(){
-    if(wx.getStorageSync('scSysUser')){
+  loadFn: function () {
+    if (wx.getStorageSync('scSysUser')) {
       this.setData({
         userId: wx.getStorageSync('scSysUser').id,
       })
     }
-   
-    if (wx.getStorageSync('scSysUser')){
+
+    if (wx.getStorageSync('scSysUser')) {
       app.util.getShop(wx.getStorageSync('scSysUser').id, this.data.shopId).then((res) => {
         // debugger
         if (res.data.code == 1) {
           wx.setStorageSync('shop', res.data.data.shopInfo)
+          this.setData({
+            shopBtn: false
+          })
         }
       })
     }
     console.log('orderStatusVo:' + this.data.orderStatusVo);
-  
+
 
     console.log('stockId:' + this.data.stockId);
     app.util.reqAsync('shop/getGroupBuyOrderDetail', {
@@ -122,9 +126,11 @@ Page({
           })
         }
       })
-    
+
       this.setData({
         groupId: data.groupId,
+        groupOrderListLength: data.saleNum,
+
         loading: true,
         pictureUrl: data.pictureUrl,
         goodsTitle: data.goodsTitle,
@@ -139,15 +145,15 @@ Page({
       })
       if (wx.getStorageSync('scSysUser')) {
 
-      this.getData({
-        shopId: this.data.shopId,
-        goodsId: this.data.goodId,
-        customerId: wx.getStorageSync('scSysUser').id
-      })
+        this.getData({
+          shopId: this.data.shopId,
+          goodsId: this.data.goodId,
+          customerId: wx.getStorageSync('scSysUser').id
+        })
       }
-      
 
-     
+
+
     })
     let _this = this
     clearInterval(_this.data.timer)
@@ -161,7 +167,7 @@ Page({
     console.log(this.data.options)
     // debugger
     // if (wx.getStorageSync('scSysUser')){
-      this.loadFn()      
+    this.loadFn()
     // }
     console.log({
       shopId: this.data.shopId,
@@ -176,9 +182,9 @@ Page({
         //     loginType: 2
         //   })
         // } else if (wx.getStorageSync('isAuth') == 'yes') {
-          this.setData({
-            loginType: 1
-          })
+        this.setData({
+          loginType: 1
+        })
         // }
       }
     })
@@ -194,6 +200,9 @@ Page({
         // debugger
         if (res.data.code == 1) {
           wx.setStorageSync('shop', res.data.data.shopInfo)
+          this.setData({
+            shopBtn: false
+          })
         }
       })
       var parms = {
@@ -204,7 +213,7 @@ Page({
       this.setData({
         parm: parms,
         userId: wx.getStorageSync('scSysUser').id,
-        
+
       })
       // console.loh
       this.getData(this.data.parm)
@@ -221,24 +230,24 @@ Page({
 
     // }
   },
-  showRule:function(){
+  showRule: function () {
     this.setData({
       showStock: true
     });
   },
-  closeMask:function(){
+  closeMask: function () {
     this.setData({
       showStock: false
     });
   },
   //获取订单数据
-  getData: function (parm){
+  getData: function (parm) {
     this.setData({
       number: 1,
       select: 0,
-      total:0,
-      stockPrice:0,
-      balance:0
+      total: 0,
+      stockPrice: 0,
+      balance: 0
     })
     app.util.reqAsync('shop/goodsDetailAddGroupBuying', parm).then((res) => {//获取商品详情数据
       if (res.data.data) {
@@ -248,28 +257,27 @@ Page({
         // })
         this.setData({
           goodsType: res.data.data.goodsType,
-            groupOrderListLength: res.data.data.groupBuyingAllNum
-          
+
         })
-        if (this.data.goodsType){
+        if (this.data.goodsType) {
           this.setData({
             balance: res.data.data.stockBalance,
-            
+
 
           })
-          
-        }else{
+
+        } else {
           this.setData({
             balance: res.data.data.scShopGoodsStockList ? res.data.data.scShopGoodsStockList[0].stockNum : 0,
           })
         }
-        this.setData({  
+        this.setData({
           shopData: res.data.data,
           shopList: res.data.data.scShopGoodsStockList,
-          stockPrice: res.data.data.scShopGoodsStockList ?res.data.data.scShopGoodsStockList[0].stockBatchPrice:0,
-          total: res.data.data.scShopGoodsStockList ? (res.data.data.scShopGoodsStockList[0].stockBatchPrice * this.data.number).toFixed(2) : 0      
+          stockPrice: res.data.data.scShopGoodsStockList ? res.data.data.scShopGoodsStockList[0].stockBatchPrice : 0,
+          total: res.data.data.scShopGoodsStockList ? (res.data.data.scShopGoodsStockList[0].stockBatchPrice * this.data.number).toFixed(2) : 0
         })
-    
+
       }
       // wx.hideLoading();
       let _this = this
@@ -330,7 +338,7 @@ Page({
       number += 1;
       num = 1;
       // if (this.data.status == 1 && this.data.spellingType == 0 && (this.data.data.limitNum > 0 && number > this.data.data.limitNum)) {//拼团限购数量
-      if (number > this.data.shopData.scShopGoodsStockList[this.data.select].stockNum){
+      if (number > this.data.shopData.scShopGoodsStockList[this.data.select].stockNum) {
         wx.showToast({
           title: '已超过最大购买数量',
           icon: 'none'
@@ -376,10 +384,10 @@ Page({
     // }
   },
   //下单
-  buyNow:function(){
+  buyNow: function () {
     let urls = '../../../../../packageBuy/pages/secKillBuy/secKillBuy?realMoney=' + this.data.total + '&goodsId=' + this.data.shopData.scShopGoodsStockList[0].goodsId + '&goodsPrice=' + this.data.stockPrice + '&goodsType=' + this.data.shopData.goodsType + '&remake=' + this.data.shopData.scShopGoodsStockList[this.data.select].stockName + '&stockId=' + this.data.shopData.scShopGoodsStockList[this.data.select].id + '&goodsName=' + this.data.shopData.goodsName + '&stockName=' + this.data.shopData.scShopGoodsStockList[this.data.select].stockName + '&goodsNum=' + this.data.number + '&pictureUrl=' + this.data.shopData.pictureUrl + '&deliveryCalcContent=' + this.data.shopData.deliveryCalcContent + '&isSeckill=' + 0 + '&groupId=' + this.data.shopData.isGroupBuying + '&limitNum=' + this.data.shopData.limitNum + '&SmallGroupId=' + this.data.smallGroupId + "&spellingType=" + 1 + "&shopId=" + this.data.shopData.shopId;
     console.log(urls)
-    console.log(this.data.smallGroupId+'===============')
+    console.log(this.data.smallGroupId + '===============')
     wx.navigateTo({
       url: urls,
     })
@@ -401,7 +409,7 @@ Page({
       select: e.currentTarget.dataset.index,
     })
   },
-  preventTouchMove:function(){
+  preventTouchMove: function () {
 
   },
   closeshop: function () {//关闭遮罩
@@ -409,19 +417,19 @@ Page({
       flag: false
       // untouch: 'touch'
     })
-   
-    
+
+
     // this.getData(this.data.parm)
   },
   // 参与拼单
-  participate: function(e){
+  participate: function (e) {
     this.getData({
       shopId: this.data.shopId,
       goodsId: this.data.goodId,
       customerId: wx.getStorageSync('scSysUser').id
     })
     this.setData({
-      flag:true
+      flag: true
     })
     console.log(1111111111)
     // if (this.data.stockId) {
@@ -440,7 +448,7 @@ Page({
   // 1 拼团 2 秒杀 3 普通商品
   againInitiate: function (e) {
     // debugger;
-    
+
     // return
     if (this.data.stockId) {
       wx.navigateTo({
@@ -463,7 +471,7 @@ Page({
     console.log(shopId);
     var user = wx.getStorageSync('scSysUser')
     wx.navigateTo({
-      url: '../goodsDetial/goodsDetial?goodsId=' + goodsid + '&shopId=' + shopId ,
+      url: '../goodsDetial/goodsDetial?goodsId=' + goodsid + '&shopId=' + shopId,
       success: function (res) {
         // success
       }
@@ -471,38 +479,38 @@ Page({
   },
   // 倒计时方法
   count: function () {
-      let leftTime = this.data.count;
-      leftTime -= 1000;
-      if (leftTime <= 0) {
-        leftTime = 0;
-      }
-      let d = Math.floor(leftTime / 1000 / 60 / 60 / 24),
-        h = Math.floor(leftTime / 1000 / 60 / 60 % 24),
-        m = Math.floor(leftTime / 1000 / 60 % 60),
-        s = Math.floor(leftTime / 1000 % 60)
-      if (h < 10) {
-        h = "0" + h;
-      }
-      if (m < 10) {
-        m = "0" + m;
-      }
-      if (s < 10) {
-        s = "0" + s;
-      }
-      this.setData({
-        count:leftTime,
-        d:d,
-        h:h,
-        m:m,
-        s:s
-      })
+    let leftTime = this.data.count;
+    leftTime -= 1000;
+    if (leftTime <= 0) {
+      leftTime = 0;
+    }
+    let d = Math.floor(leftTime / 1000 / 60 / 60 / 24),
+      h = Math.floor(leftTime / 1000 / 60 / 60 % 24),
+      m = Math.floor(leftTime / 1000 / 60 % 60),
+      s = Math.floor(leftTime / 1000 % 60)
+    if (h < 10) {
+      h = "0" + h;
+    }
+    if (m < 10) {
+      m = "0" + m;
+    }
+    if (s < 10) {
+      s = "0" + s;
+    }
+    this.setData({
+      count: leftTime,
+      d: d,
+      h: h,
+      m: m,
+      s: s
+    })
   },
   // 定时2分钟自动请求服务器一次
-  refreshRequest:function(){
+  refreshRequest: function () {
     var refreshTimer;
     refreshTimer = setInterval(this.onShow, 120000);
   },
-  primary: function(){
+  primary: function () {
     wx.switchTab({
       url: '../index/index',
     })

@@ -82,7 +82,7 @@
 <view class="canvas-box">
 <canvas hidden="{{canvasHidden}}" style="width: 686rpx;height: 686rpx;background:#f1f1f1;" canvas-id="mycanvas"/>
 </view>
-<canvas canvas-id='discountCanvas' style='width:480rpx;height:400rpx;' id='discountCanvas'></canvas>
+<canvas canvas-id='discountCanvas' style='width:960rpx;height:800rpx;' id='discountCanvas'></canvas>
 
 <!-- 海报画布 -->
 <canvas id='shareCanvasNew' canvas-id='shareCanvasNew' style='width:1380rpx;height:2000rpx;' class='shareCanvas'></canvas>

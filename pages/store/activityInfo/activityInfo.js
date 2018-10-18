@@ -265,6 +265,7 @@ Page({
             userId: wx.getStorageSync('scSysUser').id,
             actionId: this.data.data.id,
             signType: this.data.data.signType,
+            goodsId: this.data.data.id,
             sourcePart: '1',
             shareType: 6,
             shareFrom: 'activityInfo'
@@ -539,6 +540,7 @@ Page({
     context.fillRect(0,0,690*scale, 1000*scale);//设置白色背景
     context.drawImage('../../../images/bg3.png',0,0,690*scale,1000*scale);
     this.drawShadow(context,scale,5,5,10,'rgba(176,50,32,0.3)');//绘制阴影
+    context.setStrokeStyle('#ffffff');
     this.roundRect(context,scale,52,56,600,704,66);//绘制圆角矩形背景
     this.drawShadow(context, scale, 0, 0, 30, 'rgba(228,183,177,0.3)');//绘制阴影
     this.roundRect(context,scale,25,70,610,260,57);//绘制海报圆角矩形阴影矩形
@@ -581,7 +583,7 @@ Page({
     let w3 = context.measureText(this.data.descTitle).width;
     context.fillText(this.data.descTitle,(690-w3)/2*scale,540*scale);//绘制口号
     context.setFillStyle('#666666');
-    let descContent=this.data.data.descContent;
+    let descContent = this.data.data.descContent.replace(/<(style|script|iframe)[^>]*?>[\s\S]+?<\/\1\s*>/gi, '').replace(/<[^>]+?>/g, '').replace(/\s+/g, ' ').replace(/ /g, ' ').replace(/>/g, ' ').replace(/&nbsp;/g, ' ');
     let w4;
     //绘制活动内容
     if(descContent.length<=19){//一行

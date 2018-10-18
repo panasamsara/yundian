@@ -546,14 +546,14 @@
               <text class="siz-four">序列号：{{item.orderInfo.serialNumber}}</text>
               <text class="siz-four">请到此店兑换此码</text>
             </view>  
-          </view>
-        </view>
-        <!--配送方式为快递-->
-        <view class="ziti sendcode" wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType != 2}}">
-          <text class="siz-three">自提兑换码</text>
-          <view class="selfcode" bindtap='showCode'>
-            <image src='../../../images/yundian_erweima@2x.png'></image>
-            <image src='../../../images/yundian_spxq_gengduo.png'></image>
+            <!--配送方式为快递-->
+            <view class="ziti sendcode" wx:if="{{item.orderInfo.orderStatusVo==2 && item.orderInfo.deliveryType != 2}}">
+              <text class="siz-three">自提兑换码</text>
+              <view class="selfcode" bindtap='showCode'>
+                <image src='../../../images/yundian_erweima@2x.png'></image>
+                <image src='../../../images/yundian_spxq_gengduo.png'></image>
+              </view>
+            </view>
           </view>
         </view>
       </view>
@@ -741,12 +741,14 @@
   
 </view>
 <!--二维码弹窗-->
-<view class="modal-box order-tip" hidden="{{flagOrder}}" >
+<view class='mask' catchtouchstart='test' hidden="{{flagOrder}}"></view>
+<view class="modal-box order-tip" hidden="{{flagOrder}}" catchtouchstart='test'>
+  <image catchtouchstart='closeTip' class="order-close" src="../../../images/yundianClose.png"></image>
   <view class="modal-body">
-    <image bindtap='closeTip' class="order-close" src="../../../images/yundianClose.png"></image>
+  
      <view class="code-img" wx:if="{{orderStatusVo==2 && deliveryType != 2}}">
           <view class="canvas-box">
-            <canvas  style="width: 670rpx;height: 630rpx;" canvas-id="mycanvas"/>
+            <canvas disable-scroll="true" bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd" style="width: 640rpx;height: 630rpx;margin:10rpx 48%;transform:translate(-45%)" canvas-id="mycanvas"/>
           </view>
       </view>
     <view class="modal-content">
@@ -755,4 +757,6 @@
     </view>
   </view>
   </view>
+  <canvas canvas-id='groupbuy' style='width:480rpx;height:420rpx;position:fixed; top: 99999rpx;' id='gruopBuyCanvas'></canvas>
+
 

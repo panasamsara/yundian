@@ -3,7 +3,7 @@
       {{dataArr.name}}
       <image src='../images/til_right@3x.png'></image>
     </view>
-    <navigator class="navigator" wx:for="{{dataArr.courses}}" wx:key="{{index}}" url='../lessonDetail/lessonDetail?id={{item.id}}' hover-class="none">
+    <navigator class="navigator" wx:for="{{dataArr.courses}}" wx:key="{{index}}" url='../lessonDetail/lessonDetail?id={{item.id}}' wx:if="{{index<4}}"  hover-class="none">
       <view class='lesson-content'>
         <view class='cover-box'>
           <image class='cover' mode='aspectFill' src='{{item.cover}}'></image>
@@ -14,15 +14,15 @@
         <view class='text-box'>
           <view class='title'>{{item.name}}</view>
           <view class='teacher'>
-            <image src='{{item.cover}}'></image>
+            <image wx:if="{{item.speakerImg=''}}" src='../images/img_touxiang.png'></image>
+            <image  wx:else src='{{item.speakerImg}}'></image>
             <text>{{item.speakerName}}</text>
             <text class='price {{item.showPrice=="免费"?"free":""}}'>{{item.showPrice}}</text>
           </view>
         </view>
       </view>
     </navigator>
-    <navigator class='lookMore' url='../lessonMore/lessonMore?id={{dataArr.id}}' hover-class="none" 
-    wx:if="{{dataArr.courses.length>5}}">
+    <navigator class='lookMore' url='../lessonMore/lessonMore?id={{dataArr.id}}' hover-class="none" >
       <view class='lookMore'>
         查看更多
         <image src='../images/icon_gengduo@3x.png'></image>

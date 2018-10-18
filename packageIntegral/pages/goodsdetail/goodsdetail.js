@@ -64,7 +64,8 @@ Page({
           data.descContent = data.descContent.replace(/\s+(id|class|style)(=(([\"\']).*?\4|\S*))?/g, "").replace(/(background-color|font-size)[\s:]+[^;]*;/gi, '').replace(/\"=\"\"/g, "").replace(/\<img/gi, '<img style="max-width:100%;height:auto" ');
         }
         this.setData({
-          data:res.data.data
+          data:res.data.data,
+          status:'done'
         })
       }
       wx.hideLoading();
@@ -74,6 +75,9 @@ Page({
     })
   },
   exchange:function(){//立即兑换
+    if(this.data.status!='done'){
+      return;
+    }
     let usablePoint = this.data.usablePoint;
     if (usablePoint < this.data.data.point){
       wx.showToast({

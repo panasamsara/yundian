@@ -15,12 +15,18 @@
 }
 .bgimg{
   margin-left: 30rpx;
+  margin-top: 20rpx;
 }
-.swiper-item image,.bgimg,.bgimg image{
+.bgimg,.bgimg image{
   width: 690rpx;
   height: 280rpx;
   border-radius: 10rpx;
   vertical-align: middle;
+}
+.swiper-item image{
+  border-radius: 10rpx 10rpx 0 0;
+  width: 100%;
+  height:100%;
 }
 .swiperImg{
   position: absolute;
@@ -100,10 +106,10 @@
   font-size: 30rpx;
   line-height: 74rpx;
   color: #333;
-  font-weight: medium;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-weight: bold;
 }
 .lesson-content .text-box .teacher{
   display: block;
@@ -135,6 +141,7 @@
   margin: 36rpx 0;
   color: #3B82EE;
   font-size: 32rpx;
+  font-weight: bold;
 }
 .nav image{
   width: 52rpx;
@@ -174,10 +181,12 @@
 .studyHistory{
   background: #f8f8f8;
 }
+.studyHistory navigator{
+  margin-left: 30rpx;
+}
 .studyHistory .cover-box{
   width: 300rpx;
   height: 210rpx;
-  margin-left: 30rpx;
 }
 .titleHistory{
   font-size: 26rpx;
@@ -196,6 +205,7 @@
   font-size: 30rpx;
   padding-top:20rpx;
   margin-left:20rpx;
+  margin-bottom: 20rpx;
   width: 300rpx;
 }
 .listeningTest .cover-box{
@@ -259,13 +269,25 @@
 /* 滚动定位 */
 .tab-content{
   position: relative;
-  display: flex;
   height: 88rpx;
   background: #fff;
-  border-top: 1rpx solid #f3f3f3;
-  box-shadow: 0 8rpx 8rpx 0 rgba(0, 0, 0, 0.09);
+  background: #fff;
 }
-.tab-content.fixed{
+.flex>view{
+  flex: 1;
+}
+.flex{
+  display: flex;
+}
+.navCheck>view{
+  min-width: 10%;
+  display: inline-block;
+  margin-left: 40rpx;
+}
+.navCheck>view:last-child{
+  margin-right: 40rpx;
+}
+.fixed{
   z-index: 999;
   position: fixed;
   top: 0;
@@ -274,13 +296,17 @@
 }
 .tab-content>view{
   position: relative;
-  flex: 1;
   font-size: 32rpx;
   line-height: 88rpx;
   text-align: center;
   color: #333;
   transition: all 0.15s ease-in-out;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  min-width: 100rpx;
+  background: #fff;
 }
+
 .tab-content>view::after{
   position: absolute;
   content: '';
@@ -299,3 +325,9 @@
 .tab-content>view.active::after{
   transform: translateX(-50%) scale(1);
 }
+.scroll-view_H{
+  white-space:nowrap;
+  box-shadow:0 8rpx 8rpx 0 rgba(0, 0, 0, 0.09);
+  background: #fff;
+}
+

@@ -40,7 +40,9 @@ Page({
           scale: wx.getSystemInfoSync().windowWidth/375
         })
         let scale=this.data.scale;
-        QR.api.draw(this.data.orderInfo.serialNumber, "codeCanvas", 134*scale, 134*scale);
+        if (this.data.orderInfo.serialNumber){
+          QR.api.draw(this.data.orderInfo.serialNumber, "codeCanvas", 134 * scale, 134 * scale);
+        } 
       }
     }).catch((err) => {
       console.log(err);

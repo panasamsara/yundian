@@ -10,6 +10,7 @@ Page({
     time: 1, //倒计时
     createTime: '', //下单时间
     no: '', //倒计时关闭
+    goodsId:'',
     index: 0,
     userid: '',
     orderStatusVo: '',
@@ -37,7 +38,10 @@ Page({
     stockId: '', // 是否有商品规格
     lackUser: '', // 拼团缺少人数
     userCode: '',
-    deliveryType:0
+    deliveryType:0,
+    data:'',
+	groupPath:'',
+    scale:''
   },
 
   onLoad: function (options) {
@@ -58,7 +62,8 @@ Page({
         })
       }
     }
-
+    var systeminfo = wx.getSystemInfoSync();
+    var scale = systeminfo.windowWidth / 375;
     var user = wx.getStorageSync('scSysUser');
     var userid = wx.getStorageSync('scSysUser').id;
     var userCode = wx.getStorageSync('scSysUser').usercode;
@@ -74,7 +79,8 @@ Page({
       userid: userid,
       orderNo: orderNo,
       isGroupBuying: isGroupBuying,
-      userCode: userCode
+      userCode: userCode,
+      scale: scale
     })
 
     if (orderkind) {
@@ -86,14 +92,14 @@ Page({
     var _this = this;
     //调接口
     app.util.reqAsync('shop/orderDetail', {
-      orderNo: this.data.orderNo,
-      isGroupBuying: this.data.isGroupBuying
+      orderNo: _this.data.orderNo,
+      isGroupBuying: _this.data.isGroupBuying
     }).then((data) => {
       if (data.data.code == 1) {
         var areaName = app.util.area.getAreaNameByCode(data.data.data[0].orderInfo.areaId);
         var cityName = app.util.area.getAreaNameByCode(data.data.data[0].orderInfo.cityId);
         var ProvinceName = app.util.area.getAreaNameByCode(data.data.data[0].orderInfo.provinceId);
-        this.setData({
+        _this.setData({
           goods: data.data.data,
           phone: data.data.data[0].shopInfo.phoneService,
           createTime: data.data.data[0].orderInfo.createTime,
@@ -101,11 +107,28 @@ Page({
           areaName: areaName,
           cityName: cityName,
           ProvinceName: ProvinceName,
+          shopId: data.data.data[0].shopInfo.id,
+          goodsName: data.data.data[0].orderInfo.orderItemList[0].goodsName,
+          stockId: data.data.data[0].orderInfo.orderItemList[0].stockId,
+          goodsId: data.data.data[0].orderInfo.orderItemList[0].goodsId,
           storeUrl: data.data.data[0].orderInfo.serialNumber ? data.data.data[0].orderInfo.serialNumber : ''
         })
-
+        var parm = {
+          shopId: wx.getStorageSync('shop').id,
+          goodsId: _this.data.goodsId,
+          customerId: wx.getStorageSync('scSysUser').id
+        }
+        app.util.reqAsync('shop/goodsDetailAddGroupBuying', parm).then((res) => {//获取商品详情数据
+          if (res.data.data) {
+            var data = res.data.data
+            _this.setData({
+              data:data
+            })
+            _this.drawImg()
+          }
+        })
         // 秒杀
-        if (this.data.isGroupBuying == 0 && this.data.orderkind == 3) {
+        if (this.data.isGroupBuying == 0 && _this.data.orderkind == 3) {
           // 倒计时
           if (data.data.data[0].orderInfo.orderStatusVo == 1) {
             //待付款
@@ -787,6 +810,7 @@ Page({
     return {
       title: this.data.goodsName,
       desc: this.data.goodsName,
+      imageUrl: this.data.groupPath,
       path: '/pages/spelldetails/spelldetails?groupId=' + this.data.groupId + '&orderNo=' + this.data.orderNo + '&shopId=' + this.data.shopId + '&cUser=' + this.data.userid + '&population=' + this.data.population + '&orderStatusVo=' + this.data.orderStatusVo + '&stockId=' + this.data.stockId + '&share=' + 1,
       success: (res) => {
         this.setData({
@@ -818,6 +842,54 @@ Page({
 
     })
   },
+    
+  drawImg: function () {
+    let _this = this
+    // clearInterval(_this.data.timer)
+    // if (this.data.status == 1 || this.data.status == 2) {//设置定时器
+      // this.data.timer = setInterval(function () {
+      //   _this.count(_this.data.listData, 'listData')
+      // }, 1000)
+    // }
+    let logoUrl = wx.getStorageSync('shop').logoUrl,
+      pictureUrl = this.data.data.pictureUrl;
+    if (pictureUrl.split(':')[0] == 'http') {
+      pictureUrl.replace('http', 'https');
+    }
+    if (logoUrl.split(':')[0] == 'http') {
+      logoUrl.replace('http', 'https');
+    }
+    if (pictureUrl.split(':')[0] == 'http') {
+      pictureUrl = pictureUrl.replace('http', 'https');
+    }
+    this.setData({
+      logoUrl: logoUrl,
+      pictureUrl: pictureUrl
+    })
+    wx.downloadFile({//缓存店铺头像，直接使用网络路径真机无法显示或绘制
+      url: _this.data.logoUrl,
+      success: function (res) {
+        console.log(res.tempFilePath)
+        _this.setData({
+          logo: res.tempFilePath
+        })
+        wx.downloadFile({//缓存商品图片，直接使用网络路径真机无法显示或绘制
+          url: _this.data.pictureUrl,
+          success: function (res) {
+            console.log(res.tempFilePath)
+            _this.setData({
+              proPic: res.tempFilePath
+            })
+            //canvas绘图//拼团
+            _this.drawPicGroup();
+            _this.setData({
+              downLoadStatus: 'done'
+            })
+          }
+        })
+      }
+    })
+  },
   showCode:function(){
     
     //点击展示二维码
@@ -829,7 +901,62 @@ Page({
     this.setData({
       flagOrder: true
     })
-  }
+  },
 
-
+  drawPicGroup: function () {//绘制拼团页面
+    let scale = this.data.scale,
+      context = wx.createCanvasContext('groupbuy'),
+      _this = this;
+    context.setFillStyle('#ffffff');
+    context.fillRect(0, 0, 480 * scale, 380 * scale);//绘制背景色
+    context.drawImage(_this.data.proPic, 0, 0, 240 * scale, 140 * scale);//绘制背景图
+    let w = context.measureText(this.data.groupBuyingNum + '人正在参与拼团');
+    context.drawImage('images/zhuanfa_pt_bg@2x.png', 26 * scale, 13 * scale, (w.width + 12) * scale, 26 * scale);//绘制店铺右侧店铺图片
+    context.setFillStyle('#ffffff');
+    context.setFontSize(14 * scale);
+    context.fillText(_this.data.data.groupBuyingNum + '人正在参与拼团', 40 * scale, 31 * scale);//绘制参团人数
+    context.save();
+    context.beginPath();
+    context.arc(26 * scale, 26 * scale, 13 * scale, 0, 2 * Math.PI);//绘制圆形头像画布
+    context.fill();
+    context.clip();
+    context.drawImage(_this.data.logo, 13 * scale, 13 * scale, 26 * scale, 26 * scale);//绘制店铺头像
+    context.restore();//恢复之前保存的上下文
+    context.setFontSize(18 * scale);
+    context.setFillStyle('#fb191d');
+    context.fillText('￥' + this.data.data.groupBuyingPrice, 13 * scale, 174 * scale);//绘制拼团价
+    let w1 = context.measureText('￥' + this.data.data.groupBuyingPrice);
+    context.setFontSize(14);
+    context.setFillStyle('#989898');
+    context.fillText('￥' + this.data.data.price, (w1.width + 13 + 5) * scale, 174 * scale);//绘制原价
+    let w2 = context.measureText('￥' + this.data.data.price);
+    context.beginPath();
+    context.moveTo((w1.width + 13 + 5) * scale, 168 * scale);       //设置起点状态
+    context.lineTo((w1.width + w2.width + 13 + 5) * scale, 168 * scale);       //设置末端状态
+    context.setLineWidth(1);          //设置线宽状态
+    context.setStrokeStyle('#989898') //设置线的颜色状态
+    context.stroke();
+    context.drawImage('images/zhuanfa_pt_btn@2x.png', 150 * scale, 148 * scale, 80 * scale, 36 * scale);
+    context.setFontSize(16 * scale);
+    context.setFillStyle('#000000');
+    context.fillText('去拼团', 165 * scale, 172 * scale);
+    context.draw(false, function () {
+      wx.canvasToTempFilePath({//绘制完成执行保存回调
+        x: 0,
+        y: 0,
+        width: 480,
+        height: 420,
+        destWidth: 480,
+        destHeight: 420,
+        fileType: 'jpg',
+        canvasId: 'groupbuy',
+        success: function (res) {
+          console.log(res.tempFilePath)
+          _this.setData({
+            groupPath: res.tempFilePath
+          })
+        }
+      })
+    });
+  },
 })

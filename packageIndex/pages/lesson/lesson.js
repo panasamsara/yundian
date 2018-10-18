@@ -21,7 +21,8 @@ Page({
     //轮播专用结束,
     arr:[],
     activeIndex:"0",
-    capacityList:[]
+    capacityList:[],
+    scrollTop:0
   },
   swiperChange: function (e) {
     this.setData({
@@ -84,42 +85,21 @@ Page({
   //智经营
   capacityList: function () {
     let params = {
-      "plant": 1,              
+      "shopId":this.data.shopId,
+      "pageSize":20             
     }
     app.util.reqAsync('masterCourse/index', params).then((res) => {
       if (res.data.code == 1) {
         let Data = res.data.data;
-        //新建一个数组，为滚动加载时候循环遍历做准备
-        let scrollArr=[];
+        //筛选出数组中courses为空的的,避免滚动监听的时候报错
         for (var i in Data){
-          if (Data[i].name == "智经营"){
-            scrollArr.push({
-              name:"智经营",
-              id:"#aptitude",
-            })
-          } else if (Data[i].name == "门店培优"){
-            scrollArr.push({
-              name: "门店培优",
-              id: "#shopexcellent",
-            })
-          } else if (Data[i].name == "人事客项钱") {
-            scrollArr.push({
-              name: "人事客项钱",
-              id: "#peopleThing",
-            })
-          } else if (Data[i].name == "六脉粉神剑") {
-            scrollArr.push({
-              name: "六脉粉神剑",
-              id: "#excalibur",
-            })
+          if (Data[i].courses.length==0){
+            Data.splice(i,1)
           }
         }
-        scrollArr[0].flag=1;
         this.setData({
           capacityList: Data,
-          scrollArr: scrollArr
         })
-        console.log("scrollArr",scrollArr)
       } else {
         wx.showToast({ title: res.data.msg || '请稍后再试！', icon: 'none' });
       }
@@ -131,7 +111,7 @@ Page({
   onLoad: function (options) {
     var shopId=wx.getStorageSync("shop").id;
     this.setData({
-      shopId: shopId
+      shopId: shopId,
     })
     this.getCarousel();
     this.getStudy();
@@ -145,28 +125,31 @@ Page({
   onPullDownRefresh: function () {
   },
   onPageScroll:function(e){
+      this.setData({
+        scrollTop: e.scrollTop //页面滚动的距离
+      })
     let _this = this;
-    let scrollArr=this.data.scrollArr;
     let query = wx.createSelectorQuery();
     query.selectAll(".management").boundingClientRect();
     query.exec((rect)=>{
       let testArr = rect[0];
       let index=0;
-      let fixed = testArr[0].top < 88;
+      let fixed = testArr[0].top < 100;
       testArr.forEach((v, i) => {
-        if (v.top < 88) index = i;
+        if (v.top < 100) {
+          console.log(i);
+          index = i
+        };
       })
       if (fixed) {
         this.setData({
           fixed: true,
           activeIndex:index,
-          scrollTop: e.scrollTop //页面滚动的距离
         })
       }else{
         this.setData({
           fixed: false,
           activeIndex: 0,
-          scrollTop: e.scrollTop //页面滚动的距离
         })
       }
     })
@@ -176,19 +159,17 @@ Page({
    */
   scrollTo:function(e){
     let id = e.currentTarget.dataset.id;
+    console.log(id);
     let index = e.currentTarget.dataset.index;
     let scrollTop = this.data.scrollTop || 0;
-    let height = this.data.height || 0;
     this.setData({
       activeIndex:index
     })
-    console.log(id)
     let query = wx.createSelectorQuery();
-    let top=0;
     query.select(id).boundingClientRect((rect) => {
-      top = rect.top
+      let  top = rect.top
       wx.pageScrollTo({
-        scrollTop: this.data.scrollTop + top-44
+        scrollTop: this.data.scrollTop + top - 88
       })
     }).exec();
   }

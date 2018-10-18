@@ -105,6 +105,7 @@
                 <text wx:if="{{items.enableType==1}}">{{items.actualPayment}}</text>
                 <text wx:if="{{items.enableType==0}}">{{items.unitPrice}}</text>
               </text> -->
+              <text class='font34 strick account' wx:if="{{isMember==0}}"><text class='font24'>￥</text>{{items.unitPrice}}</text>
               <text class='font34 priceColor account' wx:if="{{isMember==0}}"><text class='font24'>￥</text>{{items.actualPayment}}</text>
               <text class='font34 strick account' wx:if="{{isMember==1}}"><text class='font24'>￥</text>{{items.unitPrice}}</text>
               <!--会员价-->

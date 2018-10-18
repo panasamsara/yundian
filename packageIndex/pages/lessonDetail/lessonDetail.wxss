@@ -291,5 +291,5 @@ page{
 /* 画布 */
 #shareCanvas{
   position: fixed;
-  top: 10000;
+  top: 10000rpx;
 }

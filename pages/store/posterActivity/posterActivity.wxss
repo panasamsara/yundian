@@ -261,3 +261,8 @@ textarea{
   top: 1050rpx;
   z-index: 7777;
 }
+
+#shareCanvas{
+  position: fixed;
+  top: 99999rpx;
+}

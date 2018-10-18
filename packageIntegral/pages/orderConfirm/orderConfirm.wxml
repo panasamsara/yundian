@@ -6,7 +6,7 @@
       <view class='picker'>
         <view class="detail">{{deliveryText}}</view>
         <view class='chooseBox'>
-          <image src='../orderDetail/images/yundian_spxq_gengduo.png' class='choose'></image>
+          <image src='images/enter.png' class='choose'></image>
         </view>
       </view>
     </picker>
@@ -19,7 +19,7 @@
       <view class='picker'>
         <view class="detail">{{accountText}}</view>
         <view class='chooseBox'>
-          <image src='../orderDetail/images/yundian_spxq_gengduo.png' class='choose'></image>
+          <image src='images/enter.png' class='choose'></image>
         </view>
       </view>
     </picker>
@@ -33,7 +33,7 @@
       </view>
       <view id='address'>{{address?address:'请选择收货地址'}}</view>
     </view>
-    <image src='../orderDetail/images/yundian_spxq_gengduo.png' id='enterIcon'></image>
+    <image src='../orderDetail/images/enter.png' id='enterIcon'></image>
   </view>
   <view id='goodsBox'>
     <image src='{{data.creditsGoodsInfo.pictureUrl}}' id='goodsPic'></image>

@@ -29,21 +29,20 @@ Page({
     // app.util.getShop(user.id, options.shopId).then((res) => {
     //   wx.setStorageSync('shop', res.data.data.shopInfo);
     // })
+    console.log(options)
     if (options && options.q) {
       var uri = decodeURIComponent(options.q)
       var p = util.getParams(uri)
       let shopId = p.shopId
-      wx.setStorageSync('shopId', shopId);
       this.setData({
         shopId: shopId
       })
     } else {
-      if (options && options.shopId) {
-        wx.setStorageSync('shopId', options.shopId);
+      
         this.setData({
           shopId: options.shopId
         })
-      }
+      
     }
     console.log(options)
     var parm = {

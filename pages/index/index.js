@@ -350,10 +350,10 @@ Page({
        }
      }).then((res) => {
        if (res.data.data){
-         if (res.data.data.sListMap.length != 0) {
-           if (res.data.data.sListMap[0].hotCommoditiesList) {
+         if (res.data.data.length != 0) {
+           if (res.data.data[0].hotCommoditiesList) {
              this.setData({
-               hotCommoditiesList: res.data.data.sListMap[0],
+               hotCommoditiesList: res.data.data[0],
              })
            }
          }

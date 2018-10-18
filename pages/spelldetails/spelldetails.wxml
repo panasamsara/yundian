@@ -147,7 +147,8 @@
       </view>
     </view>    
   </view>
-  <view class='tot' bindtap='buyNow' >立即购买</view>
+  <view class='tot' bindtap='buyNow' wx:if="{{!shopBtn}}">立即购买</view>
+  <view class='tot notBuy'  wx:if="{{shopBtn}}">立即购买</view>
   <view class='tot cart' bindtap='addCart' wx:if="{{buy=='addCart'}}">加入购物车</view>
 </view>
   <!-- 拼单规则 弹窗 -->

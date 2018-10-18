@@ -7,7 +7,7 @@ page{
   padding: 24rpx 0 12rpx 24rpx;
 }
 .list image{
-  margin-right: 7rpx;
+  margin-right: 5rpx;
   margin-top: 7rpx;
   width: 246rpx;
   height: 246rpx;

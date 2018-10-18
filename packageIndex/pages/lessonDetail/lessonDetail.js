@@ -373,7 +373,7 @@ Page({
         merchantId: wx.getStorageSync('shop').merchantId,
         courseId: this.data.options.id,
         sourcePart: '1',
-        shareType: 9
+        shareType: 8
       }
     })
   },
@@ -428,9 +428,9 @@ Page({
         context.lineTo(295*scale,290*scale);
         context.stroke();
         context.setFillStyle('#fb452d');
-        context.fillRect(((345-w)/2)*scale,282.5*scale,w,15*scale);
+        context.fillRect(((345-w/2)/2)*scale,282.5*scale,w,15*scale);//绘制店铺名背景
         context.setFillStyle('#ffffff');
-        context.fillText(shopName,((365-w)/2)*scale,294*scale);
+        context.fillText(shopName,((355-w/2)/2)*scale,294*scale);//绘制店铺名
         context.drawImage(_this.data.codeUrl,50*scale,413*scale,75*scale,75*scale);
         context.draw(false,function(){
           saveImg.temp(_this, 'shareCanvas', 1380, 2000, 1380, 2000);

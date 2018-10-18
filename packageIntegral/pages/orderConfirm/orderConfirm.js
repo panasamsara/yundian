@@ -134,6 +134,13 @@ Page({
       })
       return
     }
+    if (!this.data.deliveryType&&this.data.deliveryType!=0){
+      wx.showToast({
+        title: '请选择购买方式',
+        icon:'none'
+      })
+      return
+    }
     if (this.data.data.creditsGoodsInfo.goodsType == 3&&!this.data.data.recvAddress){
       wx.showToast({
         title: '请选择收货地址',

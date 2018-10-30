@@ -22,7 +22,8 @@ Page({
     arr:[],
     activeIndex:"0",
     capacityList:[],
-    scrollTop:0
+    scrollTop:0,
+    shopId:""
   },
   swiperChange: function (e) {
     this.setData({
@@ -137,7 +138,6 @@ Page({
       let fixed = testArr[0].top < 100;
       testArr.forEach((v, i) => {
         if (v.top < 100) {
-          console.log(i);
           index = i
         };
       })

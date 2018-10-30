@@ -1,0 +1,17 @@
+<!--packageIndex/pages/appointmentNew/servant/servant.wxml-->
+<view class='container' id='servant'>
+  <view id='head'>
+    <image src='../../images/sousuo@2x.png' id='searchIcon'></image>
+    <input placeholder="请输入服务人员名称"></input>
+  </view>
+  <view class='title'>全部人员</view>
+  <view id='content'>
+    <view wx:for="{{servantList}}" wx:key="index" class='servantList flexBetween'>
+      <view class='flexBetween'>
+        <image src='{{item.url}}' class='servantPic'></image>
+        <text>{{item.name}}</text>
+      </view>
+      <navigator class='checkAppoint' url='../appointmentNew?servantId={{item.id}}' open-type='navigateBack'>确定预约</navigator>
+    </view>
+  </view>
+</view>

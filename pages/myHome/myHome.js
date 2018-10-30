@@ -12,7 +12,7 @@ Page({
       {
         icon: '../../images/dianneiorder.png',
         text: '店内订单',
-        path: '../../packageMyHome/pages/shopOrder/shopOrder',
+        path: '../../packageOffline/pages/shopOrder/shopOrder',
         style: "width:48rpx;height:44rpx;"
       },
       {

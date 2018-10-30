@@ -224,7 +224,7 @@
   position: fixed;
   bottom: 0;
   left: 0;
-  background-color: #f8f8f8;
+  background-color: #F5F5F5;
   z-index: 999;
 }
 
@@ -236,4 +236,5 @@
   text-align: center;
   background-color: #FB452C;
   border-radius: 40rpx;
+  box-shadow: 0 5rpx 10rpx 0 rgba(251,69,44,0.4);
 }

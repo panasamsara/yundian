@@ -1,0 +1,8 @@
+<!--components/component-search/component-search.wxml-->
+<view class='searchBox'>
+  <image src='images/sousuo@2x.png' class='searchIcon'></image>
+  <input placeholder="请输入设备名称" bindfocus='showSearch' bindinput='setKey' class="{{status=='search'?'searchInput':'normalInput'}}" value='{{key}}'></input>
+  <image src='images/xcx_yy_xzry_guanbi@2x.png' class='clearIcon' wx:if="{{status=='search'}}" bindtap='clear'></image>
+  <text bindtap='search' class='search' wx:if="{{status=='search'}}">搜索</text>
+</view>
+<view class='shade' wx:if="{{shadeShow}}" bindtap='closeShade'></view>

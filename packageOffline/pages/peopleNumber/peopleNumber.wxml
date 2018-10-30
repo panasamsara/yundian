@@ -22,11 +22,8 @@
   <view class="pron-ts">
     <image src="img/pic@2x.png"></image>
     <text class="table">此桌已开台</text>
-    <text class="table1">您确定要进入当前桌台吗？</text>
-    <view class="choose">
-      <text bindtap='choosee1'>换桌扫码</text>
-      <text bindtap='choosee2'>确定进入</text>
-    </view>
+    <view class="table2" bindtap='choosee2'>进入当前桌台</view>
+    <text class="table1">提示：换桌扫码请先关闭当前页面哦</text>
   </view>
 </view>
 

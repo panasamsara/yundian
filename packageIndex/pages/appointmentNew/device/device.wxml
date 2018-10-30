@@ -1,0 +1,12 @@
+<!--packageIndex/pages/appointmentNew/device/device.wxml-->
+<view class='container' id='device'>
+  <component-search searchList="{{dataList}}" bind:search="search"></component-search>
+  <view class='title'>全部设备</view>
+  <view id='content'>
+    <view wx:for="{{deviceList}}" wx:key="index" class='deviceList flexBetween' wx:if="{{deviceList.length>0}}">
+      <text>{{item.name}}</text>
+      <navigator class='checkAppoint' url='../appointmentNew?deviceId={{item.id}}' open-type='navigateBack'>确定预约</navigator>
+    </view>
+    <view class='blankTip' wx:if="{{deviceList.length<=0}}">暂无搜索数据</view>
+  </view>
+</view>

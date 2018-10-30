@@ -2,6 +2,8 @@
   "navigationBarTitleText": "课程详情",
   "enablePullDownRefresh": true,
   "usingComponents": {
-    "poster-modal": "../../../components/poster-modal/poster-modal"
+    "poster-modal": "../../../components/poster-modal/poster-modal",
+    "login-component": "../../../components/component-login"
   }
+
 }

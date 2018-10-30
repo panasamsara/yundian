@@ -10,47 +10,54 @@ Page({
     total: 0
   },
   timeAgo: function (time) {
-    var dateTimeStamp = Date.parse(time.replace(/-/gi, "/"));
-    var minute = 1000 * 60;
-    var hour = minute * 60;
-    var day = hour * 24;
-    var halfamonth = day * 15;
-    var month = day * 30;
+    //今天0：0：0
+    var integral_point = Date.parse(new Date(new Date(new Date().toLocaleDateString()).getTime())), // 当天0点
+      oneDay_point = integral_point - 24 * 60 * 60 * 1000,//前一天0点
+      twoDay_point = integral_point - 48 * 60 * 60 * 1000,//前两天0点
+      oneMonth_point = integral_point - 30 * 24 * 60 * 60 * 1000,
+      oneYear_point = integral_point - 365 * 24 * 60 * 60 * 1000;
+    var _this = this;
     var now = new Date().getTime();
-    var diffValue = now - dateTimeStamp;
-    if (diffValue < 0) { return; }
-    var monthC = diffValue / month;
-    var weekC = diffValue / (7 * day);
-    var dayC = diffValue / day;
-    var hourC = diffValue / hour;
-    var minC = diffValue / minute;
-    var result;
-    if (monthC >= 1) {
-      result = "" + parseInt(monthC) + "月前";
+    var dateTimeStamp = Date.parse(time.replace(/-/gi, "/"));
+    var day = 24 * 60 * 60;
+    var month = day * 30;
+    var year = month * 12;
+    //时间戳详减得到秒
+    var diffValue = parseInt((now - dateTimeStamp) / 1000);
+    var result = "";
+    var temp1 = diffValue / day,
+      temp2 = diffValue / month,
+      temp3 = diffValue / year;
+    //计算具体多少天前
+    var newdateTimeStampstr = Date.parse(time.substring(0, 10).replace(/-/gi, "/")+" 00:00:00");
+    if (dateTimeStamp - integral_point >= 0) {
+      result = "今天";
+      if (now - dateTimeStamp < 60 * 1000 &&now - dateTimeStamp > 0) {
+        result = "刚刚";
+      }
+    } else {
+      result = _this.toChinesNum(parseInt((integral_point - newdateTimeStampstr)/1000/day)) + "天前";
+      if (dateTimeStamp - oneDay_point > 0) {
+        result = '昨天';
+      } else if (dateTimeStamp - oneDay_point < 0 && dateTimeStamp - twoDay_point > 0) {
+        result = '前天';
+      } if (dateTimeStamp - oneMonth_point < 0) {
+        result = _this.toChinesNum(parseInt(temp2)) + "个月前";
+        if (dateTimeStamp - oneYear_point < 0) {
+          result = _this.toChinesNum(parseInt(temp3)) + "年前";
+        }
+      }
     }
-    else if (weekC >= 1) {
-      result = "" + parseInt(weekC) + "周前";
-    }
-    else if (dayC >= 1) {
-      result = "" + parseInt(dayC) + "天前";
-    }
-    else if (hourC >= 1) {
-      result = "" + parseInt(hourC) + "小时前";
-    }
-    else if (minC >= 1) {
-      result = "" + parseInt(minC) + "分钟前";
-    } else
-      result = "刚刚";
     return result;
   },
   // flag，true，表示初始化
   getList: function (flag) {
     wx.showNavigationBarLoading();
-    let arr_ = flag? []: this.data.arr;
+    let arr_ = flag ? [] : this.data.arr;
     let selected = this.data.selected;
     let conditions = this.data.conditions;
     let params = {
-      pageNo: parseInt(arr_.length/10) + 1,
+      pageNo: parseInt(arr_.length / 10) + 1,
       pageSize: 10,
       source: 2,
       type: 2,
@@ -61,7 +68,7 @@ Page({
       if (res.data.code == 1) {
         let arr = arr_.concat(res.data.data);
         let lastTimeAgo = '';
-        for (let i = 0; i < arr.length; i++){
+        for (let i = 0; i < arr.length; i++) {
           let ta = this.timeAgo(arr[i].createTime);
           // 对比上一个timeAgo，若相同，则省略该字段
           if (lastTimeAgo == ta) {
@@ -86,13 +93,20 @@ Page({
   toDetail: function (e) {
     let id = e.currentTarget.dataset.id;
     wx.navigateTo({
-      url: '/packageIndex/pages/lessonDetail/lessonDetail?id=' + id,
+      url: '/packageIndex/pages/lessonDetail/lessonDetail?id=' + id + "&shopId=" + this.data.shopId,
     })
   },
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    //当前时间戳
+    // var now = new Date().getTime();
+    var shopId = wx.getStorageSync("shop").id;
+    this.setData({
+      shopId: shopId,
+      // now: now
+    })
     this.getList()
   },
 
@@ -108,5 +122,22 @@ Page({
    */
   onReachBottom: function () {
     if (this.data.total > this.data.arr.length) this.getList()
+  },
+  toChinesNum:function(num) {
+    let changeNum = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九']; //changeNum[0] = "零"
+    let unit = ["", "十", "百", "千", "万"];
+    num = parseInt(num);
+    let getWan = (temp) => {
+      let strArr = temp.toString().split("").reverse();
+      let newNum = "";
+      for (var i = 0; i < strArr.length; i++) {
+        newNum = (i == 0 && strArr[i] == 0 ? "" : (i > 0 && strArr[i] == 0 && strArr[i - 1] == 0 ? "" : changeNum[strArr[i]] + (strArr[i] == 0 ? unit[0] : unit[i]))) + newNum;
+      }
+      return newNum;
+    }
+    let overWan = Math.floor(num / 10000);
+    let noWan = num % 10000;
+    if (noWan.toString().length < 4) noWan = "0" + noWan;
+    return overWan ? getWan(overWan) + "万" + getWan(noWan) : getWan(num);
   }
 })

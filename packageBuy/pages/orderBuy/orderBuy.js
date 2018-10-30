@@ -46,7 +46,7 @@ Page({
     discount: [], //店铺优惠
     amountMin: 0, //优惠满
     amounts: 0, //优惠多少
-    instruction: '',//优惠描述
+    instruction: '选择优惠券',//优惠描述
     name: '',//优惠类型名称
     limtgood: '',//选择的优惠券若是指定商品传入指定商品id
     contactMobile: '',
@@ -138,7 +138,7 @@ Page({
       oldTotal: options.totalMoney,
       amountMin: options.amountMin || 0,
       amounts: options.amount || 0,
-      instruction: options.instruction || "",
+      instruction: options.instruction || "选择优惠券",
       name: options.name || "",
       couponId: options.counid || ""
     });
@@ -740,10 +740,9 @@ Page({
               }
             } else {
               this.setData({
-                instruction: "",
                 amountMin: 0, //优惠满
                 amounts: 0, //优惠多少
-                instruction: '',
+                instruction: '选择优惠券',
                 couponId: '',
                 name: ''
               })
@@ -755,10 +754,9 @@ Page({
             }
           } else {
             this.setData({
-              instruction: "",
               amountMin: 0, //优惠满
               amounts: 0, //优惠多少
-              instruction: '',
+              instruction: '选择优惠券',
               couponId: '',
               name: '',
               limtgood: ''
@@ -786,10 +784,9 @@ Page({
             }
           } else {
             this.setData({
-              instruction: "",
               amountMin: 0, //优惠满
               amounts: 0, //优惠多少
-              instruction: '',
+              instruction: '选择优惠券',
               couponId: '',
               name: ''
             })
@@ -838,10 +835,9 @@ Page({
             }
           } else { //此订单无指定商品
             this.setData({
-              instruction: "",
               amountMin: 0, //优惠满
               amounts: 0, //优惠多少
-              instruction: '',
+              instruction: '选择优惠券',
               couponId: '',
               name: '',
               limtgood: ''
@@ -875,10 +871,9 @@ Page({
       } else {
         if (Number(newmoney) < Number(this.data.amountMin)) {
           this.setData({
-            instruction: "",
             amountMin: 0, //优惠满
             amounts: 0, //优惠多少
-            instruction: '',
+            instruction: '选择优惠券',
             couponId: '',
             name: ''
           })
@@ -903,7 +898,7 @@ Page({
   addressSkip: function (e) {
     //跳到地址管理
     wx.navigateTo({
-      url: '../../packageMyHome/pages/address/index/list?id=' + this.data.customerId + '&select=' + 1
+      url: '/packageMyHome/pages/address/index/list?id=' + this.data.customerId + '&select=' + 1
     })
   },
   bindPickerChange: function (e) {
@@ -914,10 +909,9 @@ Page({
       this.setData({
         index: e.detail.value,
         isSend: 0,
-        instruction: "",
         amountMin: 0, //优惠满
         amounts: 0, //优惠多少
-        instruction: '',
+        instruction: '选择优惠券',
         couponId: '',
         name: '',
         limtgood: ''
@@ -926,10 +920,9 @@ Page({
       this.setData({
         index: e.detail.value,
         isSend: 2,
-        instruction: "",
         amountMin: 0, //优惠满
         amounts: 0, //优惠多少
-        instruction: '',
+        instruction: '选择优惠券',
         couponId: '',
         name: '',
         limtgood: ''
@@ -1071,7 +1064,7 @@ Page({
       flagOrder: true
     })
     wx.switchTab({
-      url: '../proList/proList'
+      url: '/pages/proList/proList'
     });
   },
   look: function (e) {
@@ -1081,7 +1074,7 @@ Page({
     })
     //跳到线上订单
     wx.redirectTo({
-      url: '../../../../../packageMyHome/pages/order/order'
+      url: '/packageMyHome/pages/order/order'
     })
 
 
@@ -1263,7 +1256,7 @@ Page({
                   })
 
                   wx.switchTab({
-                    url: '../../../pages/shoppingCart/shoppingCart'
+                    url: '/pages/shoppingCart/shoppingCart'
                   });
 
                 }
@@ -1354,7 +1347,7 @@ Page({
             })
             setTimeout(function () {
               wx.switchTab({
-                url: '../shoppingCart/shoppingCart'
+                url: '/pages/shoppingCart/shoppingCart'
               }, 3000);
             })
 

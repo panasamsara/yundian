@@ -18,7 +18,7 @@
         <view class='go-buy-btn' bindtap='goOfflineOrderDetail'>买单</view>
       </view>
     </view>
-    <view wx:if="{{ifstore==0}}" class="foods-wrapper {{showMaiDan ? 'm-t-100' : ''}}" style="height: {{showMaiDan ? goodsHL : goodsHL}}px;">
+    <view wx:if="{{ifstore==0}}" class="foods-wrapper {{showMaiDan ? 'm-t-100' : ''}}" style="height: {{showMaiDan ? pgoodsHL : goodsHL}}px;">
       <scroll-view scroll-y style="height: 100%;" scroll-into-view="{{toView}}">
       <view  class="food-grouping" id="catGood_{{item.id}}">
         <view wx:for="{{goodsInCategory}}" wx:for-item="good" wx:key='index' class="foods-item" data-id="{{good.id}}" data-status='{{good.goodsType}}' data-stocklist="{{good.stockList.length}}" bindtap='goToDetail'>
@@ -41,7 +41,7 @@
     </view>
 
     <!-- 右侧 留店商品列表 -->
-    <view wx:elif="{{ifstore==1}}" class="foods-wrapper {{showMaiDan ? 'm-t-100' : ''}}" style="height: {{showMaiDan ? goodsHL : goodsHL}}px;">
+    <view wx:elif="{{ifstore==1}}" class="foods-wrapper {{showMaiDan ? 'm-t-100' : ''}}" style="height: {{showMaiDan ? pgoodsHL : goodsHL}}px;">
       <scroll-view scroll-y style="height: 100%;" >
         <view class="gift-title">留店商品</view>
         <view class="gift-list" style="height: 100%;">

@@ -1,0 +1,8 @@
+{
+  "navigationBarTextStyle": "#ffffff",
+  "navigationBarBackgroundColor": "#FB452C",
+  "navigationBarTitleText": "选择设备",
+  "usingComponents": {
+    "component-search": "../../../../components/component-search/component-search"
+  }
+}

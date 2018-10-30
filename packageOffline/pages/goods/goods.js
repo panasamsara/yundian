@@ -31,22 +31,24 @@ Page({
     // })
     console.log(options)
     if (options && options.q) {
+      console.log(1)
       var uri = decodeURIComponent(options.q)
       var p = util.getParams(uri)
-      let shopId = p.shopId
+      let shopId = p.shopId || wx.getStorageSync('shop').id
       this.setData({
         shopId: shopId
       })
     } else {
-      
+      console.log(2)
+      let shopId = options.shopId || wx.getStorageSync('shop').id;
         this.setData({
-          shopId: options.shopId
+          shopId: shopId
         })
       
     }
     console.log(options)
     var parm = {
-      shopId: options.shopId,
+      shopId: options.shopId || wx.getStorageSync('shop').id,
       goodsId: options.goodsId,
       customerId: wx.getStorageSync('scSysUser').id
     },

@@ -13,7 +13,12 @@ page,.content{
   width: 100%;
   height: 256rpx;
 }
-
+#mycanvas{
+  width: 268rpx;
+  height: 268rpx;
+  display: block!important;
+  margin: 50rpx 0 0 241rpx;
+}
 .code-img{
   text-align: center;
 }
@@ -486,8 +491,8 @@ page,.content{
     overflow: hidden;
 }
 .modal-box,.modal-box .modal-body{
-  width:675rpx;
-  height:750rpx;
+  width:450rpx;
+  height:420rpx;
   background:#fff;
   margin:0 auto;
   border-radius: 10rpx;
@@ -496,6 +501,12 @@ page,.content{
   top: 50%;
   left: 50%;
   transform: translate(-50%,-50%);
+}
+.modal-box .modal-body #mycanvas1 {
+  margin:0 auto !important;
+  width: 268rpx;
+  height: 268rpx;
+  display: block!important;
 }
 .modal-box .order-close{
   width:50rpx;
@@ -507,7 +518,7 @@ page,.content{
 .modal-content{
   text-align: center;
   position: absolute;
-  bottom:20rpx;
+  bottom:40rpx;
   width:100%;
 }
 .modal-content text{
@@ -523,11 +534,9 @@ page,.content{
 }
 .modal-box .code-img{
   position: relative;
-  width: 670rpx;
+  width: 350rpx;
   overflow: hidden;
-}
-.modal-box .canvas-box{
-  margin-left: -64rpx;
+  margin:12rpx auto 0;
 }
 .modal-box canvas{
   position: none;

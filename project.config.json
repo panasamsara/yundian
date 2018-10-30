@@ -37,7 +37,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 39,
+			"current": 40,
 			"list": [
 				{
 					"id": -1,
@@ -276,7 +276,13 @@
 				{
 					"id": -1,
 					"name": "新手礼包劵详情",
-					"pathName": "pages/myHome/discounts/discountDetail/discountDetail"
+					"pathName": "pages/myHome/discounts/discountDetail/discountDetail",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "Qr",
+					"pathName": "pages/QrToActivity/QrToActivity"
 				}
 			]
 		}

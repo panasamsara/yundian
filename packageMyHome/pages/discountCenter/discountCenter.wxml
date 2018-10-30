@@ -91,3 +91,7 @@
   </view>
 </view>
 
+  <view id='shareBox'>
+    <image src='../images/fenxinag_btn@2x.png' id='goback' bindtap='goback'></image>
+  </view>
+

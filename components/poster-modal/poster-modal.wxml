@@ -1,11 +1,13 @@
 <!--components/poster-modal/poster-modal.wxml-->
 <view class='posterModal'>
   <view class='shareShade' bindtap='closeShare'></view>
-  <view class='shareView' wx:if="{{shareShow}}">
-    <button open-type='share' class='btn'>转发</button>
-    <button class='save_img btn' bindtap="drawPoster">生成海报 保存分享</button>
-    <button class='close btn' bindtap="closeShare">取消</button>
-  </view>
+  <form bindsubmit="submitInfo" report-submit='true' >
+    <view class='shareView' wx:if="{{shareShow}}">
+      <button open-type='share' form-type="submit" class='btn'>转发</button>
+      <button class='save_img btn' bindtap="drawPoster">生成海报 保存分享</button>
+      <button class='close btn' bindtap="closeShare">取消</button>
+    </view>
+  </form>
   <view class='posterBox' wx:if="{{posterShow}}">
     <image class='imgBox' src='{{posterData}}'></image>
     <button id='saveImg' bindtap='saveImg' wx:if="{{btnData=='normal'}}" class='save' >保存图片</button>

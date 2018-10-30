@@ -47,7 +47,8 @@ Page({
       animationData: {},
       outQrCodeParam:{},
       shopHasCoupon: false,
-      share:false
+      share:false,
+      canGetCoupon: true // 防止重复领取礼包
       
 
    },
@@ -77,9 +78,30 @@ Page({
          })
        }
      }
-     
 
+    if (e.shareUser){
+      util.checkWxLogin().then((loginRes) => {
+        let paramData = {
+          currentId: loginRes.id,
+          shareShop: e.shopId,
+          shareUser: e.shareUser,
+          sourcePart: '1',
+          shareType: '',
+          businessId: ''
+        }
+        if (loginRes.id != e.shareUser) { //分享人不是本人，记录推荐关系
+          _this.record(paramData)
+        }
+      })
+    }
+    
    },
+   // 记录推荐关系
+  record: function(data){
+    app.util.reqAsync('payBoot/wx/acode/record', data).then((res) => {
+
+    })
+  },
    // 每次显示做个判断，本地没有店铺就扫码，当前没有店铺就请求数据
    onShow: function () {
     //  this.onLoad();
@@ -116,7 +138,7 @@ Page({
 
                _this.setData({
                  shopInformation: res.data.data,
-                 goodsInfos: res.data.data.goodsInfos
+                //  goodsInfos: res.data.data.goodsInfos
                })
                //shop存入storage
                wx.setStorageSync('shop', res.data.data.shopInfo);
@@ -152,7 +174,7 @@ Page({
 
              _this.setData({
                shopInformation: shopInformation,
-               goodsInfos: _this.changeStartEndTime(goodsInfos)
+              //  goodsInfos: _this.changeStartEndTime(goodsInfos)
              })
              _this.getShopInfo(shopInformation)
              _this.getIndexAllInfo(shop.id)
@@ -172,7 +194,7 @@ Page({
                console.log(wx.getStorageSync('shopInformation'))
                _this.setData({
                  shopInformation: shopInformation,
-                 goodsInfos: _this.changeStartEndTime(goodsInfos)
+                //  goodsInfos: _this.changeStartEndTime(goodsInfos)
                })
                _this.getShopInfo(shopInformation)
                _this.getIndexAllInfo(shop.id)
@@ -184,7 +206,7 @@ Page({
                util.getShop(loginRes.id, shopId).then(function (res) {
                  _this.setData({
                    shopInformation: res.data.data,
-                   goodsInfos: _this.changeStartEndTime(res.data.data.goodsInfos)
+                  //  goodsInfos: _this.changeStartEndTime(res.data.data.goodsInfos)
                  })
                  //shop存入storage
                  wx.setStorageSync('shop', res.data.data.shopInfo);
@@ -232,7 +254,7 @@ Page({
   // 获取店铺活动
   getShopHomeGoods(shopId){
     let _this = this
-    util.reqAsync('shop/getShopHomeGoods', {
+    util.reqAsync('shop/selectActivePosterList', {
       shopId: shopId,
       pageNo: 1,
       pageSize: 100
@@ -371,7 +393,7 @@ Page({
        wx.stopPullDownRefresh()
        _this.setData({
          shopInformation: res.data.data,
-         goodsInfos: _this.changeStartEndTime(res.data.data.goodsInfos)
+        //  goodsInfos: _this.changeStartEndTime(res.data.data.goodsInfos)
        })
        //shop存入storage
        wx.setStorageSync('shop', res.data.data.shopInfo);
@@ -573,6 +595,15 @@ Page({
      })
      
    },
+   //防止重复领取
+   checkGetCoupon: function(){
+     if (this.data.canGetCoupon){
+       this.setData({
+         canGetCoupon: false
+       })
+       this.getCoupon()
+     }
+   },
    //领取新人礼包
    getCoupon: function(){
      let _this = this
@@ -583,11 +614,14 @@ Page({
        promGoodsType: this.data.couponInfo.coupon.promGoodsType,
        number: 1
      }).then((res) => {
+       _this.setData({
+         canGetCoupon: true
+       })
        if(res.data.code == 9){
-         wx.showToast({
-           title: res.data.msg,
-           icon: 'none'
-         })
+        //  wx.showToast({
+        //    title: res.data.msg,
+        //    icon: 'none'
+        //  })
          // 重新刷新首页
          _this.onPullDownRefresh()
        }else{
@@ -681,6 +715,7 @@ Page({
      })
     
    },
+
    goToActivityDetail: function(e){
     let user = wx.getStorageSync('scSysUser');
     var shopId = this.data.shopInformation.shopInfo.id
@@ -691,6 +726,13 @@ Page({
     if (activityType ==0){
       wx.navigateTo({
         url: '../store/activityInfo/activityInfo?shopId=' + shopId + '&goodsId=' + goodsId + '&actionId=' + actionId + '&signType=' + signType,
+        success: function (res) {
+          // success
+        }
+      })
+    } else if (activityType == 11){
+      wx.navigateTo({
+        url: '../../packageMyHome/pages/eventCard/eventCard?shopId=' + shopId + '&goodsId=' + goodsId + '&actionId=' + actionId + '&signType=' + signType,
         success: function (res) {
           // success
         }
@@ -880,10 +922,10 @@ Page({
        couponId: e.currentTarget.dataset.id
      }
      app.util.reqAsync('shop/takeCoupon',datas).then((res) => {
-       wx.showToast({
-         title: res.data.msg,
-         icon:'none'
-       })
+      //  wx.showToast({
+      //    title: res.data.msg,
+      //    icon:'none'
+      //  })
      }).catch((err) => {
        console.log(err)
      })
@@ -908,7 +950,7 @@ Page({
   onShareAppMessage: function () {
     return {
       title: wx.getStorageSync('shop').shopName,
-      path: "pages/index/index?shopId=" + wx.getStorageSync('shop').id ,
+      path: "pages/index/index?shopId=" + wx.getStorageSync('shop').id + '&shareUser=' + wx.getStorageSync('scSysUser').id,
     }
   },
   // 下拉刷新

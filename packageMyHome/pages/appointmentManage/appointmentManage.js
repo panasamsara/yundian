@@ -6,9 +6,17 @@ Page({
     listData:{
       pagination: { rows: 3, page: 1 },
       customerId: "",
-      bespokeStatus: 0
+      bespokeStatus: 0,
+      shopId:""
     },
     total:""
+  },
+  onLoad:function(){
+    var shopId=wx.getStorageSync("shop").id;
+    var newshopId = "listData.shopId";
+    this.setData({
+      [newshopId]: shopId
+    })
   },
   onShow:function(){
     var userId = wx.getStorageSync('scSysUser').id;

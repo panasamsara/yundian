@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "活动详情"
+  ,
+  "usingComponents": {
+    "login-component": "../../../components/component-login",
+    "poster-modal": "../../../components/poster-modal/poster-modal"
+  }
+}

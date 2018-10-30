@@ -43,7 +43,8 @@ Page({
     userId: '',//当前用户ID,
     loginType: 0,
     options: {},
-    shopBtn: true
+    shopBtn: true,
+    shareUser:''
   },
   /**
   * 生命周期函数--监听页面加载
@@ -60,11 +61,15 @@ Page({
       cUser: options.cUser,
       orderStatusVo: options.orderStatusVo,
       stockId: options.stockId,
+      shareUser: options.shareUser||''
       // goodsType: options.goodsType
     })
-
-    return
+   
     console.log(wx.getStorageSync('scSysUser'));
+  },
+  record: function (data) {
+    app.util.reqAsync('payBoot/wx/acode/record', data).then((res) => {
+    })
   },
   //初始数据获取
   loadFn: function () {
@@ -79,9 +84,7 @@ Page({
         // debugger
         if (res.data.code == 1) {
           wx.setStorageSync('shop', res.data.data.shopInfo)
-          this.setData({
-            shopBtn: false
-          })
+
         }
       })
     }
@@ -150,6 +153,18 @@ Page({
           goodsId: this.data.goodId,
           customerId: wx.getStorageSync('scSysUser').id
         })
+        let paramData = {
+          currentId: wx.getStorageSync('scSysUser').id,
+          shareShop: this.data.shopId,
+          shareUser: this.data.shareUser,
+          sourcePart: '1',
+          shareType: 5,
+          businessId: this.data.groupId
+        }
+        if (this.data.shareUser != wx.getStorageSync('scSysUser').id && this.data.shareUser) {
+          this.record(paramData)
+
+        }
       }
 
 
@@ -167,8 +182,9 @@ Page({
     console.log(this.data.options)
     // debugger
     // if (wx.getStorageSync('scSysUser')){
-    this.loadFn()
     // }
+    this.loadFn()
+    
     console.log({
       shopId: this.data.shopId,
       goodsId: this.data.goodId,
@@ -215,6 +231,17 @@ Page({
         userId: wx.getStorageSync('scSysUser').id,
 
       })
+      let paramData = {
+        currentId: wx.getStorageSync('scSysUser').id,
+        shareShop: this.data.shopId,
+        shareUser: this.data.shareUser,
+        sourcePart: '1',
+        shareType: 5,
+        businessId: this.data.groupId
+      }
+      if (this.data.shareUser != wx.getStorageSync('scSysUser').id && this.data.shareUser) {
+        this.record(paramData)
+      }
       // console.loh
       this.getData(this.data.parm)
       // this.loadFn(wx.getStorageSync('scSysUser').id)
@@ -247,7 +274,8 @@ Page({
       select: 0,
       total: 0,
       stockPrice: 0,
-      balance: 0
+      balance: 0,
+      shopBtn: true
     })
     app.util.reqAsync('shop/goodsDetailAddGroupBuying', parm).then((res) => {//获取商品详情数据
       if (res.data.data) {
@@ -257,6 +285,7 @@ Page({
         // })
         this.setData({
           goodsType: res.data.data.goodsType,
+          shopBtn: false
 
         })
         if (this.data.goodsType) {
@@ -394,15 +423,20 @@ Page({
   },
   //选规模
   chose: function (e) {//选择规格
+    console.log(e)
+  
     if (this.data.goodsType) {
       this.setData({
         balance: this.data.shopData.stockBalance,
-
       })
 
     } else {
+      console.log(this.data.total)
+      
       this.setData({
-        balance: this.data.shopData.scShopGoodsStockList[e.currentTarget.dataset.index].stockNum
+        balance: this.data.shopData.scShopGoodsStockList[e.currentTarget.dataset.index].stockNum,
+        total: this.data.shopData.scShopGoodsStockList[e.currentTarget.dataset.index].stockBatchPrice,
+        stockPrice: this.data.shopData.scShopGoodsStockList[e.currentTarget.dataset.index].stockBatchPrice
       })
     }
     this.setData({

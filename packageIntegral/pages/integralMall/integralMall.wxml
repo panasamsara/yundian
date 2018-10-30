@@ -21,7 +21,7 @@
    </swiper>
 </view>
 <view class='content'> 
-  <view class='list' wx:for="{{integralList}}" wx:key="{{index}}" data-goodsId="{{item.goodsId}}" data-goodsType="{{item.goodsType}}"bindtap='goDetail'>
+  <view class='list' wx:for="{{integralList}}" wx:key="{{index}}" data-goodsId="{{item.goodsId}}" data-goodsType="{{item.goodsType}}" bindtap='goDetail'>
     <view class='viewBg'>
       <image src="{{item.pictureUrl}}"></image>
       <view class='bgTitle'>
@@ -30,7 +30,7 @@
       </view>
     </view>
       <view class='jifen'>{{item.point}}<text>积分</text></view>
-      <view class='com deficiency' wx:if="{{item.goodsType==3&&item.balance==0}}">库存不足</view>
+      <view class='com deficiency' wx:if="{{item.goodsType==3&&item.balance<=0}}">库存不足</view>
       <view class='com exchange' wx:else catchtap='exchange' data-id="{{item.id}}" >立即兑换</view>
   </view>
 </view>

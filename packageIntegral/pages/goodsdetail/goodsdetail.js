@@ -1,4 +1,5 @@
 // packageIntegral/pages/goodsdetail/goodsdetail.js
+import saveImg from "../../../utils/saveImg.js"
 const app=getApp();
 Page({
 
@@ -10,14 +11,25 @@ Page({
     goodsId:'',
     goodsType:'',
     loginType:0,
-    data:{}
+    data:{},
+    btnShow: 'normal'
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    console.log(options)
+    console.log('测试转发',options)
+    if (options.shareUser) {//转发进入页面记录推荐关系
+      this.record({
+        currentId: wx.getStorageSync('scSysUser').id,
+        shareShop: options.shopId,
+        shareUser: options.shareUser,
+        sourcePart: '1',
+        shareType: options.shareType,
+        businessId: options.goodsId
+      })
+    }
     if (options && options.q) {
       var uri = decodeURIComponent(options.q)
       var p = util.getParams(uri)
@@ -40,6 +52,10 @@ Page({
     })
     // let shopId = options.id,
        
+  },
+  record: function (data) {//记录推荐关系
+    console.log('测试入参',data)
+    app.util.reqAsync('payBoot/wx/acode/record', data).then((res) => {})
   },
   getPoint:function(params){//获取账户积分
     app.util.reqAsync('shop/selectOrderSettleInfo', params).then((res) => {
@@ -96,7 +112,6 @@ Page({
   onShow: function () {
     var _this =this;
     app.util.checkWxLogin('share').then((loginRes) => {
-      console.log(loginRes)
       if (loginRes.status == 0) {
         // if (wx.getStorageSync('isAuth') == 'no') {
         // this.setData({
@@ -119,7 +134,7 @@ Page({
            params2 = {
              goodsId: _this.data.goodsId,
              shopId: _this.data.shopId,
-              merchantId: wx.getStorageSync('shop').merchantId,
+             merchantId: wx.getStorageSync('shop').merchantId,
              goodsType: _this.data.goodsType
             }
           //查询账户剩余积分
@@ -142,10 +157,10 @@ Page({
               merchantId: wx.getStorageSync('shop').merchantId
               },
              params2 = {
-               goodsId: _this.data.goodsId,
-               shopId: _this.data.shopId,
+                goodsId: _this.data.goodsId,
+                shopId: _this.data.shopId,
                 merchantId: wx.getStorageSync('shop').merchantId,
-               goodsType: _this.data.goodsType
+                goodsType: _this.data.goodsType
               }; 
               //查询账户剩余积分
             _this.getPoint(params1);
@@ -199,10 +214,94 @@ Page({
     return {
       title: this.data.data.goodsName,
       desc: this.data.data.goodsName,
-      imageUrl: this.data.pictureUrl,
-      path: '../goodsDetial/goodsDetial?shopId=' + this.data.shopId + '&goodsId=' + this.data.goodsId + '&share=share',
+      imageUrl: this.data.data.pictureUrl,
+      path: '/packageIntegral/pages/goodsdetail/goodsdetail?shopId=' + this.data.shopId + '&goodsId=' + this.data.data.id + '&share=share' + '&shareUser=' + wx.getStorageSync('scSysUser').id + '&shareType=4&sourcePart=1' + '&goodsType=' + this.data.goodsType,
       success: function () {
       }
     }
+  },
+  goback: function () {//回到首页按钮
+    wx.switchTab({
+      url: '../../../pages/index/index?shopId=' + this.data.shopId
+    })
+  },
+  shareBtn: function () {//点击分享
+    this.setData({
+      posterShow: true,
+      untouch: 'untouch'
+    })
+  },
+  closeShare: function () {//关闭分享
+    this.setData({
+      posterShow: false,
+      untouch: 'touch'
+    })
+  },
+  drawPoster: function () {//绘制海报
+    if (this.data.canvasUrl) {
+      return;
+    }
+    wx.showLoading();
+    var _this = this,
+        shopName=saveImg.cut(this.data.data.shopInfo.shopName,7,_this),
+        proName=saveImg.cut(this.data.data.goodsName,10,_this); 
+    if (!this.data.codeUrl) {
+      saveImg.getCode(_this, {
+        source: 0,
+        page: "pages/QrToActivity/QrToActivity",
+        params: {
+          shopId: wx.getStorageSync('shop').id,
+          userId: wx.getStorageSync('scSysUser').id,
+          shareUser: wx.getStorageSync('scSysUser').id,
+          merchantId: wx.getStorageSync('shop').merchantId,
+          goodsId: _this.data.goodsId,
+          goodsType: _this.data.goodsType,
+          sourcePart: '1',
+          shareType: 4
+        }
+      }).then(function () {
+        var pictureUrl=_this.data.data.pictureUrl;
+        wx.downloadFile({//缓存积分商品图片，直接使用网络路径真机无法显示或绘制
+          url: pictureUrl.split(':')[0]=='http'?pictureUrl.replace('http','https'):pictureUrl,
+          success: function (res) {
+            _this.setData({
+              proPic: res.tempFilePath
+            });
+            var context=wx.createCanvasContext('shareCanvas'),
+                scale=wx.getSystemInfoSync().windowWidth/375;
+            context.setFillStyle('#ffffff');
+            context.fillRect(0,0,690*scale,1000*scale);//设置白色背景
+            context.drawImage('images/xcx_schb_jfdh_bg@2x.png', 0, 0, 690 * scale, 1000 * scale);
+            context.setFontSize(28*scale);
+            let w=context.measureText(shopName).width;
+            context.fillText(shopName,(690-w)/2*scale,57*scale);//绘制店铺名
+            saveImg.roundRect(context,scale,36,80,618,618,26);//绘制圆角矩形
+            context.save();
+            saveImg.roundRect(context,scale,39,83,612,612,26);//绘制圆角矩形显示白色边框
+            context.clip();
+            context.drawImage(_this.data.proPic,39*scale,80*scale,612*scale,612*scale);//绘制商品图片
+            context.restore();
+            context.drawImage('images/xcx_schb_jfdh_top@2x.png',0,0,690*scale,1000*scale);//绘制背景图
+            context.fillText('价值￥'+_this.data.data.memberPrice,70*scale,900*scale);//绘制价值
+            context.setFontSize(24*scale);
+            context.fillText(proName,70*scale,845*scale);//绘制商品名
+            context.drawImage(_this.data.codeUrl,518*scale,817*scale,138*scale,138*scale);
+            context.draw(false,function(){
+              setTimeout(function () {
+                saveImg.temp(_this,'shareCanvas',1380,2000,1380,2000);
+              }, 1000);
+            })
+          }
+        })
+      });
+    }
+  },
+  saveImg: function () {//保存图片
+    var that = this;
+    saveImg.saveImg(that);
+  },
+  handleSetting: function (e) {//授权
+    let that = this;
+    saveImg.handleSetting(that, e.detail.e);
   }
 })

@@ -1,0 +1,247 @@
+/* packageMyHome/pages/eventCardDetail/eventCardDetail.wxss */
+.backimg{
+  width: 750rpx;
+  height: 310rpx;
+}
+.header-content{
+  padding:0 30rpx;
+  background: #fff;
+  
+}
+view.title{
+  padding: 20rpx 0;
+  color: #FB452C;
+  font-size: 34rpx;
+}
+page{
+  background: #F3F3F3;
+  height: 100%;
+  font-size: 30rpx;
+    word-wrap:break-word;
+
+}
+.card-msg{
+  background: #fff;
+  padding:  30rpx;
+  margin-top: 30rpx;
+}
+.main{
+  padding-bottom: 110rpx;
+  
+}
+.msg-title{
+  height: 50rpx;
+  padding-left: 30rpx;
+  border-left: 5rpx solid #FB452C;
+  line-height: 50rpx;
+  font-size: 32rpx;
+
+}
+.img-tilte{
+  padding-top: 50rpx;
+  font-size: 32rpx;
+  color: #333333;
+  font-weight: bold;
+}
+.content-img{
+  width: 750rpx;
+}
+.img-info{
+  background: #fff;
+  padding: 30rpx;
+  text-indent: 2em;
+}
+.msg-title text{
+  font-size: 28rpx;
+}
+.list-node{
+  position: relative;
+  padding: 30rpx;
+  background: #fff;
+  margin-top: 20rpx;
+  
+}
+.list-node>image{
+  width: 14rpx;
+  height: 20rpx;
+  top: 40rpx;
+  left: 30rpx;
+  position:absolute; 
+}
+.list-node text{
+  padding-left: 30rpx;
+  display: inline-block;
+  padding-bottom: 20rpx;
+}
+.list-title{
+  background: #fff;
+  padding: 30rpx;
+  margin-top: 30rpx;
+  border-bottom: 1px solid #eee;
+}
+.list-msg{
+  background: #fff;
+  padding:  30rpx; 
+  border-top:1px solid #eee;
+  border-bottom:1px solid #eee;
+}
+.stockName{
+padding-top:30rpx;
+color:#999;
+}
+
+.list-msg .list-img{
+  height: 180rpx;
+  width: 180rpx;
+  vertical-align: top;
+  padding-right: 20rpx;
+  border-radius: 10rpx;
+}
+.list-msg .list-chs{
+  width: 40rpx;
+  height: 40rpx;
+  padding-top: 70rpx; 
+  padding-right: 20rpx; 
+  vertical-align: top;
+}
+.list-msg text{
+  vertical-align: top;
+}
+.buy{
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  background: #fff;
+  box-shadow: 0 -1px 1px #888888;
+}
+.buy view{
+  width: 50%;
+  height: 100rpx;
+  float: left;
+  color:#FB452C;
+  line-height: 100rpx;
+  text-align: center;
+}
+.buy view .corn{
+  font-size: 36rpx;
+}
+.buy view.buyBtn{
+  background: #FB452C;
+  color: #fff;
+  font-size: 36rpx;
+}
+.msg-text{
+  width: 370rpx;
+  display: inline-block;
+}
+.modal-box{
+  position:fixed;
+  width:100%;
+  height:100%;
+  z-index: 55;
+  top:0px;
+  background:rgba(0,0,0,0.4);
+  overflow: hidden;
+}
+.modal-body{
+  position:relative;
+  margin:30% auto;
+  border-radius: 10rpx;
+  width: 80%;
+  height:750rpx; 
+  background: #fff;
+}
+.modal-body image{
+  width: 70rpx;
+  height: 70rpx;
+  position: absolute;
+  right: -35rpx;
+  top: -35rpx;
+}
+.modal-body .modal-title{
+  font-size: 33rpx;
+  height: 100rpx;
+  line-height: 100rpx;
+  text-align: center;
+  border-bottom:1rpx solid #e4e4e4;
+}
+.modal-content{
+  width: 100%;
+  height:500rpx; 
+  background: #fff;
+  overflow: auto;
+  margin-bottom:20rpx;
+}
+.modal-content .room-list{
+  width: 180rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  background: #fff;
+  border:1px solid #e4e4e4;
+  font-size: 30rpx;
+  border-radius: 10rpx;
+  float: left;
+  margin:30rpx 0 0 15rpx;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+}
+.modal-content .room-list.acv{
+  background: #fb452c;
+  color:#fff;
+}
+.modal-btn button{
+  width: 250rpx;
+  height: 70rpx;
+  line-height: 70rpx;
+  color:#fff;
+  font-size: 34rpx;
+  background: linear-gradient(to right, #fe4b2c, #fe6e2c);
+}
+/*下单成功*/
+.order-tip .modal-body{
+  height: 378rpx;
+  margin:40% auto 0;
+}
+.order-tip .order-success{
+  position: absolute;
+  top:-100rpx;
+  left: 50%;
+  margin-left: -155rpx;
+  width: 310rpx;
+  height: 220rpx;
+}
+.order-tip .modal-content{
+  height: 120rpx;
+  width: 100%;
+  padding-top:160rpx;
+  font-size: 28rpx;
+  color:#999;
+  border-radius: 10rpx;
+}
+.order-tip .modal-content text{
+  display: block;
+  text-align: center;
+  margin-bottom:15rpx;
+}
+.order-tip .modal-btn{
+  border-top:1px solid #e4e4e4;
+}
+.order-tip .modal-btn text{
+  width:49%;
+  float: left;
+  background: #fff;
+  border:0;
+  border-radius: 0;
+  height: 70rpx;
+  line-height: 70rpx;
+  text-align: center;
+}
+.order-tip .modal-btn text:first-child{
+  border-right: 1rpx solid #e4e4e4;
+  color:#999;
+}
+.order-tip .modal-btn text:last-child{
+  color:#ff8979;
+}

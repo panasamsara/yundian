@@ -34,7 +34,8 @@ Page({
     facilityId: '',
     toViewType: '',
     prompt:'',
-    ongkd:'false'
+    ongkd:'false',
+    show: ""
   },
  
 
@@ -54,7 +55,7 @@ Page({
   },
   confirmd: function (e) {
     var that = this;
-    var index = that.__viewData__.idx;
+    var index = that.data.idx;
     console.log('人数---',this.data.list[index].num)
     wx.setStorageSync('peopleNumber', this.data.list[index].num)
     this.setData({
@@ -85,7 +86,7 @@ Page({
       startTime: app.util.formatTime(new Date()),
     }).then((res) => {
       // if (res.data.code == 1) {
-        wx.navigateTo({
+        wx.redirectTo({
           url: '../proList/proList'
         })
       // } else {
@@ -96,16 +97,35 @@ Page({
     
   },
   //跳转换桌扫码页面
-  choosee1: function () {
-    // this.setData({
-    //   prompt: !this.data.prompt
-    // })
-    
-    wx.navigateBack({
-      delta: -1
-    })
-    console.log(123)
-  },
+  // choosee1: function () {
+  //   // this.setData({
+  //   //   prompt: !this.data.prompt
+  //   // })
+  //     var that = this;
+  //     var show;
+  //     wx.scanCode({
+  //       success: (res) => {
+  //         this.show = "--result:" + res.result + "--scanType:" + res.scanType + "--charSet:" + res.charSet + "--path:" + res.path;
+  //         console.log(this.show)
+  //         that.setData({
+  //           show: this.show
+  //         })
+  //         console.log(res)
+  //         if (!res.path){
+  //           var result = "../../../packageOffline/pages/proList/proList?q="+ res.result
+  //           wx.navigateTo({
+  //             url: result
+  //           })
+  //         } 
+  //         // else {
+  //         //   var result = "../../../" + res.path + res.result
+  //         //   wx.navigateTo({
+  //         //     url: result
+  //         //   })
+  //         // }
+  //       },
+  //     })
+  // },
   // 生命周期函数--监听页面加载
   onLoad: function (e) {
     showView: (e.showView == "true" ? true : false)
@@ -114,8 +134,8 @@ Page({
     })
 
     let _this = this;
-    var num = _this.__viewData__.list[7]
-    console.log(num)
+    var num = _this.data.list[7]
+    console.log(_this)
     this.setData({
       num:''
     })

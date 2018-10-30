@@ -2,19 +2,22 @@ const app=getApp();
 
 function getCode(obj,params){//获取二维码地址
   let _this=obj;
-  app.util.reqAsync('payBoot/wx/acode/build', params).then((res) => {
-    if (res.data.code == 1) {
-      wx.downloadFile({//缓存二维码
-        url:res.data.data.url,
-        success:function(res){
-          _this.setData({
-            codeUrl: res.tempFilePath,
-            codeStatus:'done'
-          })
-        }
-      })
-    }
+  var p = new Promise(function (resolve, reject){
+    app.util.reqAsync('payBoot/wx/acode/build', params).then((res) => {
+      if (res.data.code == 1) {
+        wx.downloadFile({//缓存二维码
+          url: res.data.data.url,
+          success: function (res) {
+            _this.setData({
+              codeUrl: res.tempFilePath
+            })
+            resolve();
+          }
+        })
+      }
+    })
   })
+  return p;
 }
 
 function saveImg(obj){//保存图片判断授权
@@ -116,10 +119,47 @@ function handleSetting(obj,e){//调起授权设置页
   }
 }
 
+function cut(text,length,_this){//截取文字
+  if(text.length>length){
+    text=text.substring(0,length)+'..';
+  }
+  return text
+}
+
+function drawShadow(context,scale,x,y,blur,color){//绘制阴影
+  context.shadowOffsetX=x*scale;
+  context.shadowOffsetY=y*scale;
+  context.shadowColor=color;
+  context.shadowBlur=blur*scale;
+}
+
+function roundRect(context,scale,x,y,w,h,radius){//绘制圆角矩形
+  if(w<2*radius) {
+    radius= w/2;
+  }
+  if(h<2*radius) {
+    radius=h/2;
+  }
+  let r=radius*scale;
+  context.beginPath();
+  context.moveTo((x+r) * scale,y * scale);//a
+  context.arcTo((x+w)*scale,y*scale,(x+w)*scale,(y+h)*scale,r);//b-c
+  context.arcTo((x+w) * scale, (y+h) * scale,x*scale,(y+h)*scale,r);//c-d
+  context.arcTo(x * scale, (y+h) * scale, x * scale, y * scale,r);//d-e
+  context.arcTo(x * scale, y * scale,(x+r)*scale,y*scale,r);//e-a
+  context.closePath();
+  context.setStrokeStyle('#ffffff');
+  context.stroke();
+  context.fill();
+}
+
 module.exports={
   getCode: getCode,
   saveImg: saveImg,
   temp: temp,
   save: save,
-  handleSetting: handleSetting
+  handleSetting: handleSetting,
+  cut:cut,
+  drawShadow:drawShadow,
+  roundRect:roundRect
 }

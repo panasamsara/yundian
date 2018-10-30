@@ -861,7 +861,7 @@ page{
   margin-left: 20rpx;
 }
 .go-buy-btn-box{
-  width: 200rpx;
+  width: 228rpx;
   height: 100rpx;
   line-height: 100rpx;
 }

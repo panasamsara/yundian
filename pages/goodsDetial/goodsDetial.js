@@ -37,6 +37,16 @@ Page({
         share: options.share
       })
     }
+    if(options.shareUser){//转发进入页面记录推荐关系
+      this.record({
+        currentId: wx.getStorageSync('scSysUser').id,
+        shareShop: options.shopId,
+        shareUser: options.shareUser,
+        sourcePart: '1',
+        shareType: options.shareType,
+        businessId: options.goodsId
+      })
+    }
     if (options && options.q) {
       var uri = decodeURIComponent(options.q)
       var p = util.getParams(uri)
@@ -124,10 +134,12 @@ Page({
     //   })
     // }
   },
+  record: function (data) {//记录推荐关系
+    app.util.reqAsync('payBoot/wx/acode/record', data).then((res) => {})
+  },
   onShow: function () { //缓存店铺信息（分享切店铺）
     var _this = this;
     util.checkWxLogin('share').then((loginRes) => {
-      console.log(loginRes)
       if (loginRes.status == 0) {
         // if (wx.getStorageSync('isAuth') == 'no') {
           // this.setData({
@@ -157,7 +169,6 @@ Page({
       var shop = wx.getStorageSync('shop')
 
       if (!shop) {
-        console.log('分享进商品详情,无店铺缓存，shopId-----', shopId)
         if (shopId == undefined) {
           wx.redirectTo({
             url: '../scan/scan'
@@ -180,7 +191,6 @@ Page({
 
         }
       } else {
-        console.log('分享进商品详情,有店铺缓存，shopId-----', shopId)
         if (shopId == undefined || shopId == '' || shopId == null) {
           if (shop.shopHomeConfig) {
             if (shop.shopHomeConfig.videoPathList.length != 0) {
@@ -267,6 +277,7 @@ Page({
           params: {
             shopId: wx.getStorageSync('shop').id,
             userId: wx.getStorageSync('scSysUser').id,
+            shareUser: wx.getStorageSync('scSysUser').id,
             goodsId: this.data.goodsId,
             merchantId: wx.getStorageSync('shop').merchantId,
             sourcePart: 1
@@ -393,9 +404,9 @@ Page({
       } else {
         params.params['shareType'] = 1;
       }
-      if (!this.data.codeUrl) {
-        saveImg.getCode(_this, params);
-      }
+      this.setData({
+        params:params
+      })
       wx.hideLoading();
       if (wx.getStorageSync('shop')) {
         this.drawImg()
@@ -446,9 +457,6 @@ Page({
             } else if (_this.data.status == 2) {//秒杀
               _this.drawPicSeckill();
             }
-            _this.setData({
-              downLoadStatus:'done'
-            })
           }
         })
       }
@@ -1097,7 +1105,6 @@ Page({
           couponType1 = [],
           couponType2 = [],
           couponType3 = []
-        console.log(list)
         for (let i = 0; i < list.length; i++) {
           list[i].beginTime = app.util.formatActivityDate(list[i].beginTime);
           list[i].endTime = app.util.formatActivityDate(list[i].endTime)
@@ -1295,7 +1302,7 @@ Page({
         title: this.data.data.goodsName,
         desc: this.data.goodsName,
         imageUrl: this.data.groupPath,
-        path: '/pages/goodsDetial/goodsDetial?shopId=' + this.data.shopId + '&goodsId=' + this.data.goodsId + '&share=share',
+        path: '/pages/goodsDetial/goodsDetial?shopId=' + this.data.shopId + '&goodsId=' + this.data.goodsId + '&share=share' + '&shareUser=' + wx.getStorageSync('scSysUser').id+'&shareType=3&sourcePart=1',
         success: function () {
         }
       }
@@ -1304,7 +1311,7 @@ Page({
         title: this.data.data.goodsName,
         desc: this.data.goodsName,
         imageUrl: this.data.secPath,
-        path: '/pages/goodsDetial/goodsDetial?shopId=' + this.data.shopId + '&goodsId=' + this.data.goodsId,
+        path: '/pages/goodsDetial/goodsDetial?shopId=' + this.data.shopId + '&goodsId=' + this.data.goodsId +'&shareUser=' + wx.getStorageSync('scSysUser').id + '&shareType=2&sourcePart=1',
         success: function () {
 
         }
@@ -1313,7 +1320,7 @@ Page({
       return {
         title: '￥' + this.data.data.price + ' | ' + this.data.data.goodsName,
         desc: this.data.goodsName,
-        path: '/pages/goodsDetial/goodsDetial?shopId=' + this.data.shopId + '&goodsId=' + this.data.goodsId,
+        path: '/pages/goodsDetial/goodsDetial?shopId=' + this.data.shopId + '&goodsId=' + this.data.goodsId +'&shareUser=' + wx.getStorageSync('scSysUser').id + '&shareType=1&sourcePart=1',
         imageUrl: this.data.data.pictureUrl,
         success: function () {
 
@@ -1330,7 +1337,6 @@ Page({
     var current = e.target.dataset.src,
       imageList = [],
       commentList = this.data.userData[e.target.dataset.index].commentUploadList;
-    console.log()
     for (let i = 0; i < commentList.length; i++) {
       imageList.push(commentList[i].filePath)
     }
@@ -1340,13 +1346,6 @@ Page({
     })
   },
   shareBtn:function(){//点击分享
-    if(this.data.downLoadStatus!='done'||this.data.codeStatus!='done'||this.data.codeStatus==undefined){
-      wx.showToast({
-        title: '页面加载中，请稍后分享',
-        icon: 'none'
-      })
-      return;
-    }
     this.setData({
       posterShow:true,
       untouch: 'untouch'
@@ -1366,16 +1365,37 @@ Page({
       untouch: 'untouch'
     })
     wx.showLoading();
-    var shopName = this.data.data.shopName;
+    var shopName = this.data.data.shopName,
+        _this=this;
     if (shopName.length > 7) {
       shopName = shopName.substring(0, 6) + '..';
     }
-    if(this.data.status==1){//拼团
-      this.groupPoster(shopName);
-    }else if(this.data.status==2){//秒杀
-      this.secPoster(shopName);
-    }else{//普通
-      this.poster(shopName);
+    if (!this.data.codeUrl) {
+      saveImg.getCode(_this, _this.data.params).then(function(){
+        wx.downloadFile({//缓存店铺头像，直接使用网络路径真机无法显示或绘制
+          url: _this.data.logoUrl,
+          success: function (res) {
+            _this.setData({
+              logo: res.tempFilePath
+            })
+            wx.downloadFile({//缓存商品图片，直接使用网络路径真机无法显示或绘制
+              url: _this.data.pictureUrl,
+              success: function (res) {
+                _this.setData({
+                  proPic: res.tempFilePath
+                })
+                if (_this.data.status == 1) {//拼团
+                  _this.groupPoster(shopName);
+                } else if (_this.data.status == 2) {//秒杀
+                  _this.secPoster(shopName);
+                } else {//普通
+                  _this.poster(shopName);
+                }
+              }
+            })
+          }
+        })
+      });
     }
   },
   groupPoster: function (shopName){//绘制拼团商品海报
@@ -1387,6 +1407,7 @@ Page({
     context.fillRect(0,0,690*scale,1000*scale);//设置白色背景
     context.drawImage(backImg,0,0,345*scale,500*scale);//绘制背景图
     context.setFontSize(14 * scale);
+    context.setFillStyle('#ffffff');
     let group=Math.floor(Math.random()*199+1)+'人正在拼团',
         w=context.measureText(group).width;
     context.fillText(group,(690-w)/4*scale,107*scale);
@@ -1419,8 +1440,9 @@ Page({
     context.drawImage(frontImg,175*scale,370*scale,170*scale,130*scale);
     let _this=this;
     context.draw(false,function(){
-      // _this.temp(_this);
-      saveImg.temp(_this, 'shareCanvas', 1380, 2000, 1380,2000);
+      setTimeout(function () {//延时缓存避免部分安卓手机canvas绘图串色
+        saveImg.temp(_this, 'shareCanvas', 1380, 2000, 1380, 2000);
+      }, 1000)
     });
   },
   secPoster: function (shopName){//绘制秒杀商品海报
@@ -1439,8 +1461,10 @@ Page({
     context.fillText(shopName, (690-w-30-70)/2*scale, 20*scale);//绘制店铺名
     context.drawImage(backImg,0,250*scale,345*scale,260*scale);//绘制背景图
     context.drawImage(textImg,35*scale,220*scale,120*scale,120*scale);//绘制字体
+    context.setFillStyle('#ffffff');
     context.fillRect(35*scale,360*scale,150*scale,30*scale);
     context.setFontSize(20*scale);
+    context.setFillStyle('#ffffff');
     context.fillText('￥',35*scale,440*scale);
     context.setFontSize(34*scale);
     context.fillText(this.data.listData[0].goodsPreferentialStockPrice.toFixed(2),55*scale,440*scale);//绘制秒杀价
@@ -1461,8 +1485,9 @@ Page({
     context.drawImage(this.data.codeUrl,240*scale,390*scale,82*scale,82*scale);
     let _this=this;
     context.draw(false,function(){
-      // _this.temp(_this);
-      saveImg.temp(_this, 'shareCanvas', 1380, 2000, 1380, 2000);
+      setTimeout(function(){//延时缓存避免部分安卓手机canvas绘图串色
+        saveImg.temp(_this, 'shareCanvas', 1380, 2000, 1380, 2000);
+      },1000)
     })        
   },
   poster: function (shopName){//绘制普通商品海报
@@ -1493,8 +1518,9 @@ Page({
     context.drawImage(this.data.codeUrl, 243 * scale, 400 * scale, 76 * scale, 76 * scale)
     let _this = this;
     context.draw(false, function () {
-      // _this.temp(_this);
-      saveImg.temp(_this, 'shareCanvas', 1380, 2000, 1380, 2000);
+      setTimeout(function () {//延时缓存避免部分安卓手机canvas绘图串色
+        saveImg.temp(_this, 'shareCanvas', 1380, 2000, 1380, 2000);
+      }, 1000)
     })
   },
   saveImg: function () {//保存图片

@@ -39,14 +39,24 @@ Page({
   // 跳转到详情界面
   toDetail: function (e) {
     let id = e.currentTarget.dataset.id;
-    wx.navigateTo({
-      url: '/packageIndex/pages/lessonDetail/lessonDetail?id=' + id,
-    })
+    var status = e.currentTarget.dataset.status;
+    if (status!=2){
+      wx.navigateTo({
+        url: '/packageIndex/pages/lessonDetail/lessonDetail?id=' + id + "&shopId=" + this.data.shopId,
+      })
+    }else{
+      wx.showToast({ title: "课程已删除", icon: 'none' })
+    }
+    
   },
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    var shopId=wx.getStorageSync("shop").id;
+    this.setData({
+      shopId: shopId
+    })
     this.getList()
   },
   onPullDownRefresh: function () {

@@ -18,9 +18,22 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    console.log(options)
+    console.log('测试记录关系',options);
+    wx.showLoading({
+      title: '加载中',
+      icon: 'none'
+    })
     wx.setStorageSync('shopId', options.shopId)
-    
+    if (options.shareUser) {//转发进入页面记录推荐关系
+      this.record({
+        currentId: wx.getStorageSync('scSysUser').id,
+        shareShop: options.shopId,
+        shareUser: options.shareUser,
+        sourcePart: '1',
+        businessId: options.shopId,
+        shareType: options.shareType
+      })
+    }
     var user = wx.getStorageSync('scSysUser');
     var _this = this
     app.util.getShop(user.id, options.shopId).then((res) => {
@@ -51,6 +64,9 @@ Page({
       }
     })
     
+  },
+  record: function (data) {//记录推荐关系
+    app.util.reqAsync('payBoot/wx/acode/record', data).then((res) => {})
   },
   //适配不同屏幕大小的canvas
   setCanvasSize: function () {
@@ -87,6 +103,7 @@ Page({
         that.setData({
           imagePath: tempFilePath
         });
+        wx.hideLoading();
       },
       fail: function (res) {
         console.log(res);
@@ -220,7 +237,7 @@ Page({
   onShareAppMessage: function () {
     return{
       title: this.data.shopName,
-      path:'/pages/store/code/code?shopName='+this.data.shopName+'&address='+this.data.address+'&phoneService='+this.data.phoneService+'&shopLogo='+this.data.url+'&shopId='+this.data.shopId
+      path: '/pages/store/code/code?shopName=' + this.data.shopName + '&address=' + this.data.address + '&phoneService=' + this.data.phoneService + '&shopLogo=' + this.data.url + '&shopId=' + this.data.shopId + '&shareUser=' + wx.getStorageSync('scSysUser').id+'&shareType=9'
     }
   },
   goback: function () {//回到首页按钮

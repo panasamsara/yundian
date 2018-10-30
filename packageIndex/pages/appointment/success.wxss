@@ -9,7 +9,6 @@
   justify-content: center;
   align-items: center;
   padding-bottom: 80rpx;
-  border-bottom: solid 1px #e5e5e5;
 }
 
 .success .status image{
@@ -46,10 +45,6 @@
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
-}
-
-.success .info{
-  border: none;
 }
 
 .success #submit{

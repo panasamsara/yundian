@@ -198,6 +198,13 @@ button[type=warn]{
 }
 .orderTop .float_l{
   padding: 12rpx 0;
+  
+}
+.username{
+  overflow:hidden; 
+  white-space:nowrap; 
+  text-overflow:ellipsis;
+  max-width: 380rpx;
 }
 .orderTop .float_l>view,.orderTop image{
   display: inline-block;

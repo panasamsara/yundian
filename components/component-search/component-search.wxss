@@ -1,0 +1,57 @@
+/* components/component-search/component-search.wxss */
+.searchBox{
+  height: 90rpx;
+  padding: 0 24rpx;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchBox input{
+  height: 60rpx;
+  background-color: #F5F5F5;
+  padding-left: 70rpx;
+  font-size: 24rpx;
+  color: #999999;
+  border-radius: 30rpx;
+}
+
+.searchIcon,.clearIcon{
+  width: 30rpx;
+  height: 30rpx;
+  position: absolute;
+  z-index: 999;
+}
+
+.searchIcon{
+  left: 53rpx;
+}
+
+.clearIcon{
+  right: 135rpx;
+}
+
+.searchInput{
+  width: 550rpx;
+}
+
+.normalInput{
+  width: 100%;
+}
+
+.search{
+  color: #FB452C;
+  font-size: 28rpx;
+  display: block;
+  width: 58rpx;
+  margin-left: 24rpx;
+}
+
+.shade{
+  position: fixed;
+  top: 90rpx;
+  width: 100%;
+  height: calc(100% - 90rpx);
+  background-color: rgba(0,0,0,0.3);
+  z-index: 999;
+}

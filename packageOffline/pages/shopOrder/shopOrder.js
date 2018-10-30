@@ -45,6 +45,8 @@ Page({
         shopId: shopId
       }
     });
+  },
+  onShow: function(){
     this.getList();
   },
   onPullDownRefresh: function () {
@@ -174,10 +176,22 @@ Page({
     var facilityId = e.currentTarget.dataset.facilityid,
       presaleId = e.currentTarget.dataset.id,
       userId = e.currentTarget.dataset.userid,
-      shopId = e.currentTarget.dataset.shopid;
-    wx.navigateTo({
-      url: "../orderDetail/orderDetail?facilityId=" + facilityId + "&activeIndex=" + this.data.activeIndex + "&presaleId=" + presaleId + "&userId=" + userId + "&shopId=" + shopId + '&selectMember=1'
-    });
+      shopId = e.currentTarget.dataset.shopid,
+      paystatu = e.currentTarget.dataset.paystatu,
+      activeIndex = this.data.activeIndex;
+    console.log(activeIndex)
+    if (activeIndex==1){
+      console.log("ha")
+      wx.navigateTo({
+        url: "../endDetails/endDetails?presaleId=" + presaleId
+      });
+      }else{
+        console.log("enen")
+      wx.navigateTo({
+        url: "../orderDetail/orderDetail?facilityId=" + facilityId + "&activeIndex=" + this.data.activeIndex + "&presaleId=" + presaleId + "&userId=" + userId + "&shopId=" + shopId + '&selectMember=1'
+      });
+      }
+    
   },
   goOn: function (e) { //继续添加
     wx.navigateTo({

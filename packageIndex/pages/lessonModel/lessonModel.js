@@ -7,6 +7,10 @@ Component({
     dataArr:{
       type: Object,
       value:""
+    },
+    datashopId:{
+      type: String,
+      value: ""
     }
   },
 

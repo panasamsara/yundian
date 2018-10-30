@@ -3,7 +3,8 @@
   <view class='title'>{{articleDetail.articleTitle}}</view>
   <view class='user'>
     <view> 
-      <image src='{{articleDetail.scSysUser.userpic}}'></image>
+      <image wx:if="{{articleDetail.scSysUser.userpic==''|| articleDetail.scSysUser.userpic==null}}" src='../images/img_touxiang.png'></image>
+      <image wx:else src='{{articleDetail.scSysUser.userpic}}'></image>
     </view>
     <view>
       <view class='username'>{{articleDetail.scSysUser.username}}</view>

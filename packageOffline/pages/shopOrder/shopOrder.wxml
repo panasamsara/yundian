@@ -16,7 +16,7 @@
       </view>
     </block>
     <view class='content' wx:for="{{orderList}}" wx:key="index" >
-      <view class="list"  bindtap='skip' data-id="{{item.id}}" data-index="{{index}}" data-shopid="{{item.shopId}}" data-facilityid="{{item.facilityId}}" data-userid="{{item.userId}}">
+      <view class="list"  bindtap='skip' data-id="{{item.id}}" data-index="{{index}}" data-shopid="{{item.shopId}}" data-facilityid="{{item.facilityId}}" data-userid="{{item.userId}}" data-paystatu="{{item.payStatus}}">
         <view class='shop'>
           <view class='left'>
             <image class="shopImg mr15" src="{{shopLogoUrl}}"></image>
@@ -51,7 +51,7 @@
       </view>
        <!--未完成-->
           <view class="noover" wx:if="{{item.orderStatus!=3}}">
-            <view class="button red-btn" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" disabled="{{disabled}}"  bindtap="buyOrder" hover-class="other-button-hover"> 结算 </view>
+            <view class="button red-btn" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" disabled="{{disabled}}"  bindtap="buyOrder" data-no="{{item.id}}" hover-class="other-button-hover"> 结算 </view>
             <view hidden="{{isHid}}" class="button white-btn" size="{{defaultSize}}" loading="{{loading}}" plain="{{plain}}" disabled="{{disabled}}"  bindtap="goOn" hover-class="other-button-hover"> 继续添加 </view>
           </view>
     </view>

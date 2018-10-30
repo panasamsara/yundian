@@ -41,7 +41,7 @@ Component({
       
       // console.log(util)
       // console.log(app.util)
-      var reg = /^1(3|4|5|7|8|9)\d{9}$/;
+      var reg = /^[1][3-9][0-9]{9}$/;
       if (!reg.test(this.data.phoneNum)) {
         wx.showToast({
           title: '请输入正确的手机号',

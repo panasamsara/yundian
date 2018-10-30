@@ -1,0 +1,59 @@
+<!--packageMyHome/pages/eventCardDetail/eventCardDetail.wxdasd asd
+<!-- 活动卡 -->
+<login-component login-type-property="{{loginType}}" bindresusermevent="resusermevent" bindresmevent="resmevent" ></login-component>
+
+<view class='main'>
+    <view class='setup' wx:if="{{msgData.isSetup}}"><image src='img/yundian_hdxqtixing.png'></image>  该活动仅限新用户兑换！</view>
+    <image class='backimg' src="{{msgData.pictureUrl}}"></image>
+    <view class='header-content'>
+    <text class='time'>活动时间：{{msgData.startTime}}至{{msgData.endTime}}</text>
+    
+      <view class='title'>{{msgData.activityName}}</view>
+      <view class='info'>{{msgData.descTitle}}</view>
+    </view>
+    <view class='card-msg'>
+      <view class='msg-title'>
+        活动详情内容
+      </view>
+    </view>
+     <!-- <view class='img-tilte'>旗袍，形成于民国时代的女性服装女性服装服装服</view>
+    <image class='content-img'></image> -->
+    <view class='img-info'> 
+    <rich-text  nodes="{{msgData.descContent}}" bindtap="tap"></rich-text>
+    
+    </view>
+      <view class='list-title'>
+        <view class='msg-title'>
+            活动商品    
+        </view>   
+      </view>
+      <view class='list-node' wx:for="{{msgData.itemCategoryList}}"  wx:key="*this" wx:for-item='items'>
+        <image src='../images/yundian_xshbtb.png'></image>
+        <text>可选{{items.itemNum}}件商品</text>
+      <view class='list-msg'  wx:for="{{items.activePosterItemList}}" wx:key="*this" wx:for-item='item'>
+        <image src="{{item.pictureUrl?item.pictureUrl:'../images/yundian_sdsrmorentu.png'}}"></image>
+        <view class='msg-text'>{{item.goodsName}}
+        <view class='stockName'>{{item.stockName=='0'?'':item.stockName}}</view>
+        </view>
+      </view>
+
+      </view>
+    
+    
+    <view class='buy'>
+      <view>价格: <text>¥<text class='corn'>{{msgData.activePrice}}</text></text></view>
+      <view class='buyBtn' bindtap='buy'>立即购买</view>
+    </view>
+</view>
+<view id='shareBox'>
+      <button bindtap="shareBtn">
+        <image src='../../../images/shouye_btn@2x.png' id='share'></image>
+      </button>
+      <image src='../../../images/fenxinag_btn@2x.png' id='goback' bindtap='goback'></image>
+    </view>
+<!-- 海报画布 -->
+<canvas canvas-id="shareCanvas" style='width:720rpx; height:568rpx; position:fixed; top: 99999rpx;' ></canvas>
+
+<canvas id='shareCanvas' canvas-id='newShareCanvas' style='width:1380rpx;height:2000rpx;' class='shareCanvas'></canvas>
+<!-- 海报组件 -->
+<poster-modal posterData="{{canvasUrl}}" btnData="{{btnShow}}" bind:close="closePoster" bind:closeShare="closeShare" bind:drawPoster="drawPoster" bind:saveImg="saveImg" bind:handleSetting="handleSetting" wx:if="{{posterShow}}" id="posterModal"></poster-modal>

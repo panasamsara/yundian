@@ -8,7 +8,7 @@
         <view class='wrap float_l'>
           <image class="" src="{{user.userpic}}" bindtap='clickCount'></image>
         </view>
-        <text class='float_l'>{{user.username}}</text>
+        <text class='float_l username'>{{user.username}}</text>
         <image class='genxi' bindtap='genxi' src='../../images/xcx_wd_gengxin@2x.png'></image>
 
       </view>

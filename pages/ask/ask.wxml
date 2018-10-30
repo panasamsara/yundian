@@ -3,7 +3,7 @@
   <image src='{{picImg}}'></image>
   <view class='text'>
     <text class='text-top'>{{goodsName}}</text>
-    <text class='text-bot'>{{goodsDesc}}</text>
+    <!-- <text class='text-bot'>{{goodsDesc}}</text> -->
   </view>
   <view class='text-right'>
     <text class='right-text'>{{askAcount}}个问题</text>

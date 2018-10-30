@@ -1,9 +1,9 @@
 <!--pages/store/activityInfo/activityInfo.wxml-->
 <login-component login-type-property="{{loginType}}" bindresusermevent="resusermevent" bindresmevent="resmevent" ></login-component>
 
-<view class="container activityInfo {{unscroll?'unscroll':''}}">
+<scroll-view class="container activityInfo {{unscroll?'unscroll':''}}" scroll-y>
   <view class='head'>
-    <text class='title'>{{data.goodsName}}</text>
+    <text class='title'>{{data.activityName}}</text>
     <view>
       <text class='time'>活动时间</text>
       <text class='time'>{{data.startTime}}-{{data.endTime}}</text>
@@ -29,10 +29,10 @@
     <view id='submit' bindtap='submit'>提交</view>
   </view>
   <view id='shade' wx:if="{{signShow}}" bindtap='signHide'><image src='images/guanbi@2x.png' id='close'></image></view>
-  <view id='sign' wx:if="{{signType==1&&signed==false&&load=='done'}}" bindtap='sign'>报名</view>
-  <view id='signed' wx:if="{{signed}}">已报名</view>
-  <view id='passed' wx:if="{{passed}}">已过期</view>
-</view>
+</scroll-view>
+<view id='sign' wx:if="{{signType==1&&signed==false&&load=='done'}}" bindtap='sign'>报名</view>
+<view id='signed' wx:if="{{signed}}">已报名</view>
+<view id='passed' wx:if="{{passed}}">已过期</view>
 <canvas canvas-id="shareCanvas" style='width:720rpx; height:568rpx; position:fixed; top: 99999rpx;' ></canvas>
 <!-- 按钮 -->
 <view id='shareBox'>

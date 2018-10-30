@@ -28,8 +28,21 @@ Page({
       shopId: options.shopId,
       // phone: wx.getStorageSync('scSysUser').phone,
       signType: options.signType,
-      actionId: options.actionId
+      actionId: options.actionId,
+      shareUser: options.shareUser || null,
     });
+    // 小程序分享 加上分享记录
+    if (options.shareUser && _this.data.shareUser != wx.getStorageSync('scSysUser').id){
+      _this.record({
+        currentId: wx.getStorageSync('scSysUser').id,
+        shareShop: options.shopId,
+        shareUser: options.shareUser,
+        sourcePart: '1',
+        shareType: 6,
+        businessId: options.goodsId
+      })
+    }
+    console.log('111111----',options)
     this.setCanvasSize()
 
    
@@ -73,6 +86,12 @@ Page({
     }
    
     // this.getSignList(params);
+  },
+  // 记录推荐关系
+  record: function (data) {
+    app.util.reqAsync('payBoot/wx/acode/record', data).then((res) => {
+console.log('记录关系的参数------------',data)
+    })
   },
   //登录注册回调
   resmevent: function (e) {
@@ -242,6 +261,17 @@ Page({
   onShow: function () { //缓存店铺信息（分享切店铺）
     var _this = this;
 
+    if (_this.data.shareUser && _this.data.shareUser != wx.getStorageSync('scSysUser').id) {
+      _this.record({
+        currentId: wx.getStorageSync('scSysUser').id,
+        shareShop: _this.data.shopId,
+        shareUser: _this.data.shareUser,
+        sourcePart: '1',
+        shareType: 6,
+        businessId: _this.data.goodsId
+      })
+    }
+
     util.checkWxLogin('share').then((loginRes) => {
       console.log(loginRes)
 
@@ -292,9 +322,11 @@ Page({
   },
   getAct: function (goodsId, shopId){
     var _this = this
-    app.util.reqAsync('shop/goodsDetail', {
-      goodsId: goodsId,
-      shopId: shopId
+    // app.util.reqAsync('shop/goodsDetail', {
+    //   goodsId: goodsId,
+    //   shopId: shopId
+    app.util.reqAsync('shop/selectActivePosterById', {
+      activeId: goodsId,
     }).then((res) => {
       console.log(999)
       console.log(res)
@@ -317,20 +349,6 @@ Page({
             buttonShow: true
           }
         })
-        saveImg.getCode(_this, {//获取二维码
-          source: 0,
-          page: "pages/QrToActivity/QrToActivity",
-          params: {
-            shopId: wx.getStorageSync('shop').id,
-            userId: wx.getStorageSync('scSysUser').id,
-            actionId: this.data.activityData.id,
-            signType: this.data.activityData.signType,
-            goodsId: this.data.activityData.id,
-            sourcePart: '1',
-            shareType: 6,
-            shareFrom: 'posterActivity'
-          }
-        });
         if (wx.getStorageSync('shop')){
           wx.downloadFile({//缓存网络图片，直接使用网络路径真机无法显示或绘制
             url: wx.getStorageSync('shop').logoUrl,
@@ -379,12 +397,12 @@ Page({
     context.restore()
     context.setFillStyle('#fff');
     context.setFontSize(15 * scale);
-    context.fillText(this.data.activityData.shopName, 70 * scale, 108 * scale);//绘制店名
+    context.fillText(this.data.activityData.extend1, 70 * scale, 108 * scale);//绘制店名
     context.drawImage('./img/zhuanfa_hdhb_up@2x.png', 300 * scale, 94 * scale, 19 * scale, 18 * scale);//绘制小图标
 
     context.setFillStyle('#000');
     context.setFontSize(17 * scale);
-    context.fillText(this.data.activityData.goodsName, 25 * scale, 172 * scale);//绘制活动名
+    context.fillText(this.data.activityData.activityName, 25 * scale, 172 * scale);//绘制活动名
     // context.drawImage('./img/zhuanfa_hdhb_right@2x.png', 305 * scale, 160 * scale, 9 * scale, 15 * scale);//绘制小图标
 
     // context.setFillStyle('#f2f2f2');
@@ -457,8 +475,8 @@ Page({
     }
 
     return {
-      title: '[' + this.data.activityData.shopName + ']'  + this.data.activityData.descTitle,
-      path: "pages/store/posterActivity/posterActivity?shopId=" + this.data.shopId + '&goodsId=' + this.data.goodsId + '&actionId=' + this.data.actionId + '&signType=' + this.data.signType,
+      title: '[' + this.data.activityData.extend1 + ']'  + this.data.activityData.descTitle,
+      path: "pages/store/posterActivity/posterActivity?shopId=" + this.data.shopId + '&goodsId=' + this.data.goodsId + '&actionId=' + this.data.actionId + '&signType=' + this.data.signType + '&shareUser=' + wx.getStorageSync('scSysUser').id,
       imageUrl: this.data.temp,
       success: function (res) {
         _this.updateforwardingAmount(_this.data.goodsId) // 用户转发点击量统计
@@ -480,13 +498,6 @@ Page({
     })
   },
   shareBtn: function () {//点击分享
-    if (this.data.codeStatus != 'done' || this.data.codeStatus == undefined || this.data.downloadStatus != 'done') {
-      wx.showToast({
-        title: '页面加载中，请稍后分享',
-        icon: 'none'
-      })
-      return;
-    }
     this.setData({
       posterShow: true
     })
@@ -501,82 +512,119 @@ Page({
       return;
     }
     wx.showLoading();
-    var context = wx.createCanvasContext('newShareCanvas'),
-      scale = wx.getSystemInfoSync().windowWidth / 375,
-      _this = this;
-    context.setFillStyle('#ffffff');
-    context.fillRect(0, 0, 690 * scale, 1000 * scale);//设置白色背景
-    context.drawImage('../../../images/bg3.png', 0, 0, 690 * scale, 1000 * scale);
-    this.drawShadow(context, scale, 5, 5, 10, 'rgba(176,50,32,0.3)');//绘制阴影
-    this.roundRect(context, scale, 52, 56, 600, 704, 66);//绘制圆角矩形背景
-    this.drawShadow(context, scale, 0, 0, 30, 'rgba(228,183,177,0.3)');//绘制阴影
-    this.roundRect(context, scale, 25, 70, 610, 260, 57);//绘制海报圆角矩形阴影矩形
-    context.save();
-    this.roundRect(context, scale, 25, 70, 610, 260, 57);//绘制海报圆角矩形背景
-    context.clip();
-    context.drawImage(this.data.proPic, 25 * scale, 70 * scale, 610 * scale, 260 * scale);//绘制海报
-    context.restore();
-    context.setFontSize(30 * scale);
-    let w = context.measureText(this.data.data.shopName).width;
-    context.shadowColor = 'rgba(255,255,255,0)';
-    context.beginPath();
-    context.arc(122.5 * scale, 70 * scale, 37 * scale, 0.5 * Math.PI, 1.5 * Math.PI);//绘制左半圆
-    context.closePath();
-    context.stroke();
-    context.fill();
-    context.beginPath();
-    context.arc((122.5 + w) * scale, 70 * scale, 37 * scale, 0.5 * Math.PI, 1.5 * Math.PI, true);//绘制右半圆
-    context.closePath();
-    context.stroke();
-    context.fill();
-    context.fillRect(122.5 * scale, 33 * scale, w * scale, 74 * scale);//绘制矩形
-    context.setFillStyle('#FB452C');
-    context.fillText(this.data.data.shopName, 122.5 * scale, 79 * scale);//绘制店铺名
-    context.setFontSize(24 * scale);
-    let timeText = '活动时间:  ' + this.data.data.startTime + '—' + this.data.data.endTime,
-      w1 = context.measureText(timeText).width;
-    context.setFillStyle('#FE732D');
-    context.fillText(timeText, (690 - w1) / 2 * scale, 380 * scale);//绘制活动时间
-    context.setFillStyle('#333333');
-    context.setFontSize(36 * scale);
-    this.cut('goodsName', this.data.data.goodsName, 10);
-    let w2 = context.measureText(this.data.goodsName).width;
-    context.fillText(this.data.goodsName, (690 - w2) / 2 * scale, 470 * scale);//绘制店铺标题
-    context.setFillStyle('#FB452C');
-    context.fillRect(305 * scale, 490 * scale, 80 * scale, 6 * scale);//绘制下划线
-    context.setFontSize(26 * scale);
-    context.setFillStyle('#999999');
-    this.cut('descTitle', this.data.data.descTitle, 20, _this);
-    let w3 = context.measureText(this.data.descTitle).width;
-    context.fillText(this.data.descTitle, (690 - w3) / 2 * scale, 540 * scale);//绘制口号
-    context.setFillStyle('#666666');
-    let descContent = this.data.data.descContent;
-    let w4;
-    //绘制活动内容
-    if (descContent.length <= 19) {//一行
-      w4 = context.measureText(descContent).width;
-      context.fillText(descContent, (690 - w4) / 2 * scale, 600 * scale);
-    } else {//超过一行
-      w4 = context.measureText(descContent.substring(0, 19)).width;
-      context.fillText(descContent.substring(0, 19), (690 - w4) / 2 * scale, 600 * scale);
-      if (descContent.length <= 38) {
-        context.fillText(descContent.substring(20), (690 - w4) / 2 * scale, 645 * scale);
-      } else {
-        context.fillText(descContent.substring(20, 38), (690 - w4) / 2 * scale, 645 * scale);
-        if (descContent.length <= 48) {
-          let w5 = context.measureText(descContent.substring(38)).width;
-        } else {
-          descContent = descContent.substring(39, 48) + '..'
-          let w5 = context.measureText(descContent).width;
-          context.fillText(descContent, (690 - w5) / 2 * scale, 690 * scale);
+    var _this=this;
+    if (!_this.data.codeUrl){
+      saveImg.getCode(_this, {//获取二维码
+        source: 0,
+        page: "pages/QrToActivity/QrToActivity",
+        params: {
+          shopId: wx.getStorageSync('shop').id,
+          userId: wx.getStorageSync('scSysUser').id,
+          shareUser: wx.getStorageSync('scSysUser').id,
+          actionId: _this.data.activityData.id,
+          signType: _this.data.activityData.signType,
+          goodsId: _this.data.activityData.id,
+          sourcePart: '1',
+          shareType: 6,
+          shareFrom: 'posterActivity'
         }
-      }
+      }).then(function(){
+        wx.downloadFile({//缓存网络图片，直接使用网络路径真机无法显示或绘制
+          url: _this.data.data.pictureUrl,
+          success: function (newRes) {
+            _this.setData({
+              proPic: newRes.tempFilePath
+            })
+            var context = wx.createCanvasContext('newShareCanvas'),
+              scale = wx.getSystemInfoSync().windowWidth / 375;
+            context.setFillStyle('#ffffff');
+            context.fillRect(0, 0, 690 * scale, 1000 * scale);//设置白色背景
+            context.drawImage('../../../images/bg3.png', 0, 0, 690 * scale, 1000 * scale);
+            _this.drawShadow(context, scale, 5, 5, 10, 'rgba(176,50,32,0.3)');//绘制阴影
+            context.setStrokeStyle('#ffffff');
+            _this.roundRect(context, scale, 52, 56, 600, 704, 66);//绘制圆角矩形背景
+            _this.drawShadow(context, scale, 0, 0, 30, 'rgba(228,183,177,0.3)');//绘制阴影
+            _this.roundRect(context, scale, 25, 70, 610, 260, 57);//绘制海报圆角矩形阴影矩形
+            context.save();
+            _this.roundRect(context, scale, 25, 70, 610, 260, 57);//绘制海报圆角矩形背景
+            context.clip();
+            context.drawImage(_this.data.proPic, 25 * scale, 70 * scale, 610 * scale, 260 * scale);//绘制海报
+            context.restore();
+            context.setFontSize(30 * scale);
+            let w = context.measureText(_this.data.data.extend1).width;
+            context.shadowColor = 'rgba(255,255,255,0)';
+            context.beginPath();
+            context.arc(122.5 * scale, 70 * scale, 37 * scale, 0.5 * Math.PI, 1.5 * Math.PI);//绘制左半圆
+            context.closePath();
+            context.setStrokeStyle('#ffffff');
+            context.stroke();
+            context.setFillStyle('#ffffff');
+            context.fill();
+            context.beginPath();
+            context.arc((122.5 + w) * scale, 70 * scale, 37 * scale, 0.5 * Math.PI, 1.5 * Math.PI, true);//绘制右半圆
+            context.closePath();
+            context.setStrokeStyle('#ffffff');
+            context.stroke();
+            context.setFillStyle('#ffffff');
+            context.fill();
+            context.setFillStyle('#ffffff');
+            context.fillRect(122.5 * scale, 33 * scale, w * scale, 74 * scale);//绘制矩形
+            context.setFillStyle('#FB452C');
+            context.fillText(_this.data.data.extend1, 122.5 * scale, 79 * scale);//绘制店铺名
+            context.setFontSize(24 * scale);
+            let timeText = '活动时间:  ' + _this.data.data.startTime + '—' + _this.data.data.endTime,
+              w1 = context.measureText(timeText).width;
+            context.setFillStyle('#FE732D');
+            context.fillText(timeText, (690 - w1) / 2 * scale, 380 * scale);//绘制活动时间
+            context.setFillStyle('#333333');
+            context.setFontSize(36 * scale);
+            _this.cut('activityName', _this.data.data.activityName, 10);
+            let w2 = context.measureText(_this.data.activityName).width;
+            context.fillText(_this.data.activityName, (690 - w2) / 2 * scale, 470 * scale);//绘制店铺标题
+            context.setFillStyle('#FB452C');
+            context.fillRect(305 * scale, 490 * scale, 80 * scale, 6 * scale);//绘制下划线
+            context.setFontSize(26 * scale);
+            context.setFillStyle('#999999');
+            _this.cut('descTitle', _this.data.data.descTitle, 20, _this);
+            let w3 = context.measureText(_this.data.descTitle).width;
+            context.fillText(_this.data.descTitle, (690 - w3) / 2 * scale, 540 * scale);//绘制口号
+            context.setFillStyle('#666666');
+            let descContent = _this.data.data.descContent;
+            let w4;
+            //绘制活动内容
+            if (descContent.length <= 19) {//19字以内
+              w4 = context.measureText(descContent).width;
+              context.fillText(descContent, (690 - w4) / 2 * scale, 600 * scale);
+            } else {//超过19字
+              w4 = context.measureText(descContent.substring(0, 19)).width;
+              context.fillText(descContent.substring(0, 20), (690 - w4) / 2 * scale, 600 * scale);
+              if (descContent.length <= 38) {//19到38字
+                w4 = context.measureText(descContent.substring(20)).width;
+                context.fillText(descContent.substring(20), (690 - w4) / 2 * scale, 645 * scale);
+              } else {//超过38字
+                w4 = context.measureText(descContent.substring(20, 38)).width;
+                context.fillText(descContent.substring(20, 38), (690 - w4) / 2 * scale, 645 * scale);
+                if (descContent.length <= 48) {//38到48字
+                  let w5 = context.measureText(descContent.substring(38)).width;
+                  context.fillText(descContent.substring(38), (690 - w5) / 2 * scale, 690 * scale);
+                } else {//超过48字
+                  descContent = descContent.substring(39, 48) + '..'
+                  let w5 = context.measureText(descContent).width;
+                  context.fillText(descContent, (690 - w5) / 2 * scale, 690 * scale);
+                }
+              }
+            }
+            context.drawImage(_this.data.codeUrl, 100 * scale, 800 * scale, 158 * scale, 158 * scale);//绘制二维码
+            context.drawImage('../../../images/saoma.png', 290 * scale, 800 * scale, 300 * scale, 150 * scale);//绘制扫码文字图片
+            context.draw(false, function () {
+              setTimeout(function () {
+                saveImg.temp(_this, 'newShareCanvas', 1380, 2000, 1380, 2000);
+              }, 1000)
+            })
+          }
+        })
+      });
     }
-    context.drawImage(this.data.codeUrl, 100 * scale, 800 * scale, 158 * scale, 158 * scale);//绘制二维码
-    context.drawImage('../../../images/saoma.png', 290 * scale, 800 * scale, 300 * scale, 150 * scale);//绘制扫码文字图片
-    context.draw(false, function () {
-      saveImg.temp(_this, 'newShareCanvas', 1380, 2000, 1380, 2000);
-    })
   },
   saveImg: function () {//保存图片
     let _this = this;

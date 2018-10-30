@@ -26,4 +26,12 @@
   </view>
   <view id='lowstocks' class='exchange' wx:if="{{data.goodsType==3&&data.balance<=0}}">库存不足</view>
   <view id='exchange' bindtap='exchange' class="exchange" wx:else>立即兑换</view>
+  <view id='shareBox'>
+    <button bindtap="shareBtn">
+      <image src='../../../images/shouye_btn@2x.png' id='share'></image>
+    </button>
+    <image src='../../../images/fenxinag_btn@2x.png' id='goback' bindtap='goback'></image>
+  </view>
+  <canvas id='shareCanvas' canvas-id='shareCanvas' style='width:1380rpx;height:2000rpx;' class='shareCanvas'></canvas>
+  <poster-modal posterData="{{canvasUrl}}" btnData="{{btnShow}}" bind:close="closePoster" bind:closeShare="closeShare" bind:drawPoster="drawPoster" bind:saveImg="saveImg" bind:handleSetting="handleSetting" wx:if="{{posterShow}}" id="posterModal"></poster-modal>
 </view>

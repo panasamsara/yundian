@@ -153,7 +153,7 @@
   <view class='separate'></view>
 
   <view class='shop clearfix'>
-    <image src='{{data.shopLogoUrl}}'></image>
+    <image src='{{data.shopLogoUrl}}' bindtap='goShop'></image>
     <view class='content'>
       <text>{{data.shopName}}</text>
       <block wx:for='{{data.shopScore}}' wx:key='key'>

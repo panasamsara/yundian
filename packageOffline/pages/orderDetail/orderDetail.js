@@ -343,7 +343,7 @@ Page({
         var data = res.data.data; 
         if (data.orderStatus == 3) { //如果是已经结算
 
-          wx.redirectTo({
+          wx.reLaunch({
             url: '../endDetails/endDetails?presaleId=' + this.data.presaleId,
           })
         }

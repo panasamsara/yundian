@@ -247,3 +247,9 @@ textarea{
   position: fixed;
   top: 99999rpx;
 }
+
+.desc_tit{
+  font-weight: bold!important;
+  font-size: 32rpx;
+  padding: 5rpx 0;
+}

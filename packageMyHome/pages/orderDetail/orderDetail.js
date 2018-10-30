@@ -140,7 +140,8 @@ Page({
           // 页面初始化 options为页面跳转所带来的参数
           var size = this.setCanvasSize();//动态设置画布大小
           var initUrl = this.data.storeUrl;
-          this.createQrCode(initUrl, "mycanvas", size.w, size.h);
+        this.createQrCode(initUrl, "mycanvas", 134 * scale, 134 * scale);
+        this.createQrCode(initUrl, "mycanvas1", 134 * scale, 134 * scale);
         // }
         this.setData({
           no: this.data.orderNo
@@ -313,7 +314,7 @@ Page({
   createQrCode: function (url, canvasId, cavW, cavH) {
     //调用插件中的draw方法，绘制二维码图片
     QR.api.draw(url, canvasId, cavW, cavH);
-    setTimeout(() => { this.canvasToTempImage(); }, 200);
+   // QR.api.draw(this.data.orderInfo.serialNumber, "codeCanvas", 134 * scale, 134 * scale);
 
   },
   //获取临时缓存照片路径，存入data中
@@ -811,7 +812,7 @@ Page({
       title: this.data.goodsName,
       desc: this.data.goodsName,
       imageUrl: this.data.groupPath,
-      path: '/pages/spelldetails/spelldetails?groupId=' + this.data.groupId + '&orderNo=' + this.data.orderNo + '&shopId=' + this.data.shopId + '&cUser=' + this.data.userid + '&population=' + this.data.population + '&orderStatusVo=' + this.data.orderStatusVo + '&stockId=' + this.data.stockId + '&share=' + 1,
+      path: '/pages/spelldetails/spelldetails?groupId=' + this.data.groupId + '&orderNo=' + this.data.orderNo + '&shopId=' + this.data.shopId + '&cUser=' + this.data.userid + '&population=' + this.data.population + '&orderStatusVo=' + this.data.orderStatusVo + '&stockId=' + this.data.stockId + '&share=' + 1 + '&shareUser=' + this.data.userid,
       success: (res) => {
         this.setData({
           ifshare: 1

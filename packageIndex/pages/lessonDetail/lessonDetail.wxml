@@ -1,6 +1,8 @@
 <!-- 头部 -->
+<login-component login-type-property="{{loginType}}"  bindresmevent="resmevent" ></login-component>
+
 <view class='bg-cover'>
-  <image class='cover' mode='widthFix' src='{{data.cover}}'></image>
+  <image class='cover' mode='widthFix' src='{{data.resourceList[0].imgDetail}}'></image>
   <view wx:if="{{!play}}" class='cover-shadow'>
     <text wx:if="{{data.isfree == 1 && (data.online == 1 && !data.isEntry)}}">付费课程，购买后可播放</text>
   </view>

@@ -1,0 +1,200 @@
+/* packageIndex/pages/appointmentNew/appointInfo/appointInfo.wxss */
+@import '../css/common.wxss';
+
+#appointInfo{
+  font-size: 28rpx;
+}
+
+#appointInfo #infoContent{
+  padding-bottom: 120rpx;
+}
+
+#appointInfo .infoList{
+  display: flex;
+  height: 100rpx;
+  line-height: 100rpx;
+  border-bottom: solid 1rpx #EEEEEE;
+  color: #666666;
+  padding: 0 24rpx;
+}
+
+#appointInfo .infoList:nth-of-type(4){
+  border-bottom: solid 20rpx #f6f6f6;
+}
+
+#appointInfo .infoList view:first-of-type{
+  width: 640rpx;
+  display: flex;
+}
+
+#appointInfo .infoList view:nth-of-type(2){
+  width: 62rpx;
+  text-align: right;
+}
+
+#appointInfo #contactIcon{
+  width: 30rpx;
+  height: 32rpx;
+}
+
+#appointInfo #numIcon{
+  width: 12rpx;
+  height: 22rpx;
+  margin-right: 10rpx;
+}
+
+#appointInfo #slideIcon{
+  width: 22rpx;
+  height: 12rpx;
+  margin-right: 10rpx;
+}
+
+#appointInfo .infoList text{
+  display: block;
+}
+
+#appointInfo .infoName{
+  width: 175rpx;
+}
+
+#appointInfo .appointInfo{
+  color: #FB452C;
+  max-width: 520rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#appointInfo .userInfo{
+  color: #333333;
+}
+
+#appointInfo #remark{
+  display: block;
+  width: calc(100% - 50rpx);
+  height: 250rpx;
+  padding: 30rpx 25rpx;
+  color: #999999;
+}
+
+#appointInfo #numBox{
+  height: 224rpx;
+  background-color: #f6f6f6;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 24rpx 23rpx;
+}
+
+#appointInfo .num{
+  width: 128rpx;
+  height: 64rpx;
+  line-height: 64rpx;
+  border-radius: 4rpx;
+  text-align: center;
+  background-color: #ffffff;
+  margin: 0 16rpx 16rpx 0;
+}
+
+#appointInfo .num:nth-of-type(5n){
+  margin-right: 0;
+}
+
+#appointInfo .numChecked{
+  background-color: #FB452C;
+  color: #ffffff;
+}
+
+#userModal{
+  position: fixed;
+  width: 100%;
+  height: 850rpx;
+  z-index: 9999;
+  bottom: 0;
+  left: 0;
+  background-color: #ffffff;
+}
+
+#userModal .userScroll{
+  height: 750rpx;
+}
+
+#userModal .userList{
+  padding: 0 28rpx;
+  border-bottom: solid 1rpx #EEEEEE;
+}
+
+#userModal .imageBox{
+  width: 29rpx;
+  margin-right: 46rpx;
+}
+
+#userModal .checkIcon{
+  width: 29rpx;
+  height: 22rpx;
+}
+
+#userModal .editIcon{
+  width: 40rpx;
+  height: 40rpx;
+}
+
+#userModal .infoTitle{
+  border-bottom: solid 1rpx #EEEEEE;
+  line-height: 100rpx;
+  font-size: 32rpx;
+  text-align: center;
+}
+
+#userModal .userBox{
+  display: flex;
+  flex-direction: column;
+  height: 130rpx;
+  line-height: 60rpx;
+}
+
+#userModal .userBox text:first-of-type{
+  color: #FB452C;
+  font-size: 32rpx;
+}
+
+#userModal .userBox text:last-of-type{
+  color: #666666;
+}
+
+#shade{
+  height: 100%;
+  top: 0;
+}
+
+#textModal{
+  position: fixed;
+  z-index: 9999;
+  width: 540rpx;
+  height: 500rpx;
+  top: 200rpx;
+  left: 75rpx;
+  border-radius: 10rpx;
+  background-color: #ffffff;
+  padding: 30rpx 30rpx 0 30rpx;
+}
+
+#textModal textarea{
+  height: 300rpx;
+  margin-bottom: 30rpx;
+  border: solid 1rpx #EEEEEE;
+  width: auto;
+  padding: 20rpx;
+  border-radius: 10rpx;
+}
+
+#confirm{  
+  width: 100%;
+  height:100rpx;
+  line-height: 100rpx;
+  text-align: center;
+  background: -webkit-linear-gradient(left, #ff894f , #fe5c45); /* Safari 5.1 - 6.0 */
+  background: -o-linear-gradient(right, #ff894f, #fe5c45); /* Opera 11.1 - 12.0 */
+  background: -moz-linear-gradient(right, #ff894f, #fe5c45); /* Firefox 3.6 - 15 */
+  background: linear-gradient(to right, #ff894f , #fe5c45); /* 标准的语法 */
+  color: #ffffff;
+}

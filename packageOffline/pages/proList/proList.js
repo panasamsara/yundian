@@ -104,8 +104,8 @@ Page({
       systemInfo: systemInfo,
       goodsH: systemInfo.windowHeight - 118,
       goodsHs: systemInfo.windowHeight -48,  
-      goodsHL: systemInfo.windowHeight - 48,
-      pgoodsHL: systemInfo.windowHeight - 100
+      goodsHL: systemInfo.windowHeight - 56,
+      pgoodsHL: systemInfo.windowHeight - 90
     })
 
     if (e && e.q) {
@@ -448,15 +448,15 @@ Page({
   },
   getData: function (shop){
     let _this = this
-    let systemInfo = wx.getStorageSync('systemInfo');
-    this.setData({
-      // mechine: mechine,
-      systemInfo: systemInfo,
-      goodsH: systemInfo.windowHeight - 118,
-      goodsHs: systemInfo.windowHeight - 48,
-      goodsHL: systemInfo.windowHeight - 48,
-      pgoodsHL: systemInfo.windowHeight - 100
-    })
+    // let systemInfo = wx.getStorageSync('systemInfo');
+    // this.setData({
+    //   // mechine: mechine,
+    //   systemInfo: systemInfo,
+    //   goodsH: systemInfo.windowHeight - 118,
+    //   goodsHs: systemInfo.windowHeight - 48,
+    //   goodsHL: systemInfo.windowHeight - 56,
+    //   pgoodsHL: systemInfo.windowHeight - 118
+    // })
     /*************** */
     //获取店铺类别列表
     util.reqAsync('shop/getShopGoodsCategoryList', {
@@ -1075,7 +1075,7 @@ Page({
     }).then((res) => {
       let shopCategory = res.data.data
       // 类别中加入 “全部”
-      let allCategory = { sequence: 0, type: 1, categoryName: "全部", categoryId: null }
+      let allCategory = { sequence: 0, type: 10, categoryName: "全部", categoryId: null }
       shopCategory.unshift(allCategory)
       console.log('所有分类')
       console.log(shopCategory)
@@ -1107,7 +1107,7 @@ Page({
       merchantId: merchantid,
       shopId: shopid,
       goodsType: 0,
-      searchType: searchType || 10,
+      searchType: 10,
       customerId: wx.getStorageSync('scSysUser').id,
       categoryId: categoryid
     }).then((res) => {
@@ -1364,7 +1364,7 @@ Page({
     let goods_id = e.currentTarget.dataset.id
     // let status = e.currentTarget.dataset.status
     var shopid = this.data.shopId
-    
+    console.log(shopid)
     wx.navigateTo({
       url: '../goods/goods?goodsId=' + goods_id + '&shopId=' + shopid + '&status=' + 3 + '&sacn=' + 0, // 3 普通商品
     })
@@ -1425,7 +1425,7 @@ Page({
           deviceTime: util.formatTime(new Date()),
           deviceType: 1,
           waiterId: '',
-          peopleNumber: 1,
+          peopleNumber: wx.getStorageSync('peopleNumber') || 1,
           startTime: util.formatTime(new Date()),
 
         }).then((res) => {
@@ -1555,9 +1555,9 @@ Page({
 
     }).then((data) => {
       if (data.data.code == 9) {
-        this.setData({
-          showLoading: true
-        })
+        // this.setData({
+        //   showLoading: true
+        // })
         wx.showToast({
           title: data.data.msg,
           icon: 'none'

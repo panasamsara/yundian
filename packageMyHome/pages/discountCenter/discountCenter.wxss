@@ -153,3 +153,14 @@ page{
   right:14rpx;
   top:-60rpx;
 }
+#shareBox,#goback{
+  position: fixed;
+  width: 80rpx;
+  height: 80rpx;
+  z-index: 888;
+}
+
+#goback{
+  right: 30rpx;
+  bottom: 180rpx;
+}

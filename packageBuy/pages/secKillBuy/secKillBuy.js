@@ -345,7 +345,7 @@ Page({
   addressSkip: function (e) {
     //跳到地址管理
     wx.navigateTo({
-      url: '../../packageMyHome/pages/address/index/list?id=' + this.data.customerId + '&select=' + 1
+      url: '/packageMyHome/pages/address/index/list?id=' + this.data.customerId + '&select=' + 1
     })
   },
   bindPickerChange: function (e) {
@@ -388,7 +388,7 @@ Page({
       flagOrder: true
     })
     wx.switchTab({
-      url: '../proList/proList'
+      url: '/pages/proList/proList'
     });
   },
   look: function (e) {
@@ -399,18 +399,18 @@ Page({
     if (this.data.isSend == 1) { //店内下单
       //跳到店内下单
       wx.redirectTo({
-        url: '../../../../../packageMyHome/pages/shopOrder/shopOrder'
+        url: '/packageMyHome/pages/shopOrder/shopOrder'
       })
     } else {
       if (this.data.isSeckill == 1) {//秒杀
         //跳到线上订单
         wx.redirectTo({
-          url: '../../../../../packageMyHome/pages/orderDetail/orderDetail?orderNo=' + this.data.orderNo + '&isGroupBuying=' + 0 + '&orderkind=' + 3
+          url: '/packageMyHome/pages/orderDetail/orderDetail?orderNo=' + this.data.orderNo + '&isGroupBuying=' + 0 + '&orderkind=' + 3
         })
       } else {
         //跳到线上订单
         wx.redirectTo({
-          url: '../../../../../packageMyHome/pages/orderDetail/orderDetail?orderNo=' + this.data.orderNo + '&isGroupBuying=' + 1
+          url: '/packageMyHome/pages/orderDetail/orderDetail?orderNo=' + this.data.orderNo + '&isGroupBuying=' + 1
         })
       }
 

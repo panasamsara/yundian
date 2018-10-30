@@ -24,17 +24,45 @@ Page({
        userId = wx.getStorageSync('scSysUser').id
     }
     this.setData({ shopId: shopId, userId: userId})
+    if (options.shareUser) {//转发进入页面记录推荐关系
+      this.setData({
+        options: options
+      })
+    }
+    //if (options.shareUser) {//转发进入页面记录推荐关系
+    // if (options.shareUser) {//转发进入页面记录推荐关系
+    //   this.record({
+    //     currentId: wx.getStorageSync('scSysUser').id,
+    //     shareShop: options.shopId,
+    //     shareUser: options.shareUser,
+    //     sourcePart: '1',
+    //     shareType: options.shareType,
+    //     businessId: options.couponId
+    //   })
+    // }
   },
   onReady: function () {
   
   },
 
   onShow: function () {
+    var _this=this;
     app.util.checkWxLogin('share').then(res=>{
       if (res.id){
         this.setData({ userId: res.id })
         this.newGift();
         this.discount();
+        console.log("_this.data.options_____", _this.data.options);
+        if (_this.data.options.shareUser) {//转发进入页面记录推荐关系
+          _this.record({
+            currentId: wx.getStorageSync('scSysUser').id,
+            shareShop: _this.data.options.shopId,
+            shareUser: _this.data.options.shareUser,
+            sourcePart: '1',
+            shareType: _this.data.options.shareType,
+            businessId: _this.data.options.couponId
+          })
+        }
       }else{
         // if (wx.getStorageSync('isAuth') == 'no') {
           this.setData({
@@ -55,8 +83,19 @@ Page({
         loginType: 0,
         userId: wx.getStorageSync('scSysUser').id
       })
+
       this.newGift();
       this.discount();
+      if (_this.data.options.shareUser) {//转发进入页面记录推荐关系
+        _this.record({
+          currentId: wx.getStorageSync('scSysUser').id,
+          shareShop: _this.data.options.shopId,
+          shareUser: _this.data.options.shareUser,
+          sourcePart: '1',
+          shareType: _this.data.options.shareType,
+          businessId: _this.data.options.couponId
+        })
+      }
     }
   },
   resusermevent: function (e) {
@@ -246,5 +285,15 @@ Page({
         icon: 'none'
       })
     })
-  }
+  },
+  goback: function () {//回到首页按钮
+    wx.switchTab({
+      url: '../../../pages/index/index?shopId=' + this.data.shopId
+    })
+  },
+  record: function (data) {//记录推荐关系
+    app.util.reqAsync('payBoot/wx/acode/record', data).then((res) => {
+      console.log("记录推荐关系:", res)
+    })
+  },
 })

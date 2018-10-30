@@ -273,12 +273,12 @@ canvas#discountCanvas{
 
 #share{
   right: 30rpx;
-  bottom: 280rpx;
+  bottom: 180rpx;
 }
 
 #goback{
   right: 30rpx;
-  bottom: 180rpx;
+  bottom: 280rpx;
 }
 .bindGet{
   width: 500rpx;

@@ -281,9 +281,15 @@ page,.content{
   margin:0 30rpx;
 }
 .discount-box .shop-discount image{
-  width: 24rpx;
-  height: 30rpx; 
+  width:22rpx;
+  height:26rpx;
   margin-left:10rpx;
+}
+.discount-room img{
+  width:22rpx;
+  height:26rpx;
+  margin-left:10rpx;
+  margin-top:35rpx;
 }
 .discount-room{
   display: inline-block;

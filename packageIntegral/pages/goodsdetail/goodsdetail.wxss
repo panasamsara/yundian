@@ -96,3 +96,25 @@
   padding: 25rpx;
   font-size: 30rpx;
 }
+
+#share,#goback{
+  position: fixed;
+  width: 80rpx;
+  height: 80rpx;
+  z-index: 888;
+}
+
+#share{
+  right: 30rpx;
+  bottom: 280rpx;
+}
+
+#goback{
+  right: 30rpx;
+  bottom: 180rpx;
+}
+
+#shareCanvas{
+  position: fixed;
+  top: 99999rpx;
+}

@@ -8,7 +8,7 @@
       <view class='coupon-name'>{{couponInfo.coupon.instruction}}</view>
       <view class='coupon-price' wx:if='{{couponInfo.coupon.couponValue}}'>价值{{couponInfo.coupon.couponValue}}元</view>
       <image class='libao-img' src='./img/libaobeij.png'></image>
-      <image class='lingqu-btn' bindtap="getCoupon" src="./img/yundian_libaolingquanniu@2x.png" />
+      <image class='lingqu-btn' bindtap="checkGetCoupon" src="./img/yundian_libaolingquanniu@2x.png" />
       <image class='close-btn' bindtap="closeModal" src='./img/yundian_lipinguanbi@2x.png'></image>
     </view>
   </view>
@@ -28,7 +28,7 @@
   <image class='newCouponBag' wx:if='{{showCoupnBox && showIndex}}' bindtap='openCouponBag' src='../../images/libao.gif'></image>
 
   <view id="top" class="cate-box" wx:if='{{showIndex}}' animation="{{animationData}}">
-    <view class="bg-mask"></view>
+    <!-- <view class="bg-mask"></view> -->
     <image src='{{shopInformation.bgImageLong}}' mode='aspectFill' class='top-bg' wx:if='{{showImg}}'></image>
     <image src='{{shopInformation.videoImagecover}}' mode='aspectFill' class='top-bg' wx:if='{{showVideo}}'></image> 
     <image src='../../images/yundian_shipinbofang@2x.png' bindtap='goIndexVideo' class='index-video-cover' wx:if='{{showVideo &&  shopInformation.shopInfo.shopHomeConfig.openServiceList[0]}}'></image>
@@ -96,12 +96,7 @@
       <image class='down-icon' bindtap='clickShowIndex' src='../../images/down.gif'></image>
       <!-- <navigator url='../store/code/code'><image class='qrcode' src='../../images/yundian_erweima@2x.png'></image></navigator> -->
     </view>
-
-  
-  <navigator wx:if="{{shopInformation.masterSetupType == 1}}" url='/packageIndex/pages/lesson/lesson'>
-    <image mode='aspectFit' class='banner-lesson' src='./img/zxkt_ydsy_rk@2x.png'></image>
-  </navigator>
-
+    
     <!-- <view class='coupon' bindtap='showQuanBox' wx:if="{{couponType1||couponType2||couponType3}}"> -->
     <view class='coupon' bindtap='showQuanBox' wx:if="{{shopHasCoupon}}">
       <!-- <view class='coupon-inline'> -->
@@ -111,10 +106,14 @@
         <image class='coupon-icon right' src='../../images/yundian_zhankai@2x.png'></image>
       <!-- </view> -->
     </view>
-
+    <!-- 在线预约 -->
     <view class="yuyue" bindtap='goAppointment' wx:if="{{shopInformation.isReserve}}">
       <image src='./img/yuyue.png'></image>
     </view>
+     <!-- 云店课堂 -->
+    <navigator wx:if="{{shopInformation.masterSetupType == 1}}" url='/packageIndex/pages/lesson/lesson'>
+      <image mode='aspectFit' class='banner-lesson' src='./img/zxkt_ydsy_rk@2x.png'></image>
+    </navigator>
 
     <view wx:if="{{goodsInfos.length<=0&&list.length<=0&&groupBuyList.length<=0&&hotCommoditiesList.hotCommoditiesList==undefined}}" class="activityBlank">
       <view><image src='img/yundian_kby_meiyoudianpu.png'></image></view>
@@ -128,8 +127,8 @@
         <view class='left-line'></view>
       </view>
       <view class="activity-swiper">
-        <!-- <swiper class='activity-swiper-box' indicator-dots="{{shopInformation.goodsInfos.length>1}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}"> -->
-          <view class='active-block' wx:for="{{goodsInfos}}" wx:key="index">
+        <!-- <swiper class='activity-swiper-box' indicator-dots="{{shopInformation.goodsInfos.length>1}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}"> wx:if="{{item.activityType==11}}" -->
+          <view class='active-block' wx:for="{{goodsInfos}}" wx:key="index"  >
             <!-- <swiper-item> -->
               <!-- <view class="swiper-item"> -->
                 <view class='activity-img'>
@@ -140,7 +139,7 @@
 
                 <view class='activity-desc-box'>
                   <view class='activity-desc-container'>
-                    <view class='activity-name font-size-24'>{{item.goodsName}}</view>
+                    <view class='activity-name font-size-24'>{{item.activityName}}</view>
                     <view class='activity-detail font-size-24'>{{item.descTitle}}</view>
                   </view>
                   <view class='activity-desc-container'>
@@ -151,6 +150,7 @@
               <!-- </view> -->
             <!-- </swiper-item> -->
           </view>
+
         <!-- </swiper> -->
       </view>
     </view>   

@@ -3,7 +3,7 @@
       {{dataArr.name}}
       <image src='../images/til_right@3x.png'></image>
     </view>
-    <navigator class="navigator" wx:for="{{dataArr.courses}}" wx:key="{{index}}" url='../lessonDetail/lessonDetail?id={{item.id}}' wx:if="{{index<4}}"  hover-class="none">
+    <navigator class="navigator" wx:for="{{dataArr.courses}}" wx:key="{{index}}" url='../lessonDetail/lessonDetail?id={{item.id}}&shopId={{datashopId}}' wx:if="{{index<4}}"  hover-class="none">
       <view class='lesson-content'>
         <view class='cover-box'>
           <image class='cover' mode='aspectFill' src='{{item.cover}}'></image>
@@ -14,7 +14,7 @@
         <view class='text-box'>
           <view class='title'>{{item.name}}</view>
           <view class='teacher'>
-            <image wx:if="{{item.speakerImg=''}}" src='../images/img_touxiang.png'></image>
+            <image wx:if="{{item.speakerImg==''}}" src='../images/img_touxiang.png'></image>
             <image  wx:else src='{{item.speakerImg}}'></image>
             <text>{{item.speakerName}}</text>
             <text class='price {{item.showPrice=="免费"?"free":""}}'>{{item.showPrice}}</text>

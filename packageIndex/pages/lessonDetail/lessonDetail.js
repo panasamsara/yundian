@@ -15,6 +15,7 @@ Page({
   },
   // 获取课程详情
   getDetail: function () {
+    var _this = this
     wx.showLoading({
       title: '加载中...',
       mask: true
@@ -23,16 +24,31 @@ Page({
       courseId: this.data.options.id,
       userId: wx.getStorageSync('scSysUser').id
     }
+    console.log("params",params)
     app.util.reqAsync('masterCourse/getCourseInfo', params).then((res) => {
+      console.log("res",res);
       if (res.data.code == 1) {
         this.setData({
-          data: res.data.data
+          data: res.data.data,
+          courseId: res.data.data.id,
         });
         this.replyReset();
-      } else {
+        wx.hideLoading();
+      } else if (res.data.code==9){
+          wx.showToast({
+            title: '视屏已删除',
+            icon: 'none'
+          })
+          setTimeout(function(){
+            wx.hideLoading();
+            wx.switchTab({
+              url: '/pages/index/index?shopId=' + _this.data.options.shopId
+            })
+          },1000)
+      }else{
         wx.showToast({ title: res.data.msg || '请稍后再试！', icon: 'none' });
+        wx.hideLoading();
       }
-      wx.hideLoading();
       wx.hideNavigationBarLoading();
       wx.stopPullDownRefresh();
     })
@@ -96,12 +112,12 @@ Page({
     let comments = this.data.comments;
     // 根 - 子节点判断
     if(c.type == 1) {
-      comments.push(c);
+      comments.unshift(c);
     } else {
       comments.forEach((v, i) => {
         if (v.id == c.rootId) {
           if (!v.childs) v.childs = [];
-          v.childs.push(c)
+          v.childs.unshift(c)
         }
       });
     }
@@ -149,7 +165,13 @@ Page({
     reply.uName = this.data.data.name;
     reply.uPic = this.data.data.cover;
     reply.focus = false;
+    // 点击主讲老师，取消其他操作
+    if (obj && obj.type == 'tap') {
+      this.setData({reply: reply})
+      return;
+    }
     if (obj) reply = Object.assign(reply, obj);
+    reply.type = 1;
     this.setData({
       reply: reply
     })
@@ -165,24 +187,97 @@ Page({
   },
   // 初始化回复数据，页面高度，获取课程和评论
   onLoad: function (options) {
+    var _this =this
+    console.log(options)
+    wx.getSystemInfo({
+      success: (res) => {
+        this.setData({ 
+          height: res.windowHeight,
+          shopId: options.shopId,
+          options: options,
+         })
+      }
+    })
+    if (options.shareUser) {//转发进入页面记录推荐关系
+      this.setData({
+        options: options
+      })
+    }
+    
+    app.util.checkWxLogin('share').then((loginRes) => {
+      console.log('检测是否登录---------------------loginRes', loginRes)
+      if (loginRes.status == 0) {
+        _this.setData({
+          loginType: 1
+        })
+      } else {
+          let u = wx.getStorageSync('scSysUser');
+          let reply = _this.data.reply;
+          reply.courseId = options.id;
+          reply.fid = u.id;
+          reply.fName = u.username;
+          reply.fPic = u.userpic;
+          _this.setData({
+            reply: reply,
+          })
+          app.util.getShop(wx.getStorageSync('scSysUser').id, _this.data.shopId).then((res) => {
+            console.log(res)
+            if (res.data.code == 1) {
+              wx.setStorageSync('shop', res.data.data.shopInfo)
+            }
+          })
+          _this.getDetail();
+          _this.getComments();
+        }
+      })
+    console.log("options", options)
     // 回复的时候不变的参数
+    if (_this.data.options.shareUser) {//转发进入页面记录推荐关系
+      _this.record({
+        currentId: wx.getStorageSync('scSysUser').id,
+        shareShop: _this.data.options.shopId,
+        shareUser: _this.data.options.shareUser,
+        sourcePart: '1',
+        shareType: _this.data.options.shareType,
+        businessId: _this.data.options.courseId
+      })
+    }
+    
+  },
+  resmevent:function(){
+    var _this = this
+    
+    this.setData({
+      loginType: 0
+    })
     let u = wx.getStorageSync('scSysUser');
+    let shopId = this.data.shopId;
     let reply = this.data.reply;
-    reply.courseId = options.id;
+    reply.courseId = this.data.options.id;
     reply.fid = u.id;
     reply.fName = u.username;
     reply.fPic = u.userpic;
     this.setData({
-      options: options,
-      reply: reply
+      reply: reply,
+      shopId: shopId
     })
-    wx.getSystemInfo({
-      success: (res) => {
-        this.setData({ height: res.windowHeight})
+    app.util.getShop(wx.getStorageSync('scSysUser').id, shopId).then((res) => {
+      if (res.data.code == 1) {
+        wx.setStorageSync('shop', res.data.data.shopInfo)
       }
     })
     this.getDetail();
     this.getComments();
+    if (_this.data.options.shareUser) {//转发进入页面记录推荐关系
+      _this.record({
+        currentId: wx.getStorageSync('scSysUser').id,
+        shareShop: _this.data.shopId,
+        shareUser: _this.data.shareUser,
+        sourcePart: '1',
+        shareType: _this.data.shareType,
+        businessId: _this.data.courseId
+      })
+    }
   },
   // 点击播放视频，添加学习记录
   videoPlay: function () {
@@ -362,34 +457,12 @@ Page({
       })
     }).exec();
   },
-  onShow:function(){
-    let _this=this;
-    saveImg.getCode(_this, {//获取商品二维码
-      source: 0,
-      page: "pages/QrToActivity/QrToActivity",
-      params: {
-        shopId: wx.getStorageSync('shop').id,
-        userId: wx.getStorageSync('scSysUser').id,
-        merchantId: wx.getStorageSync('shop').merchantId,
-        courseId: this.data.options.id,
-        sourcePart: '1',
-        shareType: 8
-      }
-    })
-  },
   goback: function () {//回到首页按钮
     wx.switchTab({
-      url: '../index/index?shopId=' + this.data.shopId
+      url: '/pages/index/index?shopId=' + this.data.options.shopId
     })
   },
   shareBtn: function () {//点击分享
-    if (this.data.codeStatus!='done'||this.data.codeStatus==undefined){
-      wx.showToast({
-        title: '页面加载中，请稍后分享',
-        icon: 'none'
-      })
-      return;
-    }
     this.setData({
       posterShow: true
     })
@@ -405,37 +478,53 @@ Page({
       return;
     }
     wx.showLoading();
-    wx.downloadFile({
-      url: this.data.data.cover,
-      success:function(res){
-        let shopName = wx.getStorageSync('shop').shopName,
-            context = wx.createCanvasContext('shareCanvas'),
-            cover=res.tempFilePath,
-            scale=wx.getSystemInfoSync().windowWidth/375*2;
-        if (shopName.length > 7) {
-          shopName = shopName.substring(0, 6) + '..';
-        };
-        context.setFillStyle('#ffffff');
-        context.fillRect(0,0,690*scale,1000*scale);//设置白色背景
-        context.drawImage(cover,20*scale,18*scale,305*scale,305*scale);//绘制视频封面
-        context.drawImage('../../../images/video.png',142.5*scale,130*scale,60*scale,60*scale);//绘制播放按钮
-        context.drawImage('../../../images/bg7.png',0,200*scale,345*scale,300*scale);//绘制背景图
-        context.setFontSize(15*scale);
-        let w=context.measureText(shopName).width+20;
-        context.beginPath();
-        context.setStrokeStyle('#ffffff');
-        context.moveTo(50*scale,290*scale);
-        context.lineTo(295*scale,290*scale);
-        context.stroke();
-        context.setFillStyle('#fb452d');
-        context.fillRect(((345-w/2)/2)*scale,282.5*scale,w,15*scale);//绘制店铺名背景
-        context.setFillStyle('#ffffff');
-        context.fillText(shopName,((355-w/2)/2)*scale,294*scale);//绘制店铺名
-        context.drawImage(_this.data.codeUrl,50*scale,413*scale,75*scale,75*scale);
-        context.draw(false,function(){
-          saveImg.temp(_this, 'shareCanvas', 1380, 2000, 1380, 2000);
-        })
+    saveImg.getCode(_this, {//获取商品二维码
+      source: 0,
+      page: "pages/QrToActivity/QrToActivity",
+      params: {
+        shopId: wx.getStorageSync('shop').id,
+        userId: wx.getStorageSync('scSysUser').id,
+        shareUser: wx.getStorageSync('scSysUser').id,
+        merchantId: wx.getStorageSync('shop').merchantId,
+        courseId: this.data.options.id,
+        sourcePart: '1',
+        shareType: 8
       }
+    }).then(function(){
+      wx.downloadFile({
+        url: _this.data.data.cover,
+        success: function (res) {
+          let shopName = wx.getStorageSync('shop').shopName,
+              context = wx.createCanvasContext('shareCanvas'),
+              cover = res.tempFilePath,
+              scale = wx.getSystemInfoSync().windowWidth / 375 * 2;
+          if (shopName.length > 7) {
+            shopName = shopName.substring(0, 6) + '..';
+          };
+          context.setFillStyle('#ffffff');
+          context.fillRect(0, 0, 690 * scale, 1000 * scale);//设置白色背景
+          context.drawImage(cover, 20 * scale, 18 * scale, 305 * scale, 305 * scale);//绘制视频封面
+          context.drawImage('../../../images/video.png', 142.5 * scale, 130 * scale, 60 * scale, 60 * scale);//绘制播放按钮
+          context.drawImage('../../../images/bg7.png', 0, 200 * scale, 345 * scale, 300 * scale);//绘制背景图
+          context.setFontSize(15 * scale);
+          let w = context.measureText(shopName).width + 20;
+          context.beginPath();
+          context.setStrokeStyle('#ffffff');
+          context.moveTo(50 * scale, 290 * scale);
+          context.lineTo(295 * scale, 290 * scale);
+          context.stroke();
+          context.setFillStyle('#fb452d');
+          context.fillRect(((345 - w / 2) / 2) * scale, 282.5 * scale, w, 15 * scale);//绘制店铺名背景
+          context.setFillStyle('#ffffff');
+          context.fillText(shopName, ((355 - w / 2) / 2) * scale, 294 * scale);//绘制店铺名
+          context.drawImage(_this.data.codeUrl, 50 * scale, 413 * scale, 75 * scale, 75 * scale);
+          context.draw(false, function () {
+            setTimeout(function(){
+              saveImg.temp(_this, 'shareCanvas', 1380, 2000, 1380, 2000);
+            },1000)
+          })
+        }
+      })
     })
   },
   saveImg:function(){//保存图片
@@ -445,5 +534,19 @@ Page({
   handleSetting:function (e){//授权
     let that=this;
     saveImg.handleSetting(that, e.detail.e);
-  }
+  },
+  onShareAppMessage:function(){
+    return {
+      title: this.data.data.name,
+      path: '/packageIndex/pages/lessonDetail/lessonDetail?shopId=' + this.data.shopId + '&id=' + this.data.courseId + '&shareUser=' + wx.getStorageSync('scSysUser').id + "&courseId=" + this.data.courseId+'&shareType=8',
+      imageUrl: this.data.data.resourceList[0].imgDetail,
+      success: function () {
+      }
+    }
+  },
+  record: function (data) {//记录推荐关系
+    app.util.reqAsync('payBoot/wx/acode/record', data).then((res) => {
+      console.log("记录推荐关系:", res)
+    })
+  },
 })

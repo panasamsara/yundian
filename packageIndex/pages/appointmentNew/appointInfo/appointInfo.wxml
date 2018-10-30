@@ -1,0 +1,69 @@
+<!--packageIndex/pages/appointmentNew/appointInfo/appointInfo.wxml-->
+<view class='container' id='appointInfo'>
+  <view id='infoContent'>
+    <view class='infoList'>
+      <text class='infoName'>预约时间</text>
+      <text class='appointInfo'>2018-12-30 周日 12:20</text>
+    </view>
+    <view class='infoList'>
+      <text class='infoName'>服务项目</text>
+      <text class='appointInfo'>面部化妆卡</text>
+    </view>
+    <view class='infoList'>
+      <text class='infoName'>服务人员</text>
+      <text class='appointInfo'>1号员工</text>
+    </view>
+    <view class='infoList'>
+      <text class='infoName'>服务设备</text>
+      <text class='appointInfo'>单人房</text>
+    </view>
+    <view class='infoList flexBetween'>
+      <view>
+        <text class='infoName'>预约人</text>
+        <text class='userInfo'>测试人员</text>
+      </view>
+      <image src='../images/xcx_yy_yyxx_yuyueren@2x.png' id='contactIcon' bindtap='showModal'></image>
+    </view>
+    <view class='infoList'>
+      <text class='infoName'>联系电话</text>
+      <text class='userInfo'>18086512321</text>
+    </view>
+    <view class='infoList flexBetween'>
+      <view>
+        <text class='infoName'>到店人数</text>
+        <text class='userInfo'>10名</text>
+      </view>
+      <view bindtap='showNum' wx:if="{{!numShow}}"><image src='../images/xcx_yy_jiantou_you@2x.png' id='numIcon'></image></view>
+      <view bindtap='hideNum' wx:if="{{numShow}}"><image src='../images/xcx_yy_yyxx_jiantou_xia@2x.png' id='slideIcon'></image></view>
+    </view>
+    <view id='numBox' wx:if="{{numShow}}">
+      <text wx:for="{{numList}}" wx:key="index"  wx:for-index='index' class="num {{choseIndex==index?'numChecked':''}}" bindtap='choseNum' data-index="{{index}}">{{item}}</text>
+    </view>
+    <text id='remark' bindtap='showTextModal'>{{remark}}</text>
+  </view>
+  <view class='appointBox flexCenter'>
+    <button class='appoint'>确定,  提交预约</button>
+  </view>
+  <view id='userModal' wx:if="{{showModal}}">
+    <view class='infoTitle'>选择预约人信息</view>
+    <scroll-view class='userScroll' scroll-y>
+      <view class='userList flexBetween' wx:for="{{userList}}" wx:key="index" bindtap='choseUser' data-index="{{index}}">
+        <view class='flexBetween'>
+          <view class='imageBox'>
+            <image src='../images/xcx_yy_yyxx_tanchuang_gou@2x.png' class='checkIcon' wx:if="{{userIndex==index}}"></image>
+          </view>
+          <view class='userBox'>
+            <text>{{item.name}}</text>
+            <text>手机号 {{item.phone}}</text>
+          </view>
+        </view>
+        <image src='../images/xcx_yy_yyxx_qianbi@2x.png' class='editIcon'></image>
+      </view>
+    </scroll-view>
+  </view>
+  <view id='textModal' wx:if="{{showText}}">
+    <textarea placeholder='请输入内容' bindinput='setRemark' value="{{text}}"></textarea>
+    <button id='confirm' bindtap='confirm'>确定</button>
+  </view>
+  <view id='shade' bindtap='closeModal' wx:if="{{showShade}}"></view>
+</view>

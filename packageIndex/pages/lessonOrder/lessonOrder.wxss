@@ -86,16 +86,12 @@ page{
   line-height: 1;
   color: #AAB2BC;
 }
-.lesson-content .text-box .teacher::before{
-  content: ' ';
-  display: inline-block;
-  margin-right: 14rpx;
-  width: 30rpx;
-  height: 30rpx;
-  background: #FFDAE2;
-  border-radius: 100%;
-  vertical-align: middle;
-  line-height: 1;
+.teacher image{
+  width:40rpx;
+  height:40rpx;
+  border-radius:50%;
+  vertical-align:middle;
+  margin-right:10rpx;
 }
 .lesson-content .text-box .price{
   position: absolute;

@@ -182,7 +182,7 @@
       <view class='body'>
         <view class='fans' wx:if="{{data.circleFansTeam.length>0}}">
         <!--  bindtap='skipDetail' -->
-            <view class='banner' data-detailId="{{data.circleFansTeam[0].circleId}}" data-type="1" bindtap='skipDetail'>
+            <view class='banner' data-detailId="{{data.circleFansTeam[0].circleId}}" data-type="1">
               <image src="{{data.circleFansTeam[0].bgPic}}" class='bannerPic'></image>
               <view class='teamInfo'>
                 <text class='detailName'>{{data.circleFansTeam[0].circleName}}</text>
@@ -195,7 +195,7 @@
             </view>
             <scroll-view class="teamBox" scroll-x="true">
             <!--  bindtap='skipDetail' -->
-              <view class='team' wx:for="{{data.circleFansTeam[0].groupList}}" wx:key="index" data-type="2" data-detailId="{{item.detailId}}" bindtap='skipDetail'>
+              <view class='team' wx:for="{{data.circleFansTeam[0].groupList}}" wx:key="index" data-type="2" data-detailId="{{item.detailId}}">
                 <image src='{{item.detailPic}}'></image>
                 <view class='infoBox'>
                   <text class='teamName'>{{item.detailName}}</text>

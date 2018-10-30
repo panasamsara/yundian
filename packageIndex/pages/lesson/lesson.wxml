@@ -2,7 +2,7 @@
  <view class="page-section page-section-spacing swiper" wx:if="{{arr.length!=0}}">
     <swiper indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" circular="{{circular}}" vertical="{{vertical}}" interval="{{interval}}" duration="{{duration}}" previous-margin="{{previousMargin}}px" next-margin="{{nextMargin}}px" indicator-active-color="{{indicatorActiveColor}}" indicator-color="{{indicatorColor}}"  bindchange="swiperChange">
       <swiper-item  wx:for="{{arr}}" wx:key="{{index}}">
-       <navigator url='../lessonDetail/lessonDetail?id={{item.courseId}}' hover-class="none">
+       <navigator url='../lessonDetail/lessonDetail?id={{item.courseId}}&shopId={{shopId}}' hover-class="none">
         <view class="swiper-item">
           <image src='{{item.cover}}'></image>
           <view class='swiperImg'>
@@ -38,7 +38,7 @@
         </navigator>
       </view>
       <scroll-view scroll-x class='scroll-view_H'>
-        <navigator wx:for="{{historyList}}" wx:key="{{index}}" url='../lessonDetail/lessonDetail?id={{item.id}}' hover-class="none">
+        <navigator wx:for="{{historyList}}" wx:key="{{index}}" url='../lessonDetail/lessonDetail?id={{item.id}}&shopId={{shopId}}' hover-class="none">
           <view>
             <view class='cover-box'>
               <image class='cover' mode='aspectFill' src='{{item.cover}}'></image>
@@ -58,7 +58,7 @@
       限时试听
       <image src='../images/til_right@3x.png'></image>
     </view>
-    <navigator class="navigator" wx:for="{{limitlistening}}" wx:key="{{index}}" url='../lessonDetail/lessonDetail?id={{item.id}}' wx:if="{{index<=3}}" hover-class="none">
+    <navigator class="navigator" wx:for="{{limitlistening}}" wx:key="{{index}}" url='../lessonDetail/lessonDetail?id={{item.id}}&shopId={{shopId}}' wx:if="{{index<=3}}" hover-class="none">
       <view class='lessonCon'>
         <view class='cover-box'>
           <image class='cover' mode='aspectFill' src='{{item.cover}}'></image>
@@ -69,7 +69,7 @@
         <view class='historyDes over_ellipsis'>{{item.name}}</view>
         <view class='lessonTitle'>
           <view class='lessonIcon float_l'>
-            <image wx:if="{{item.speakerImg=''}}" src='../images/img_touxiang.png'></image>
+            <image wx:if="{{item.speakerImg==''}}" src='../images/img_touxiang.png'></image>
             <image  wx:else src='{{item.speakerImg}}'></image>
             {{item.speakerName}}
           </view>
@@ -85,7 +85,7 @@
       </navigator>
   </view>
   <view class='content management' id='test{{index}}' wx:for="{{capacityList}}" wx:key="{{key}}" wx:if="{{item.courses.length>0}}">
-    <lesson-model dataArr="{{item}}"></lesson-model>
+    <lesson-model dataArr="{{item}}" datashopId="{{shopId}}"></lesson-model>
   </view>
 </view>
 <scroll-view scroll-x class='scroll-view_H {{fixed == true? "fixed": ""}}'>

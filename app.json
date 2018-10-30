@@ -26,7 +26,8 @@
     "pages/spelldetails/spelldetails",
     "pages/store/posterActivity/posterActivity",
     "pages/QrToActivity/QrToActivity",
-    "pages/store/dynamicInfo/dynamicInfo"
+    "pages/store/dynamicInfo/dynamicInfo",
+    "components/component-search/component-search"
   ],
   "subPackages": [
     {
@@ -58,8 +59,10 @@
         "pages/memberSearch/memberSearch",
         "pages/appointmentNew/appointmentNew",
         "pages/timePicker/timePicker",
-        "pages/lessonMore/lessonMore",
-        "pages/appointmentNew/service/service"
+        "pages/appointmentNew/service/service",
+        "pages/appointmentNew/servant/servant",
+        "pages/appointmentNew/device/device",
+        "pages/appointmentNew/appointInfo/appointInfo"
       ]
     },
     {
@@ -109,7 +112,9 @@
         "pages/shopOrder/shopOrder",
         "pages/shopOrder/orderDetail/orderDetail",
         "pages/downLoadIos/downLoadIos",
-        "pages/downLoadAndroid/downLoadAndroid"
+        "pages/downLoadAndroid/downLoadAndroid",
+        "pages/eventCard/eventCard",
+        "pages/eventChoose/eventChoose"
       ]
     },
     {

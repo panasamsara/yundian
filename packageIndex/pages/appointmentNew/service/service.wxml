@@ -6,6 +6,16 @@
   </view>
   <view class='title'>全部服务</view>
   <view id='content'>
-    
+    <view class='serviceList flexBetween' wx:for="{{serviceList}}" wx:key="index">
+      <view class='flexBetween'>
+        <image src='{{item.url}}' class='cardPic'></image>
+        <text>{{item.name}}</text>
+      </view>
+      <image class='checked' src='../images/xcx_yy_cishukaxuanzhong@2x.png' wx:if="{{item.check}}" bindtap='checkCard' data-index="{{index}}"></image>
+      <view class='check' wx:if="{{!item.check}}" bindtap='checkCard' data-index="{{index}}"></view>
+    </view>
+  </view>
+  <view class='appointBox flexCenter'>
+    <button class='appoint'>确定</button>
   </view>
 </view>

@@ -1,0 +1,192 @@
+/* packageMyHome/pages/eventCardDetail/eventCardDetail.wxss */
+.backimg{
+  width: 750rpx;
+  height: 310rpx;
+  
+}
+.header-content{
+  padding:0 30rpx 30rpx;
+  background: #fff;
+  position:relative;
+  
+}
+.setup{
+  display: block;
+  background: #FEEBE8;
+  font-size:28rpx;
+  color:#FB452C;
+  padding-left: 20rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+
+}
+
+.setup image{
+  width: 35rpx;
+  height: 35rpx;
+  vertical-align: middle;
+}
+.time{
+  display:inline-block;
+  padding:20rpx;
+  background:rgba(0,0, 0, 0.3);
+  position:absolute;
+  left:0;
+  top:-100rpx;
+  color: #fff;
+  border-top-right-radius: 32rpx;
+  border-bottom-right-radius: 32rpx;
+}
+view.title{
+  padding: 20rpx 0;
+  color: #FB452C;
+  font-size: 34rpx;
+}
+
+page{
+  background: #F3F3F3;
+  height: 100%;
+  font-size: 30rpx;
+  word-wrap:break-word;
+
+}
+.card-msg{
+  background: #fff;
+  padding:  30rpx;
+  margin-top: 30rpx;
+  border-bottom: 1px solid #eee;
+}
+.main{
+  padding-bottom: 110rpx;
+  
+}
+.msg-title{
+  height: 50rpx;
+  padding-left: 30rpx;
+  border-left: 5rpx solid #FB452C;
+  line-height: 50rpx;
+  font-size: 32rpx;
+
+}
+.img-tilte{
+  padding-top: 50rpx;
+  font-size: 32rpx;
+  color: #333333;
+  font-weight: bold;
+}
+.desc_tit{
+  padding: 10rpx 0;
+  font-size: 32rpx;
+  color: #333333;
+  font-weight: bold;
+}
+.desc_txt{
+  background: #fff;
+  padding: 20rpx 0;
+  text-indent: 2rem;
+}
+.content-img{
+  width: 750rpx;
+}
+.img-info{
+  background: #fff;
+  padding: 30rpx;
+}
+.imgBox {
+  background-color:rgba(255,255,255,0.1)!important;
+}
+.msg-title text{
+  font-size: 28rpx;
+}
+.list-node{
+  position: relative;
+  padding: 30rpx;
+  background: #fff;
+  margin-top: 20rpx;
+  
+}
+.list-node>image{
+  width: 14rpx;
+  height: 20rpx;
+  top: 40rpx;
+  left: 30rpx;
+  position:absolute; 
+}
+.list-node text{
+  padding-left: 30rpx;
+  display: inline-block;
+  padding-bottom: 20rpx;
+}
+.list-title{
+  background: #fff;
+  padding: 30rpx;
+  margin-top: 30rpx;
+  border-bottom: 1px solid #eee;
+}
+.list-msg{
+  background: #fff;
+  padding:  30rpx; 
+  border-top:1px solid #eee;
+  border-bottom:1px solid #eee;
+}
+.list-msg image{
+  height: 180rpx;
+  width: 180rpx;
+  vertical-align: top;
+  padding-right: 20rpx;
+  border-radius: 10rpx;
+}
+.list-msg text{
+  vertical-align: top;
+}
+.buy{
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  background: #fff;
+  box-shadow: 0 -1px 1px #888888;
+}
+.buy view{
+  width: 50%;
+  height: 100rpx;
+  float: left;
+  color:#FB452C;
+  line-height: 100rpx;
+  text-align: center;
+}
+.buy view .corn{
+  font-size: 36rpx;
+}
+.buy view.buyBtn{
+  background: #FB452C;
+  color: #fff;
+  font-size: 36rpx;
+}
+.msg-text{
+  width: 430rpx;
+  display: inline-block;
+}
+.stockName{
+padding-top:30rpx;
+color:#999;
+}
+#share,#goback{
+  position: fixed;
+  width: 80rpx;
+  height: 80rpx;
+  z-index: 7777;
+}
+
+#share{
+  right: 30rpx;
+  bottom: 280rpx;
+}
+
+#goback{
+  right: 30rpx;
+  bottom: 180rpx;
+}
+#shareCanvas{
+  position: fixed;
+  top: 99999rpx;
+}

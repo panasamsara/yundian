@@ -9,7 +9,11 @@
     </view>
     <view class='text-box'>
       <view class='title'>{{item.name}}</view>
-      <view class='teacher'>{{item.speakerName}}</view>
+      <view class='teacher'>
+      <image wx:if="{{item.speakerImg==''}}" src='../images/img_touxiang.png'></image>
+        <image  wx:else src='{{item.speakerImg}}'></image>
+      {{item.speakerName}}
+      </view>
     </view>
   </view>
 </block>

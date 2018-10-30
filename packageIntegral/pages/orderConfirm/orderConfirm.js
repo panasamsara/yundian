@@ -8,7 +8,9 @@ Page({
   data: {
     accountText:'选择账户',
     count:1,
-    deliveryArray:['快递配送','自取提货']
+    deliveryArray:['快递配送','自取提货'],
+    deliveryType: 0,
+    deliveryText: '快递配送'
   },
 
   /**
@@ -127,6 +129,9 @@ Page({
     })
   },
   confirm:function(){//确认兑换
+    if(this.data.status=='exchanged'){
+      return
+    }
     if(this.data.data.subaccounts.length<=0){
       wx.showToast({
         title: '抱歉，您现在无账户无法兑换服务类积分商品',
@@ -205,6 +210,9 @@ Page({
       }
     }).catch((err) => {
       console.log(err);
+    })
+    this.setData({
+      status:'exchanged'
     })
   },
   /**

@@ -4,6 +4,17 @@
   width: 100%;
   height: 300rpx;
 }
+.table2{
+  width: 50%;
+  height: 45px;
+  line-height: 45px;
+  font-size: 35rpx;
+  color: #ffffff;
+  border-radius:50px;
+  background-image:linear-gradient(90deg, #fa973f 0%, #fa4c47 100%), linear-gradient(#e00019, #e00019);
+  background-blend-mode:normal, normal;
+  margin: 0 auto;
+}
 .imoe{
   width: 200rpx;
   height: 200rpx;
@@ -107,7 +118,7 @@
 }
 .pron-ts image{
   width: 80%;
-  /* height: 100rpx; */
+  height: 480rpx;
   margin-top: -200rpx;
 }
 .table{
@@ -120,8 +131,10 @@
   margin-top: 10rpx;
 }
 .table1{
-  font-size: 18px;
+  font-size: 16px;
   color: #666666;
+  position: relative;
+  top: 20rpx;
 }
 .choose{
   width: 100%;

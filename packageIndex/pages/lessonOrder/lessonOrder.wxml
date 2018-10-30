@@ -8,10 +8,14 @@
   <view class='text-box'>
     <view class='title'>{{item.name}}</view>
     <view class='column'>专栏：<text>{{item.themeName}}</text></view>
-    <view class='teacher'>{{item.speakerName || ''}} <view class='price'>¥{{item.deposit}}</view></view>
+    <view class='teacher'>
+      <image wx:if="{{item.speakerImg==''}}" src='../images/img_touxiang.png'></image>
+      <image  wx:else src='{{item.speakerImg}}'></image>
+    {{item.speakerName || ''}} 
+    <view class='price'>¥{{item.deposit}}</view></view>
     <view class='time'>于 {{item.createTime}} 支付成功</view>
     <view class='text-right'>
-      <view class='btn-learn' data-id="{{item.id}}" bindtap='toDetail'>去学习</view>
+      <view class='btn-learn' data-id="{{item.id}}" data-status="{{item.status}}" bindtap='toDetail'>去学习</view>
     </view>
   </view>
 </view>

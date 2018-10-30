@@ -11,30 +11,39 @@ Page({
     couponType: "",
     canLimitGoods: "",
     imagePath: '',
-    imagePath2:"",
+    imagePath2: "",
     canvasHidden: false,
-    shopId:"",
-    limitGoods:[],
-    couponCode:"",
-    userId:"",
-    getUserId:"",//分享领取人的id
+    shopId: "",
+    limitGoods: [],
+    couponCode: "",
+    userId: "",
+    getUserId: "",//分享领取人的id
     scale: '',
-    descArr:[],
-    share:"",
-    promGoodsTypeShare:"",
-    showMa:"0",
+    descArr: [],
+    share: "",
+    promGoodsTypeShare: "",
+    showMa: "0",
     btnShow: 'normal',
-    loginType:0,
-    },
-  onLoad: function(options) {
-    var that=this;
+    loginType: 0,
+  },
+  onLoad: function (options) {
     //options.share=0 说明从详情页进来 =1 说明是分享进来的
     wx.showShareMenu({
       withShareTicket: true,
     })
-    console.log('options',options)
-    if (options && options.list) { 
-      
+    console.log('options', options)
+    if (options.shareUser) {//转发进入页面记录推荐关系
+      this.record({
+        currentId: wx.getStorageSync('scSysUser').id,
+        shareShop: options.shopId,
+        shareUser: options.shareUser,
+        sourcePart: '1',
+        shareType: options.shareType,
+        businessId: options.couponId
+      })
+    }
+    if (options && options.list) {
+
       this.setData({
         id: options.id,
         couponLogId: options.couponLogId,
@@ -43,7 +52,7 @@ Page({
         // userId: userId,
         share: options.share
       })
-    }else{
+    } else {
       this.setData({
         couponLogId: options.couponLogId,
         couponType: options.couponType,
@@ -52,6 +61,7 @@ Page({
       })
     }
     this.setCanvasSize()  //适配不同屏幕大小的canvas
+
 
 
     if (options && options.q) {
@@ -70,25 +80,24 @@ Page({
         })
       }
     }
-    
 
-    if (options.share == 1 || options.share == 2){
+
+    if (options.share == 1 || options.share == 2) {
       this.setData({
         shareFlag: 1
       })
-    } else if (options.share==0){
+    } else if (options.share == 0) {
       var userId = wx.getStorageSync('scSysUser').id;
       this.setData({
         userId: userId
       })
     }
 
+    //优惠券详情隐藏转发按钮
+    wx.hideShareMenu({});
 
   },
   onShow: function () { //缓存店铺信息（分享切店铺）
-    console.log("show canLimitGoods", this.data.canLimitGoods);
-    console.log("show id", this.data.id);
-    console.log("show promGoodsTypeShare", this.data.promGoodsType)
     let _this = this
     var shopId = this.data.shopId
     if (!shopId) {
@@ -96,7 +105,7 @@ Page({
     }
     var shop = wx.getStorageSync('shop')
     app.util.checkWxLogin('share').then((loginRes) => {
-      if(loginRes.id){
+      if (loginRes.id) {
         if (_this.data.shareFlag == 1) {
           wx.showLoading({
             title: '加载中',
@@ -123,16 +132,16 @@ Page({
           wx.setStorageSync('shopInformation', res.data.data);
 
         })
-        
-      } else{
+
+      } else {
         // if (wx.getStorageSync('isAuth') == 'no') {
         //   this.setData({
         //     loginType: 2
         //   })
         // } else if (wx.getStorageSync('isAuth') == 'yes') {
-          this.setData({
-            loginType: 1
-          })
+        this.setData({
+          loginType: 1
+        })
         // }
       }
     })
@@ -145,8 +154,8 @@ Page({
         getUserId: wx.getStorageSync('scSysUser').id,
         userId: wx.getStorageSync('scSysUser').id
       })
-          this.getList();
-      
+      this.getList();
+
       app.util.getShop(wx.getStorageSync('scSysUser').id, this.data.shopId).then((res) => {
         // debugger
         if (res.data.code == 1) {
@@ -166,6 +175,12 @@ Page({
       // this.loadFn(wx.getStorageSync('scSysUser').id)
     }
   },
+  record: function (data) {//记录推荐关系
+    console.log('记录入参',data);
+    app.util.reqAsync('payBoot/wx/acode/record', data).then((res) => { 
+      console.log("记录推荐关系:",res)
+    })
+  },
   //获取用户信息回调
   resusermevent: function (e) {
     // debugger
@@ -176,14 +191,14 @@ Page({
 
     // }
   },
-  drawCanvas: function(name, detail){
+  drawCanvas: function (name, detail) {
     let scale = this.data.scale
     var context = wx.createCanvasContext('shareCanvas')
     context.setFillStyle('#ffffff');
     context.fillRect(0, 0, 720 * scale, 568 * scale);//给画布添加背景色，无背景色真机会自动变黑
     context.drawImage('./img/zhuanfa_xinrenlibao_bg@2x.png', 0 * scale, 0 * scale, 325 * scale, 283 * scale);//绘制背景
     context.setFontSize(22 * scale);
-    if (detail){
+    if (detail) {
       if (detail.length > 10) {
         var string1 = detail.substring(0, 10)
         var string2 = detail.substring(10, detail.length)
@@ -204,18 +219,18 @@ Page({
         context.fillText(detail, a, 122.5 * scale);//绘制详情
       }
     }
-   
-    
+
+
     context.setFontSize(30 * scale)
     let numB = context.measureText(name).width
     let b = (345 * scale - numB) / 2
     context.fillText(name, b, 165.5 * scale);//绘制名字 
 
     let _that = this
-    context.draw(false, setTimeout(this.saveTempCanvas, 1000) )
+    context.draw(false, setTimeout(this.saveTempCanvas, 1000))
 
   },
-  saveTempCanvas: function(){
+  saveTempCanvas: function () {
     let _that = this
     wx.canvasToTempFilePath({
       x: 0,
@@ -236,16 +251,16 @@ Page({
       }
     })
   },
-  getList: function() {
+  getList: function () {
     let _this = this
     var person;
-    if (this.data.share==0){
+    if (this.data.share == 0) {
       person = this.data.userId;
-    }else{
+    } else {
       person = this.data.getUserId;
     }
 
-    var dataDatail={
+    var dataDatail = {
       userId: person,
       couponLogId: this.data.couponLogId
     }
@@ -253,16 +268,16 @@ Page({
     // 判断新客礼包和满减的礼包不同
     if (this.data.couponType == "06") {
       app.util.reqAsync('coupon/selectScCouponDetail', dataDatail).then((res) => {
-       //promGoodsType为0，1 0选择商品,1手动输入
+        //promGoodsType为0，1 0选择商品,1手动输入
         var data = res.data.data;
-        console.log(data,'卷详情');
-        if (data.promGoodsType==1){
+        console.log(data, '卷详情');
+        if (data.promGoodsType == 1) {
           var descArr = data.promGoodsDesc.split("|&");
-          _this.setData({ descArr: descArr});
-       }else{
+          _this.setData({ descArr: descArr });
+        } else {
           var couponGoodsName = data.couponGoodsName.split("|&");
-          this.setData({ quanDetail: couponGoodsName})
-       }
+          this.setData({ quanDetail: couponGoodsName })
+        }
         _this.setData({
           discountsNew: data,
           discountData: data,
@@ -278,17 +293,24 @@ Page({
             buttonShow: true
           }
         });
+        if (this.data.discountsNew.userCouponLogCount == null) {
+          wx.hideShareMenu({});
+        }
         console.log("discountsNew-------------------------------", this.data.discountsNew)
         _this.setData({
-          storeUrl:data.couponCode
+          storeUrl: data.couponCode
         })
         wx.hideLoading();
         // 页面初始化 options为页面跳转所带来的参数
         var size = _this.setCanvasSize();//动态设置画布大小
         var initUrl = _this.data.storeUrl;
         _this.createQrCode(initUrl, "mycanvas", size.w, size.h);
-        _this.drawCanvas(res.data.data.couponInstruction, res.data.data.couponGoodsName  )
-        
+        var detail=''
+        if (res.data.data.couponGoodsName){
+          detail = res.data.data.couponGoodsName.replace(/\|\&/g, "、")
+        }
+        _this.drawCanvas(res.data.data.couponInstruction, detail)
+
       }).catch((err) => {
         wx.hideLoading();
         wx.showToast({
@@ -302,8 +324,8 @@ Page({
         couponId: this.data.id,
       }).then((res) => {
         wx.hideLoading();
-        if (res.data.data.limitGoods){
-          res.data.data.limitGoods.forEach(function(item,index){
+        if (res.data.data.limitGoods) {
+          res.data.data.limitGoods.forEach(function (item, index) {
             res.data.data.limitGoods[index].goodsPrice = app.util.formatMoney(res.data.data.limitGoods[index].goodsPrice, 2);
           });
           this.setData({
@@ -311,7 +333,7 @@ Page({
           });
           console.log(this.data.limitGoods);
         }
-        console.log('优惠券信息---------------',res.data.data)
+        console.log('优惠券信息---------------', res.data.data)
         this.setData({
           discounts: res.data.data.coupon,
           discountData: res.data.data.coupon,
@@ -322,21 +344,20 @@ Page({
             buttonShow: true
           }
         });
-        console.log(this.data.list,'我是优惠券啊')
-        let _this=this;
+        console.log(this.data.list, '我是优惠券啊')
+        let _this = this;
         wx.downloadFile({//缓存网络图片，直接使用网络路径真机无法显示或绘制
           url: this.data.discountData.shopLogoUrl,
           success: function (res) {
             console.log(res.tempFilePath)
             _this.setData({
-              discountPic: res.tempFilePath,
-              downloadStatus:'done'
+              discountPic: res.tempFilePath
             })
             _this.discountDraw();
           }
         })
         // setTimeout(function(){
-         
+
         // },1000)
         // this.drawCanvas(res.data.data.coupon.name, res.data.data.coupon.instruction)
       }).catch((err) => {
@@ -347,29 +368,14 @@ Page({
         })
       })
     }
-    saveImg.getCode(_this, {//获取二维码
-      source: 0,
-      page: "pages/QrToActivity/QrToActivity",
-      params: {
-        shopId: wx.getStorageSync('shop').id,
-        userId: wx.getStorageSync('scSysUser').id,
-        couponLogId: this.data.couponLogId,
-        couponId: this.data.id,
-        couponType: this.data.couponType,
-        sourcePart: '1',
-        shareType: 7,
-        share: 1,
-        shareFrom: 'discountDetail'
-      }
-    });
   },
-  skip: function(e) {
+  skip: function (e) {
     var id = e.currentTarget.dataset.id;
     wx.navigateTo({
       url: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + id
     })
   },
-  call:function(e){
+  call: function (e) {
     wx.makePhoneCall({
       phoneNumber: e.currentTarget.dataset.phone //仅为示例，并非真实的电话号码
     })
@@ -425,10 +431,10 @@ Page({
       urls: [img] // 需要预览的图片http链接列表
     })
   },
-  
+
   onShareAppMessage: function (res) {
     var _this = this;
-    console.log(res)
+    console.log("点击分享礼包开始——————————————————")
     // if (res.from === 'button') {
     //   // 来自页面内转发按钮
     //   console.log()
@@ -440,29 +446,33 @@ Page({
       console.log('新人大礼包')
       return {
         title: "[新消息]" + this.data.discountData.shopName + "喊你来白拿钱，点击进入",
-path: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + _this.data.id + "&couponLogId=" + _this.data.couponLogId + "&couponType=" + _this.data.couponType + "&canLimitGoods=" + _this.data.canLimitGoods + "&promGoodsTypeShare=" + _this.data.promGoodsType + "&share=" + "1" + "&shopId=" + _this.data.shopId,        imageUrl: _this.data.temp,
+        path: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + _this.data.id + "&couponLogId=" + _this.data.couponLogId + "&couponType=" + _this.data.couponType + "&canLimitGoods=" + _this.data.canLimitGoods + "&promGoodsTypeShare=" + _this.data.promGoodsType + "&share=" + "1" + "&shopId=" + _this.data.shopId + '&shareUser=' + wx.getStorageSync('scSysUser').id + "&couponId=" + _this.data.couponId+'&shareType=7',
+        imageUrl: _this.data.temp,
         success: function (res) {
-          app.util.reqAsync("coupon/shareCoupon", {
-            couponId: _this.data.couponId,
-            couponLogId: _this.data.couponLogId,
-            userId: _this.data.userId,
-          }).then((res) => {
-          }).catch((err) => {
-            wx.hideLoading();
-            wx.showToast({
-              title: '操作失败,请稍后再试',
-              icon: 'none'
-            })
-          })
+          // console.log("礼包分享成功————————————————————")
+          // app.util.reqAsync("coupon/shareCoupon", {
+          //   couponId: _this.data.couponId,
+          //   couponLogId: _this.data.couponLogId,
+          //   userId: _this.data.userId,
+          // }).then((res) => {
+          //   console.log("礼包分享成功请求接口成功————————————————————")
+          // }).catch((err) => {
+          //   console.log("礼包分享error————————————————————")
+          //   wx.hideLoading();
+          //   wx.showToast({
+          //     title: '操作失败,请稍后再试',
+          //     icon: 'none'
+          //   })
+          // })
         }
       }
-    } else{
+    } else {
       console.log(this.data.shopId)
-      return{
-        title: '更多好券,尽在' + _this.data.discountData.shopName+',数量有限,先到先得',
+      return {
+        title: '更多好券,尽在' + _this.data.discountData.shopName + ',数量有限,先到先得',
         desc: _this.data.goodsName,
         imageUrl: _this.data.discountPath,
-        path: '/packageMyHome/pages/discountCenter/discountCenter?shopId=' + _this.data.shopId,
+        path: '/packageMyHome/pages/discountCenter/discountCenter?shopId=' + _this.data.shopId + '&shareUser=' + wx.getStorageSync('scSysUser').id + "&couponId=" + _this.data.discounts.id+'&shareType=7',
         success: function () {
           console.log('/packageMyHome/pages/discountCenter/discountCenter?shopId=' + this.data.shopId)
 
@@ -475,62 +485,62 @@ path: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + _this.data.i
         // }
       }
     }
-    
+
   },
-  goodsInfo:function(e){
+  goodsInfo: function (e) {
     var shopId = e.currentTarget.dataset.shopid;
     var goodsId = e.currentTarget.dataset.goodsid;
     //跳转指定商品的详情
     wx.navigateTo({
-      url: "/pages/goodsDetial/goodsDetial?shopId=" +shopId+"&goodsId="+goodsId,
+      url: "/pages/goodsDetial/goodsDetial?shopId=" + shopId + "&goodsId=" + goodsId,
     })
   },
-  discountDraw:function(){
+  discountDraw: function () {
     let context = wx.createCanvasContext('discountCanvas'),
-        scale=this.data.scale*2,
-        _this=this,
-        shopName=_this.data.discountData.shopName,
-        endTime=_this.data.discountData.endTime.split(' ')[0],
-        couponType,
-        shopNameCut;
-    if(shopName.length>6){
-      shopName=shopName.substring(0,6)+'...';
+      scale = this.data.scale * 2,
+      _this = this,
+      shopName = _this.data.discountData.shopName,
+      endTime = _this.data.discountData.endTime.split(' ')[0],
+      couponType,
+      shopNameCut;
+    if (shopName.length > 6) {
+      shopName = shopName.substring(0, 6) + '...';
     }
     console.log(_this.data)
     context.setFillStyle('#ffffff');
     context.fillRect(0, 0, 480 * scale, 400 * scale);//绘制背景色
     context.drawImage('img/zhuanfa_youhuiquan_bg@2x.png', 0, 0, 240 * scale, 200 * scale);//绘制背景图
-    if (_this.data.discountData.couponType=='01'){//优惠券
-      couponType='优惠券'
-    } else if (_this.data.discountData.couponType == '02'){//代金券
-      couponType='代金券'
-    } else if (_this.data.discountData.couponType == '03'){//包邮券
-      couponType='包邮券'
+    if (_this.data.discountData.couponType == '01') {//优惠券
+      couponType = '优惠券'
+    } else if (_this.data.discountData.couponType == '02') {//代金券
+      couponType = '代金券'
+    } else if (_this.data.discountData.couponType == '03') {//包邮券
+      couponType = '包邮券'
     }
-    context.setFontSize(25*scale);
-    context.fillText(couponType,13*scale,38*scale);//绘制券类型
-    context.setFontSize(18*scale);
+    context.setFontSize(25 * scale);
+    context.fillText(couponType, 13 * scale, 38 * scale);//绘制券类型
+    context.setFontSize(18 * scale);
     context.setFillStyle('#ffffff');
-    context.fillText(shopName,13*scale,68*scale);//绘制店铺名
-    context.setFontSize(12*scale);
-    context.fillText('券详情',125*scale,58*scale);
+    context.fillText(shopName, 13 * scale, 68 * scale);//绘制店铺名
+    context.setFontSize(12 * scale);
+    context.fillText('券详情', 125 * scale, 58 * scale);
     context.save();
     context.beginPath();
     context.arc(146 * scale, 90 * scale, 25 * scale, 0, 2 * Math.PI);//绘制圆形头像画布
     context.setFillStyle('grey');
     context.fill();
     context.clip();
-    context.drawImage(_this.data.discountPic,121*scale,65*scale,50*scale,50*scale);//绘制店铺头像
+    context.drawImage(_this.data.discountPic, 121 * scale, 65 * scale, 50 * scale, 50 * scale);//绘制店铺头像
     context.restore();//恢复之前保存的上下文
-    context.setFontSize(11*scale);
+    context.setFontSize(11 * scale);
     context.setFillStyle('#726f6a');
-    let w=context.measureText(shopName).width;
-    context.fillText(shopName,((280-w/2)/2)*scale,135*scale);//绘制店铺名
-    context.fillText('有效期至:'+endTime,85*scale,185*scale);//绘制有效期
-    context.setFontSize(16*scale);
+    let w = context.measureText(shopName).width;
+    context.fillText(shopName, ((280 - w / 2) / 2) * scale, 135 * scale);//绘制店铺名
+    context.fillText('有效期至:' + endTime, 85 * scale, 185 * scale);//绘制有效期
+    context.setFontSize(16 * scale);
     context.setFillStyle('#000000');
-    context.fillText(couponType,115*scale,160*scale);
-    context.draw(false,function(){
+    context.fillText(couponType, 115 * scale, 160 * scale);
+    context.draw(false, function () {
       wx.canvasToTempFilePath({//绘制完成执行保存回调
         x: 0,
         y: 0,
@@ -574,33 +584,33 @@ path: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + _this.data.i
   //     })
   //   })
   // },
-  bindGet:function(){
-    var _this=this;
+  bindGet: function () {
+    var _this = this;
     wx.showLoading({
       title: '加载中',
     })
-    var data={
-      "customerId": this.data.getUserId, 
-      "shopId": this.data.shopId, 
-      "couponId": this.data.couponId, 
-      "promGoodsType": this.data.promGoodsTypeShare, 
-      "number": 1 
+    var data = {
+      "customerId": this.data.getUserId,
+      "shopId": this.data.shopId,
+      "couponId": this.data.couponId,
+      "promGoodsType": this.data.promGoodsTypeShare,
+      "number": 1
     }
     console.log("data", data);
-    app.util.reqAsync('shop/takeCoupon',data).then((res) => {
+    app.util.reqAsync('shop/takeCoupon', data).then((res) => {
       //promGoodsType为0，1 0选择商品,1手动输入
-      if(res.data.code!=1){
+      if (res.data.code != 1) {
         wx.showToast({
           title: res.data.msg,
-          icon:'none'
+          icon: 'none'
         })
-      }else{
+      } else {
         var newcouponLogId = res.data.data.couponLogId;
         wx.redirectTo({
           url: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + _this.data.id + "&couponLogId=" + newcouponLogId + "&couponType=" + _this.data.couponType + "&canLimitGoods=" + _this.data.canLimitGoods + "&promGoodsTypeShare=" + _this.data.promGoodsType + "&share=" + "2&shopId=" + this.data.shopId,
         })
       }
-      
+
     }).catch((err) => {
       wx.hideLoading();
       wx.showToast({
@@ -609,7 +619,7 @@ path: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + _this.data.i
       })
     })
   },
-  location:function(){
+  location: function () {
     // 从缓存中拿到店铺的经纬度
     var latitude = this.data.discountsNew.latitude;
     var longitude = this.data.discountsNew.longitude;
@@ -621,23 +631,16 @@ path: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + _this.data.i
       scale: 28
     })
   },
-  hide:function(){
+  hide: function () {
     //让提示打开，下面的二维码不隐藏
     //领取过礼包
-    if (this.data.share == 1 && this.data.discountsNew.userCouponLogCount == 1){
+    if (this.data.share == 1 && this.data.discountsNew.userCouponLogCount == 1) {
       this.setData({ share: 4, showMa: 0 });
-    } else if(this.data.share == 2 && this.data.discountsNew.userCouponLogCount == 1){
+    } else if (this.data.share == 2 && this.data.discountsNew.userCouponLogCount == 1) {
       this.setData({ share: 3, showMa: 1 });
     }
   },
   shareBtn: function () {//点击分享
-    if (this.data.codeStatus != 'done' || this.data.codeStatus == undefined || (this.data.couponType!='06' && this.data.downloadStatus!='done')) {
-      wx.showToast({
-        title: '页面加载中，请稍后分享',
-        icon: 'none'
-      })
-      return;
-    }
     this.setData({
       posterShow: true
     })
@@ -647,80 +650,110 @@ path: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + _this.data.i
       posterShow: false
     })
   },
-  drawPoster:function(){
+  drawPoster: function () {
     if (this.data.canvasUrl) {
       return;
     }
     wx.showLoading();
-    var context = wx.createCanvasContext('shareCanvasNew'),
-        scale = wx.getSystemInfoSync().windowWidth / 375,
-        _this = this;
-    context.setFillStyle('#ffffff');
-    context.fillRect(0, 0, 690 * scale, 1000 * scale);//设置白色背景
-    if (this.data.couponType=='06'){//礼包
-      this.drawGiftPoster(context,scale,_this);
-    }else{//券
-      this.drawDiscountPoster(context,scale,_this);
-    }
+    var _this = this;
+    saveImg.getCode(_this, {//获取二维码
+      source: 0,
+      page: "pages/QrToActivity/QrToActivity",
+      params: {
+        shopId: wx.getStorageSync('shop').id,
+        userId: wx.getStorageSync('scSysUser').id,
+        shareUser: wx.getStorageSync('scSysUser').id,
+        couponLogId: this.data.couponLogId,
+        couponId: this.data.id,
+        couponType: this.data.couponType,
+        sourcePart: '1',
+        shareType: 7,
+        share: 1,
+        shareFrom: 'discountDetail'
+      }
+    }).then(function () {
+      wx.downloadFile({//缓存网络图片，直接使用网络路径真机无法显示或绘制
+        url: _this.data.discountData.shopLogoUrl,
+        success: function (res) {
+          console.log(res.tempFilePath);
+          _this.setData({
+            discountPic: res.tempFilePath
+          })
+          var context = wx.createCanvasContext('shareCanvasNew'),
+            scale = wx.getSystemInfoSync().windowWidth / 375;
+          context.setFillStyle('#ffffff');
+          context.fillRect(0, 0, 690 * scale, 1000 * scale);//设置白色背景
+          if (_this.data.couponType == '06') {//礼包
+            _this.drawGiftPoster(context, scale, _this);
+          } else {//券
+            _this.drawDiscountPoster(context, scale, _this);
+          }
+        }
+      })
+    });
   },
-  drawGiftPoster:function(context,scale,_this){//礼包海报
-    context.drawImage('../../../../images/bg.png',0,50*scale,690*scale,950*scale);//绘制背景图
-    context.setFontSize(36*scale);
+  drawGiftPoster: function (context, scale, _this) {//礼包海报
+    context.drawImage('../../../../images/bg.png', 0, 50 * scale, 690 * scale, 950 * scale);//绘制背景图
+    context.setFontSize(36 * scale);
     context.setFillStyle('#333333');
-    this.cut('shopName', _this.data.discountData.shopName,7)
-    let w=context.measureText(this.data.shopName).width;
-    context.fillText(this.data.shopName,(690-w)/2*scale,60*scale);//绘制店铺名
+    this.cut('shopName', _this.data.discountData.shopName, 7)
+    let w = context.measureText(this.data.shopName).width;
+    context.fillText(this.data.shopName, (690 - w) / 2 * scale, 60 * scale);//绘制店铺名
     context.setFillStyle('#FF6629');
-    context.setFontSize(35*scale);
-    let couponValue='免费赠送' + _this.data.discountsNew.couponValue + '抵用券',
-        w1=context.measureText(couponValue).width;
-    context.fillText(couponValue,(690-w1)/2*scale,215*scale);
+    context.setFontSize(35 * scale);
+    let couponValue = '免费赠送' + _this.data.discountsNew.couponValue + '抵用券',
+      w1 = context.measureText(couponValue).width;
+    context.fillText(couponValue, (690 - w1) / 2 * scale, 215 * scale);
     context.setFillStyle('#FF3E3E');
-    let couponName=this.data.discountsNew.couponInstruction;
-    if (couponName.length<=4){
-      context.setFontSize(68*scale);
-    }else{
-      context.setFontSize(48*scale);
+    let couponName = this.data.discountsNew.couponInstruction;
+    if (couponName.length <= 4) {
+      context.setFontSize(68 * scale);
+    } else {
+      context.setFontSize(48 * scale);
     }
     let w2 = context.measureText(couponName).width;
-    context.fillText(couponName,(690-w2)/2*scale,380*scale);
-    context.drawImage(this.data.codeUrl,215*scale,570*scale,260*scale,240*scale);
-    context.setFontSize(26*scale);
+    context.fillText(couponName, (690 - w2) / 2 * scale, 380 * scale);
+    context.drawImage(this.data.codeUrl, 215 * scale, 570 * scale, 260 * scale, 240 * scale);
+    context.setFontSize(26 * scale);
     context.setFillStyle('#ffffff');
-    let w3=context.measureText('扫描或长按二维码').width;
-    context.fillText('扫描或长按二维码',(690-w3)/2*scale,860*scale);
+    let w3 = context.measureText('扫描或长按二维码').width;
+    context.fillText('扫描或长按二维码', (690 - w3) / 2 * scale, 860 * scale);
     context.draw(false, function () {
-      saveImg.temp(_this, 'shareCanvasNew', 1380, 2000, 1380, 2000);
+      setTimeout(function () {
+        saveImg.temp(_this, 'shareCanvasNew', 1380, 2000, 1380, 2000);
+      }, 1000);
     })
   },
-  drawDiscountPoster:function(context,scale,_this){//券海报
-    context.drawImage('../../../../images/bg6.png',0,0,690*scale,1000*scale);//绘制背景图
+  drawDiscountPoster: function (context, scale, _this) {//券海报
+    context.drawImage('../../../../images/bg6.png', 0, 0, 690 * scale, 1000 * scale);//绘制背景图
     context.save();
-    context.arc(345*scale,115*scale,55*scale,0,2*Math.PI);
+    context.arc(345 * scale, 115 * scale, 55 * scale, 0, 2 * Math.PI);
     context.fill();
     context.clip();
-    context.drawImage(this.data.discountPic,290*scale,60*scale,110*scale,110*scale);//绘制店铺头像
+    context.drawImage(this.data.discountPic, 290 * scale, 60 * scale, 110 * scale, 110 * scale);//绘制店铺头像
     context.restore();
-    context.setFontSize(32*scale);
-    this.cut('shopName',this.data.discounts.shopName,7);
-    let shopName=this.data.shopName,
-        w=context.measureText(shopName).width;
-    context.fillText(shopName,(690-w)/2*scale,220*scale);//绘制店铺名
-    context.setFontSize(90*scale);
-    let name=this.data.discounts.name,
-        w1=context.measureText(name).width;
-    context.fillText(name,(690-w1)/2*scale,365*scale);//绘制优惠券类型
-    context.drawImage(this.data.codeUrl,105*scale,810*scale,158*scale,158*scale);//绘制二维码
+    context.setFontSize(32 * scale);
+    this.cut('shopName', this.data.discounts.shopName, 7);
+    let shopName = this.data.shopName,
+      w = context.measureText(shopName).width;
+    context.fillText(shopName, (690 - w) / 2 * scale, 220 * scale);//绘制店铺名
+    context.setFontSize(90 * scale);
+    let name = this.data.discounts.name,
+      w1 = context.measureText(name).width;
+    context.fillText(name, (690 - w1) / 2 * scale, 365 * scale);//绘制优惠券类型
+    context.drawImage(this.data.codeUrl, 105 * scale, 810 * scale, 158 * scale, 158 * scale);//绘制二维码
     context.draw(false, function () {
-      saveImg.temp(_this, 'shareCanvasNew', 1380, 2000, 1380, 2000);
+      setTimeout(function () {
+        saveImg.temp(_this, 'shareCanvasNew', 1380, 2000, 1380, 2000);
+      }, 1000);
     })
   },
-  cut:function(textName,text,length){
-    if(text.length>length){
-      text=text.substring(0,length)+'..';
+  cut: function (textName, text, length) {
+    if (text.length > length) {
+      text = text.substring(0, length) + '..';
     }
     this.setData({
-      [textName]:text
+      [textName]: text
     })
   },
   saveImg: function () {//保存图片
@@ -730,6 +763,20 @@ path: "/pages/myHome/discounts/discountDetail/discountDetail?id=" + _this.data.i
   handleSetting: function (e) {//授权
     let that = this;
     saveImg.handleSetting(that, e.detail.e);
+  },
+  submitInfo: function (e) {
+    if (this.data.couponType == "06") {
+      var openid = wx.getStorageSync("scSysUser").wxOpenId;
+      let formId = e.detail.formId;
+      let params = {
+        openid: openid,
+        couponId: this.data.discountsNew.couponId,
+        formId: formId
+      }
+      app.util.reqAsync("payBoot/wx/templateMessage/coupon", params).then((res) => {
+        console.log(res);
+      })
+    }
   }
 })
 

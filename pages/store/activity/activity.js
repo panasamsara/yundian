@@ -15,7 +15,6 @@ Page({
    */
   onLoad: function (options) {
     let data={
-      customerId: wx.getStorageSync('scSysUser').id,
       shopId: wx.getStorageSync('shop').id,
       pageNo: 1,
       pageSize: 10,
@@ -46,9 +45,9 @@ Page({
   },
   getData: function (data) {
     let oldData = this.data.list;
-    app.util.reqAsync('shop/getShopHomePageInfo', data).then((res) => {
-      if (res.data.data.goodsInfos) {
-        let list = res.data.data.goodsInfos;
+    app.util.reqAsync('shop/selectActivePosterList', data).then((res) => {
+      if (res.data.code) {
+        let list = res.data.data;
         console.log(list)
         for(let i=0;i<list.length;i++){
           list[i].startTime = app.util.formatActivityDate(list[i].startTime);
@@ -57,7 +56,7 @@ Page({
         let newData = oldData.concat(list);
         this.setData({
           list: newData,
-          total: res.data.data.countGoodsInfo
+          total: res.data.total
         })
       }
       wx.hideLoading();
@@ -78,6 +77,13 @@ Page({
     if (activityType == 0) {
       wx.navigateTo({
         url: '../activityInfo/activityInfo?shopId=' + shop.id + '&goodsId=' + goodsId + '&actionId=' + actionId + '&signType=' + signType,
+        success: function (res) {
+          // success
+        }
+      })
+    } else if (activityType == 11) {
+      wx.navigateTo({
+        url: '../../../packageMyHome/pages/eventCard/eventCard?shopId=' + shop.id + '&goodsId=' + goodsId + '&actionId=' + actionId + '&signType=' + signType,
         success: function (res) {
           // success
         }

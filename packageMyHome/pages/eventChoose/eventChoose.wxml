@@ -1,0 +1,38 @@
+<!--packageMyHome/pages/eventChoose/eventChoose.wxml-->
+
+<view class='main'>
+      <view class='list-node' wx:for="{{arrdata}}" wx:for-index="indexs"  wx:key="*this" wx:for-item='items'>
+        <image src='../images/yundian_xshbtb.png'></image>
+        <text>可选{{items.itemNum}}件商品</text>
+      <view class='list-msg' bindtap='chooseList' data-indexs="{{indexs}}" data-chooseNum="{{items.itemNum}}" data-id="{{item.id}}" data-index="{{index}}"  wx:for="{{items.activePosterItemList}}" wx:for-index="index"  wx:key="*this" wx:for-item='item'>
+        <image  wx:if="{{item.select}}" class='list-chs' src='../images/yundian_spxuanzhong.png'></image>      
+        <image  wx:else class='list-chs' src='../images/yundian_spweixuanzhong.png'></image>      
+        <image class='list-img' src='{{item.pictureUrl?item.pictureUrl:"../images/yundian_sdsrmorentu.png"}}'></image>
+        <view class='msg-text'>{{item.goodsName}}
+          <view class='stockName'>{{item.stockName=='0'?'':item.stockName}}</view>
+        </view>
+        
+      </view>
+       
+
+    </view>
+
+    <view class='buy'>
+      <view>价格: <text>¥<text class='corn'>{{msgData.activePrice}}</text></text></view>
+      <view class='buyBtn' bindtap='subBuy'>立即购买</view>
+    </view>
+</view>
+      <!--下单成功-->
+  <view class="modal-box order-tip" hidden="{{flagOrder}}" >
+  <view class="modal-body">
+    <image class="order-success" src="../../../images/success.png"></image>
+    <view class="modal-content">
+      <text>下单成功!</text>
+      <text>选择继续购物或查看此订单</text>
+    </view>
+    <view class="modal-btn">  
+      <text class="knowBtn" bindtap="goback">返回首页</text>
+      <text class="knowBtn" bindtap="look">查看订单</text>
+    </view>
+  </view>
+  </view>

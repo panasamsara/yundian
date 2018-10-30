@@ -75,7 +75,7 @@
                 <view class='right-info'>
                   <text class='order-tit'>{{items.goodsName}}</text>
                   <text wx:if="{{items.stockName}}">{{items.stockName}}</text>
-                  <view class='detail-down'>
+                  <view class='detail-down' wx:if="{{item.bussinessType!=19}}">
                     <span class="small-size red">￥</span>
                     <text >{{items.goodsPrice}}</text>
                     <text>x{{items.goodsNum}}</text>

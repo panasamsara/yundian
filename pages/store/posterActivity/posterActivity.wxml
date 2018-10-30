@@ -4,9 +4,9 @@
     <image class='ac-img' src='{{activityData.pictureUrl }}'></image>
   </view>
   <view class='logo-box'>
-    <image class='shop-logo' src='{{activityData.shopLogoUrl}}'></image>
+    <image class='shop-logo' src='{{activityData.extend2}}'></image>
   </view>
-  <view class='title'>{{activityData.goodsName}}</view>
+  <view class='title'>{{activityData.activityName}}</view>
   <view class='sub-title'>{{activityData.descTitle}}</view>
   <view class='ac-time'>{{activityData.startTime}} - {{activityData.endTime}}</view>
   <view class='border1'>

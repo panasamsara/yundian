@@ -1,4 +1,6 @@
 <!--pages/store/code/code.wxml-->
+<login-component login-type-property="{{loginType}}" bindresmevent="resmevent" ></login-component>
+
 <view class='container code'>
   <image id='codeborder' src='../images/dianpuerweima_biankuang@2x.png'></image>
   <view class='storeInfo'>

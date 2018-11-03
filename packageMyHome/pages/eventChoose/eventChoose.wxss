@@ -17,8 +17,8 @@ page{
   background: #F3F3F3;
   height: 100%;
   font-size: 30rpx;
-    word-wrap:break-word;
-
+  word-wrap:break-word;
+  
 }
 .card-msg{
   background: #fff;
@@ -72,6 +72,10 @@ page{
   padding-left: 30rpx;
   display: inline-block;
   padding-bottom: 20rpx;
+  max-width: 620rpx;
+  overflow:hidden; 
+  white-space:nowrap; 
+  text-overflow:ellipsis;
 }
 .list-title{
   background: #fff;

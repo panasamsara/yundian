@@ -7,10 +7,6 @@ Page({
    */
   data: {
     arrdata:[],
-    listData:[],
-    shopList:[],
-    activeId: '',
-    msgData:'',
     flagOrder:true,
     isSend: 2,//0-快递  1-店内下单 2-自提    
     orderNo:'',
@@ -175,6 +171,7 @@ Page({
             self.getMessage(code);
             self.setData({
               flagOrder: false,
+              buyBtn: false              
             })
           },
           'fail': function (res) {
@@ -184,6 +181,10 @@ Page({
             wx.showToast({
               title: '支付失败',
               icon: 'none'
+            })
+            self.setData({
+              buyBtn: false              
+              
             })
             // self.setData({
             //   isPay: 0
@@ -278,46 +279,59 @@ Page({
   },
   //下单
   subBuy:function(){
-    var subdata = {
-        "amount": this.data.msgData.activePrice,                          //活动海报总金额
+    var _this =this
+    if (!_this.data.buyBtn){
+      this.setData({
+        buyBtn:true
+      })
+      var subdata = {
+        "amount": _this.data.msgData.activePrice,                          //活动海报总金额
         "contactName": wx.getStorageSync('scSysUser').username, //顾客名称
         "payType": 3, //支付方式（货到付款0，在线支付1，支付宝支付2，微信支付3，积分兑换4）
         "customerId": wx.getStorageSync('scSysUser').id, //顾客id
         "shopOrderItemList": [],
         "contactMobile": wx.getStorageSync('scSysUser').phone, //顾客电话
-        "realMoney": this.data.msgData.activePrice, //实际支付金额
+        "realMoney": _this.data.msgData.activePrice, //实际支付金额
         "payStatus": "0", //支付状态（未支付0，成功1，失败2, 已完成3）
         "bussinessId": wx.getStorageSync('shop').id, //店铺id
-        "extend6": this.data.activeId, //活动海报id
+        "extend6": _this.data.activeId, //活动海报id
         "referrerId": "",                //分享者id（选填）
         "areaId": "",         //区编码
         "provinceId": "", //省编码
         "cityId": "",
-    }
-    subdata.shopOrderItemList=this.data.listData;
-    for (var i = 0; i < this.data.shopList.length;i++){
-      if (!this.data.shopList[i]){
-        wx.showToast({
-          title: '请按规则选择商品！',
-          icon: "none"
-        })
-        return
       }
-    }
-    app.util.reqAsync('shop/submitActivePosterOrder', subdata).then(res => {
-      console.log(res)
-      if (res.data.code==1){
-        this.bindTestCreateOrder(res.data.data)
-        this.setData({
-          orderNo: res.data.data
-        })
-      }else{
-        wx.showToast({
-          title: res.data.msg,
-          icon: 'none'
-        })
+      subdata.shopOrderItemList = _this.data.listData;
+      for (var i = 0; i < _this.data.shopList.length; i++) {
+        if (!_this.data.shopList[i]) {
+          wx.showToast({
+            title: '请按规则选择商品！',
+            icon: "none"
+          })
+          _this.setData({
+            buyBtn: false
+          })
+          return
+        }
       }
-    })
+      app.util.reqAsync('shop/submitActivePosterOrder', subdata).then(res => {
+        console.log(res)
+        if (res.data.code == 1) {
+          _this.bindTestCreateOrder(res.data.data)
+          _this.setData({
+            orderNo: res.data.data,
+          })
+        } else {
+          _this.setData({
+            buyBtn: false  
+          })
+          wx.showToast({
+            title: res.data.msg,
+            icon: 'none'
+          })
+        }
+      })
+    }
+    
     console.log(subdata)
   },
   getMessage: function (no) {

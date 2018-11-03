@@ -17,7 +17,7 @@
   <view id='serviceCardBox'>
     <view id='serviceCardHead' class='flexBetween'>
       <text>已有服务卡 ({{cardNum}})</text>
-      <view><navigator hover-class='none' url='service/service'><text>其他服务</text><image src='images/xcx_yy_jiantou_you@2x.png' class='enterIcon'></image></navigator></view>
+      <view><text>其他服务</text><image src='images/xcx_yy_jiantou_you@2x.png' class='enterIcon'></image></view>
     </view>
     <view id='serviceCardList'>
       <view class="listBox" wx:for="{{cardList}}" wx:key="index">
@@ -44,13 +44,13 @@
             <image class='checkedSmall' src='images/xcx_yy_xuanzhong@2x.png' wx:if="{{item.checkServant}}" bindtap='check' data-index="{{index}}" data-flag="checkServant"></image>
             <view class='checkSmall' wx:if="{{!item.checkServant}}" bindtap='check' data-index="{{index}}" data-flag="checkServant"></view>
             <text>服务人员</text>
-            <view class='flexBetween' wx:if="{{item.checkServant}}">:<navigator class='flexBetween' url='servant/servant' hover-class='none'><text class='tip'>{{servant}}</text><text class='chose'>选择</text></navigator></view>
+            <view class='flexBetween' wx:if="{{item.checkServant}}">:<text class='tip'>{{servant}}</text><text class='chose'>选择</text></view>
           </view>
           <view class='device'>
             <image class='checkedSmall' src='images/xcx_yy_xuanzhong@2x.png' wx:if="{{item.checkDevice}}" bindtap='check' data-index="{{index}}" data-flag="checkDevice"></image>
             <view class='checkSmall' wx:if="{{!item.checkDevice}}" bindtap='check' data-index="{{index}}" data-flag="checkDevice"></view>
             <text>服务设备</text>
-            <view class='flexBetween' wx:if="{{item.checkDevice}}">:<navigator class='flexBetween' url='device/device' hover-class='none'><text class='tip'>{{device}}</text><text class='chose'>选择</text></navigator></view>
+            <view class='flexBetween' wx:if="{{item.checkDevice}}">:<text class='tip'>{{device}}</text><text class='chose'>选择</text></view>
           </view>
         </view>
       </view>

@@ -104,7 +104,7 @@ Page({
       systemInfo: systemInfo,
       goodsH: systemInfo.windowHeight - 118,
       goodsHs: systemInfo.windowHeight -48,  
-      goodsHL: systemInfo.windowHeight - 56,
+      goodsHL: systemInfo.windowHeight - 90,
       pgoodsHL: systemInfo.windowHeight - 90
     })
 
@@ -455,7 +455,7 @@ Page({
     //   goodsH: systemInfo.windowHeight - 118,
     //   goodsHs: systemInfo.windowHeight - 48,
     //   goodsHL: systemInfo.windowHeight - 56,
-    //   pgoodsHL: systemInfo.windowHeight - 118
+    //   pgoodsHL: systemInfo.windowHeight - 100
     // })
     /*************** */
     //获取店铺类别列表
@@ -466,7 +466,7 @@ Page({
     }).then((res) => {
       let shopCategory = res.data.data
       // 类别中加入 “全部”
-      let allCategory = { sequence: 0, type: 1, categoryName: "全部", categoryId: null }
+      let allCategory = { sequence: 0, type: 10, categoryName: "全部", categoryId: null }
       shopCategory.unshift(allCategory)
       console.log('所有分类')
       console.log(shopCategory)
@@ -1075,7 +1075,7 @@ Page({
     }).then((res) => {
       let shopCategory = res.data.data
       // 类别中加入 “全部”
-      let allCategory = { sequence: 0, type: 10, categoryName: "全部", categoryId: null }
+      let allCategory = { sequence: 0, type: 1, categoryName: "全部", categoryId: null }
       shopCategory.unshift(allCategory)
       console.log('所有分类')
       console.log(shopCategory)

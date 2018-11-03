@@ -45,6 +45,7 @@ Page({
   },
 
   onLoad: function (options) {
+    wx.hideShareMenu()
     console.log(options)
     if (options && options.q) {
       var uri = decodeURIComponent(options.q)
@@ -359,6 +360,7 @@ Page({
   },
   goodSkip: function (e) {
     //跳到商品详情
+    if (this.data.goods[0].orderInfo.bussinessType==19)return;
     var shopId = e.currentTarget.dataset.shopid,
       goodsId = e.currentTarget.dataset.goodsid;
     //调接口判断是否下架
@@ -797,6 +799,8 @@ Page({
   },
   // 邀请好友拼单
   onShareAppMessage: function (res) {
+    console.log(res)
+    console.log(this.data.groupPath)
     let options = this.data;
     let datas = {
       groupId: options.groupId,
@@ -808,6 +812,21 @@ Page({
       stockId: options.stockId
     }
     console.log(datas)
+    // if (this.data.goods[0].orderInfo.bussinessType==19){
+
+    if (this.data.isGroupBuying==1){
+      return {
+        title: this.data.goodsName,
+        desc: this.data.goodsName,
+        imageUrl: this.data.groupPath,
+        path: '/pages/spelldetails/spelldetails?groupId=' + this.data.groupId + '&orderNo=' + this.data.orderNo + '&shopId=' + this.data.shopId + '&cUser=' + this.data.userid + '&population=' + this.data.population + '&orderStatusVo=' + this.data.orderStatusVo + '&stockId=' + this.data.stockId + '&share=' + 1 + '&shareUser=' + this.data.userid,
+        success: (res) => {
+          this.setData({
+            ifshare: 1
+          })
+        }
+      }
+    }
     return {
       title: this.data.goodsName,
       desc: this.data.goodsName,

@@ -31,15 +31,22 @@ const formatTime = date => {
 // 主线
 // const URL = 'https://wxappmain.izxcs.com/zxcity_restful/ws/rest';
 
+
+const URL_QRCODE = 'https://wxapp.izxcs.com/qrcode/shop/';
+
 // 测试环境
 const URL = 'https://wxappprod.izxcs.com/zxcity_restful/ws/rest';
-const URL_QRCODE = 'https://wxapp.izxcs.com/zxcity_restful/ws/rest';
 const SHARE_URL ='https://share.zxtest.izxcs.com';
 const SOCKET_URL = 'wss://wxappprod.izxcs.com'
 
+
+// 预上线环境
+// const URL = 'https://wxapppreline.izxcs.com/zxcity_restful/ws/rest';
+// const SHARE_URL = 'https://share.izxcs.com';
+// const SOCKET_URL = 'wss://wxapppreline.izxcs.com'
+
 // 正式环境
 // const URL = 'https://wxapp.izxcs.com/zxcity_restful/ws/rest';
-// const URL_QRCODE = 'https://wxapp.izxcs.com/qrcode/shop/';
 // const SHARE_URL = 'https://share.izxcs.com';
 // const SOCKET_URL = 'wss://wxapp.izxcs.com'
 

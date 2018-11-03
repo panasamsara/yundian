@@ -21,7 +21,7 @@
    </swiper>
 </view>
 <view class='content'> 
-  <view class='list' wx:for="{{integralList}}" wx:key="{{index}}" data-goodsId="{{item.goodsId}}" data-goodsType="{{item.goodsType}}" bindtap='goDetail'>
+  <view class='list' wx:for="{{integralList}}" wx:key="{{index}}" data-goodsId="{{item.goodsId}}" data-goodsType="{{item.goodsType}}"bindtap='goDetail'>
     <view class='viewBg'>
       <image src="{{item.pictureUrl}}"></image>
       <view class='bgTitle'>

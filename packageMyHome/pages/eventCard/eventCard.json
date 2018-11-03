@@ -1,6 +1,5 @@
 {
-  "navigationBarTitleText": "活动详情"
-  ,
+  "navigationBarTitleText": "",
   "usingComponents": {
     "login-component": "../../../components/component-login",
     "poster-modal": "../../../components/poster-modal/poster-modal"

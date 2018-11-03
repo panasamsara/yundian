@@ -229,7 +229,8 @@
     <view wx:if="{{userCardPayWay == 1}}" data-statu="{{1}}" class="selectway" bindtap="UserCardchangePayway"><image src="../../../images/duozhongzhifu_xuanze@2x.png"></image></view>
     <view wx:else class="selectway" data-statu="{{1}}" bindtap="UserCardchangePayway"><image src="../../../images/zihifu_weixuanzhong@2x.png"></image></view>
   </view>
-  <button class="payforcard font36" size="{{primarySize}}" loading="{{loading}}" disabled="{{disabled}}" bindtap="confirmPay"> 确定支付</button>
+  <button class="payforcard font36 grayBtn" size="{{primarySize}}" loading="{{loading}}" disabled="{{disabled}}" wx:if="{{isPay==true}}"> 确定支付</button>
+  <button class="payforcard font36" size="{{primarySize}}" loading="{{loading}}" disabled="{{disabled}}" wx:if="{{isPay==false}}" bindtap="confirmPay"> 确定支付</button>
 </view>
 
 <view class="popbg" hidden="{{shadeIfshow}}" bindtap="closePaycard"></view>

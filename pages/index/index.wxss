@@ -306,10 +306,21 @@ putInCart-img{
 
 }
 .activity-desc-container{
-  height: 74rpx;
+  min-height: 74rpx;
   width:50%;
   margin-top: 5rpx;
 }
+.activity-price{
+  padding: 0 0 10rpx;
+  color: #fe5c45;
+  font-size: 28rpx!important;
+  
+}
+.activity-price text{
+  font-size: 24rpx!important;
+
+}
+
 .activity-name{
   color: #fe5c45;
   font-weight: bold;

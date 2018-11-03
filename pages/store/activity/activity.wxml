@@ -12,6 +12,10 @@
           <text class='activityName'>{{item.descTitle}}</text>
           <text class='time'>{{item.startTime}}-{{item.endTime}}</text>
         </view>
+        <view class='code' wx:if="{{item.activityType==11}}">
+          <text>价格:</text>
+          <text>¥{{item.activePrice}}</text>
+        </view>
     </view>
   </view>
 </view>

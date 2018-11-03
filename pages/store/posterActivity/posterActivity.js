@@ -330,6 +330,23 @@ console.log('记录关系的参数------------',data)
     }).then((res) => {
       console.log(999)
       console.log(res)
+      if (res.data.code == 9) {
+        _this.setData({
+          passed: true
+        })
+        if (res.data.code == 9) {
+          _this.setData({
+            passed: true
+          })
+        }
+
+
+
+
+
+
+        
+      }
       console.log(999)
       if (res.data.data) {
         res.data.data.startTime = app.util.formatActivityDate(res.data.data.startTime);

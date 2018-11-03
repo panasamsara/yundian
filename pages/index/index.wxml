@@ -96,7 +96,7 @@
       <image class='down-icon' bindtap='clickShowIndex' src='../../images/down.gif'></image>
       <!-- <navigator url='../store/code/code'><image class='qrcode' src='../../images/yundian_erweima@2x.png'></image></navigator> -->
     </view>
-    
+
     <!-- <view class='coupon' bindtap='showQuanBox' wx:if="{{couponType1||couponType2||couponType3}}"> -->
     <view class='coupon' bindtap='showQuanBox' wx:if="{{shopHasCoupon}}">
       <!-- <view class='coupon-inline'> -->
@@ -110,10 +110,10 @@
     <view class="yuyue" bindtap='goAppointment' wx:if="{{shopInformation.isReserve}}">
       <image src='./img/yuyue.png'></image>
     </view>
-     <!-- 云店课堂 -->
-    <navigator wx:if="{{shopInformation.masterSetupType == 1}}" url='/packageIndex/pages/lesson/lesson'>
-      <image mode='aspectFit' class='banner-lesson' src='./img/zxkt_ydsy_rk@2x.png'></image>
-    </navigator>
+    <!-- 云店课堂 -->
+     <navigator wx:if="{{shopInformation.masterSetupType == 1}}" url='/packageIndex/pages/lesson/lesson'>
+    <image mode='aspectFit' class='banner-lesson' src='./img/zxkt_ydsy_rk@2x.png'></image>
+  </navigator>
 
     <view wx:if="{{goodsInfos.length<=0&&list.length<=0&&groupBuyList.length<=0&&hotCommoditiesList.hotCommoditiesList==undefined}}" class="activityBlank">
       <view><image src='img/yundian_kby_meiyoudianpu.png'></image></view>
@@ -127,8 +127,8 @@
         <view class='left-line'></view>
       </view>
       <view class="activity-swiper">
-        <!-- <swiper class='activity-swiper-box' indicator-dots="{{shopInformation.goodsInfos.length>1}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}"> wx:if="{{item.activityType==11}}" -->
-          <view class='active-block' wx:for="{{goodsInfos}}" wx:key="index"  >
+        <!-- <swiper class='activity-swiper-box' indicator-dots="{{shopInformation.goodsInfos.length>1}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}"> -->
+          <view class='active-block' wx:for="{{goodsInfos}}" wx:key="index">
             <!-- <swiper-item> -->
               <!-- <view class="swiper-item"> -->
                 <view class='activity-img'>
@@ -141,16 +141,17 @@
                   <view class='activity-desc-container'>
                     <view class='activity-name font-size-24'>{{item.activityName}}</view>
                     <view class='activity-detail font-size-24'>{{item.descTitle}}</view>
+                    <view class='activity-detail font-size-24 activity-price' wx:if="{{item.activityType==11}}"><text>价格：</text>¥{{item.activePrice}}</view>
                   </view>
                   <view class='activity-desc-container'>
                     <view class='font-size-24 text-align-right'>活动时间</view>
                     <view class='font-size-24 text-align-right'>{{item.startTime}}-{{item.endTime}}</view>
                   </view>
+                  
                 </view>
               <!-- </view> -->
             <!-- </swiper-item> -->
           </view>
-
         <!-- </swiper> -->
       </view>
     </view>   

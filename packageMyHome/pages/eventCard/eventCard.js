@@ -9,17 +9,17 @@ Page({
    * 页面的初始数据
    */
   data: {
-    choose:false,
-    msgData:'',
-    activeId:'',
-    shopId:'',
+    choose: false,
+    msgData: '',
+    activeId: '',
+    shopId: '',
     scale: null,
     btnShow: 'normal',
     draw: false,
     temp: null,
-    loginType:0,
-    shareType:'',
-    shareUser:''
+    loginType: 0,
+    shareType: '',
+    shareUser: ''
   },
 
   /**
@@ -28,19 +28,19 @@ Page({
   onLoad: function (options) {
     console.log(options)
     this.setData({
-      shopId: options.shareShop ||options.shopId ,
+      shopId: options.shareShop || options.shopId,
       activeId: options.actionId || options.businessId,
       goodsId: options.goodsId || options.businessId,
-      shareType: options.shareType ||6
+      shareType: options.shareType || 6
     })
-    if (options.shareUser){
+    if (options.shareUser) {
       this.setData({
         shareUser: options.shareUser,
       })
     }
     console.log(this.data.shopId)
     this.setCanvasSize()
-    
+
     // this.getData(data)
   },
 
@@ -56,17 +56,24 @@ Page({
    */
   onShow: function () {
     var _this = this
+    wx.showLoading({
+      title: '加载中',
+      icon: 'none'
+    })
     
+    console.log('加载中')
     app.util.checkWxLogin('share').then((loginRes) => {
-      if (loginRes.status==0){
+      if (loginRes.status == 0) {
+        wx.hideLoading()
         _this.setData({
-          loginTyoe:1
+          loginType: 1
         })
-      }else{
-        _this.getMsgdata()
+      } else {
         app.util.getShop(wx.getStorageSync('scSysUser').id, _this.data.shopId).then((res) => {
           if (res.data.code == 1) {
             wx.setStorageSync('shop', res.data.data.shopInfo)
+            _this.getMsgdata()
+            
           }
         })
         let paramData = {
@@ -77,43 +84,46 @@ Page({
           shareType: 6,
           businessId: _this.data.goodsId
         }
-        if (this.data.shareUser && this.data.shareUser != wx.getStorageSync('scSysUser').id){
+        if (_this.data.shareUser && _this.data.shareUser != wx.getStorageSync('scSysUser').id) {
           _this.record(paramData)
         }
-        
       }
     })
-    
+
   },
   record: function (data) {
     app.util.reqAsync('payBoot/wx/acode/record', data).then((res) => {
+      console.log(res)
     })
   },
   resmevent: function () {
-    this.setData({
-      loginType: 0
+    var _this =this
+    wx.showLoading({
+      title: '加载中',
+      icon: 'none'
     })
     let paramData = {
       currentId: wx.getStorageSync('scSysUser').id,
-      shareShop: _this.data.shopId ,
+      shareShop: _this.data.shopId,
       shareUser: _this.data.shareUser,
       sourcePart: '1',
       shareType: 6,
       businessId: _this.data.goodsId
     }
-    if (this.data.shareUser && this.data.shareUser != wx.getStorageSync('scSysUser').id) {
+    if (_this.data.shareUser && _this.data.shareUser != wx.getStorageSync('scSysUser').id) {
       _this.record(paramData)
     }
     app.util.getShop(wx.getStorageSync('scSysUser').id, _this.data.shopId).then((res) => {
       if (res.data.code == 1) {
         wx.setStorageSync('shop', res.data.data.shopInfo)
+        _this.getMsgdata()
+
       }
     })
     // _this.record(paramData)
-    this.getMsgdata()
   },
-  getMsgdata:function(){
-    var _this = this    
+  getMsgdata: function () {
+    var _this = this
     app.util.reqAsync('shop/selectActivePosterById', { "activeId": this.data.activeId }).then(res => {
       if (res.data.code == 1) {
         var msgData = res.data.data
@@ -123,8 +133,14 @@ Page({
         msgData.startTime = msgData.startTime.substring(0, 10)
         msgData.endTime = msgData.endTime.substring(0, 10)
         _this.setData({
-          msgData: msgData
+          msgData: msgData,
+          loginType: 0
         })
+        wx.setNavigationBarTitle({
+          title: msgData.activityName
+        })
+        wx.hideLoading()
+        
         if (wx.getStorageSync('shop')) {
           wx.downloadFile({//缓存网络图片，直接使用网络路径真机无法显示或绘制
             url: wx.getStorageSync('shop').logoUrl,
@@ -146,10 +162,20 @@ Page({
             }
           })
         }
+      }else{
+        wx.hideLoading()        
+        wx.showToast({
+          title: res.data.msg,
+          icon: 'none'
+        })
+        setTimeout(function(){
+          _this.goback()
+        },
+        1000)
       }
     })
   },
-  buy:function(){
+  buy: function () {
     wx.navigateTo({
       url: '../eventChoose/eventChoose?activeId=' + this.data.activeId
     })
@@ -173,7 +199,7 @@ Page({
   //         data: res.data.data
   //       })
   //       if (wx.getStorageSync('shop')) {
-         
+
   //       }
   //     }
   //   }).catch((err) => {
@@ -225,12 +251,12 @@ Page({
   },
   drawCanvas: function () {
     let scale = this.data.scale
-    var _this=this
+    var _this = this
     var context = wx.createCanvasContext('shareCanvas')
     context.setFillStyle('#ffffff');
     context.fillRect(0, 0, 720 * scale, 568 * scale);//给画布添加背景色，无背景色真机会自动变黑
-    
-    
+
+
     context.drawImage(this.data.proPic, 0 * scale, 0 * scale, 345 * scale, 140 * scale);//绘制背景
     context.save()
     context.setGlobalAlpha(0.5) //半透明遮罩
@@ -248,14 +274,14 @@ Page({
     context.setFillStyle('#fff');
     context.setFontSize(15 * scale);
     _this.cut('shopName', wx.getStorageSync('shop').shopName, 16);
-    
+
     context.fillText(_this.data.shopName, 70 * scale, 108 * scale);//绘制店名
     context.drawImage('img/zhuanfa_hdhb_up@2x.png', 300 * scale, 94 * scale, 19 * scale, 18 * scale);//绘制小图标
 
     context.setFillStyle('#000');
     context.setFontSize(17 * scale);
     _this.cut('activityName', this.data.msgData.activityName, 16);
-    
+
     context.fillText(this.data.activityName, 25 * scale, 172 * scale);//绘制活动名
     // context.drawImage('../posterActivity/img/zhuanfa_hdhb_right@2x.png', 305 * scale, 160 * scale, 9 * scale, 15 * scale);//绘制小图标
 
@@ -309,7 +335,7 @@ Page({
     if (res.from === 'button') {
       // 来自页面内转发按钮
       console.log()
-    } 
+    }
     console.log(this.data.temp)
     return {
       title: '[' + wx.getStorageSync('shop').shopName + ']' + this.data.msgData.descTitle,
@@ -383,24 +409,24 @@ Page({
             // _this.roundRect(context, scale, 25, 70, 610, 260, 57);//绘制海报圆角矩形背景
             // context.clip();
             context.setFontSize(36 * scale);
-            
+
             context.setFillStyle('#76350C');
-            let w = context.measureText(wx.getStorageSync('shop').shopName).width;            
-            context.fillText(wx.getStorageSync('shop').shopName, (660-w)/2 * scale, 60 * scale);//绘制店铺名
+            let w = context.measureText(wx.getStorageSync('shop').shopName).width;
+            context.fillText(wx.getStorageSync('shop').shopName, (660 - w) / 2 * scale, 60 * scale);//绘制店铺名
             context.setFontSize(38 * scale);
             context.setFillStyle('#76350C');
             _this.cut('activityName', _this.data.msgData.activityName, 13);
-            
+
             let w5 = context.measureText(_this.data.activityName).width;
             context.fillText(_this.data.activityName, (660 - w5) / 2 * scale, 370 * scale);//绘制店铺名
-            context.drawImage(_this.data.activityUrl, 85 * scale, 90 * scale, 530 * scale,220 * scale);//绘制海报
+            context.drawImage(_this.data.activityUrl, 85 * scale, 90 * scale, 530 * scale, 220 * scale);//绘制海报
             context.setFontSize(24 * scale);
-            let timeText = '活动时间:'+ _this.data.msgData.startTime + '—' + _this.data.msgData.endTime,
+            let timeText = '活动时间:' + _this.data.msgData.startTime + '—' + _this.data.msgData.endTime,
               w1 = context.measureText(timeText).width;
-            
+
             context.setFillStyle('#BFA391');
             // context.fillText(', 300 * scale, 410 * scale);//绘制活动时间
-            
+
             context.fillText(timeText, (660 - w1) / 2 * scale, 420 * scale);//绘制活动时间
             context.restore();
             context.shadowColor = 'rgba(255,255,255,0)';
@@ -420,10 +446,10 @@ Page({
             context.fill();
             context.setFillStyle('#FB452C');
             context.fillRect(270 * scale, 619 * scale, 160 * scale, 68 * scale);//绘制矩形
-            
+
             context.setFillStyle('#fff');
             context.setFontSize(36 * scale);
-            let money = '￥'+_this.data.msgData.activePrice
+            let money = '￥' + _this.data.msgData.activePrice
             let wm = context.measureText(money).width
             context.fillText(money, (690 - wm) / 2 * scale, 663 * scale);//绘制价格
 

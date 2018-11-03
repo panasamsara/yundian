@@ -16,7 +16,6 @@ Page({
     total: 0,
     flagOrder: true,
     memberId: '',
-    subaccountId: '',
     discount: '',
     orderStatus: '',
     merchantId: '',
@@ -61,16 +60,20 @@ Page({
     hasMemberCard:true, //是否会员
     subaccountId:0, //结算完再次查看订单时使用，看是否用了会员
     overCard:'',//结算完再次查看订单时用的会员名
-    payStatus:''
+    isPay:false //是否点击会员卡确定支付
   },
   onLoad: function (options) {
     console.log(options);
     var shop = wx.getStorageSync('shop');
+    console.log(shop)
     var user = wx.getStorageSync('scSysUser');
     var facilityId = wx.getStorageSync('facilityId');
+    var isMember = wx.getStorageSync("isMember");
+    var subaccountId = wx.getStorageSync("subaccountId");
     this.setData({
       shopId: shop.id,
       userId: user.id,
+      subaccountId: subaccountId,
       shopName: shop.shopName,
       presaleId: options.presaleId,
       //facilityId:1101,
@@ -78,6 +81,7 @@ Page({
       facilityId: facilityId,
       merchantId: shop.merchantId,
       phone: user.phone,
+      isMember: isMember || 0,
       selectMember: options.selectMember || 1
     })
     this.getInfo();
@@ -134,6 +138,9 @@ Page({
     });
   },
   buyOrder: function (e) { //结算支付
+    this.setData({
+      isPay:false
+    })
     if (this.data.isMember == 0) {
       if (this.data.actualPay == 0 || this.data.actualPay == '0.00' || this.data.actualPay == 0.00 || this.data.actualPay == '0') {
         wx.showToast({
@@ -158,7 +165,7 @@ Page({
     var isMember = this.data.isMember;
     if (isMember==1) { //使用了会员卡
       var accountInfo = this.data.accountInfo;//会员相关信息
-      var subaccountId = accountInfo.accountId || 3834;//会员id
+      var subaccountId = accountInfo.accountId;//会员id
       var supportLimitBalance = accountInfo[0].supportLimitBalance;  //1是会员价仅限余额支付，0是不限制(若为1只有会员卡选择才享受优惠，0都享受折扣)
       this.setData({
         shadeIfshow: false,
@@ -169,6 +176,7 @@ Page({
       
     } else { //非会员
       this.bindTestCreateOrder(code, name, this.data.sumPrice, shopid);
+      
     }
   },
   memberWecheat: function (){
@@ -195,6 +203,9 @@ Page({
           this.bindTestCreateOrder(this.data.presaleId, this.data.scPresaleInfoList[0].purchaseName, this.data.newPrice, this.data.shopId, this.data.accountInfo[0].accountId);
         
       }else{
+        this.setData({
+          isPay:false
+        })
         wx.showToast({
           title: res.data.msg,
           icon: 'none'
@@ -253,6 +264,8 @@ Page({
           'success': function (res) {
             that.sendMessage();
             console.log("支付成功")
+            wx.removeStorageSync('isMember');
+            wx.removeStorageSync('subaccountId');
 
             // 支付成功 发socket消息
             wx.sendSocketMessage({
@@ -358,8 +371,7 @@ Page({
           totalAccout: 0, //会员折扣
           scPresaleInfoList: data.scPresaleInfos,
           presaleId: data.id,
-          sumPrice: actualPay,
-          subaccountId: data.subaccountId
+          sumPrice: actualPay
         })
         if (data.payStatus==5){
           this.setData({
@@ -395,9 +407,9 @@ Page({
     this.setData({
       flagOrder: true
     })
-    wx.redirectTo({
-      url: '../endDetails/endDetails?presaleId=' + this.data.presaleId,
-    })
+    // wx.redirectTo({
+    //   url: '../endDetails/endDetails?presaleId=' + this.data.presaleId,
+    // })
     //this.getInfo();
     // var hasMemberCard = this.data.hasMemberCard;
     // if (hasMemberCard) { //是会员
@@ -512,7 +524,7 @@ Page({
             })
           } else {
             for (var i = 0; i < cardlist.length;i++){ //已结算用了会员卡
-              if (that.data.subaccountId == cardlist[i].id){
+              if (Number(that.data.subaccountId) == Number(cardlist[i].accountId)){
                 that.setData({
                     overCard: cardlist[i].accountName
                   })
@@ -520,10 +532,32 @@ Page({
            }
           }
       } else {
+        
+         
+        var subaccountId= wx.getStorageInfoSync('subaccountId')
+        if(that.data.payStatus==5){
+          if (that.data.isMember == 1) { //用会员
+            for (var i = 0; i < cardlist.length; i++) { //用了会员卡
+              var accountId = cardlist[i].accountId;
+              console.log(typeof(accountId))
+              console.log(typeof(wx.getStorageSync('subaccountId')))
+              console.log(subaccountId == accountId)
+              // if (Number(subaccountId) == Number(accountId)) {
+
+                console.log(cardlist[i])
+                that.setData({
+                  overCard: cardlist[0].accountName
+                })
+              // }
+            }
+          } 
+        }else{
           that.setData({
-          showCard:false,
-          hasMemberCard: true
-        })
+            showCard: false,
+            hasMemberCard: true
+          })
+        }
+          
       }
       }else{
         that.setData({
@@ -816,7 +850,8 @@ Page({
   closePaycard: function () {
     this.setData({
       shadeIfshow: true,
-      ispayCard: true
+      ispayCard: true,
+      isPay:false
     })
   },
   // 选用会员卡后更换支付方式
@@ -870,15 +905,23 @@ Page({
     var purchaseName = this.data.scPresaleInfoList[0].purchaseName;
     var accountInfo = this.data.accountInfo[0];
     var discountedPrice = 0;//整单优惠
+   
+    this.setData({
+      isPay:true
+    })
     // 0 会员卡余额支付
     if (userCardPayWay == 0) {
       console.log("会员卡余额支付=======================")
       if (this.data.newPrice > accountInfo.money){ //余额不足
+      this.setData({
+        isPay:false
+      })
         wx.showToast({
           title: '余额不足请去前台充值',
           icon: 'none'
         })
       }else{ //足额支付
+        
         app.util.reqAsync('foodBoot/member/please', {
           "shopId":this.data.shopId, //店铺id
           "presaleId": this.data.presaleId, //订单id
@@ -896,7 +939,8 @@ Page({
           console.log(res.data.code)
           if (res.data.code == 1) {
             // 支付成功 发socket消息
-           
+           wx.removeStorageSync("isMember");
+            wx.removeStorageSync('subaccountId');
            
             this.closePaycard();
             this.sendMessage();
@@ -912,6 +956,9 @@ Page({
            // this.getusercard();
             
           } else {
+            this.setData({
+              isPay:false
+            })
             wx.showToast({
               title: res.data.msg,
               icon: 'none'
@@ -925,7 +972,9 @@ Page({
     // 1 微信支付
     else if (userCardPayWay == 1) {
       console.log("微信支付=======================" + this.data.actualPay)
-    
+      
+      wx.setStorageSync("isMember", 1);
+      wx.setStorageSync("subaccountId", this.data.accountInfo[0].accountId)
       this.memberWecheat();
      
     }

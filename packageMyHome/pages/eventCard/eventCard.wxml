@@ -27,9 +27,9 @@
             活动商品    
         </view>   
       </view>
-      <view class='list-node' wx:for="{{msgData.itemCategoryList}}"  wx:key="*this" wx:for-item='items'>
+      <view class='list-node' wx:for="{{msgData.itemCategoryList}}"  wx:for-index="indexs" wx:key="*this" wx:for-item='items'>
         <image src='../images/yundian_xshbtb.png'></image>
-        <text>可选{{items.itemNum}}件商品</text>
+        <text>{{indexs+1}}、{{items.activePosterItemList.length==items.itemNum?items.activePosterItemList[0].goodsName:items.activePosterItemList.length+'选'+items.itemNum}}</text>
       <view class='list-msg'  wx:for="{{items.activePosterItemList}}" wx:key="*this" wx:for-item='item'>
         <image src="{{item.pictureUrl?item.pictureUrl:'../images/yundian_sdsrmorentu.png'}}"></image>
         <view class='msg-text'>{{item.goodsName}}

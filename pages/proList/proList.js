@@ -104,7 +104,7 @@ Page({
               shopId: shop.id,
               customerId: user.id,
               searchType: 1,
-              categoryId: 0
+              categoryId: null
             }).then((resGoods) => {
               goods = resGoods.data.data
 
@@ -343,7 +343,7 @@ Page({
           shopId: shop.id,
           customerId: user.id,
           searchType: 1,
-          categoryId: 0
+          categoryId: null
         }).then((resGoods) => {
           goods = resGoods.data.data
 
@@ -987,13 +987,13 @@ Page({
 
   //获取店铺类别下的商品，类别不传 则是所有商品
   getShopGoodsMore: function (merchantid, shopid, searchType, categoryid) {
-    var categoryids = categoryid
-    if (categoryid=="null"){
-      categoryids=0;
-    }
     this.setData({
       showLoading: true
     })
+    // var categoryids = categoryid
+    // if (categoryid=="null"){
+    //   categoryids=0
+    // }
     let _that = this;
     let shopCategory = this.data.shopCategory
     util.reqAsync('shop/getShopGoodsMore', {
@@ -1001,7 +1001,7 @@ Page({
       shopId: shopid,
       searchType: searchType,
       customerId: wx.getStorageSync('scSysUser').id,
-      categoryId: categoryids
+      categoryId: categoryid
     }).then((res) => {
 
       // 类别中有套盒，选择全部商品 ( 再次获取套盒 合并到所有商品中去 )
@@ -1029,10 +1029,13 @@ Page({
         })
       }else{
         if (res.data.data) {
+   
           _that.setData({
             goodsInCategory: res.data.data,
             showLoading: false
           })
+          console.log('当前goodMap的内容：', this.data.goodMap)
+          console.log('当前goodsInCategory的内容：', this.data.goodsInCategory)
         } 
       }
      

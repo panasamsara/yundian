@@ -44,7 +44,7 @@ Page({
     loginType: 0,
     options: {},
     shopBtn: true,
-    shareUser:''
+    shareUser: ''
   },
   /**
   * 生命周期函数--监听页面加载
@@ -61,10 +61,10 @@ Page({
       cUser: options.cUser,
       orderStatusVo: options.orderStatusVo,
       stockId: options.stockId,
-      shareUser: options.shareUser||''
+      shareUser: options.shareUser || ''
       // goodsType: options.goodsType
     })
-   
+
     console.log(wx.getStorageSync('scSysUser'));
   },
   record: function (data) {
@@ -184,7 +184,7 @@ Page({
     // if (wx.getStorageSync('scSysUser')){
     // }
     this.loadFn()
-    
+
     console.log({
       shopId: this.data.shopId,
       goodsId: this.data.goodId,
@@ -291,10 +291,7 @@ Page({
         if (this.data.goodsType) {
           this.setData({
             balance: res.data.data.stockBalance,
-
-
           })
-
         } else {
           this.setData({
             balance: res.data.data.scShopGoodsStockList ? res.data.data.scShopGoodsStockList[0].stockNum : 0,
@@ -306,7 +303,6 @@ Page({
           stockPrice: res.data.data.scShopGoodsStockList ? res.data.data.scShopGoodsStockList[0].stockBatchPrice : 0,
           total: res.data.data.scShopGoodsStockList ? (res.data.data.scShopGoodsStockList[0].stockBatchPrice * this.data.number).toFixed(2) : 0
         })
-
       }
       // wx.hideLoading();
       let _this = this
@@ -424,19 +420,23 @@ Page({
   //选规模
   chose: function (e) {//选择规格
     console.log(e)
-  
+
     if (this.data.goodsType) {
       this.setData({
         balance: this.data.shopData.stockBalance,
+        stockPrice: this.data.shopData.scShopGoodsStockList[e.currentTarget.dataset.index].stockBatchPrice,
+        total: (this.data.shopData.scShopGoodsStockList[e.currentTarget.dataset.index].stockBatchPrice * this.data.number).toFixed(2),
+        
       })
 
     } else {
       console.log(this.data.total)
-      
+
       this.setData({
         balance: this.data.shopData.scShopGoodsStockList[e.currentTarget.dataset.index].stockNum,
-        total: this.data.shopData.scShopGoodsStockList[e.currentTarget.dataset.index].stockBatchPrice,
-        stockPrice: this.data.shopData.scShopGoodsStockList[e.currentTarget.dataset.index].stockBatchPrice
+        stockPrice: this.data.shopData.scShopGoodsStockList[e.currentTarget.dataset.index].stockBatchPrice,
+        total: (this.data.shopData.scShopGoodsStockList[e.currentTarget.dataset.index].stockBatchPrice * this.data.number).toFixed(2),
+        
       })
     }
     this.setData({

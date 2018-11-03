@@ -7,28 +7,7 @@ Page({
     showView: true,
     imageed:'img/con5.jpg',
     name:'',
-    list: [
-      { num: '1' },
-      { num: '2' },
-      { num: '3' },
-      { num: '4' },
-      { num: '5' },
-      { num: '6' },
-      { num: '7' },
-      { num: '8' },
-      { num: '9' },
-      { num: '10' },
-      { num: '11' },
-      { num: '12' },
-      { num: '13' },
-      { num: '14' },
-      { num: '15' },
-      { num: '16' },
-      { num: '17' },
-      { num: '18' },
-      { num: '19' },
-      { num: '20' }
-    ],
+    arr:[1,2,3,4,5,6,7],
     idx: 0,
     shopId: '',
     facilityId: '',
@@ -43,12 +22,8 @@ Page({
     var that = this;
     var index = e.currentTarget.dataset.index;
     console.log(index)
-    var address = that.data.list[index].num;
+    var address = that.data.arr[index];
     console.log('你点击的是', address)
-   
-    // for (var i in ongd) {
-    //   console.log(ongd[i].num);
-    // }
     this.setData({
       idx: index
     })
@@ -56,19 +31,27 @@ Page({
   confirmd: function (e) {
     var that = this;
     var index = that.data.idx;
-    console.log('人数---',this.data.list[index].num)
-    wx.setStorageSync('peopleNumber', this.data.list[index].num)
+    console.log('人数---', this.data.arr[index])
+    wx.setStorageSync('peopleNumber', this.data.arr[index])
     this.setData({
       prompt: !this.data.prompt
     })
   },
 
   onChangeShowState: function () {
-    var that = this;
-    that.setData({
-      showView: (!that.data.showView),
-      ongkd: !this.data.ongkd
-    })
+    // var that = this;
+    // that.setData({
+    //   showView: (!that.data.showView),
+    //   ongkd: !this.data.ongkd
+    // })
+      let arr=[];
+      for(let i=1;i<=20;i++){
+        arr.push(i)
+      }
+      this.setData({
+        arr:arr,
+        ongkd: !this.data.ongkd
+      })
   },
 
   //事件处理函数
@@ -134,8 +117,9 @@ Page({
     })
 
     let _this = this;
-    var num = _this.data.list[7]
+    var num = _this.data.arr
     console.log(_this)
+    console.log(num)
     this.setData({
       num:''
     })

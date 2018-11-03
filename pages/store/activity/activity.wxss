@@ -21,7 +21,12 @@ page{
   border-top-left-radius: 12rpx;
   border-top-right-radius: 12rpx;
 }
-
+.code{
+  line-height:55rpx;
+  padding:0 25rpx;
+  font-size:27rpx;
+  color: #ff5c48;
+}
 .activity .act,.activity .actInfo{
   display: flex;
   justify-content: space-between;

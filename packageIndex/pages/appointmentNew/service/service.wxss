@@ -1,21 +1,38 @@
 /* packageIndex/pages/appointmentNew/service/service.wxss */
-@import '../css/common.wxss';
-
-#content .serviceList .cardPic{
-  width: 160rpx;
-  height: 160rpx;
-  border-radius: 10rpx;
+#service #head{
+  height: 90rpx;
+  padding: 0 24rpx;
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
-#content .serviceList text{
-  width: 400rpx;
+#service #head input{
+  height: 60rpx;
+  background-color: #F5F5F5;
+  text-indent: 70rpx;
+  font-size: 24rpx;
+  color: #999999;
+  border-radius: 30rpx;
+  width: 100%;
+}
+
+#service #searchIcon{
+  width: 30rpx;
+  height: 32rpx;
+  position: absolute;
+  z-index: 999;
+}
+
+#service .title{
   font-size: 28rpx;
-  margin-left: 24rpx;
+  color: #333333;
+  background-color: #F5F5F5;
+  text-indent: 24rpx;
+  height: 70rpx;
+  line-height: 70rpx;
 }
 
-#content .serviceList{
-  padding: 13rpx 0;
-  border-bottom: solid 1rpx #EEEEEE;
+#service #content{
+  padding: 0 24rpx 120rpx 24rpx;
 }
-
-

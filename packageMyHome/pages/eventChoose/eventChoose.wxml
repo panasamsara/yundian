@@ -3,7 +3,7 @@
 <view class='main'>
       <view class='list-node' wx:for="{{arrdata}}" wx:for-index="indexs"  wx:key="*this" wx:for-item='items'>
         <image src='../images/yundian_xshbtb.png'></image>
-        <text>可选{{items.itemNum}}件商品</text>
+        <text>{{indexs+1}}、{{items.activePosterItemList.length==items.itemNum?items.activePosterItemList[0].goodsName:items.activePosterItemList.length+'选'+items.itemNum}}</text>
       <view class='list-msg' bindtap='chooseList' data-indexs="{{indexs}}" data-chooseNum="{{items.itemNum}}" data-id="{{item.id}}" data-index="{{index}}"  wx:for="{{items.activePosterItemList}}" wx:for-index="index"  wx:key="*this" wx:for-item='item'>
         <image  wx:if="{{item.select}}" class='list-chs' src='../images/yundian_spxuanzhong.png'></image>      
         <image  wx:else class='list-chs' src='../images/yundian_spweixuanzhong.png'></image>      

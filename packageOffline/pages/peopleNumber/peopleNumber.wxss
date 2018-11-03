@@ -41,6 +41,7 @@
   /* border: 1rpx solid red; */
   margin: 0 auto;
   margin-top: 80rpx;
+  z-index: 10;
 }
 .number{
   text-align: center;
@@ -49,7 +50,7 @@
   margin-bottom: 50rpx;
   color: #505050;
 }
-.options .ions{
+.ions{
   width: 145rpx;
   height: 75rpx;
   border: 1rpx solid #bababa;
@@ -63,6 +64,9 @@
 }
 .bright789_view_show{
     display: block;
+    width: 100%;
+    height: 500rpx;
+    border: 1px solid red;
 }
 .bright789_view_hidebright789_view_show{
     width: 100%;
@@ -155,4 +159,21 @@
 }
 .choose text:nth-child(2){
   color: #FE732D;
+}
+
+#container{
+  display: flex;
+  flex-wrap:wrap;
+}
+
+#box{
+  width:145rpx;
+  height:75rpx;
+  border:1rpx solid #bababa;
+  color:#343434;
+  display:inline-block;
+  text-align:center;
+  /* border-radius:20rpx; */
+  line-height:75rpx;
+  margin:10rpx;
 }

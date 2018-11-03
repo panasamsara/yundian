@@ -230,6 +230,11 @@ Page({
   getData:function(data){
     var _this =this
     app.util.reqAsync('shop/selectActivePosterById', data).then((res) => {
+      if (res.data.code == 9) {
+        _this.setData({
+          passed: true
+        })
+      }
       if (res.data.data) {
         res.data.data.startTime = app.util.formatActivityDate(res.data.data.startTime);
         res.data.data.endTime = app.util.formatActivityDate(res.data.data.endTime);

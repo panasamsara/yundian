@@ -47,8 +47,8 @@ Page({
       animationData: {},
       outQrCodeParam:{},
       shopHasCoupon: false,
-      share:false,
-      canGetCoupon: true // 防止重复领取礼包
+     share: false,
+     canGetCoupon: true // 防止重复领取礼包
       
 
    },
@@ -78,26 +78,25 @@ Page({
          })
        }
      }
-
-    if (e.shareUser){
+     
+    if (e.shareUser) {
       util.checkWxLogin().then((loginRes) => {
         let paramData = {
           currentId: loginRes.id,
           shareShop: e.shopId,
           shareUser: e.shareUser,
           sourcePart: '1',
-          shareType: '',
-          businessId: ''
+          shareType: 9,
+          businessId: e.shopId
         }
         if (loginRes.id != e.shareUser) { //分享人不是本人，记录推荐关系
           _this.record(paramData)
         }
       })
     }
-    
    },
-   // 记录推荐关系
-  record: function(data){
+  // 记录推荐关系
+  record: function (data) {
     app.util.reqAsync('payBoot/wx/acode/record', data).then((res) => {
 
     })
@@ -595,15 +594,15 @@ Page({
      })
      
    },
-   //防止重复领取
-   checkGetCoupon: function(){
-     if (this.data.canGetCoupon){
-       this.setData({
-         canGetCoupon: false
-       })
-       this.getCoupon()
-     }
-   },
+  //防止重复领取
+  checkGetCoupon: function () {
+    if (this.data.canGetCoupon) {
+      this.setData({
+        canGetCoupon: false
+      })
+      this.getCoupon()
+    }
+  },
    //领取新人礼包
    getCoupon: function(){
      let _this = this
@@ -715,7 +714,6 @@ Page({
      })
     
    },
-
    goToActivityDetail: function(e){
     let user = wx.getStorageSync('scSysUser');
     var shopId = this.data.shopInformation.shopInfo.id
@@ -730,7 +728,7 @@ Page({
           // success
         }
       })
-    } else if (activityType == 11){
+    } else if (activityType == 11) {
       wx.navigateTo({
         url: '../../packageMyHome/pages/eventCard/eventCard?shopId=' + shopId + '&goodsId=' + goodsId + '&actionId=' + actionId + '&signType=' + signType,
         success: function (res) {

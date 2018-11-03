@@ -41,7 +41,7 @@
     </view>
 
     <!-- 右侧 留店商品列表 -->
-    <view wx:elif="{{ifstore==1}}" class="foods-wrapper {{showMaiDan ? 'm-t-100' : ''}}" style="height: {{showMaiDan ? pgoodsHL : goodsHL}}px;">
+    <view wx:elif="{{ifstore==1}}" class="foods-wrapper {{showMaiDan ? 'm-t-100' : ''}}" style="height: {{showMaiDan ? goodsHL : goodsHL}}px;">
       <scroll-view scroll-y style="height: 100%;" >
         <view class="gift-title">留店商品</view>
         <view class="gift-list" style="height: 100%;">

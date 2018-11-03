@@ -1,7 +1,7 @@
 // pages/store/code/code.js
 var QR = require("../../../utils/qrcode.js");
 import saveImg from '../../../utils/saveImg.js';
-const app=getApp();
+const app = getApp();
 
 Page({
 
@@ -11,33 +11,98 @@ Page({
   data: {
     canvasHidden: false,
     imagePath: '',
-    btnShow: 'normal'
+    btnShow: 'normal',
+    loginType: 0,
+    options: ''
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    console.log('测试记录关系',options);
+    console.log('测试记录关系', options);
+    var _this = this
+    this.setData({
+      options: options
+    })
+    wx.showLoading({
+      title: '加载中',
+      icon: 'none'
+    })
     wx.showLoading({
       title: '加载中',
       icon: 'none'
     })
     wx.setStorageSync('shopId', options.shopId)
-    if (options.shareUser) {//转发进入页面记录推荐关系
+    app.util.checkWxLogin('share').then((loginRes) => {
+      if (loginRes.id) {
+        if (options.shareUser && options.shareUser != wx.getStorageSync('scSysUser').id) {//转发进入页面记录推荐关系
+          this.record({
+            currentId: wx.getStorageSync('scSysUser').id,
+            shareShop: options.shopId,
+            shareUser: options.shareUser,
+            sourcePart: '1',
+            businessId: options.shopId,
+            shareType: options.shareType
+          })
+        }
+        var user = wx.getStorageSync('scSysUser');
+        app.util.getShop(user.id, options.shopId).then((res) => {
+          if (res.data.code == 1) {
+            var shop = res.data.data.shopInfo
+            wx.setStorageSync('shop', res.data.data.shopInfo);
+            var address = shop.address
+            if (address.length > 28) {
+              address = address.substring(0, 28) + '...'
+            }
+            _this.setData({
+              shopName: shop.shopName,
+              url: shop.logoUrl,
+              address: address,
+              phoneService: shop.phoneService,
+              storeUrl: "https://wxapp.izxcs.com/qrcode/shop/index.html?apptype=cityshop&subtype=shophome&fromscan=yes&visitFrom=1&cloud_store&sn=17&yw=shop&cp=1&shopId=" + shop.id + '&shareUser=' + wx.getStorageSync('scSysUser').id + '&shareType=9',
+              shopId: shop.id
+            })
+            // 页面初始化 options为页面跳转所带来的参数
+            var size = _this.setCanvasSize();//动态设置画布大小
+            var initUrl = _this.data.storeUrl;
+            _this.createQrCode(initUrl, "mycanvas", size.w, size.h);
+
+          } else {
+            wx.showToast({
+              title: '数据错误...',
+            })
+          }
+        })
+      } else {
+        wx.hideLoading()
+        
+        this.setData({
+          loginType: 1
+        })
+      }
+    })
+  },
+  resmevent: function () {
+    this.setData({
+      loginType: 0
+    })
+    var _this = this
+    var user = wx.getStorageSync('scSysUser');
+
+    if (_this.data.options.shareUser && _this.data.options.shareUser != wx.getStorageSync('scSysUser').id) {//转发进入页面记录推荐关系
       this.record({
         currentId: wx.getStorageSync('scSysUser').id,
-        shareShop: options.shopId,
-        shareUser: options.shareUser,
+        shareShop: _this.data.options.shopId,
+        shareUser: _this.data.options.shareUser,
         sourcePart: '1',
-        businessId: options.shopId,
-        shareType: options.shareType
+        businessId: _this.data.options.shopId,
+        shareType: _this.data.options.shareType
       })
     }
     var user = wx.getStorageSync('scSysUser');
-    var _this = this
-    app.util.getShop(user.id, options.shopId).then((res) => {
-      if (res.data.code == 1){
+    app.util.getShop(user.id, _this.data.options.shopId).then((res) => {
+      if (res.data.code == 1) {
         var shop = res.data.data.shopInfo
         wx.setStorageSync('shop', res.data.data.shopInfo);
         var address = shop.address
@@ -49,7 +114,7 @@ Page({
           url: shop.logoUrl,
           address: address,
           phoneService: shop.phoneService,
-          storeUrl: "https://wxapp.izxcs.com/qrcode/shop/index.html?apptype=cityshop&subtype=shophome&fromscan=yes&visitFrom=1&cloud_store&sn=17&yw=shop&cp=1&shopId=" + shop.id,
+          storeUrl: "https://wxapp.izxcs.com/qrcode/shop/index.html?apptype=cityshop&subtype=shophome&fromscan=yes&visitFrom=1&cloud_store&sn=17&yw=shop&cp=1&shopId=" + shop.id + '&shareUser=' + wx.getStorageSync('scSysUser').id + '&shareType=9',
           shopId: shop.id
         })
         // 页面初始化 options为页面跳转所带来的参数
@@ -57,16 +122,15 @@ Page({
         var initUrl = _this.data.storeUrl;
         _this.createQrCode(initUrl, "mycanvas", size.w, size.h);
 
-      }else{
+      } else {
         wx.showToast({
           title: '数据错误...',
         })
       }
     })
-    
   },
   record: function (data) {//记录推荐关系
-    app.util.reqAsync('payBoot/wx/acode/record', data).then((res) => {})
+    app.util.reqAsync('payBoot/wx/acode/record', data).then((res) => { })
   },
   //适配不同屏幕大小的canvas
   setCanvasSize: function () {
@@ -79,7 +143,7 @@ Page({
       size.w = width;
       size.h = height;
       this.setData({
-        scale:res.windowWidth/375
+        scale: res.windowWidth / 375
       })
     } catch (e) {
       // Do something when catch error
@@ -137,7 +201,7 @@ Page({
             fail() {//这里是用户拒绝授权后的回调
               wx.showToast({
                 title: '授权后才能保存至手机相册',
-                icon:'none'
+                icon: 'none'
               })
               that.setData({
                 btnShow: 'authorize'
@@ -155,22 +219,22 @@ Page({
       }
     })
   },
-  
+
   handleSetting: function (e) {
     let that = this;
-    saveImg.handleSetting(that,e);
+    saveImg.handleSetting(that, e);
   },
 
-  drawPic:function(){
+  drawPic: function () {
     var context = wx.createCanvasContext('picCanvas'),
-        shop = wx.getStorageSync('shop'),
-        shopLogo = shop.logoUrl,
-        shopName=shop.shopName,
-        address=shop.address,
-        phoneService=shop.phoneService,
-        borderUrl ="../images/dianpuerweima_biankuang@2x.png",
-        scale=this.data.scale,
-        _this=this;
+      shop = wx.getStorageSync('shop'),
+      shopLogo = shop.logoUrl,
+      shopName = shop.shopName,
+      address = shop.address,
+      phoneService = shop.phoneService,
+      borderUrl = "../images/dianpuerweima_biankuang@2x.png",
+      scale = this.data.scale,
+      _this = this;
     wx.downloadFile({//缓存网络图片，直接使用网络路径真机无法显示或绘制
       url: shopLogo,
       success: function (res) {
@@ -179,7 +243,7 @@ Page({
         })
       }
     })
-    setTimeout(function(){//延时等待图片缓存
+    setTimeout(function () {//延时等待图片缓存
       context.save();//保存绘图上下文
       context.setFillStyle('#ffffff');
       context.fillRect(0, 0, 610 * scale, 800 * scale);//给画布添加背景色，无背景色真机会自动变黑
@@ -195,7 +259,7 @@ Page({
       //绘制店铺地址
       if (address.length > 14) {//地址超过14字换行
         var address1 = address.substring(0, 14),
-            address2 = address.substring(14);
+          address2 = address.substring(14);
         context.fillText(address1, 90 * scale, 67.5 * scale);
         context.fillText(address2, 90 * scale, 92.5 * scale);
         context.fillText(phoneService, 90 * scale, 117.5 * scale);
@@ -229,15 +293,15 @@ Page({
           }
         })
       });
-    },2000)
+    }, 2000)
   },
   /**
   * 用户点击右上角分享
   */
   onShareAppMessage: function () {
-    return{
+    return {
       title: this.data.shopName,
-      path: '/pages/store/code/code?shopName=' + this.data.shopName + '&address=' + this.data.address + '&phoneService=' + this.data.phoneService + '&shopLogo=' + this.data.url + '&shopId=' + this.data.shopId + '&shareUser=' + wx.getStorageSync('scSysUser').id+'&shareType=9'
+      path: '/pages/store/code/code?shopName=' + this.data.shopName + '&address=' + this.data.address + '&phoneService=' + this.data.phoneService + '&shopLogo=' + this.data.url + '&shopId=' + this.data.shopId + '&shareUser=' + wx.getStorageSync('scSysUser').id + '&shareType=9'
     }
   },
   goback: function () {//回到首页按钮

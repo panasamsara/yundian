@@ -26,8 +26,7 @@
     "pages/spelldetails/spelldetails",
     "pages/store/posterActivity/posterActivity",
     "pages/QrToActivity/QrToActivity",
-    "pages/store/dynamicInfo/dynamicInfo",
-    "components/component-search/component-search"
+    "pages/store/dynamicInfo/dynamicInfo"
   ],
   "subPackages": [
     {
@@ -59,10 +58,8 @@
         "pages/memberSearch/memberSearch",
         "pages/appointmentNew/appointmentNew",
         "pages/timePicker/timePicker",
-        "pages/appointmentNew/service/service",
-        "pages/appointmentNew/servant/servant",
-        "pages/appointmentNew/device/device",
-        "pages/appointmentNew/appointInfo/appointInfo"
+        "pages/lessonMore/lessonMore",
+        "pages/appointmentNew/service/service"
       ]
     },
     {
